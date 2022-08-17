@@ -6,6 +6,11 @@
 
         <title>Why Culture Matters</title>
 
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+
         <!-- Fonts -->
         <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -20,7 +25,7 @@
             }
         </style>
 
-        @vite('resources/css/app.css')
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     </head>
     <body class="antialiased">
@@ -50,7 +55,7 @@
 
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden">
                     <div class="grid grid-cols-1">
-                        <img src="/wcm_coming_soon.webp" />
+                        <img src="{{ asset('wcm_coming_soon.webp') }}" title="Why Culture Matters" />
                     </div>
                 </div>
 
