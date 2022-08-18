@@ -26,6 +26,10 @@
             .wcm-font{font-family:'Peclet-Regular', sans-serif;}
             .wcm-logo{font-size:70px; transition: transform 0.5s;}
             .wcm-tag{font-size:20px;}
+            .parallax-wcm {
+                max-height: 50vh;
+                max-width: 90vw;
+            }
         </style>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -56,7 +60,7 @@
             <div id="container" class="w-full mx-auto flex justify-center items-center flex-col">
                 <div class="my-1 grid grid-cols-2">
                     <div class="col-span-2">
-                        <svg class="parallax-wcm" viewBox="0 0 842 526" style="height: 50vh;">
+                        <svg class="parallax-wcm" viewBox="0 0 842 526">
                             <rect x="0" class="red" width="842" height="526"/>
 
                             <text x="76" y="152" class="green wcm-font wcm-logo">why culture matters?</text>
