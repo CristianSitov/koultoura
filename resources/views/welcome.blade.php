@@ -19,6 +19,17 @@
                 background: #ed1c24 !important;
                 font-family: 'Nunito', sans-serif;
             }
+            #container {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                line-height: 60px;
+                margin-left: -45vw;
+                margin-top: -25vh;
+                text-align: center;
+                height: 50vh;
+                width: 90vw;
+            }
             .red{fill:#EC2227;}
             .green{fill:#046937;}
             .white{fill:#FFFFFF;}
@@ -31,8 +42,6 @@
                 max-width: 90vw;
             }
         </style>
-
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <script>
             document.addEventListener("mousemove", parallax);
@@ -56,34 +65,28 @@
         </script>
     </head>
     <body class="antialiased">
-        <div class="relative flex items-center justify-center min-h-screen sm:items-center py-4 sm:pt-0">
-            <div id="container" class="w-full mx-auto flex justify-center items-center flex-col">
-                <div class="my-1 grid grid-cols-2">
-                    <div class="col-span-2">
-                        <svg class="parallax-wcm" viewBox="0 0 842 526">
-                            <rect x="0" class="red" width="842" height="526"/>
+        <div id="container">
+            <svg class="parallax-wcm" viewBox="0 0 842 526">
+                <rect x="0" class="red" width="842" height="526"/>
 
-                            <text x="76" y="152" class="green wcm-font wcm-logo">why culture matters?</text>
-                            <text x="76" y="228" class="green wcm-font wcm-logo">why culture matters?</text>
-                            <text x="76" y="304" class="green wcm-font wcm-logo">why culture matters?</text>
-                            <text x="76" y="380" class="green wcm-font wcm-logo">why culture matters?</text>
+                <text x="76" y="152" class="green wcm-font wcm-logo">why culture matters?</text>
+                <text x="76" y="228" class="green wcm-font wcm-logo">why culture matters?</text>
+                <text x="76" y="304" class="green wcm-font wcm-logo">why culture matters?</text>
+                <text x="76" y="380" class="green wcm-font wcm-logo">why culture matters?</text>
 
-                            <text x="52" y="132" class="black wcm-font wcm-logo">why culture matters?</text>
-                            <text x="52" y="208" class="black wcm-font wcm-logo">why culture matters?</text>
-                            <text x="52" y="284" class="black wcm-font wcm-logo">why culture matters?</text>
-                            <text x="52" y="360" class="black wcm-font wcm-logo">why culture matters?</text>
+                <text x="52" y="132" class="black wcm-font wcm-logo">why culture matters?</text>
+                <text x="52" y="208" class="black wcm-font wcm-logo">why culture matters?</text>
+                <text x="52" y="284" class="black wcm-font wcm-logo">why culture matters?</text>
+                <text x="52" y="360" class="black wcm-font wcm-logo">why culture matters?</text>
 
-                            <text x="64" y="140" class="white wcm-font wcm-logo">why culture matters?</text>
-                            <text x="64" y="216" class="white wcm-font wcm-logo">why culture matters?</text>
-                            <text x="64" y="292" class="white wcm-font wcm-logo">why culture matters?</text>
-                            <text x="64" y="368" class="white wcm-font wcm-logo">why culture matters?</text>
+                <text x="64" y="140" class="white wcm-font wcm-logo">why culture matters?</text>
+                <text x="64" y="216" class="white wcm-font wcm-logo">why culture matters?</text>
+                <text x="64" y="292" class="white wcm-font wcm-logo">why culture matters?</text>
+                <text x="64" y="368" class="white wcm-font wcm-logo">why culture matters?</text>
 
-                            <text x="64" y="428" class="white wcm-font wcm-tag">international symposium</text>
-                            <text x="484" y="428" class="white wcm-font wcm-tag">6-7-8 oct 2022, timișoara, ro</text>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+                <text x="64" y="428" class="white wcm-font wcm-tag">international symposium</text>
+                <text x="484" y="428" class="white wcm-font wcm-tag">6-7-8 oct 2022, timișoara, ro</text>
+            </svg>
         </div>
     </body>
 </html>
