@@ -1,7 +1,7 @@
 <script setup>
-import { Head, Link } from '@inertiajs/inertia-vue3';
-import MainMenu from '@/Components/SectionMainMenu.vue';
-import Bottom from "@/Components/SectionBottom.vue";
+import { Head } from '@inertiajs/inertia-vue3';
+import MainMenu from '../Components/SectionMainMenu.vue';
+import Bottom from "../Components/SectionBottom.vue";
 
 defineProps({
     title: String,

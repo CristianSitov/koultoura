@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
     <div class="snap-start scroll-m-0 snap-both">
         <div id="speakers" class="bg-black w-full">

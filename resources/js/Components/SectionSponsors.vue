@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section class="bg-white dark:bg-gray-900">
+        <section id="sponsors" class="bg-white dark:bg-gray-900">
             <div class="grid gap-8 py-8 px-4 mx-auto max-w-screen-xl sm:gap-16 lg:gap-20 md:grid-cols-2 lg:py-16 md:px-6">
                 <div class="text-gray-500 sm:text-lg dark:text-gray-400 mb-8">
                     <h2 class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 md:text-4xl dark:text-white">Our sponsors &amp; partners</h2>
@@ -94,6 +94,3 @@
     </div>
 </template>
 
-<script>
-
-</script>

@@ -19,7 +19,7 @@ Route::get('/', static function () {
     return view('welcome');
 });
 
-Route::get('/w', [FrontController::class, 'index']);
+Route::get('/home', [FrontController::class, 'index']);
 
 Route::middleware([
     'auth:sanctum',
