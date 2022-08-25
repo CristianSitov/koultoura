@@ -5,6 +5,6 @@
     git reset --hard origin/main
     /usr/bin/php8.0 artisan migrate --force
     /usr/bin/php8.0 artisan ziggy:generate
-    nvm exec stable npm run build
+    npm run build
     chown -R www-data:www-data /var/www/prinbanat.ngo
 @endtask
