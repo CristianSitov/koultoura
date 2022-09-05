@@ -88,5 +88,13 @@
                 <text x="484" y="428" class="white wcm-font wcm-tag">6-7-8 oct 2022, timișoara, ro</text>
             </svg>
         </div>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-WYGPJKWNT1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-WYGPJKWNT1');
+        </script>
     </body>
 </html>
