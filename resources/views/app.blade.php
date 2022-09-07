@@ -20,5 +20,13 @@
     <body class="font-sans antialiased">
         @inertia
         <script src="https://unpkg.com/flowbite@1.5.2/dist/flowbite.js"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-WYGPJKWNT1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-WYGPJKWNT1');
+        </script>
     </body>
 </html>
