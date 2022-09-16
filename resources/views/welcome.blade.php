@@ -41,6 +41,13 @@
                 max-height: 50vh;
                 max-width: 90vw;
             }
+            #comingsoon {
+                font-family:'Peclet-Regular', sans-serif;
+                font-size: 1.7rem;
+                color: white;
+                padding: 0;
+                margin: 0 auto;
+            }
         </style>
 
         <script>
@@ -66,8 +73,8 @@
     </head>
     <body class="antialiased">
         <div id="container">
-            <svg class="parallax-wcm" viewBox="0 0 842 526">
-                <rect x="0" class="red" width="842" height="526"/>
+            <svg class="parallax-wcm" viewBox="0 0 842 436">
+                <rect x="0" class="red" width="842" height="436"/>
 
                 <text x="76" y="152" class="green wcm-font wcm-logo">why culture matters?</text>
                 <text x="76" y="228" class="green wcm-font wcm-logo">why culture matters?</text>
@@ -87,6 +94,7 @@
                 <text x="64" y="428" class="white wcm-font wcm-tag">international symposium</text>
                 <text x="484" y="428" class="white wcm-font wcm-tag">6-7-8 oct 2022, timișoara, ro</text>
             </svg>
+            <p id="comingsoon">coming soon // registration: 20 sept 2022</p>
         </div>
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-WYGPJKWNT1"></script>
         <script>
