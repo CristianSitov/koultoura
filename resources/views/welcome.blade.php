@@ -25,9 +25,9 @@
                 left: 50%;
                 line-height: 60px;
                 margin-left: -45vw;
-                margin-top: -25vh;
+                margin-top: -35vh;
                 text-align: center;
-                height: 50vh;
+                height: 40vh;
                 width: 90vw;
             }
             .red{fill:#EC2227;}
@@ -73,8 +73,8 @@
     </head>
     <body class="antialiased">
         <div id="container">
-            <svg class="parallax-wcm" viewBox="0 0 842 436">
-                <rect x="0" class="red" width="842" height="436"/>
+            <svg class="parallax-wcm" viewBox="0 0 842 476">
+                <rect x="0" class="red" width="842" height="476"/>
 
                 <text x="76" y="152" class="green wcm-font wcm-logo">why culture matters?</text>
                 <text x="76" y="228" class="green wcm-font wcm-logo">why culture matters?</text>
