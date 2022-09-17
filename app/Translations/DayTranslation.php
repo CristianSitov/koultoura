@@ -12,6 +12,7 @@ class DayTranslation extends Model
     protected $fillable = [
         'name',
         'title',
+        'description',
         'location',
     ];
 }

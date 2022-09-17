@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', session()->get('locale')) }}" class="scroll-smooth">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,13 +13,15 @@
         <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css" rel="stylesheet" />
 
         <!-- Scripts -->
-        @routes
-        @vite('resources/js/app.js')
-        @inertiaHead
+@routes
+@vite('resources/js/app.js')
+@inertiaHead
+
     </head>
     <body class="font-sans antialiased">
-        @inertia
-        <script src="https://unpkg.com/flowbite@1.5.2/dist/flowbite.js"></script>
+
+@inertia
+
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-WYGPJKWNT1"></script>
         <script>
             window.dataLayer = window.dataLayer || [];

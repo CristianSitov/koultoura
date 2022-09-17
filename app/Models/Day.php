@@ -17,6 +17,7 @@ class Day extends Model implements TranslatableContract
     public array $translatedAttributes = [
         'name',
         'title',
+        'description',
         'location',
     ];
 }

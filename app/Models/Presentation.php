@@ -24,6 +24,7 @@ class Presentation extends Model implements TranslatableContract
 
     public array $translatedAttributes = [
         'title',
+        'supratitle',
         'subtitle',
         'description',
     ];

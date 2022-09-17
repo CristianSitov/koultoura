@@ -13,8 +13,8 @@ class FrontController extends Controller
     public function index(): Response
     {
         app()->setLocale('en');
-
-        return Inertia::render('Welcome', [
+//dd(Person::all()->first()->toArray());
+        return Inertia::render('Home', [
             'days' => Day::all()->keyBy('id'),
             'presentations' => Presentation::with([
                     'speakers',
@@ -25,8 +25,10 @@ class FrontController extends Controller
                     return [
                         'id' => $item->id,
                         'title' => $item->title,
+                        'supratitle' => $item->supratitle,
                         'subtitle' => $item->subtitle,
                         'description' => $item->description,
+                        'flag' => $item->flag,
                         'hour' => $item->starts_at->format('H:i'),
                         'day_id' => $item->day_id,
                         'speakers' => $item->speakers,

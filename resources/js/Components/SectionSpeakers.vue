@@ -1,13 +1,12 @@
 <template>
     <div class="snap-start scroll-m-0 snap-both">
         <div id="speakers" class="bg-black w-full">
-            <section class="bg-black dark:bg-gray-900">
-                <div class="grid gap-16 py-8 px-4 mx-auto max-w-screen-xl lg:grid-cols-2 lg:py-16 lg:px-6">
+            <section class="max-w-7xl mx-auto px-4 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28">
+                <div class="grid gap-16 py-8 px-4 mx-auto lg:grid-cols-2 lg:py-16 lg:px-6">
                     <div class="text-gray-500 sm:text-lg dark:text-gray-400">
                         <h1 class="text-6xl font-bold uppercase text-white mb-10">Speakers</h1>
-                        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-600 dark:text-white">Our people make us great</h2>
-                        <p class="mb-2 md:text-lg">Here at Flowbite we focus on markets where technology, innovation, and capital can unlock long-term value.</p>
-                        <p class="font-light md:text-lg">Working here means you’ll interact with talented professionals, will be challenged to solve difficult problems and think in new and creative ways. Along the way, you may also make some new friends, have a lot of fun and enjoy opportunities.</p>
+<!--                        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-600 dark:text-white">Our people make us great</h2>-->
+                        <p class="mb-2 md:text-lg">{{ $t('speakers heading') }}</p>
                     </div>
                     <div class="divide-y divide-gray-800">
                         <div v-for="speaker in $page.props.speakers" class="flex flex-col items-center py-8 sm:flex-row">
@@ -19,7 +18,7 @@
                                     <a href="#">{{ speaker.full_name }}</a>
                                 </h3>
                                 <span class="text-gray-500 dark:text-gray-400">{{ speaker.role }}</span>
-                                <p class="mt-3 mb-4 max-w-sm font-light text-gray-500 dark:text-gray-400">{{ speaker.description }}</p>
+                                <p class="mt-3 mb-4 max-w-sm font-light text-gray-500 dark:text-gray-400" v-html="speaker.description"></p>
                                 <ul class="flex justify-center space-x-4 sm:justify-start">
                                     <li>
                                         <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
