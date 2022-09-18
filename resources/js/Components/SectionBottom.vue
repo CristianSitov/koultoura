@@ -3,13 +3,12 @@
 
 <template>
     <div>
-        <footer class="p-4 bg-white md:p-8 lg:p-10 dark:bg-gray-800">
+        <footer class="my-20 p-4 bg-white md:p-8 lg:p-10">
             <div class="mx-auto max-w-screen-xl text-center">
-                <a href="/" class="flex justify-center items-center text-2xl font-semibold text-gray-900">why culture matters</a>
-                <p class="my-6 text-gray-500 dark:text-gray-400"></p>
-                <ul class="flex flex-wrap justify-center items-center mb-14 text-gray-900">
+                <a href="/" class="flex justify-center items-center text-5xl font-semibold text-gray-900">why culture matters</a>
+                <ul class="flex flex-wrap justify-center items-center mt-16 mb-28 text-gray-900">
                     <li v-for="item in $page.props.navigation" :key="item.name">
-                        <a :href="item.href" class="mr-4 hover:underline md:mr-6 ">{{ $t(item.name) }}</a>
+                        <a :href="item.href" class="mr-4 hover:underline md:mx-6 ">{{ $t(item.name) }}</a>
                     </li>
                 </ul>
                 <div class="sm:flex sm:items-center sm:justify-between">

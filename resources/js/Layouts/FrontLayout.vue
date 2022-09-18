@@ -14,7 +14,7 @@ defineProps({
 
         <MainMenu />
 
-        <main class="snap-x">
+        <main class="snap-y">
             <slot />
         </main>
 

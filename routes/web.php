@@ -20,8 +20,10 @@ Route::get('/', static function () {
 });
 
 Route::get('/wcm', [FrontController::class, 'index']);
-Route::get('/wcm', [FrontController::class, 'index'])
-    ->prefix('why-culture-matters');
+if (app()->environment('local')) {
+    Route::get('/wcm', [FrontController::class, 'index'])
+        ->prefix('why-culture-matters');
+}
 
 Route::get('/{locale}', static function ($locale = null) {
     if (isset($locale) && in_array($locale, config('translatable.locales'), true)) {

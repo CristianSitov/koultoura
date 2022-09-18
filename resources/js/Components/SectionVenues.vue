@@ -1,6 +1,6 @@
 <template>
-    <div class="snap-start scroll-m-0 snap-both">
-        <div class="h-auto">
+    <div class="snap-start scroll-pt-60 snap-both">
+        <div id="venues" class="w-full">
             <div id="mapContainer"></div>
         </div>
     </div>
@@ -8,7 +8,7 @@
 
 <script>
 import mapboxgl from "mapbox-gl";
-
+// https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
 export default {
     name: "BaseMap",
     data() {
@@ -28,8 +28,8 @@ export default {
             boxZoom: false,
             doubleClickZoom: false,
             maxBounds: [
-                [21.1900, 45.7300],
-                [21.2900, 45.7800],
+                [21.1800, 45.7200],
+                [21.3000, 45.7900],
             ],
         });
         const geojson = {
@@ -42,19 +42,19 @@ export default {
                         coordinates: [21.2320, 45.7480]
                     },
                     properties: {
-                        title: 'Mapbox',
-                        description: 'Washington, D.C.'
+                        title: 'Universitatea de Vest - Aula Magna',
+                        description: 'Bd. Vasile Pârvan nr. 4'
                     }
                 },
                 {
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
-                        coordinates: [21.2470, 45.7605]
+                        coordinates: [21.2530, 45.7620]
                     },
                     properties: {
-                        title: 'Mapbox',
-                        description: 'San Francisco, California'
+                        title: 'Faber',
+                        description: 'str. Peneș Curcanul, nr. 4-5'
                     }
                 }
             ]
@@ -62,16 +62,23 @@ export default {
         for (const feature of geojson.features) {
             const el = document.createElement('div');
             el.className = 'marker';
-            new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(this.map);
+            new mapboxgl
+                .Marker(el)
+                .setLngLat(feature.geometry.coordinates)
+                .setPopup(
+                    new mapboxgl.Popup({
+                        offset: 25,
+                        closeOnClick: false,
+                        keepInView: true,
+                        closeButton: false,
+                    })
+                        .setHTML(
+                            `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
+                        )
+                )
+                .addTo(this.map)
+                .togglePopup();
         }
-        this.map.on("load", function(e) {
-            new mapboxgl.Marker()
-                .setLngLat([21.2220, 45.7353])
-                .addTo(this.map);
-            new mapboxgl.Marker()
-                .setLngLat([21.2520, 45.7653])
-                .addTo(this.map);
-        });
     },
 };
 </script>
