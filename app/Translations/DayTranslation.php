@@ -2,6 +2,7 @@
 
 namespace App\Translations;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,12 @@ class DayTranslation extends Model
     protected $fillable = [
         'name',
         'title',
+        'description',
         'location',
     ];
+
+    public function getNameAttribute($value): string
+    {
+        return Carbon::parse($value)->isoFormat('MMMM Do');
+    }
 }

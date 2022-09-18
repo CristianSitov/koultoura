@@ -19,7 +19,16 @@ Route::get('/', static function () {
     return view('welcome');
 });
 
-Route::get('/home', [FrontController::class, 'index']);
+Route::get('/wcm', [FrontController::class, 'index']);
+
+Route::get('/{locale}', static function ($locale = null) {
+    if (isset($locale) && in_array($locale, config('translatable.locales'), true)) {
+        app()->setLocale($locale);
+        session()->put('locale', $locale);
+    }
+
+    return redirect()->back();
+});
 
 Route::middleware([
     'auth:sanctum',

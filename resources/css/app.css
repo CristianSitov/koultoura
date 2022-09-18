@@ -20,3 +20,16 @@
     border-radius: 50%;
     cursor: pointer;
 }
+
+.wcm {
+    letter-spacing: -3px;
+    text-transform: uppercase;
+}
+.front {
+    font-size: 11rem;
+    line-height: 10rem;
+}
+
+.about {
+    font-family: "Cormorant Garamond", Georgia, serif;
+}
