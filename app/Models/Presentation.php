@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -31,6 +32,11 @@ class Presentation extends Model implements TranslatableContract
 
     public const SPEAKER = 'speaker';
     public const MODERATOR = 'moderator';
+
+    public function getStartsAtAttribute($value): string
+    {
+        return Carbon::parse($value)->format('H:i');
+    }
 
     public function speakers(): BelongsToMany
     {

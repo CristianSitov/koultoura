@@ -54,8 +54,6 @@ export default {
                 <div class="hidden flex items-center md:block md:ml-10 md:pr-4 md:space-x-8">
                     <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
-                    <a href="/register"
-                       class="font-bold uppercase text-white p-2 rounded-md border-white border-2 bg-transparent border-white uppercase hover:text-red-600 hover:bg-white">{{ $t('Register') }}</a>
                     <button type="button"
                             data-dropdown-toggle="language"
                             aria-expanded="false"
@@ -125,10 +123,8 @@ export default {
                         </div>
                     </div>
                     <div class="px-2 pt-2 pb-3 space-y-1">
-                        <a v-for="item in navigation" :key="item.name" :href="item.href"
+                        <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
                            class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t(item.name) }}</a>
-                        <a href="/register"
-                           class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t('Register') }}</a>
                     </div>
                 </div>
             </PopoverPanel>

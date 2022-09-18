@@ -13,29 +13,28 @@ class FrontController extends Controller
     public function index(): Response
     {
         app()->setLocale('en');
-//dd(Person::all()->first()->toArray());
+
+        $days = Day::query()
+            ->with(['host'])
+            ->get()
+            ->keyBy('id');
+        $speakers = Person::query()
+            ->selectRaw('people.*')
+            ->leftJoin('person_presentation', 'person_presentation.person_id', '=', 'people.id')
+            ->whereNull('person_presentation.id')
+            ->get();
+        $persons =
+        $presentations = Presentation::with([
+            'speakers',
+            'moderators',
+        ])
+            ->get()
+            ->groupBy('day_id');
+
         return Inertia::render('Home', [
-            'days' => Day::all()->keyBy('id'),
-            'presentations' => Presentation::with([
-                    'speakers',
-                    'moderators',
-                ])
-                ->get()
-                ->transform(static function ($item) {
-                    return [
-                        'id' => $item->id,
-                        'title' => $item->title,
-                        'supratitle' => $item->supratitle,
-                        'subtitle' => $item->subtitle,
-                        'description' => $item->description,
-                        'flag' => $item->flag,
-                        'hour' => $item->starts_at->format('H:i'),
-                        'day_id' => $item->day_id,
-                        'speakers' => $item->speakers,
-                    ];
-                })
-                ->groupBy('day_id'),
-            'speakers' => Person::all()
+            'days' => $days,
+            'speakers' => $speakers,
+            'presentations' => $presentations,
         ]);
     }
 }

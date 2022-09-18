@@ -5,9 +5,7 @@
     <div>
         <footer class="p-4 bg-white md:p-8 lg:p-10 dark:bg-gray-800">
             <div class="mx-auto max-w-screen-xl text-center">
-                <a href="/" class="flex justify-center items-center text-2xl font-semibold text-gray-900">
-                    <span class="bg-red-700 text-white rounded-full text-md leading-loose h-14 w-14 mr-5">wcm</span>why culture matters
-                </a>
+                <a href="/" class="flex justify-center items-center text-2xl font-semibold text-gray-900">why culture matters</a>
                 <p class="my-6 text-gray-500 dark:text-gray-400">{{ $t('bottom tagline') }}</p>
                 <ul class="flex flex-wrap justify-center items-center mb-14 text-gray-900">
                     <li v-for="item in $page.props.navigation" :key="item.name">
