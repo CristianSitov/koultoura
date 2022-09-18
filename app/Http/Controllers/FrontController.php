@@ -12,7 +12,7 @@ class FrontController extends Controller
 {
     public function index(): Response
     {
-        app()->setLocale('en');
+        $translation = array_values(array_diff(config('translatable.locales'), [app()->getLocale()]))[0];
 
         $days = Day::query()
             ->with(['host'])
@@ -23,7 +23,6 @@ class FrontController extends Controller
             ->leftJoin('person_presentation', 'person_presentation.person_id', '=', 'people.id')
             ->whereNull('person_presentation.id')
             ->get();
-        $persons =
         $presentations = Presentation::with([
             'speakers',
             'moderators',
@@ -35,6 +34,7 @@ class FrontController extends Controller
             'days' => $days,
             'speakers' => $speakers,
             'presentations' => $presentations,
+            'translation' => $translation,
         ]);
     }
 }

@@ -54,52 +54,38 @@ export default {
                 <div class="hidden flex items-center md:block md:ml-10 md:pr-4 md:space-x-8">
                     <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
-                    <button type="button"
-                            data-dropdown-toggle="language"
-                            aria-expanded="false"
-                            class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
-                        <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2"
-                             xmlns="http://www.w3.org/2000/svg" id="flag-icons-gb" viewBox="0 0 512 512">
-                            <path fill="#012169" d="M0 0h512v512H0z"/>
-                            <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
-                            <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3l184-185zm124-12 54 8 150 147v45L308 312zM512 0 320 196l-4-44L466 0h46zM0 1l193 189-59-8L0 49V1z"/>
-                            <path fill="#FFF" d="M176 0v512h160V0H176zM0 176v160h512V176H0z"/>
-                            <path fill="#C8102E" d="M0 208v96h512v-96H0zM208 0v512h96V0h-96z"/>
-                        </svg>EN
-                    </button>
-                    <div class="hidden z-50 my-4 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700"
-                         id="language">
-                        <ul class="py-1" role="none">
-                            <li>
-                                <a href="/en" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
-                                    <div class="inline-flex items-center">
-                                        <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2"
-                                             xmlns="http://www.w3.org/2000/svg" id="flag-icons-gb" viewBox="0 0 512 512">
-                                            <path fill="#012169" d="M0 0h512v512H0z"/>
-                                            <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
-                                            <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3l184-185zm124-12 54 8 150 147v45L308 312zM512 0 320 196l-4-44L466 0h46zM0 1l193 189-59-8L0 49V1z"/>
-                                            <path fill="#FFF" d="M176 0v512h160V0H176zM0 176v160h512V176H0z"/>
-                                            <path fill="#C8102E" d="M0 208v96h512v-96H0zM208 0v512h96V0h-96z"/>
-                                        </svg>EN
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/ro" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
-                                    <div class="inline-flex items-center">
-                                        <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2"
-                                             xmlns="http://www.w3.org/2000/svg" id="flag-icons-ro" viewBox="0 0 512 512">
-                                            <g fill-rule="evenodd" stroke-width="1pt">
-                                                <path fill="#00319c" d="M0 0h170.7v512H0z"/>
-                                                <path fill="#ffde00" d="M170.7 0h170.6v512H170.7z"/>
-                                                <path fill="#de2110" d="M341.3 0H512v512H341.3z"/>
-                                            </g>
-                                        </svg>RO
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <a href="/en"
+                       type="button"
+                       v-if="$page.props.translation !== 'ro'"
+                       class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
+                       role="menuitem">
+                        <div class="inline-flex items-center">
+                            <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2"
+                                 xmlns="http://www.w3.org/2000/svg" id="flag-icons-gb" viewBox="0 0 512 512">
+                                <path fill="#012169" d="M0 0h512v512H0z"/>
+                                <path fill="#FFF" d="M512 0v64L322 256l190 187v69h-67L254 324 68 512H0v-68l186-187L0 74V0h62l192 188L440 0z"/>
+                                <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3l184-185zm124-12 54 8 150 147v45L308 312zM512 0 320 196l-4-44L466 0h46zM0 1l193 189-59-8L0 49V1z"/>
+                                <path fill="#FFF" d="M176 0v512h160V0H176zM0 176v160h512V176H0z"/>
+                                <path fill="#C8102E" d="M0 208v96h512v-96H0zM208 0v512h96V0h-96z"/>
+                            </svg>EN
+                        </div>
+                    </a>
+                    <a href="/ro"
+                       type="button"
+                       v-if="$page.props.translation !== 'en'"
+                       class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
+                       role="menuitem">
+                        <div class="inline-flex items-center">
+                            <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2"
+                                 xmlns="http://www.w3.org/2000/svg" id="flag-icons-ro" viewBox="0 0 512 512">
+                                <g fill-rule="evenodd" stroke-width="1pt">
+                                    <path fill="#00319c" d="M0 0h170.7v512H0z"/>
+                                    <path fill="#ffde00" d="M170.7 0h170.6v512H170.7z"/>
+                                    <path fill="#de2110" d="M341.3 0H512v512H341.3z"/>
+                                </g>
+                            </svg>RO
+                        </div>
+                    </a>
                 </div>
             </nav>
         </div>
