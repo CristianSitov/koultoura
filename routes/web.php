@@ -15,31 +15,53 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', static function () {
-    return view('welcome');
-});
-
-Route::get('/wcm', [FrontController::class, 'index']);
 if (app()->environment('local')) {
-    Route::get('/wcm', [FrontController::class, 'index'])
-        ->prefix('why-culture-matters');
+    Route::group([
+        'prefix' => 'why-culture-matters'
+    ], static function () {
+        Route::get('/', static function () {
+            return view('welcome');
+        });
+        Route::get('/wcm', [FrontController::class, 'index']);
+        Route::get('/{locale}', static function ($locale = null) {
+            if (isset($locale) && in_array($locale, config('translatable.locales'), true)) {
+                app()->setLocale($locale);
+                session()->put('locale', $locale);
+            }
+
+            return redirect()->back();
+        });
+        Route::middleware([
+            'auth:sanctum',
+            config('jetstream.auth_session'),
+            'verified',
+        ])->group(function () {
+            Route::get('/dashboard', function () {
+                return Inertia::render('Dashboard');
+            })->name('dashboard');
+        });
+    });
+} else {
+    Route::get('/', static function () {
+        return view('welcome');
+    });
+    Route::get('/wcm', [FrontController::class, 'index']);
+    Route::get('/{locale}', static function ($locale = null) {
+        if (isset($locale) && in_array($locale, config('translatable.locales'), true)) {
+            app()->setLocale($locale);
+            session()->put('locale', $locale);
+        }
+
+        return redirect()->back();
+    });
+    Route::middleware([
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])->group(function () {
+        Route::get('/dashboard', function () {
+            return Inertia::render('Dashboard');
+        })->name('dashboard');
+    });
 }
 
-Route::get('/{locale}', static function ($locale = null) {
-    if (isset($locale) && in_array($locale, config('translatable.locales'), true)) {
-        app()->setLocale($locale);
-        session()->put('locale', $locale);
-    }
-
-    return redirect()->back();
-});
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-});

@@ -20,6 +20,7 @@
         "laravel/jetstream": "^2.11",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "monarobase/country-list": "^3.3",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {

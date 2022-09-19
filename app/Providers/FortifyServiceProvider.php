@@ -10,7 +10,9 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
+use Monarobase\CountryList\CountryList;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,11 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Fortify::registerView(static function () {
+            return Inertia::render('Auth/Register', [
+                'countries' => (new CountryList)->getList(app()->getLocale()),
+            ]);
+        });
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

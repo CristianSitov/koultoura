@@ -74,7 +74,7 @@ return [
     |
     */
 
-    'prefix' => '',
+    'prefix' => 'why-culture-matters',
 
     'domain' => null,
 

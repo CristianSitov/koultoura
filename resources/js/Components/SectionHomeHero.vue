@@ -1,5 +1,6 @@
 <script setup>
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
+import {InertiaLink} from '@inertiajs/inertia-vue3'
 </script>
 
 <template>
@@ -23,9 +24,10 @@ import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
                                 </span>
                             </h1>
                             <div class="my-14">
-                                <a href="/register"
-                                   class="text-3xl uppercase text-white font-bold py-4 px-52 rounded-lg border-white border-4 bg-transparent hover:text-red-600 hover:bg-white">
-                                    {{ $t('Register') }}</a>
+                                <InertiaLink
+                                    :href="route('register')"
+                                    class="text-3xl uppercase text-white font-bold py-4 px-52 rounded-lg border-white border-4 bg-transparent hover:text-red-600 hover:bg-white"
+                                >{{ $t('Register') }}</InertiaLink>
                             </div>
                         </div>
                     </div>
