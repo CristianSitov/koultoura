@@ -42,13 +42,13 @@ class HandleInertiaRequests extends Middleware
                 ['name' => 'schedule', 'href' => '#schedule'],
                 ['name' => 'speakers', 'href' => '#speakers'],
                 ['name' => 'venues', 'href' => '#venues'],
-                ['name' => 'sponsors', 'href' => '#sponsors'],
+                ['name' => 'partners', 'href' => '#partners'],
             ],
             'ro' => [
                 ['name' => 'program', 'href' => '#schedule'],
                 ['name' => 'invitati', 'href' => '#speakers'],
                 ['name' => 'locatii', 'href' => '#venues'],
-                ['name' => 'sponsori', 'href' => '#sponsors'],
+                ['name' => 'parteneri', 'href' => '#parteneri'],
             ],
         ];
 

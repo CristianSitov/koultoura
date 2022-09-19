@@ -38,9 +38,9 @@ export default {
                  aria-label="Global">
                 <div class="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
                     <div class="flex items-center justify-between w-full md:w-auto">
-                        <a href="/">
+                        <a href="/public">
                             <span class="sr-only">wcm</span>
-                            <a href="/" class="text-red-700 uppercase font-bold">why culture matters?</a>
+                            <a href="/public" class="text-red-700 uppercase font-bold">why culture matters?</a>
                         </a>
                         <div class="-mr-2 flex items-center md:hidden">
                             <PopoverButton
@@ -98,7 +98,7 @@ export default {
                 <div class="shadow-md bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
                     <div class="pt-6 px-5 flex items-center justify-between">
                         <div>
-                            <a href="/" class="text-red-700 uppercase font-bold">why culture matters?</a>
+                            <a href="/public" class="text-red-700 uppercase font-bold">why culture matters?</a>
                         </div>
                         <div class="-mr-2">
                             <PopoverButton

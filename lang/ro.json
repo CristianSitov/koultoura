@@ -1,9 +1,9 @@
 {
-    "Event": "Why Culture Matters? International Symposium centers around three main themes: material and immaterial heritage, relationships between center and periphery, and migration.\nBringing together actors involved in projects and initiatives related to these topics, the symposium proposes to its participants to reflect on how culture (in its several dimensions: as a product, as a process, and as an instrument) interacts with and is shaped by them in the exceptional context of Timișoara 2023 - European Capital of Culture.",
+    "Event": "Simpozionul Internațional „De ce contează cultura?“ cuprinde trei teme principale: patrimoniul cultural material și imaterial, relația dintre centru și periferie și fenomenul migrației. Reunind actori implicați în proiecte și inițiative relevante pentru aceste subiecte, simpozionul propune participanților să reflecteze asupra modului în care ei interacționează și modelează cultura (în diferitele sale dimensiuni: ca produs, ca proces și ca instrument), în contextul excepțional Timișoara 2023 - Capitală Europeană a Culturii.",
     "Schedule": "Program",
     "Speakers": "Invitați",
     "Venues": "Locații",
-    "Sponsors": "Sponsori",
+    "Partners": "Parteneri",
     "Open main menu": "Deschide meniul",
     "Close main menu": "Închide meniul",
     "Register": "Înregistrare",
@@ -17,7 +17,8 @@
     "Moderated by": "Moderat de",
     "speakers heading": "The Why Culture Matters? and the what...",
 
-    "Organizers": "Organizatori",
+    "Organizers": "Organizator",
+    "organization explained": "Un eveniment comun al proiectelor",
     "Strategic Partners": "Parteneri strategici",
     "Local Partners": "Parteneri locali",
     "International Partners": "Parteneri internaționali",

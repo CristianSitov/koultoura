@@ -10,11 +10,9 @@ return new class extends Migration
     {
         Schema::create('profiles', static function (Blueprint $table) {
             $table->tinyInteger('user_id');
-            $table->string('title');
             $table->string('phone');
             $table->string('job');
             $table->string('organization');
-            $table->string('area');
             $table->string('country');
             $table->json('event_2021');
             $table->timestamps();
