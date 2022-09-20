@@ -8,7 +8,6 @@
     /usr/bin/php8.0 artisan route:clear
     /usr/bin/php8.0 artisan config:clear
     /usr/bin/php8.0 artisan ziggy:generate
-    /usr/bin/php8.0 artisan optimize
     npm install
     npm run build
     chown -R www-data:www-data /var/www/prinbanat.ngo
