@@ -145,6 +145,7 @@ return [
     ],
 
     'redirects' => [
-        'register' => '/email/verify' // because after register, we display this
+//        'register' => '/email/verify', // because after register, we display this
+        'email-verification' => '/',
     ]
 ];

@@ -18,7 +18,7 @@ class RegisterResponse extends FortifyRegisterResponse
     {
         $userId = $this->guard->user()->slug;
 
-        $this->guard->logout();
+//        $this->guard->logout();
 
         return redirect()->route('confirmation', ['id' => $userId]);
     }

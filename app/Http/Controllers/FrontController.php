@@ -61,6 +61,12 @@ class FrontController extends Controller
         return redirect()->back();
     }
 
+    public function registration()
+    {
+        auth()->logout();
+        return redirect('/register');
+    }
+
     public function confirmation(Request $request, $userId): Response
     {
         $user = User::query()
