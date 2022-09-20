@@ -29,7 +29,7 @@
 
     "Registration form": "Formular înregistrare",
     "Personal Information": "Informații personale",
-    "Personal Information details": "Participarea la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters?”</span> este gratuită în limita locurilor disponibile, dar înregistrarea în prealabil este obligatorie.<br /><br />Te rugăm să completezi acest formular de înregistrare.",
+    "Personal Information details": "Participarea la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters?”</span> este gratuită în limita locurilor disponibile, dar <span class='underline'>înregistrarea în prealabil este obligatorie</span>.<br /><br />Te rugăm să completezi acest formular de înregistrare.",
     "First name": "Prenume",
     "Last name": "Nume",
     "Email address": "Adresă ta de e-mail",
@@ -40,7 +40,7 @@
     "Country": "Country",
     "Preferences": "Când dorești să participi?",
 
-    "schedule short one title": "Despre punerea în siguranță a patrimoniului cultural",
+    "schedule short one title": "Despre salvarea siturilor de patrimoniu",
     "schedule short one hours": "6 octombrie 2022 / interval 15:00-20:00",
     "schedule short one location": "FABER (Spl. Peneș Curcanul, nr. 4-5)",
     "schedule short two title": "Despre relația centru-periferie",
@@ -63,7 +63,7 @@
     "Verify Email Address": "Verifică adresa de e-mail",
     "If you did not initiate this, no further action is required.": "Dacă nu ai inițiat această acțiune, te rugăm să ignori acest mesaj.",
 
-    "GDPR": "Prin completarea acestui formular, sunteți de acord ca Asociația Prin Banat să prelucreze datele personale furnizate în scopul exclusiv al participării dumneavoastră la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters?”</span> <br /><br />Pe toată perioada desfășurării simpozionului se vor înregistra secvențe foto și video, situaţie care va conduce incidental şi la prelucrarea unor date personale reprezentând imagini foto și video ale participanților la acest eveniment. Prin participarea dumneavoastră la simpozion, vă daţi acordul pentru toate materialele audio /  foto / video / scrise ce urmează a fi folosite / transmise / afişate / publicate pe platforme media şi social – media (Facebook, Instagram etc), pe site-ul Asociației Prin Banat conturile de socializare ale proiectelor asociației, cât şi de partenerii organizației, precum şi în cadrul altor evenimente/proiecte viitoare.",
+    "GDPR": "Prin completarea acestui formular, sunteți de acord ca Asociația Prin Banat să prelucreze datele personale furnizate în scopul exclusiv al participării dumneavoastră la <span class='font-bold italic'>Simpozionul Internațional „Why Culture Matters?”</span> <br /><br />Pe toată perioada desfășurării simpozionului se vor înregistra secvențe foto și video, situaţie care va conduce incidental şi la prelucrarea unor date personale reprezentând imagini foto și video ale participanților la acest eveniment. Prin participarea dumneavoastră la <span class='font-bold italic'>simpozion</span>, vă daţi acordul pentru toate materialele audio /  foto / video / scrise ce urmează a fi folosite / transmise / afişate / publicate pe platforme media şi social – media (Facebook, Instagram etc), pe site-ul Asociației Prin Banat conturile de socializare ale proiectelor asociației, cât şi de partenerii organizației, precum şi în cadrul altor evenimente/proiecte viitoare.",
 
     "Email verification": "Validare email",
     "Email verification explanation": "Înainte de a continua, te rugăm să validezi adresa ta de email apăsând butonul de verificare din mailul pe care tocmai ți l-am trimis?<br /><br />Dacă nu ai primit nici un email de la noi, putem să îți mai trimitem unul.",

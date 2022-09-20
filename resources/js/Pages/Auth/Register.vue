@@ -1,8 +1,7 @@
 <script setup>
-import { Head, useForm } from '@inertiajs/inertia-vue3';
+import {Link, Head, useForm} from '@inertiajs/inertia-vue3';
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 import JetAuthenticationCard from '@/Components/AuthenticationCard.vue';
-import JetAuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import JetButton from '@/Components/Button.vue';
 import JetInput from '@/Components/Input.vue';
 import JetInputError from '@/Components/InputError.vue';
@@ -32,18 +31,21 @@ const submit = () => {
     <Head title="Register" />
 
     <JetAuthenticationCard>
-        <template #logo>
-            <JetAuthenticationCardLogo title="Register" />
-        </template>
-
+        <div class="text-center my-8">
+            <Link :href="'/'">
+                <span class="text-3xl text-red-600 font-sans font-bold uppercase">why culture matters?</span><br />
+                <span class="text-xl text-red-600 font-sans font-bold">{{ $t('International Symposium') }}</span><br />
+                <span class="text-xl text-red-600 font-sans font-bold">{{ $t('6-7-8 October 2022') }}</span>
+            </Link>
+        </div>
 
         <div class="mt-10 sm:mt-0">
             <form @submit.prevent="submit">
             <div class="md:grid md:grid-cols-3 md:gap-6">
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">{{ $t('Personal Information') }}</h3>
-                        <p class="mt-1 text-sm text-gray-600" v-html="$t('Personal Information details')"></p>
+                        <h3 class="text-2xl text-center uppercase font-medium leading-6 my-10 text-gray-900">{{ $t('Registration form') }}</h3>
+                        <p class="mt-1 text-center text-sm text-gray-600" v-html="$t('Personal Information details')"></p>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
@@ -107,7 +109,7 @@ const submit = () => {
                                     <JetInputError class="mt-2" :message="form.errors.email_confirmation" />
                                 </div>
 
-                                <div class="col-span-6 sm:col-span-4">
+                                <div class="col-span-6 sm:col-span-3">
                                     <JetLabel for="phone" :value="$t('Phone number')"
                                               class="block text-sm font-medium text-gray-700"/>
                                     <JetInput
@@ -120,6 +122,8 @@ const submit = () => {
                                     />
                                     <JetInputError class="mt-2" :message="form.errors.phone" />
                                 </div>
+                                <div class="col-span-6 sm:col-span-3"></div>
+
 
                                 <div class="col-span-6 sm:col-span-3">
                                     <JetLabel for="organization" :value="$t('Organisation')"
@@ -166,7 +170,7 @@ const submit = () => {
 
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">{{ $t('Preferences') }}</h3>
+                        <h3 class="text-lg text-center font-medium leading-6 text-gray-900">{{ $t('Preferences') }}</h3>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
@@ -266,8 +270,8 @@ const submit = () => {
                                 </div>
                             </JetLabel>
 
-                            <div class="flex items-center justify-end mt-4">
-                                <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                            <div class="flex items-center mt-4">
+                                <JetButton class="px-15 py-5 bg-red-600 text-xl mx-auto my-10" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                     {{ $t('Register') }}
                                 </JetButton>
                             </div>

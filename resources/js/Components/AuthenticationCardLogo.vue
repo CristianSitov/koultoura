@@ -10,6 +10,5 @@ defineProps({
         <Link :href="'/'">
             <span class="text-3xl text-red-600 font-sans font-bold uppercase">why culture matters?</span>
         </Link>
-        <span class="text-lg block font-sans font-bold uppercase">{{ $t(title) }}</span>
     </div>
 </template>

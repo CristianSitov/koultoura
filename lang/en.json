@@ -30,7 +30,7 @@
 
     "Registration form": "Registration form",
     "Personal Information": "Personal Information",
-    "Personal Information details": "Participation in the <span class='font-bold'>International Symposium Why Culture Matters?</span> is free, within the limit of capacity of the venues. Prior registration is required.<br /><br />Please complete this registration form.",
+    "Personal Information details": "Participation in the <span class='font-bold'>International Symposium Why Culture Matters?</span> is free, within the capacity of the venues.<br /><span class='underline'>Prior registration is required</span>.<br /><br />Please complete this registration form.",
     "First name": "First name",
     "Last name": "Last name",
     "Email address": "Email address",
@@ -64,7 +64,7 @@
     "Regards": "Best regards",
     "association": "Prin Banat Association",
 
-    "GDPR": "By completing this form, you agree that the Prin Banat Association will process personal data for the sole purpose of your attendance in the <span class='font-bold'>Why Culture Matters? International Symposium.</span><br /><br />Throughout the duration of the symposium, photo and video sequences will be recorded, a situation that will incidentally also lead to the processing of personal data representing photo/ video images of the participants in this event. By participating in the Why Culture Matters? International Symposium, you give your consent for all audio / photo / video / written materials to be used / transmitted / displayed / published on media and social media platforms (Facebook, Instagram, etc.), on the Prin Banat Association website and on its social media accounts as well as its partners and in other future events/projects.",
+    "GDPR": "By completing this form, you agree that the Prin Banat Association will process personal data for the sole purpose of your attendance in the <span class='font-bold italic'>Why Culture Matters? International Symposium.</span><br /><br />Throughout the duration of the symposium, photo and video sequences will be recorded, a situation that will incidentally also lead to the processing of personal data representing photo/ video images of the participants in this event. By participating in the <span class='font-bold italic'>Why Culture Matters? International Symposium</span>, you give your consent for all audio / photo / video / written materials to be used / transmitted / displayed / published on media and social media platforms (Facebook, Instagram, etc.), on the Prin Banat Association website and on its social media accounts as well as its partners and in other future events/projects.",
 
     "Email verification": "Email verification",
     "Email verification explanation": "Before continuing, could you verify your email address by clicking on the link we just emailed to you?\nIf you didn't receive the email, we will gladly send you another.",
