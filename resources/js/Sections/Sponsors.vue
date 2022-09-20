@@ -62,7 +62,7 @@
                         <a href="#"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
-                            <img src="assets/images/logos/administratia_fondului_cultural_national.png" alt=""/>
+                            <img :src="'assets/images/logos/europa_creativa_' + $page.props.locale + '.png'" alt=""/>
                         </a>
                         <a href="#"
                            target="_blank"
@@ -77,7 +77,7 @@
                         <a href="#"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
-                            <img :src="'/why-culture-matters/assets/images/logos/europa_creativa_' + $page.props.locale + '.png'" alt=""/>
+                            <img src="assets/images/logos/administratia_fondului_cultural_national.png" alt=""/>
                         </a>
                     </div>
                     <h2 class="mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Local Partners') }}</h2>
@@ -106,6 +106,11 @@
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/garana_jazz_festival.png" alt="Gărâna Jazz"/>
+                        </a>
+                        <a href="//garana-jazz.ro"
+                           target="_blank"
+                           class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                            <img src="assets/images/logos/memorialul_revolutiei_timisoara.png" alt="Gărâna Jazz"/>
                         </a>
                         <a href="//turismtimis.ro"
                            target="_blank"
