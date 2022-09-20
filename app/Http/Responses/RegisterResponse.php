@@ -2,6 +2,7 @@
 
 namespace App\Http\Responses;
 
+use App\Models\User;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Laravel\Fortify\Http\Responses\RegisterResponse as FortifyRegisterResponse;
 
@@ -16,10 +17,8 @@ class RegisterResponse extends FortifyRegisterResponse
 
     public function toResponse($request)
     {
-        $userId = $this->guard->user()->slug;
+        $user = User::where('email', '=', $request->get('email'))->firstOrFail();
 
-//        $this->guard->logout();
-
-        return redirect()->route('confirmation', ['id' => $userId]);
+        return redirect()->route('confirmation', ['id' => $user->slug]);
     }
 }

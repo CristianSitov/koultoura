@@ -12,6 +12,8 @@ Route::get('/wcm', [FrontController::class, 'index'])
 
 Route::get('/registration', [FrontController::class, 'registration'])
     ->name('registration');
+Route::post('/event-registration', [FrontController::class, 'eventRegistration'])
+    ->name('event-registration');
 Route::get('/user/{id}', [FrontController::class, 'confirmation'])
     ->name('confirmation');
 
