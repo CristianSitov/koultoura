@@ -1,6 +1,3 @@
-<script setup>
-</script>
-
 <template>
     <div>
         <footer class="my-20 p-4 bg-white md:p-8 lg:p-10">
