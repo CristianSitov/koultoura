@@ -66,22 +66,22 @@
                     </div>
                     <h2 class="text-center md:text-left mb-2 mt-4 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Financer') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 mb-4 md:mt-4">
-                        <a href="#"
+                        <a href="//culture.ec.europa.eu/creative-europe"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img :src="'assets/images/logos/europa_creativa_' + $page.props.locale + '.png'" alt=""/>
                         </a>
-                        <a href="#"
+                        <a href="//centruldeproiecte.ro/"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/centrul_de_proiecte_timisoara.png" alt=""/>
                         </a>
-                        <a href="#"
+                        <a href="//www.cjtimis.ro/"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/consiliul_judetean_timis.png" alt=""/>
                         </a>
-                        <a href="#"
+                        <a href="//afcn.ro"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/administratia_fondului_cultural_national.png" alt=""/>
@@ -115,10 +115,10 @@
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/garana_jazz_festival.png" alt="Gărâna Jazz"/>
                         </a>
-                        <a href="//garana-jazz.ro"
+                        <a href="//memorialulrevolutiei.ro/sitenou/en/"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
-                            <img src="assets/images/logos/memorialul_revolutiei_timisoara.png" alt="Gărâna Jazz"/>
+                            <img src="assets/images/logos/memorialul_revolutiei_timisoara.png" alt="Memorialul Revoluției - Timișoara"/>
                         </a>
                         <a href="//turismtimis.ro"
                            target="_blank"
@@ -128,34 +128,34 @@
                     </div>
                     <h2 class="text-center md:text-left mb-2 mt-6 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('International Partners') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//fdr.at/en/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/festival_der_regionen_austria.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//novakultura.org/en/blog/category/all/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/new_culture_foundation_bulgaria.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//dansehallerne.dk/en/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/dansehallerne_denmark.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//espoonteatteri.fi/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/espoo_city_theatre_finland.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//lamanufacture.org/en/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/la_manufacture_collectif_contemporain_france.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//rijeka2020.eu/en/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/rijeka_2020_european_capital_of_culture.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//www.cultura-nova.nl/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/cultura_nova_festival_netherlands.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//andafala.org/en/Walktalkazores" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/walk_and_talk_azores.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//crs.org.rs/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/romanian_community_from_serbia.png" alt=""/>
                         </a>
-                        <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//www.fablab.hr/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/fablab_zagreb.png" alt=""/>
                         </a>
                     </div>
