@@ -4,8 +4,9 @@ use App\Http\Controllers\FrontController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [FrontController::class, 'splash'])
-    ->name('splash');
+Route::get('/', static function () {
+    return view('welcome');
+});
 Route::get('/wcm', [FrontController::class, 'index'])
     ->name('home');
 
