@@ -11,7 +11,7 @@ import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
             </div>
 
             <div class="mt-6 text-gray-500">
-                {{ $t('thank you subscription') }}
+                <p v-html="$t('thank you subscription')"></p>
             </div>
         </div>
 

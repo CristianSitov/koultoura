@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EventRegistrationConfirmation;
 use App\Models\Day;
 use App\Models\Presentation;
 use App\Models\Person;
@@ -13,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -94,7 +97,7 @@ class FrontController extends Controller
             'password' => Hash::make(Str::uuid()),
         ]);
 
-        Profile::create([
+        $profile = Profile::create([
             'user_id' => $user->id,
             'phone' => $input['phone'],
             'job' => $input['job'],
@@ -103,7 +106,9 @@ class FrontController extends Controller
             'event_details' => json_encode(['days' => $input['event_details']], JSON_THROW_ON_ERROR),
         ]);
 
-        return app(RegisterResponse::class);
+        Mail::to($user)->send(new EventRegistrationConfirmation($user, $profile));
+
+        return Redirect::route('confirmation', ['id' => $user->slug]);
     }
 
     public function confirmation(Request $request, $userId): Response
