@@ -54,6 +54,7 @@ export default {
                 <div class="hidden flex items-center md:block md:ml-10 md:pr-4 md:space-x-5">
                     <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
+                    <a class="font-bold uppercase bg-white text-red-600 p-2 rounded hover:underline" href="register">{{ $t('Register') }}</a>
                     <a href="en"
                        type="button"
                        v-if="$page.props.translation !== 'ro'"
