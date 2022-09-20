@@ -32,11 +32,9 @@ const submit = () => {
 
     <JetAuthenticationCard>
         <div class="text-center my-8">
-            <Link :href="'/'">
-                <span class="text-3xl text-red-600 font-sans font-bold uppercase">why culture matters?</span><br />
-                <span class="text-xl text-red-600 font-sans font-bold">{{ $t('International Symposium') }}</span><br />
-                <span class="text-xl text-red-600 font-sans font-bold">{{ $t('6-7-8 October 2022') }}</span>
-            </Link>
+            <span class="text-3xl text-red-600 font-sans font-bold uppercase">why culture matters?</span><br />
+            <span class="text-xl text-red-600 font-sans font-bold">{{ $t('International Symposium') }}</span><br />
+            <span class="text-xl text-red-600 font-sans font-bold">{{ $t('6-7-8 October 2022') }}</span>
         </div>
 
         <div class="mt-10 sm:mt-0">
