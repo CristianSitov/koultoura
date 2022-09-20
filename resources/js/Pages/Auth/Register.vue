@@ -32,7 +32,7 @@ const submit = () => {
 
     <JetAuthenticationCard>
         <template #logo>
-            <JetAuthenticationCardLogo />
+            <JetAuthenticationCardLogo title="Register" />
         </template>
 
 
@@ -41,8 +41,8 @@ const submit = () => {
             <div class="md:grid md:grid-cols-3 md:gap-6">
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Personal Information</h3>
-                        <p class="mt-1 text-sm text-gray-600">Some personal data to identify you.</p>
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">{{ $t('Personal Information') }}</h3>
+                        <p class="mt-1 text-sm text-gray-600">{{ $t('Some personal data to identify you.') }}</p>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
@@ -50,7 +50,7 @@ const submit = () => {
                         <div class="bg-white px-4 py-5 sm:p-6">
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
-                                    <JetLabel for="first-name" value="First name"
+                                    <JetLabel for="first-name" :value="$t('First name')"
                                         class="block text-sm font-medium text-gray-700"/>
                                     <JetInput
                                         id="first-name"
@@ -65,7 +65,7 @@ const submit = () => {
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <JetLabel for="last-name" value="Last name"
+                                    <JetLabel for="last-name" :value="$t('Last name')"
                                               class="block text-sm font-medium text-gray-700"/>
                                     <JetInput
                                         id="last-name"
@@ -79,7 +79,7 @@ const submit = () => {
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <JetLabel for="email" value="Email address"
+                                    <JetLabel for="email" :value="$t('Email address')"
                                               class="block text-sm font-medium text-gray-700"/>
                                     <JetInput
                                         id="email"
@@ -93,7 +93,7 @@ const submit = () => {
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <JetLabel for="confirm-email" value="Confirm email"
+                                    <JetLabel for="confirm-email" :value="$t('Confirm email')"
                                               class="block text-sm font-medium text-gray-700"/>
                                     <JetInput
                                         id="confirm-email"
@@ -107,7 +107,7 @@ const submit = () => {
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-4">
-                                    <JetLabel for="phone" value="Phone"
+                                    <JetLabel for="phone" :value="$t('Phone number')"
                                               class="block text-sm font-medium text-gray-700"/>
                                     <JetInput
                                         id="phone"
@@ -121,21 +121,7 @@ const submit = () => {
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <JetLabel for="job" value="Job"
-                                              class="block text-sm font-medium text-gray-700"/>
-                                    <JetInput
-                                        id="job"
-                                        v-model="form.job"
-                                        type="text"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
-                                        required
-                                        autocomplete="job"
-                                    />
-                                    <JetInputError class="mt-2" :message="form.errors.job" />
-                                </div>
-
-                                <div class="col-span-6 sm:col-span-3">
-                                    <JetLabel for="organization" value="Organization"
+                                    <JetLabel for="organization" :value="$t('Organisation')"
                                               class="block text-sm font-medium text-gray-700"/>
                                     <JetInput
                                         id="organization"
@@ -149,7 +135,21 @@ const submit = () => {
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-3">
-                                    <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                                    <JetLabel for="job" :value="$t('Job title')"
+                                              class="block text-sm font-medium text-gray-700"/>
+                                    <JetInput
+                                        id="job"
+                                        v-model="form.job"
+                                        type="text"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"
+                                        required
+                                        autocomplete="job"
+                                    />
+                                    <JetInputError class="mt-2" :message="form.errors.job" />
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label for="country" class="block text-sm font-medium text-gray-700">{{ $t('Country') }}</label>
                                     <select id="country" name="country" autocomplete="country"
                                             v-model="form.country"
                                             class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
@@ -165,17 +165,15 @@ const submit = () => {
 
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">Choose your preferences</h3>
-                        <p class="mt-1 text-sm text-gray-600">Decide which parts of the programme you'd like to attend to.</p>
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">{{ $t('Preferences') }}</h3>
+                        <p class="mt-1 text-sm text-gray-600">{{ $t('I want to attend the event on:') }}</p>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
                     <div class="overflow-hidden shadow sm:rounded-md">
                         <div class="space-y-6 bg-white px-4 py-5 sm:p-6">
                             <fieldset>
-                                <legend class="sr-only">I am interested in attending the conference</legend>
-                                <div class="text-base font-medium text-gray-900" aria-hidden="true">I am interested in attending the conferenceevent_2021</div>
-                                <div class="mt-4 space-y-4">
+                                <div class="space-y-4">
                                     <div class="flex items-start">
                                         <div class="flex h-5 items-center">
                                             <JetCheckbox
@@ -185,7 +183,7 @@ const submit = () => {
                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                         </div>
                                         <div class="ml-3 text-sm">
-                                            <label for="event_2021_day1" class="font-medium text-gray-700">Day 1 // 6 oct</label>
+                                            <label for="event_2021_day1" class="font-medium text-gray-700">{{ $t('Day :day', {day: 1}) }} // 6 oct</label>
                                             <!--                                                <p class="text-gray-500">Get notified when someones posts a comment on a posting.</p>-->
                                         </div>
                                     </div>
@@ -198,7 +196,7 @@ const submit = () => {
                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                         </div>
                                         <div class="ml-3 text-sm">
-                                            <label for="event_2021_day2" class="font-medium text-gray-700">Day 2 // 7 oct</label>
+                                            <label for="event_2021_day2" class="font-medium text-gray-700">{{ $t('Day :day', {day: 1}) }} // 7 oct</label>
                                             <!--                                                <p class="text-gray-500">Get notified when a candidate applies for a job.</p>-->
                                         </div>
                                     </div>
@@ -211,7 +209,7 @@ const submit = () => {
                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                         </div>
                                         <div class="ml-3 text-sm">
-                                            <label for="event_2021_day3" class="font-medium text-gray-700">Day 3 // 8 oct</label>
+                                            <label for="event_2021_day3" class="font-medium text-gray-700">{{ $t('Day :day', {day: 1}) }} // 8 oct</label>
                                             <!--                                                <p class="text-gray-500">Get notified when a candidate accepts or rejects an offer.</p>-->
                                         </div>
                                     </div>
@@ -222,14 +220,14 @@ const submit = () => {
                             <JetLabel for="terms">
                                 <div class="flex items-center">
                                     <div class="ml-2">
-                                        I agree to the terms & policy.
+                                        {{ $t('GDPR') }}
                                     </div>
                                 </div>
                             </JetLabel>
 
                             <div class="flex items-center justify-end mt-4">
                                 <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                                    Register
+                                    {{ $t('Register') }}
                                 </JetButton>
                             </div>
                         </div>

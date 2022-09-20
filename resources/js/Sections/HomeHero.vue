@@ -26,6 +26,7 @@ import {InertiaLink} from '@inertiajs/inertia-vue3'
                             <div class="my-14">
                                 <InertiaLink
                                     :href="route('register')"
+                                    replace
                                     class="text-3xl uppercase text-white font-bold py-4 px-52 rounded-lg border-white border-4 bg-transparent hover:text-red-600 hover:bg-white"
                                 >{{ $t('Register') }}</InertiaLink>
                             </div>

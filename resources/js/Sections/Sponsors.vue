@@ -34,6 +34,10 @@
                                 </a>
                             </div>
                         </div>
+                        <div class="col-span-4">
+                            <p v-html="$t('joint effort')"
+                                class="text-gray-500"/>
+                        </div>
                     </div>
                     <h2 class="mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Strategic Partners') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">

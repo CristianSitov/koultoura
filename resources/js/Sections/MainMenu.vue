@@ -54,7 +54,7 @@ export default {
                 <div class="hidden flex items-center md:block md:ml-10 md:pr-4 md:space-x-8">
                     <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
-                    <a href="/en"
+                    <a href="en"
                        type="button"
                        v-if="$page.props.translation !== 'ro'"
                        class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -70,7 +70,7 @@ export default {
                             </svg>EN
                         </div>
                     </a>
-                    <a href="/ro"
+                    <a href="ro"
                        type="button"
                        v-if="$page.props.translation !== 'en'"
                        class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"

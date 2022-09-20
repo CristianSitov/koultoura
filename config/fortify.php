@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'home' => env('APP_HOME', ''),
+    'home' => env('APP_HOME', '/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -144,4 +144,7 @@ return [
         // ]),
     ],
 
+    'redirects' => [
+        'register' => '/email/verify' // because after register, we display this
+    ]
 ];

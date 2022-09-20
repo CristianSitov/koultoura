@@ -42,7 +42,7 @@ export default {
                         coordinates: [21.2320, 45.7480]
                     },
                     properties: {
-                        title: 'Universitatea de Vest - Aula Magna',
+                        title: 'Universitatea de Vest',
                         description: 'Bd. Vasile Pârvan nr. 4'
                     }
                 },
@@ -53,7 +53,7 @@ export default {
                         coordinates: [21.2530, 45.7620]
                     },
                     properties: {
-                        title: 'Faber',
+                        title: 'FABER',
                         description: 'str. Peneș Curcanul, nr. 4-5'
                     }
                 }
