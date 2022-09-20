@@ -37,12 +37,12 @@ const props = defineProps({
                          role="tabpanel" aria-labelledby="profile-tab">
                         <section class="text-white body-font">
                             <div class="md:w-3/4 mx-auto">
-                                <h3 class="text-2xl font-bold pt-12">{{ $page.props.days[index].title }}</h3>
+                                <h3 class="text-2xl font-bold uppercase pt-12">{{ $page.props.days[index].title }}</h3>
                                 <p class="row-span-2 py-3" v-html="$page.props.days[index].description"></p>
                                 <p><span class="inline-flex leading-10"><LocationMarkerIcon
                                     class="h-7 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>{{ $page.props.days[index].location }}</span></p>
                                 <p><span class="inline-flex leading-10"><UserIcon
-                                    class="h-7 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>{{ $page.props.days[index].host.full_name }}</span></p>
+                                    class="h-7 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>Moderator: {{ $page.props.days[index].host.full_name }} - rol{{ $page.props.days[index].host.role }} / Moderator-gazdă: TBA</span></p>
                             </div>
                             <div class="container md:px-5 py-10 md:py-24 mx-auto flex flex-wrap">
                                 <div v-for="presentation in day" :key="presentation.id" class="flex relative pt-5 mt-3 md:pt-10 md:pb-20 sm:items-center mx-auto w-full">
@@ -57,7 +57,7 @@ const props = defineProps({
                                         </div>
                                         <div class="flex-1 md:pl-6 md:mt-6 md:mt-0">
                                             <h4 class="font-medium title-font mb-1 text-lg" v-if="presentation.supratitle !== ''">{{ presentation.supratitle }}</h4>
-                                            <h2 class="font-bold title-font mb-3 md:mb-5"
+                                            <h2 class="font-bold title-font mb-3 md:mb-5 uppercase"
                                                 :class="{ 'text-xl md:text-2xl italic text-gray-400': presentation.flag === 'service', 'text-3xl md:text-4xl': presentation.flag === 'main' }">{{ presentation.title }}</h2>
                                             <p class="leading-relaxed" v-html="presentation.description"></p>
                                             <h3 class="font-medium title-font mb-3 text-2xl">{{ presentation.subtitle }}</h3>
