@@ -39,11 +39,7 @@ class FrontController extends Controller
             ->with(['host'])
             ->get()
             ->keyBy('id');
-        $speakers = Person::query()
-            ->selectRaw('people.*')
-            ->leftJoin('person_presentation', 'person_presentation.person_id', '=', 'people.id')
-            ->whereNull('person_presentation.id')
-            ->get();
+        $speakers = Person::all();
         $presentations = Presentation::with([
             'speakers',
             'moderators',
