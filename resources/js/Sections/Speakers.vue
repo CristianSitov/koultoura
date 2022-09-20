@@ -6,15 +6,12 @@
                     <div class="text-white sm:text-lg dark:text-gray-400">
                         <h1 class="text-6xl font-bold uppercase text-white wcm" v-html="$t('Speakers')"></h1>
                         <span>{{ $t('schedule updating') }}</span>
-                        <p class="mt-10 mb-2 md:text-lg">{{ $t('speakers heading') }}</p>
                         <div v-for="speaker in $page.props.speakers" class="flex flex-col items-center py-8 sm:flex-row">
                             <img class="mx-auto inline-block align-top mb-4 w-36 h-36 rounded-full sm:ml-0 sm:mr-6"
                                  :src="speaker.avatar"
                                  :alt="speaker.full_name">
                             <div class="flex flex-col text-left md:ml-24">
-                                <h3 class="text-3xl font-bold tracking-tight dark:text-white">
-                                    <a href="#">{{ speaker.full_name }}</a>
-                                </h3>
+                                <h3 class="text-3xl font-bold tracking-tight dark:text-white">{{ speaker.full_name }}</h3>
                                 <span class="text-xl">{{ speaker.role }}</span>
                                 <span class="text-xl">{{ speaker.institution }}</span>
                                 <p class="mt-3 mb-4 text-sm" v-html="speaker.description"></p>
