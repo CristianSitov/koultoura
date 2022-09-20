@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [FrontController::class, 'splash'])
-    ->name('home');
+    ->name('splash');
 Route::get('/wcm', [FrontController::class, 'index'])
     ->name('home');
 
