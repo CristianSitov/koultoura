@@ -1,8 +1,15 @@
 <template>
     <div class="snap-start scroll-m-0 snap-both">
-        <div id="partners" class="w-full pt-28">
+        <div id="partners" class="w-full pt-8">
             <section class="bg-white dark:bg-gray-900">
-                <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-xl">
+                <div class="py-8 lg:py-8 pt-0 px-4 mx-auto max-w-screen-xl">
+                    <div class="md:pb-10 text-center">
+                        <a href="//timisoara2023.eu/"
+                           target="_blank"
+                           class="col justify-center items-center p-8 text-center">
+                            <img :src="'assets/images/logos/tm_2023_' + $page.props.locale + '.jpg'" class="lg:w-1/2 mx-auto" alt=""/>
+                        </a>
+                    </div>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
                         <div class="col">
                             <h2 class="text-center md:text-left mb-4 text-3xl font-extrabold tracking-tight md:leading-4 text-gray-900 md:text-4xl">{{ $t("Organizers") }}</h2>
@@ -58,7 +65,7 @@
                         </a>
                     </div>
                     <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Financer') }}</h2>
-                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
+                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mt-4">
                         <a href="#"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
@@ -80,6 +87,7 @@
                             <img src="assets/images/logos/administratia_fondului_cultural_national.png" alt=""/>
                         </a>
                     </div>
+                    <p class="mx-auto text-left text-xs text-gray-400 leading-tight mt-4 md:mb-16">{{ $t('AFCN disclaimer') }}</p>
                     <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Local Partners') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
                         <a href="//patrimoniu.ro"
@@ -153,7 +161,6 @@
                     </div>
                 </div>
             </section>
-            <p class="w-1/2 mx-auto text-center text-xs text-gray-400 leading-tight">{{ $t('AFCN disclaimer') }}</p>
         </div>
     </div>
 </template>
