@@ -4,8 +4,9 @@
             <section class="max-w-7xl mx-auto px-4 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28">
                 <div class="py-8 px-4 mx-auto">
                     <div class="text-white sm:text-lg dark:text-gray-400">
-                        <h1 class="text-6xl font-bold uppercase text-white mb-10 wcm">{{ $t('Speakers') }}</h1>
-                        <p class="mb-2 md:text-lg">{{ $t('speakers heading') }}</p>
+                        <h1 class="text-6xl font-bold uppercase text-white wcm" v-html="$t('Speakers')"></h1>
+                        <span>{{ $t('schedule updating') }}</span>
+                        <p class="mt-10 mb-2 md:text-lg">{{ $t('speakers heading') }}</p>
                         <div v-for="speaker in $page.props.speakers" class="flex flex-col items-center py-8 sm:flex-row">
                             <img class="mx-auto inline-block align-top mb-4 w-36 h-36 rounded-full sm:ml-0 sm:mr-6"
                                  :src="speaker.avatar"
