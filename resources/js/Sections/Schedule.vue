@@ -43,7 +43,7 @@ const props = defineProps({
                                 <p><span class="inline-flex leading-10"><LocationMarkerIcon
                                     class="h-7 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>{{ $page.props.days[index].location }}</span></p>
                                 <p><span class="inline-flex leading-10"><UserIcon
-                                    class="h-7 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>Moderator gazdă: {{ $page.props.days[index].host.full_name }}</span></p>
+                                    class="h-7 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>{{ $t('Host Moderator')}}: {{ $page.props.days[index].host.full_name }}</span></p>
                             </div>
                             <div class="container md:px-5 py-10 md:py-24 mx-auto flex flex-wrap">
                                 <div v-for="presentation in day" :key="presentation.id" class="flex relative pt-5 mt-3 md:pt-10 md:pb-20 sm:items-center mx-auto w-full">

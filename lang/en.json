@@ -17,6 +17,7 @@
 
     "Day :day": "Day :day",
 
+    "Host Moderator": "Host Moderator",
     "Moderated by": "Moderated by",
     "speakers heading": "The Why Culture Matters? International Symposium brings to Timișoara experts in the field of cultural heritage protection, and professionals in social, cultural & public policies.",
 
@@ -55,6 +56,7 @@
     "hello": "Hello <span class='font-bold'>:name</span>,",
     "thank you title": "Your registration at the <span class='font-bold'>Why Culture Matters? International Symposium</span> is complete.<br />Thank you!",
     "thank you subscription": "See below your attendance options.",
+    "thank you email subscription": "Verifică, mai jos, zilele evenimentului pentru care ai optat să participi.",
     "thank you closing": "In the case you can not make it anymore, please let us know by sending us an email at <a href='mailto:contact@prinbanat.ro' class='underline text-red-600 hover:text-black'>contact@prinbanat.ro</a>",
     "thank you footer": "Go back to the <a href='/' class='underline text-red-600 hover:text-black'>Why Culture Matters? International Symposium</a>",
 
