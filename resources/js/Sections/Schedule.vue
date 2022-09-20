@@ -14,9 +14,10 @@ const props = defineProps({
     <div class="snap-start scroll-m-0 snap-both">
         <div id="schedule" class="bg-gray-900 w-full text-white">
             <section class="max-w-7xl mx-auto px-4 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28">
-                <h1 class="text-6xl font-bold uppercase mb-10 wcm">{{ $t('Schedule') }}</h1>
+                <h1 class="text-6xl font-bold uppercase wcm" v-html="$t('Schedule')"></h1>
+                <span>{{ $t('schedule updating') }}</span>
 
-                <div class="mb-4 border-b border-white">
+                <div class="mt-10 mb-4 border-b border-white">
                     <ul class="flex -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
                         <li v-for="(day, index) in $page.props.days" class="grow" role="presentation">
                             <button class="inline-block p-2 md:p-4 md:px-8 rounded-t-lg border-b-2 text-white hover:text-orange-600"
