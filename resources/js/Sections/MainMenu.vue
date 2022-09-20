@@ -32,7 +32,7 @@ export default {
 <template>
     <Popover class="fixed top-0 w-full animated z-200"
              :class="{ 'scrolled bg-black': !view.atTopOfPage }">
-        <div class="max-w-7xl relative mx-auto py-6 px-5 sm:px-6 lg:px-8 h-1/5">
+        <div class="max-w-7xl relative mx-auto py-3 px-3 sm:px-4 lg:px-8 h-1/5">
             <nav class="relative flex items-center justify-between sm:h-10"
                  :class="{ '': !view.atTopOfPage }"
                  aria-label="Global">
@@ -51,7 +51,7 @@ export default {
                         </div>
                     </div>
                 </div>
-                <div class="hidden flex items-center md:block md:ml-10 md:pr-4 md:space-x-8">
+                <div class="hidden flex items-center md:block md:ml-10 md:pr-4 md:space-x-5">
                     <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
                     <a href="en"

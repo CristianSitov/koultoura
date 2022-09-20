@@ -5,7 +5,7 @@
                 <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-xl">
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
                         <div class="col">
-                            <h2 class="mb-4 text-3xl font-extrabold tracking-tight md:leading-4 text-gray-900 md:text-4xl">{{ $t("Organizers") }}</h2>
+                            <h2 class="text-center md:text-left mb-4 text-3xl font-extrabold tracking-tight md:leading-4 text-gray-900 md:text-4xl">{{ $t("Organizers") }}</h2>
                             <a href="//prinbanat.ngo"
                                target="_blank"
                                class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-span-3 md:gap-5">
                             <div class="row">
-                                <h3 class="mb-4 text-lg font-bold tracking-tight md:leading-4 text-gray-900 md:text-lg">{{ $t('organization explained') }}</h3>
+                                <h3 class="text-center md:text-left mb-4 text-lg font-bold tracking-tight md:leading-4 text-gray-900 md:text-lg">{{ $t('organization explained') }}</h3>
                             </div>
                             <div class="grid grid-cols-3 md:gap-5">
                                 <a href="//centriphery.eu"
@@ -39,7 +39,7 @@
                                 class="text-gray-500"/>
                         </div>
                     </div>
-                    <h2 class="mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Strategic Partners') }}</h2>
+                    <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Strategic Partners') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
                         <a href="//europanostra.org"
                            target="_blank"
@@ -57,7 +57,7 @@
                             <img src="assets/images/logos/asociatia_monumentum.png" alt=""/>
                         </a>
                     </div>
-                    <h2 class="mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Financer') }}</h2>
+                    <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Financer') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
                         <a href="#"
                            target="_blank"
@@ -80,7 +80,7 @@
                             <img src="assets/images/logos/administratia_fondului_cultural_national.png" alt=""/>
                         </a>
                     </div>
-                    <h2 class="mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Local Partners') }}</h2>
+                    <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Local Partners') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
                         <a href="//patrimoniu.ro"
                            target="_blank"
@@ -118,7 +118,7 @@
                             <img src="assets/images/logos/discover_timis.png" alt="Discover Timiș"/>
                         </a>
                     </div>
-                    <h2 class="mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('International Partners') }}</h2>
+                    <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('International Partners') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
                         <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/festival_der_regionen_austria.png" alt=""/>

@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-//Route::get('/', [FrontController::class, 'splash']);
+Route::get('/', [FrontController::class, 'splash']);
 
-Route::get('/', [FrontController::class, 'index'])
+Route::get('/wcm', [FrontController::class, 'index'])
     ->name('home');
 
 Route::get('/registration', [FrontController::class, 'registration'])
