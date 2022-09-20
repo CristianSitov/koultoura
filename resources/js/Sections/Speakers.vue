@@ -11,10 +11,10 @@
                                  :src="speaker.avatar"
                                  :alt="speaker.full_name">
                             <div class="flex flex-col text-left md:ml-24">
-                                <h3 class="text-3xl font-bold tracking-tight dark:text-white">{{ speaker.full_name }}</h3>
-                                <span class="text-xl">{{ speaker.role }}</span>
-                                <span class="text-xl">{{ speaker.institution }}</span>
-                                <p class="mt-3 mb-4 text-sm" v-html="speaker.description"></p>
+                                <h3 class="text-3xl font-bold tracking-tight text-center sm:text-left">{{ speaker.full_name }}</h3>
+                                <span class="text-xl italic text-center sm:text-left py-3">{{ speaker.role }}</span>
+                                <span class="text-lg text-center sm:text-left">{{ speaker.institution }}</span>
+                                <p class="mt-3 mb-4 text-sm text-justify sm:text-left" v-html="speaker.description"></p>
                             </div>
                         </div>
                     </div>

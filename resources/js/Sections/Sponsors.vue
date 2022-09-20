@@ -10,7 +10,7 @@
                             <img :src="'assets/images/logos/tm_2023_' + $page.props.locale + '.jpg'" class="lg:w-1/2 mx-auto" alt=""/>
                         </a>
                     </div>
-                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
+                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 mb-12 md:mt-4">
                         <div class="col">
                             <h2 class="text-center md:text-left mb-4 text-3xl font-extrabold tracking-tight md:leading-4 text-gray-900 md:text-4xl">{{ $t("Organizers") }}</h2>
                             <a href="//prinbanat.ngo"
@@ -23,7 +23,7 @@
                             <div class="row">
                                 <h3 class="text-center md:text-left mb-4 text-lg font-bold tracking-tight md:leading-4 text-gray-900 md:text-lg">{{ $t('organization explained') }}</h3>
                             </div>
-                            <div class="grid grid-cols-3 md:gap-5">
+                            <div class="row grid grid-cols-1 sm:grid-cols-3 md:gap-5">
                                 <a href="//centriphery.eu"
                                    target="_blank"
                                    class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
@@ -46,8 +46,8 @@
                                 class="text-gray-500"/>
                         </div>
                     </div>
-                    <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Strategic Partners') }}</h2>
-                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
+                    <h2 class="text-center md:text-left mb-2 mt-4 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Strategic Partners') }}</h2>
+                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 mb-12 md:mt-4">
                         <a href="//europanostra.org"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
@@ -64,8 +64,8 @@
                             <img src="assets/images/logos/asociatia_monumentum.png" alt=""/>
                         </a>
                     </div>
-                    <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Financer') }}</h2>
-                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mt-4">
+                    <h2 class="text-center md:text-left mb-2 mt-4 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Financer') }}</h2>
+                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 mb-4 md:mt-4">
                         <a href="#"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
@@ -87,9 +87,9 @@
                             <img src="assets/images/logos/administratia_fondului_cultural_national.png" alt=""/>
                         </a>
                     </div>
-                    <p class="mx-auto text-left text-xs text-gray-400 leading-tight mt-4 md:mb-16">{{ $t('AFCN disclaimer') }}</p>
-                    <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Local Partners') }}</h2>
-                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
+                    <p class="mx-auto text-left text-xs text-gray-400 leading-tight mt-4 mb-12">{{ $t('AFCN disclaimer') }}</p>
+                    <h2 class="text-center md:text-left mb-2 mt-6 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Local Partners') }}</h2>
+                    <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 mb-12 md:mt-4">
                         <a href="//patrimoniu.ro"
                            target="_blank"
                            class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
@@ -126,7 +126,7 @@
                             <img src="assets/images/logos/discover_timis.png" alt="Discover Timiș"/>
                         </a>
                     </div>
-                    <h2 class="text-center md:text-left mb-2 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('International Partners') }}</h2>
+                    <h2 class="text-center md:text-left mb-2 mt-6 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('International Partners') }}</h2>
                     <div class="mt-3 space-y-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 xl:gap-8 md:space-y-0 md:mb-16 md:mt-4">
                         <a href="#" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/festival_der_regionen_austria.png" alt=""/>

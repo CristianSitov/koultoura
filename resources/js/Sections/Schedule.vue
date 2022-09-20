@@ -13,7 +13,7 @@ const props = defineProps({
 <template>
     <div class="snap-start scroll-m-0 snap-both">
         <div id="schedule" class="bg-gray-900 w-full text-white">
-            <section class="max-w-7xl mx-auto px-4 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28">
+            <section class="max-w-7xl mx-auto px-4 pt-8 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28">
                 <h1 class="text-6xl font-bold uppercase wcm" v-html="$t('Schedule')"></h1>
                 <span>{{ $t('schedule updating') }}</span>
 
@@ -50,7 +50,7 @@ const props = defineProps({
                                     <div class="flex-shrink-0 inline-flex relative text-2xl md:text-5xl px-4">
                                         {{ presentation.starts_at }}
                                     </div>
-                                    <div class="flex mx-5 md:pl-8 pl-6 sm:items-center items-start flex-col sm:flex-row">
+                                    <div class="flex sm:mx-5 md:pl-8 sm:pl-6 sm:items-center items-start flex-col sm:flex-row">
                                         <div class="flex items-center justify-center -space-x-4 w-32">
                                             <div v-for="presenter in presentation.speakers" class="flex-none">
                                                 <img class="w-14 h-14 rounded-full" :src="presenter.avatar" :alt="presenter.full_name">
