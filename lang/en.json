@@ -56,9 +56,9 @@
     "hello": "Hello <span class='font-bold'>:name</span>,",
     "thank you title": "Your registration at the <span class='font-bold'>Why Culture Matters? International Symposium</span> is complete.<br />Thank you!",
     "thank you subscription": "See below your attendance options.",
-    "thank you email subscription": "Verifică, mai jos, zilele evenimentului pentru care ai optat să participi.",
+    "thank you email subscription": "See below your attendance options.",
     "thank you closing": "In the case you can not make it anymore, please let us know by sending us an email at <a href='mailto:contact@prinbanat.ro' class='underline text-red-600 hover:text-black'>contact@prinbanat.ro</a>",
-    "thank you footer": "Go back to the <a href='/' class='underline text-red-600 hover:text-black'>Why Culture Matters? International Symposium</a>",
+    "thank you footer": "Go back to the <a href='/' class='underline text-red-600 hover:text-black'>Why Culture Matters? International Symposium</a><br /><br />Follow us on <a href='https://facebook.com/PrinBanat' class='underline text-red-600 hover:text-black'>Facebook</a> and <a href='https://instagram.com/prinbanat' class='underline text-red-600 hover:text-black'>Instagram</a>, to stay up to date with all the news about the Symposium.",
 
     "Why Culture Matters? // Verify Email Address": "Why Culture Matters? // Verify Email Address",
     "In order to complete your registration at Why Culture Matters? International Symposium, we need to verify your email address. Please click the button below.": "In order to complete your registration at Why Culture Matters? International Symposium, we need to verify your email address. Please click the button below.",
