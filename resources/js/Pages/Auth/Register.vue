@@ -176,83 +176,30 @@ const submit = () => {
                         <div class="space-y-6 bg-white px-4 py-5 sm:p-6">
                             <fieldset>
                                 <div class="space-y-4">
-                                    <div class="flex items-start">
+                                    <div class="flex items-start"
+                                        v-for="idx in [1, 2, 3]">
                                         <div class="flex h-5 items-center">
                                             <JetCheckbox
-                                                id="event_details_day1"
+                                                :id="'event_details_day'+idx"
+                                                :value="idx"
                                                 v-model:checked="form.event_details"
-                                                value="1"
                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                         </div>
                                         <div class="ml-3 text-sm">
-                                            <label for="event_details_day1"
-                                                   class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day :day', {day: 1}) }} &mdash; 6 oct &mdash; {{ $t('schedule short one title') }}</label>
+                                            <label :for="'event_details_day'+idx"
+                                                   class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day '+idx) }}</label>
                                             <div class="mt-3 mb-5">
                                                 <span class="block">
                                                     <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
                                                         class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
                                                         aria-hidden="true"
-                                                        />{{ $t('schedule short one hours') }}</span>
+                                                    />{{ $t('schedule short '+idx+' hours') }}</span>
                                                 </span>
                                                 <span class="block">
                                                     <span class="text-sm inline-flex align-middle leading-6"><LocationMarkerIcon
                                                         class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
                                                         aria-hidden="true"
-                                                        />{{ $t('schedule short one location') }}</span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start">
-                                        <div class="flex h-5 items-center">
-                                            <JetCheckbox
-                                                id="event_details_day2"
-                                                v-model:checked="form.event_details"
-                                                value="2"
-                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="event_details_day2"
-                                                   class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day :day', {day: 2}) }} &mdash; 7 oct &mdash; {{ $t('schedule short two title') }}</label>
-                                            <div class="mt-3 mb-5">
-                                                <span class="block">
-                                                    <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
-                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
-                                                        aria-hidden="true"
-                                                    />{{ $t('schedule short two hours') }}</span>
-                                                </span>
-                                                <span class="block">
-                                                    <span class="text-sm inline-flex align-middle leading-6"><LocationMarkerIcon
-                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
-                                                        aria-hidden="true"
-                                                    />{{ $t('schedule short two location') }}</span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start">
-                                        <div class="flex h-5 items-center">
-                                            <JetCheckbox
-                                                id="event_details_day3"
-                                                v-model:checked="form.event_details"
-                                                value="3"
-                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="event_details_day3"
-                                                   class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day :day', {day: 3}) }} &mdash; 8 oct &mdash; {{ $t('schedule short three title') }}</label>
-                                            <div class="mt-3 mb-5">
-                                                <span class="block">
-                                                    <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
-                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
-                                                        aria-hidden="true"
-                                                    />{{ $t('schedule short three hours') }}</span>
-                                                </span>
-                                                <span class="block">
-                                                    <span class="text-sm inline-flex align-middle leading-6"><LocationMarkerIcon
-                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
-                                                        aria-hidden="true"
-                                                    />{{ $t('schedule short three location') }}</span>
+                                                    />{{ $t('schedule short '+idx+' location') }}</span>
                                                 </span>
                                             </div>
                                         </div>
