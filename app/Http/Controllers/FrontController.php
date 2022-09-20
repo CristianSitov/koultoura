@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Day;
 use App\Models\Presentation;
 use App\Models\Person;
+use App\Models\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,7 +19,7 @@ class FrontController extends Controller
     public function splash()
     {
 //        if (Carbon::now()->lt(Carbon::parse('2022-09-20 18:00:00'))) {
-            return view('welcome');
+            return Inertia::render('Splash');
 //        }
     }
 
@@ -57,8 +61,16 @@ class FrontController extends Controller
         return redirect()->back();
     }
 
-    public function dashboard(): Response
+    public function confirmation(Request $request, $userId): Response
     {
-        return Inertia::render('Dashboard');
+        $user = User::query()
+            ->where('users.slug', '=', $userId)
+            ->firstOrFail();
+        $profile = $user->profile()->first();
+
+        return Inertia::render('Dashboard', [
+            'user' => $user,
+            'profile' => $profile,
+        ]);
     }
 }

@@ -28,10 +28,11 @@ class CreateNewUser implements CreatesNewUsers
             'job' => ['required', 'string'],
             'organization' => ['required', 'string'],
             'country' => ['required', 'string'],
-            'event_2021.*' => ['required', 'numeric'],
+            'event_details.*' => ['required', 'numeric', 'in:1,2,3'],
         ])->validate();
 
         $user = User::create([
+            'slug' => Str::uuid(),
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make(Str::uuid()),
@@ -43,9 +44,9 @@ class CreateNewUser implements CreatesNewUsers
             'job' => $input['job'],
             'organization' => $input['organization'],
             'country' => $input['country'],
-            'event_2021' => json_encode(['days' => $input['event_2021']], JSON_THROW_ON_ERROR),
+            'event_details' => json_encode(['days' => $input['event_details']], JSON_THROW_ON_ERROR),
         ]);
 
-        return $user;
+        return $user->load('profile');
     }
 }

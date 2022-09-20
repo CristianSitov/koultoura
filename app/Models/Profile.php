@@ -20,11 +20,16 @@ class Profile extends Model
         'job',
         'organization',
         'country',
-        'event_2021',
+        'event_details',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id', 'user_id');
+    }
+
+    public function getEventDetailsAttribute($value)
+    {
+        return json_decode($value, false, 512, JSON_THROW_ON_ERROR);
     }
 }

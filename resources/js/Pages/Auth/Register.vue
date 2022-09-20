@@ -1,5 +1,6 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+import { Head, useForm } from '@inertiajs/inertia-vue3';
+import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 import JetAuthenticationCard from '@/Components/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import JetButton from '@/Components/Button.vue';
@@ -17,7 +18,7 @@ const form = useForm({
     job: '',
     organization: '',
     country: '',
-    event_2021: [],
+    event_details: [],
 });
 
 const submit = () => {
@@ -42,7 +43,7 @@ const submit = () => {
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">{{ $t('Personal Information') }}</h3>
-                        <p class="mt-1 text-sm text-gray-600">{{ $t('Some personal data to identify you.') }}</p>
+                        <p class="mt-1 text-sm text-gray-600" v-html="$t('Personal Information details')"></p>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
@@ -166,7 +167,6 @@ const submit = () => {
                 <div class="md:col-span-1">
                     <div class="px-4 sm:px-0">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">{{ $t('Preferences') }}</h3>
-                        <p class="mt-1 text-sm text-gray-600">{{ $t('I want to attend the event on:') }}</p>
                     </div>
                 </div>
                 <div class="mt-5 md:col-span-2 md:mt-0">
@@ -177,40 +177,82 @@ const submit = () => {
                                     <div class="flex items-start">
                                         <div class="flex h-5 items-center">
                                             <JetCheckbox
-                                                id="event_2021_day1"
-                                                v-model:checked="form.event_2021"
+                                                id="event_details_day1"
+                                                v-model:checked="form.event_details"
                                                 value="1"
                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                         </div>
                                         <div class="ml-3 text-sm">
-                                            <label for="event_2021_day1" class="font-medium text-gray-700">{{ $t('Day :day', {day: 1}) }} // 6 oct</label>
-                                            <!--                                                <p class="text-gray-500">Get notified when someones posts a comment on a posting.</p>-->
+                                            <label for="event_details_day1"
+                                                   class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day :day', {day: 1}) }} &mdash; 6 oct &mdash; {{ $t('schedule short one title') }}</label>
+                                            <div class="mt-3 mb-5">
+                                                <span class="block">
+                                                    <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
+                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
+                                                        aria-hidden="true"
+                                                        />{{ $t('schedule short one hours') }}</span>
+                                                </span>
+                                                <span class="block">
+                                                    <span class="text-sm inline-flex align-middle leading-6"><LocationMarkerIcon
+                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
+                                                        aria-hidden="true"
+                                                        />{{ $t('schedule short one location') }}</span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="flex items-start">
                                         <div class="flex h-5 items-center">
                                             <JetCheckbox
-                                                id="event_2021_day2"
-                                                v-model:checked="form.event_2021"
+                                                id="event_details_day2"
+                                                v-model:checked="form.event_details"
                                                 value="2"
                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                         </div>
                                         <div class="ml-3 text-sm">
-                                            <label for="event_2021_day2" class="font-medium text-gray-700">{{ $t('Day :day', {day: 1}) }} // 7 oct</label>
-                                            <!--                                                <p class="text-gray-500">Get notified when a candidate applies for a job.</p>-->
+                                            <label for="event_details_day2"
+                                                   class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day :day', {day: 2}) }} &mdash; 7 oct &mdash; {{ $t('schedule short two title') }}</label>
+                                            <div class="mt-3 mb-5">
+                                                <span class="block">
+                                                    <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
+                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
+                                                        aria-hidden="true"
+                                                    />{{ $t('schedule short two hours') }}</span>
+                                                </span>
+                                                <span class="block">
+                                                    <span class="text-sm inline-flex align-middle leading-6"><LocationMarkerIcon
+                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
+                                                        aria-hidden="true"
+                                                    />{{ $t('schedule short two location') }}</span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="flex items-start">
                                         <div class="flex h-5 items-center">
                                             <JetCheckbox
-                                                id="event_2021_day3"
-                                                v-model:checked="form.event_2021"
+                                                id="event_details_day3"
+                                                v-model:checked="form.event_details"
                                                 value="3"
                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                         </div>
                                         <div class="ml-3 text-sm">
-                                            <label for="event_2021_day3" class="font-medium text-gray-700">{{ $t('Day :day', {day: 1}) }} // 8 oct</label>
-                                            <!--                                                <p class="text-gray-500">Get notified when a candidate accepts or rejects an offer.</p>-->
+                                            <label for="event_details_day3"
+                                                   class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day :day', {day: 3}) }} &mdash; 8 oct &mdash; {{ $t('schedule short three title') }}</label>
+                                            <div class="mt-3 mb-5">
+                                                <span class="block">
+                                                    <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
+                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
+                                                        aria-hidden="true"
+                                                    />{{ $t('schedule short three hours') }}</span>
+                                                </span>
+                                                <span class="block">
+                                                    <span class="text-sm inline-flex align-middle leading-6"><LocationMarkerIcon
+                                                        class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
+                                                        aria-hidden="true"
+                                                    />{{ $t('schedule short three location') }}</span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -219,8 +261,7 @@ const submit = () => {
                         <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
                             <JetLabel for="terms">
                                 <div class="flex items-center">
-                                    <div class="ml-2">
-                                        {{ $t('GDPR') }}
+                                    <div class="ml-2 text-left" v-html="$t('GDPR')">
                                     </div>
                                 </div>
                             </JetLabel>

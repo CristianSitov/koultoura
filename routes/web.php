@@ -5,12 +5,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
-Route::get('/', static function () {
-    return view('welcome');
-});
+//Route::get('/', [FrontController::class, 'splash']);
 
-Route::get('/wcm', [FrontController::class, 'index'])
+Route::get('/', [FrontController::class, 'index'])
     ->name('home');
+
+Route::get('/user/{id}', [FrontController::class, 'confirmation'])
+    ->name('confirmation');
 
 Route::get('/{locale}', static function ($locale = null) {
     if (isset($locale) && in_array($locale, config('translatable.locales'), true)) {
@@ -27,8 +28,6 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [FrontController::class, 'dashboard'])->name('dashboard');
 });
 

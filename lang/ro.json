@@ -28,6 +28,8 @@
     "AFCN disclaimer": "* Proiectul nu reprezintă în mod necesar poziţia Administrației Fondului Cultural Național. AFCN nu este responsabilă de conținutul proiectului sau de modul în care rezultatele proiectului pot fi folosite. Acestea sunt în întregime responsabilitatea beneficiarului finanțării.",
 
     "Registration form": "Formular înregistrare",
+    "Personal Information": "Informații personale",
+    "Personal Information details": "Participarea la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters?”</span> este gratuită în limita locurilor disponibile, dar înregistrarea în prealabil este obligatorie.<br /><br />Te rugăm să completezi acest formular de înregistrare.",
     "First name": "Prenume",
     "Last name": "PreNume",
     "Email address": "Adresă ta de e-mail",
@@ -36,8 +38,25 @@
     "Organisation": "Organizație",
     "Job title": "Funcție în cadrul organizației",
     "Country": "Country",
-    "Preferences": "Preferences ",
-    "I want to attend the event on:": "Doresc să particip la simpozion în următoarele zile:",
+    "Preferences": "Când dorești să participi?",
+
+    "schedule short one title": "Despre punerea în siguranță a patrimoniului cultural",
+    "schedule short one hours": "6 octombrie 2022 / interval 15:00-20:00",
+    "schedule short one location": "FABER (Spl. Peneș Curcanul, nr. 4-5)",
+    "schedule short two title": "Despre relația centru-periferie",
+    "schedule short two hours": "7 octombrie 2022 / interval 09:30-19:00",
+    "schedule short two location": "Universitatea de Vest din Timișoara - AULA MAGNA (Bd. Vasile Pârvan, nr. 4)",
+    "schedule short three title": "Despre fenomenul migrației și accesibilizarea culturii",
+    "schedule short three hours": "8 octombrie 2022 / interval 12:30-17:00",
+    "schedule short three location": "Universitatea de Vest din Timișoara - Amfiteatrul 01 (Bd. Vasile Pârvan, nr. 4)",
+
+    "hello": "Salut <span class='font-bold'>:name</span>,",
+    "thank you title": "Înregistrarea ta la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters?”</span> a fost realizată cu succes. Îți mulțumim!",
+    "thank you subscription": "Verifică, mai jos, zilele evenimentului pentru care ai optat să participi.",
+    "thank you closing": "În cazul în care nu mai poți ajunge, te rugăm să ne trimiți un e-mail la adresa <a href='mailto:contact@prinbanat.ro' class='underline text-red-600 hover:text-black'>contact@prinbanat.ro</a>, pentru a oferi locul tău unui alt participant.",
+    "thank you footer": "Mergi înapoi la <a href='/' class='underline text-red-600 hover:text-black'>website-ul simpozionului Why Culture Matters?</a>",
+
+    "GDPR": "Prin completarea acestui formular, sunteți de acord ca Asociația Prin Banat să prelucreze datele personale furnizate în scopul exclusiv al participării dumneavoastră la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters?”</span> <br /><br />Pe toată perioada desfășurării simpozionului se vor înregistra secvențe foto și video, situaţie care va conduce incidental şi la prelucrarea unor date personale reprezentând imagini foto și video ale participanților la acest eveniment. Prin participarea dumneavoastră la simpozion, vă daţi acordul pentru toate materialele audio /  foto / video / scrise ce urmează a fi folosite / transmise / afişate / publicate pe platforme media şi social – media (Facebook, Instagram etc), pe site-ul Asociației Prin Banat conturile de socializare ale proiectelor asociației, cât şi de partenerii organizației, precum şi în cadrul altor evenimente/proiecte viitoare.",
 
     "Email verification": "Validare email",
     "Email verification explanation": "Înainte de a continua, te rugăm să validezi adresa ta de email apăsând butonul de verificare din mailul pe care tocmai ți l-am trimis?<br /><br />Dacă nu ai primit nici un email de la noi, putem să îți mai trimitem unul.",

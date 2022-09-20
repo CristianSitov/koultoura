@@ -29,6 +29,8 @@
     "AFCN disclaimer": "* The project does not necessarily represent the position of the National Cultural Fund Administration. AFCN is not responsible for the content of the project or how the results of the project may be used. These are entirely the responsibility of the beneficiary of the funding.",
 
     "Registration form": "Registration form",
+    "Personal Information": "Personal Information",
+    "Personal Information details": "Participation in the <span class='font-bold'>International Symposium Why Culture Matters?</span> is free, within the limit of capacity of the venues. Prior registration is required.<br /><br />Please complete this registration form.",
     "First name": "First name",
     "Last name": "Last name",
     "Email address": "Email address",
@@ -37,8 +39,25 @@
     "Organisation": "Organisation",
     "Job title": "Job title",
     "Country": "Country",
-    "Preferences": "Preferences",
-    "I want to attend the event on:": "I want to attend the event on:",
+    "Preferences": "When would you like to attend?",
+
+    "schedule short one title": "On Safeguarding the Cultural Heritage",
+    "schedule short one hours": "6th of October, 2022 / h 14:30-20:00",
+    "schedule short one location": "FABER (4-5, Spl. Peneș Curcanul)",
+    "schedule short two title": "The Relationship Between Center & Periphery",
+    "schedule short two hours": "7th of October, 2022 / h 09:30-19:00",
+    "schedule short two location": "West University of Timișoara - AULA MAGNA (4, Vasile Pârvan Bd.)",
+    "schedule short three title": "Migration & Culture Accessibility. Focus Ukraine and Its Cultural Front",
+    "schedule short three hours": "8th of October, 2022 / h 12:30-17:00",
+    "schedule short three location": "West University of Timișoara - Amphitheater 01 (4, Vasile Pârvan Bd.)",
+
+    "hello": "Hello <span class='font-bold'>:name</span>,",
+    "thank you title": "Your registration at the <span class='font-bold'>Why Culture Matters? International Symposium</span> is complete.<br />Thank you!",
+    "thank you subscription": "See below your attendance options.",
+    "thank you closing": "In the case you can not make it anymore, please let us know by sending us an email at <a href='mailto:contact@prinbanat.ro' class='underline text-red-600 hover:text-black'>contact@prinbanat.ro</a>",
+    "thank you footer": "Go back to the <a href='/' class='underline text-red-600 hover:text-black'>Why Culture Matters? International Symposium</a>",
+
+    "GDPR": "By completing this form, you agree that the Prin Banat Association will process personal data for the sole purpose of your attendance in the <span class='font-bold'>Why Culture Matters? International Symposium.</span><br /><br />Throughout the duration of the symposium, photo and video sequences will be recorded, a situation that will incidentally also lead to the processing of personal data representing photo/ video images of the participants in this event. By participating in the Why Culture Matters? International Symposium, you give your consent for all audio / photo / video / written materials to be used / transmitted / displayed / published on media and social media platforms (Facebook, Instagram, etc.), on the Prin Banat Association website and on its social media accounts as well as its partners and in other future events/projects.",
 
     "Email verification": "Email verification",
     "Email verification explanation": "Before continuing, could you verify your email address by clicking on the link we just emailed to you?\nIf you didn't receive the email, we will gladly send you another.",
