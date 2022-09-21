@@ -1,5 +1,5 @@
 <script setup>
-import {Link, Head, useForm} from '@inertiajs/inertia-vue3';
+import {Head, useForm} from '@inertiajs/inertia-vue3';
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 import JetAuthenticationCard from '@/Components/AuthenticationCard.vue';
 import JetButton from '@/Components/Button.vue';
@@ -32,7 +32,7 @@ const submit = () => {
 
     <JetAuthenticationCard>
         <div class="text-center my-8">
-            <span class="text-3xl text-red-600 font-sans font-bold uppercase">why culture matters?</span><br />
+            <span class="text-3xl text-red-600 font-sans font-bold uppercase"><a :href="route('home')">why culture matters?</a></span><br />
             <span class="text-xl text-red-600 font-sans font-bold">{{ $t('International Symposium') }}</span><br />
             <span class="text-xl text-red-600 font-sans font-bold">{{ $t('6-7-8 October 2022') }}</span>
         </div>
@@ -177,7 +177,7 @@ const submit = () => {
                             <fieldset>
                                 <div class="space-y-4">
                                     <div class="flex items-start"
-                                        v-for="idx in [1, 2, 3]">
+                                        v-for="idx in ['1', '2', '3']">
                                         <div class="flex h-5 items-center">
                                             <JetCheckbox
                                                 :id="'event_details_day'+idx"

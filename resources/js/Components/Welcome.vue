@@ -39,7 +39,7 @@ import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
         <div class="p-8 bg-white border-t border-gray-200">
             <p v-html="$t('thank you closing')"></p>
             <br />
-            <p v-html="$t('thank you footer')"></p>
+            <p v-html="$t('thank you footer', {'home': route('home')})"></p>
         </div>
     </div>
 </template>

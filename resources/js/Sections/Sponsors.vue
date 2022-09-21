@@ -146,7 +146,7 @@
                         <a href="//rijeka2020.eu/en/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/rijeka_2020_european_capital_of_culture.png" alt=""/>
                         </a>
-                        <a href="//www.cultura-nova.nl/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                        <a href="//cultura-nova.nl/en/" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/cultura_nova_festival_netherlands.png" alt=""/>
                         </a>
                         <a href="//andafala.org/en/Walktalkazores" class="flex justify-center items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">

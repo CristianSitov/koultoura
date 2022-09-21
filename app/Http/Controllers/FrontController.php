@@ -39,18 +39,24 @@ class FrontController extends Controller
             ->with(['host'])
             ->get()
             ->keyBy('id');
-        $speakers = Person::all();
+        $speakers = Person::query()
+            ->inRandomOrder()
+            ->get();
         $presentations = Presentation::with([
             'speakers',
             'moderators',
         ])
-            ->get()
+            ->get();
+        $presentationsByDay = $presentations
             ->groupBy('day_id');
+        $moderators = $presentations
+            ->pluck('moderators', 'day_id');
+        $days->transform(fn ($day, $index) => collect($day)->merge(['moderators' => $moderators[$index]->toArray()]));
 
         return Inertia::render('Home', [
             'days' => $days,
             'speakers' => $speakers,
-            'presentations' => $presentations,
+            'presentations' => $presentationsByDay,
             'translation' => $translation,
         ]);
     }
@@ -71,7 +77,7 @@ class FrontController extends Controller
         return redirect('/register');
     }
 
-    public function eventRegistration(Request $request)
+    public function eventRegistration(Request $request): RedirectResponse
     {
         $input = $request->input();
         $input['name'] = implode(' ', [$input['first_name'], $input['last_name']]);
@@ -118,5 +124,15 @@ class FrontController extends Controller
             'user' => $user,
             'profile' => $profile,
         ]);
+    }
+
+    public function switchLocale(Request $request, $locale): RedirectResponse
+    {
+        if (in_array($locale, config('translatable.locales'), true)) {
+            app()->setLocale($locale);
+            session()->put('locale', $locale);
+        }
+
+        return redirect()->back();
     }
 }
