@@ -1,4 +1,5 @@
 /lang/php_*.json
+/resources/js/ziggy.js
 /node_modules
 /public/build
 /public/hot
