@@ -7,7 +7,8 @@ import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { i18nVue } from 'laravel-vue-i18n'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
-import { Ziggy } from "./ziggy";
+import { Ziggy } from './ziggy';
+import VueGtag from 'vue-gtag';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Why Culture Matters?';
 
@@ -24,6 +25,9 @@ createInertiaApp({
                 }
             })
             .use(ZiggyVue, Ziggy)
+            .use(VueGtag, {
+                config: { id: "G-WYGPJKWNT1" }
+            })
             .mount(el);
     },
 });

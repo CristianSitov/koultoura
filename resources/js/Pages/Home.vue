@@ -7,6 +7,21 @@ import Speakers from '@/Sections/Speakers.vue';
 import Venues from '@/Sections/Venues.vue';
 import Sponsors from '@/Sections/Sponsors.vue';
 </script>
+<script>
+import {event} from "vue-gtag";
+
+export default {
+    setup() {
+        const registration_confirmation = () => {
+            event('register', { event: 'registration_confirmation' })
+        }
+
+        return {
+            registration_confirmation
+        }
+    }
+}
+</script>
 
 <template>
     <FrontLayout title="Home">

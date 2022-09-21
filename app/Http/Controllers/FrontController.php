@@ -24,12 +24,12 @@ use Laravel\Fortify\Contracts\RegisterResponse;
 
 class FrontController extends Controller
 {
-    public function splash()
-    {
+//    public function splash()
+//    {
 //        if (Carbon::now()->lt(Carbon::parse('2022-09-20 18:00:00'))) {
-            return Inertia::render('Splash');
+//            return Inertia::render('Splash');
 //        }
-    }
+//    }
 
     public function index(): Response
     {
@@ -73,6 +73,7 @@ class FrontController extends Controller
     public function registration()
     {
         auth()->logout();
+
         return redirect('/register');
     }
 

@@ -28,6 +28,7 @@
         "@heroicons/vue": "^1.0.6",
         "laravel-vue-i18n": "^2.2.2",
         "mapbox-gl": "^2.9.2",
+        "vue-gtag": "^2.0.1",
         "vue-i18n": "^9.3.0-beta.3"
     }
 }

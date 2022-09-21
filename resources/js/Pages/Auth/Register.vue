@@ -26,6 +26,23 @@ const submit = () => {
     });
 };
 </script>
+<script>
+import {event} from "vue-gtag";
+
+export default {
+    name: 'Register',
+
+    setup() {
+        const register = () => {
+            event('register')
+        }
+
+        return {
+            register
+        }
+    }
+}
+</script>
 
 <template>
     <Head title="Register" />
