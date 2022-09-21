@@ -5,8 +5,7 @@ import {InertiaLink} from '@inertiajs/inertia-vue3'
 
 <template>
     <div class="snap-start scroll-m-0 snap-both">
-        <div class="bg-white bg-cover bg-no-repeat"
-             style="background: url(assets/images/wall_1.jpg) no-repeat;">
+        <div class="bg-red-700 bg-cover bg-no-repeat bg-[url('@/../assets/images/wall_1.jpg')]">
             <div class="w-full mx-auto">
                 <div class="">
                     <div class="max-w-7xl mx-auto my-auto px-4 py-44">
