@@ -42,15 +42,14 @@ class FrontController extends Controller
         $speakers = Person::query()
             ->inRandomOrder()
             ->get();
-        $presentations = Presentation::with([
-            'speakers',
-            'moderators',
-        ])
+        $presentations = Presentation::query()
+            ->with(['speakers', 'moderators'])
             ->get();
         $presentationsByDay = $presentations
             ->groupBy('day_id');
         $moderators = $presentations
-            ->pluck('moderators', 'day_id');
+            ->groupBy('day_id')
+            ->transform(fn ($day) => $day->pluck('moderators', 'id')->flatten()->keyBy('id')->values());
         $days->transform(fn ($day, $index) => collect($day)->merge(['moderators' => $moderators[$index]->toArray()]));
 
         return Inertia::render('Home', [
