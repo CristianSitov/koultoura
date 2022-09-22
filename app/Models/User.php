@@ -59,10 +59,26 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $appends = [
         'profile_photo_url',
+        'created_diff',
+        'created_date',
     ];
 
     public function profile(): HasOne
     {
         return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
+
+    public function getCreatedDiffAttribute(): string
+    {
+        return $this->created_at
+            ->locale(app()->getLocale())
+            ->diffForHumans();
+    }
+
+    public function getCreatedDateAttribute(): string
+    {
+        return $this->created_at
+            ->locale(app()->getLocale())
+            ->toDayDateTimeString();
     }
 }

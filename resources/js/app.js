@@ -1,5 +1,6 @@
 import './bootstrap';
 import '../css/app.css';
+import '/node_modules/vue-cookieconsent/vendor/cookieconsent.css';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
@@ -8,6 +9,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { i18nVue } from 'laravel-vue-i18n'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { Ziggy } from './ziggy';
+import CookieConsent from 'vue-cookieconsent';
+import { consentOptions } from './consent';
 import VueGtag from 'vue-gtag';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Why Culture Matters?';
@@ -25,9 +28,15 @@ createInertiaApp({
                 }
             })
             .use(ZiggyVue, Ziggy)
+            .mixin({methods: { route }})
             .use(VueGtag, {
-                config: { id: "G-WYGPJKWNT1" }
+                enabled: false,
+                config: {
+                    id: "G-WYGPJKWNT1",
+                    send_page_view: true
+                }
             })
+            .use(CookieConsent, consentOptions)
             .mount(el);
     },
 });

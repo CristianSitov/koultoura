@@ -1,19 +1,20 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import JetApplicationLogo from '@/Components/ApplicationLogo.vue'
-import RegistrationConfirmation from '@/Sections/RegistrationConfirmation.vue';
+import Welcome from '@/Components/Welcome.vue';
 </script>
 
 <template>
-    <AppLayout title="Registration Confirmation">
+    <AppLayout title="Dashboard">
         <template #header>
-            <JetApplicationLogo />
+            <h2 class="font-semibold text-xl text-white leading-tight mt-10">
+                Home
+            </h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <RegistrationConfirmation />
+                    <Welcome />
                 </div>
             </div>
         </div>

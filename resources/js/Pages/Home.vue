@@ -1,5 +1,5 @@
 <script setup>
-import FrontLayout from '@/Layouts/FrontLayout.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 import HomeHero from '@/Sections/HomeHero.vue';
 import Event from '@/Sections/Event.vue';
 import Schedule from '@/Sections/Schedule.vue';
@@ -7,24 +7,9 @@ import Speakers from '@/Sections/Speakers.vue';
 import Venues from '@/Sections/Venues.vue';
 import Sponsors from '@/Sections/Sponsors.vue';
 </script>
-<script>
-import {event} from "vue-gtag";
-
-export default {
-    setup() {
-        const registration_confirmation = () => {
-            event('register', { event: 'registration_confirmation' })
-        }
-
-        return {
-            registration_confirmation
-        }
-    }
-}
-</script>
 
 <template>
-    <FrontLayout title="Home">
+    <AppLayout title="Home">
         <HomeHero />
 
         <Event />
@@ -36,5 +21,5 @@ export default {
         <Venues />
 
         <Sponsors />
-    </FrontLayout>
+    </AppLayout>
 </template>

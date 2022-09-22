@@ -60,23 +60,6 @@ class FrontController extends Controller
         ]);
     }
 
-    public function locale($language = 'en'): RedirectResponse
-    {
-        if (in_array($language, config('translatable.locales'), true)) {
-            app()->setLocale($language);
-            session()->put('locale', $language);
-        }
-
-        return redirect()->back();
-    }
-
-    public function registration()
-    {
-        auth()->logout();
-
-        return redirect('/register');
-    }
-
     public function eventRegistration(Request $request): RedirectResponse
     {
         $input = $request->input();
@@ -113,6 +96,21 @@ class FrontController extends Controller
         return Redirect::route('confirmation', ['id' => $user->slug]);
     }
 
+    public function dashboard(Request $request): Response
+    {
+        return Inertia::render('Dashboard');
+    }
+
+    public function subscribersList(Request $request): Response
+    {
+        return Inertia::render('Tools/Subscribers', [
+            'subscribers' => User::query()
+                ->with('profile')
+                ->orderBy('users.created_at', 'DESC')
+                ->get()
+        ]);
+    }
+
     public function confirmation(Request $request, $userId): Response
     {
         $user = User::query()
@@ -120,7 +118,7 @@ class FrontController extends Controller
             ->firstOrFail();
         $profile = $user->profile()->first();
 
-        return Inertia::render('Dashboard', [
+        return Inertia::render('RegistrationConfirmation', [
             'user' => $user,
             'profile' => $profile,
         ]);

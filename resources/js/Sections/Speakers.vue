@@ -8,7 +8,7 @@
                         <span>{{ $t('schedule updating') }}</span>
                         <div v-for="speaker in $page.props.speakers" class="flex flex-col items-center py-8 sm:flex-row">
                             <img class="mx-auto inline-block align-top mb-4 w-36 h-36 rounded-full sm:ml-0 sm:mr-6"
-                                 :src="speaker.avatar"
+                                 :src="route('home') + speaker.avatar"
                                  :alt="speaker.full_name">
                             <div class="flex flex-col text-left md:ml-24">
                                 <h3 class="text-3xl font-bold tracking-tight text-center sm:text-left">{{ speaker.full_name }}</h3>

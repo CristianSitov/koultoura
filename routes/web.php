@@ -22,8 +22,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', static function () {
-        return redirect('/');
-    });
+    Route::get('/dashboard', [FrontController::class, 'dashboard'])
+        ->name('dashboard');
+    Route::get('/dashboard/subscribers', [FrontController::class, 'subscribersList'])
+        ->name('dashboard_subscribers');
 });
 

@@ -1,5 +1,5 @@
 <script setup>
-import {Head, useForm} from '@inertiajs/inertia-vue3';
+import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 import JetAuthenticationCard from '@/Components/AuthenticationCard.vue';
 import JetButton from '@/Components/Button.vue';
@@ -27,18 +27,38 @@ const submit = () => {
 };
 </script>
 <script>
-import {event} from "vue-gtag";
+import { consentOptions } from "@/consent";
+import emitter from "@/emitter";
 
 export default {
-    name: 'Register',
-
-    setup() {
-        const register = () => {
-            event('register')
-        }
-
+    beforeCreate() {
+        this.$cc.on('consent-changed', () => {
+            console.log('cookie consent changed, new user preferences:',
+                this.$cc.getUserPreferences())
+        })
+    },
+    created() {
+        this.$cc.run(consentOptions);
+        emitter.on("consentAccepted", function (consent) {
+            console.log(consent)
+            this.$gtag.optIn()
+        });
+    },
+    mounted() {
+        this.track()
+    },
+    updated() {
+        console.log(this.$route)
+    },
+    data() {
         return {
-            register
+            gTracker: this.$gtag
+        }
+    },
+    methods: {
+        track() {
+            this.gTracker.pageview(this.$inertia.page.url)
+            this.gTracker.event(this.$inertia.page.component)
         }
     }
 }
@@ -49,7 +69,7 @@ export default {
 
     <JetAuthenticationCard>
         <div class="text-center my-8">
-            <span class="text-3xl text-red-600 font-sans font-bold uppercase"><a :href="route('home')">why culture matters?</a></span><br />
+            <span class="text-3xl text-red-600 font-sans font-bold uppercase"><Link :href="route('home')">why culture matters?</Link></span><br />
             <span class="text-xl text-red-600 font-sans font-bold">{{ $t('International Symposium') }}</span><br />
             <span class="text-xl text-red-600 font-sans font-bold">{{ $t('6-7-8 October 2022') }}</span>
         </div>
