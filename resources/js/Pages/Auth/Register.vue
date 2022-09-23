@@ -67,7 +67,7 @@ export default {
 <template>
     <Head title="Register" />
 
-    <JetAuthenticationCard>
+    <JetAuthenticationCard width="large">
         <div class="text-center my-8">
             <span class="text-3xl text-red-600 font-sans font-bold uppercase"><Link :href="route('home')">why culture matters?</Link></span><br />
             <span class="text-xl text-red-600 font-sans font-bold">{{ $t('International Symposium') }}</span><br />

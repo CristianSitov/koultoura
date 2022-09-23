@@ -10,8 +10,8 @@ defineProps({
             <slot name="logo" />
         </div>
 
-        <div class="w-full max-w-7xl mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
-            :class="{'max-w-3xl': width === 'small'}">
+        <div class="w-full mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
+            :class="{'max-w-7xl': width === 'large', 'max-w-xl': width !== 'large'}">
             <slot />
         </div>
     </div>

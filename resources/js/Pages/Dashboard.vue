@@ -6,9 +6,9 @@ import Welcome from '@/Components/Welcome.vue';
 <template>
     <AppLayout title="Dashboard">
         <template #header>
-            <h2 class="font-semibold text-xl text-white leading-tight mt-10">
+            <div class="font-semibold text-xl text-white leading-tight flex-none">
                 Home
-            </h2>
+            </div>
         </template>
 
         <div class="py-12">
