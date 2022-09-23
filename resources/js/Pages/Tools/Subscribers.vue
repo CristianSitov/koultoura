@@ -12,6 +12,14 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="w-full flex flex-row py-3">
+                    <div class="grow"></div>
+                    <div class="none">
+                        <a :href="route('dashboard_subscribers_pdf')"
+                           target="_blank"
+                           class="text-sm text-white font-bold bg-red-600 rounded p-2">Download</a>
+                    </div>
+                </div>
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="overflow-x-auto relative">
                         <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">

@@ -13,6 +13,7 @@
     "require": {
         "php": "^8.0.2",
         "astrotomic/laravel-translatable": "^11.10",
+        "barryvdh/laravel-dompdf": "^2.0",
         "doctrine/dbal": "^3.4",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "dev-master",

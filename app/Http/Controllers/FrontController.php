@@ -8,6 +8,7 @@ use App\Models\Presentation;
 use App\Models\Person;
 use App\Models\Profile;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -109,6 +110,22 @@ class FrontController extends Controller
                 ->orderBy('users.created_at', 'DESC')
                 ->get()
         ]);
+    }
+
+    public function subscribersListPdf(Request $request): \Illuminate\Http\Response
+    {
+        $data = User::query()
+            ->with('profile')
+            ->whereNull('users.email_verified_at')
+            ->orderBy('users.name', 'DESC')
+            ->get()
+            ->toArray();
+
+        view()->share('subscribers', $data);
+
+        return PDF::loadView('pdf.subscribers', $data)
+            ->setPaper('a4', 'landscape')
+            ->download('subscribers_'.date('Y-m-d-His').'.pdf');
     }
 
     public function confirmation(Request $request, $userId): Response
