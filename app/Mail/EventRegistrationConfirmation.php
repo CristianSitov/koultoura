@@ -13,17 +13,16 @@ class EventRegistrationConfirmation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $user;
-    protected $profile;
+    protected User $user;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, Profile $profile)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->profile = $profile;
     }
 
     /**
@@ -35,7 +34,6 @@ class EventRegistrationConfirmation extends Mailable
     {
         return $this->subject(__('Why Culture Matters? Internation Symposium'))
             ->markdown('emails.event_registration_confirmation')
-            ->with('user', $this->user->toArray())
-            ->with('profile', $this->profile->toArray());
+            ->with('user', $this->user->toArray());
     }
 }

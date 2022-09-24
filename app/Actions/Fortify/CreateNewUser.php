@@ -21,8 +21,11 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         $input['name'] = implode(' ', [$input['first_name'], $input['last_name']]);
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
             'job' => ['required', 'string'],
@@ -34,11 +37,13 @@ class CreateNewUser implements CreatesNewUsers
         $user = User::create([
             'slug' => Str::uuid(),
             'name' => $input['name'],
+            'first_name' => $input['first_name'],
+            'last_name' => $input['last_name'],
             'email' => $input['email'],
             'password' => Hash::make(Str::uuid()),
         ]);
 
-        Profile::create([
+        $user->profile()->create([
             'user_id' => $user->id,
             'phone' => $input['phone'],
             'job' => $input['job'],

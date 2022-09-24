@@ -68,6 +68,8 @@ class FrontController extends Controller
 
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
             'job' => ['required', 'string'],
@@ -79,11 +81,13 @@ class FrontController extends Controller
         $user = User::create([
             'slug' => Str::uuid(),
             'name' => $input['name'],
+            'first_name' => $input['first_name'],
+            'last_name' => $input['last_name'],
             'email' => $input['email'],
             'password' => Hash::make(Str::uuid()),
         ]);
 
-        $profile = Profile::create([
+        $user->profile()->create([
             'user_id' => $user->id,
             'phone' => $input['phone'],
             'job' => $input['job'],
@@ -92,7 +96,9 @@ class FrontController extends Controller
             'event_details' => json_encode(['days' => $input['event_details']], JSON_THROW_ON_ERROR),
         ]);
 
-        Mail::to($user)->send(new EventRegistrationConfirmation($user, $profile));
+        Mail::to($user)
+            ->bcc(env('MAIL_FROM_ADDRESS'))
+            ->send(new EventRegistrationConfirmation($user->load('profile')));
 
         return Redirect::route('confirmation', ['id' => $user->slug]);
     }
