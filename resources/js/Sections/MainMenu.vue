@@ -57,7 +57,7 @@ export default {
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
                     <Link :href="route('register')"
                           class="font-bold uppercase bg-white text-red-600 p-2 rounded hover:underline">{{ $t('Register') }}</Link>
-                    <Link :href="route('locale', {'locale': 'en'})"
+                    <a :href="route('locale', {'locale': 'en'})"
                        type="button"
                        v-if="$page.props.translation !== 'ro'"
                        class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -72,8 +72,8 @@ export default {
                                 <path fill="#C8102E" d="M0 208v96h512v-96H0zM208 0v512h96V0h-96z"/>
                             </svg>EN
                         </div>
-                    </Link>
-                    <Link :href="route('locale', {'locale': 'ro'})"
+                    </a>
+                    <a :href="route('locale', {'locale': 'ro'})"
                        type="button"
                        v-if="$page.props.translation !== 'en'"
                        class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
@@ -88,7 +88,7 @@ export default {
                                 </g>
                             </svg>RO
                         </div>
-                    </Link>
+                    </a>
                 </div>
             </nav>
         </div>
@@ -115,7 +115,7 @@ export default {
                         <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
                            class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t(item.name) }}</a>
                         <Link class="block px-3 py-2 font-bold uppercase bg-red-600 text-white rounded" :href="route('register')">{{ $t('Register') }}</Link>
-                        <Link :href="route('locale', {'locale': 'en'})"
+                        <a :href="route('locale', {'locale': 'en'})"
                            type="button"
                            v-if="$page.props.translation !== 'ro'"
                            class="font-bold uppercase px-3 py-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -127,8 +127,8 @@ export default {
                                 <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3l184-185zm124-12 54 8 150 147v45L308 312zM512 0 320 196l-4-44L466 0h46zM0 1l193 189-59-8L0 49V1z"/>
                                 <path fill="#FFF" d="M176 0v512h160V0H176zM0 176v160h512V176H0z"/>
                                 <path fill="#C8102E" d="M0 208v96h512v-96H0zM208 0v512h96V0h-96z"/>
-                            </svg></div></Link>
-                        <Link :href="route('locale', {'locale': 'ro'})"
+                            </svg></div></a>
+                        <a :href="route('locale', {'locale': 'ro'})"
                            type="button"
                            v-if="$page.props.translation !== 'en'"
                            class="font-bold uppercase px-3 py-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
@@ -140,7 +140,7 @@ export default {
                                     <path fill="#ffde00" d="M170.7 0h170.6v512H170.7z"/>
                                     <path fill="#de2110" d="M341.3 0H512v512H341.3z"/>
                                 </g>
-                            </svg></div></Link>
+                            </svg></div></a>
                     </div>
                 </div>
             </PopoverPanel>
