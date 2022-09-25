@@ -8,21 +8,39 @@ use App\Models\Presentation;
 use App\Models\Person;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use GeoIp2\Database\Reader;
+use GeoIp2\Exception\AddressNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use MaxMind\Db\Reader\InvalidDatabaseException;
 
 class FrontController extends Controller
 {
-    public function index(): Response
+    /**
+     * fallback: return Inertia::render('Splash');
+     * @return Response
+     */
+    public function index(Request $request): Response
     {
-//         return Inertia::render('Splash');
+        if(!Session::has('locale')) {
+            try {
+                $geoIpReader = new Reader(resource_path() . '/app/GeoLite2-Country.mmdb');
+                $userLocation = $geoIpReader->country($request->ip()); // '2a02:2f09:3419:af00:fd10:4ef8:8c40:d405'
+                App::setLocale(strtolower($userLocation->country->isoCode ?? 'en'));
+            } catch (AddressNotFoundException | InvalidDatabaseException $e) {
+                App::setLocale('en');
+            }
+        }
+
         $translation = array_values(array_diff(config('translatable.locales'), [app()->getLocale()]))[0];
 
         $days = Day::query()
