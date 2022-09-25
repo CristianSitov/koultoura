@@ -6,14 +6,10 @@ use App\Mail\EventRegistrationConfirmation;
 use App\Models\Day;
 use App\Models\Presentation;
 use App\Models\Person;
-use App\Models\Profile;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -21,19 +17,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Laravel\Fortify\Contracts\RegisterResponse;
 
 class FrontController extends Controller
 {
-//    public function splash()
-//    {
-//        if (Carbon::now()->lt(Carbon::parse('2022-09-20 18:00:00'))) {
-//            return Inertia::render('Splash');
-//        }
-//    }
-
     public function index(): Response
     {
+//         return Inertia::render('Splash');
         $translation = array_values(array_diff(config('translatable.locales'), [app()->getLocale()]))[0];
 
         $days = Day::query()
@@ -149,7 +138,7 @@ class FrontController extends Controller
 
     public function switchLocale(Request $request, $locale): RedirectResponse
     {
-        if (in_array($locale, config('translatable.locales'), true)) {
+        if (in_array(strtolower($locale), config('translatable.locales'), true)) {
             app()->setLocale($locale);
             session()->put('locale', $locale);
         }
