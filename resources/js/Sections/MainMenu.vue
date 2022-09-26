@@ -36,6 +36,7 @@ export default {
         <div class="max-w-7xl relative mx-auto py-3 px-3 sm:px-4 lg:px-8 h-1/5">
             <nav class="relative flex items-center justify-between sm:h-10"
                  :class="{ '': !view.atTopOfPage }"
+                 :data-request="$page.props.detected_ip"
                  aria-label="Global">
                 <div class="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
                     <div class="flex items-center justify-between w-full md:w-auto">
