@@ -41,8 +41,6 @@ class FrontController extends Controller
             }
         }
 
-        $translation = array_values(array_diff(config('translatable.locales'), [app()->getLocale()]))[0];
-
         $days = Day::query()
             ->with(['host'])
             ->get()
@@ -64,7 +62,6 @@ class FrontController extends Controller
             'days' => $days,
             'speakers' => $speakers,
             'presentations' => $presentationsByDay,
-            'translation' => $translation,
         ]);
     }
 

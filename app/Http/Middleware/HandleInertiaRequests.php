@@ -51,9 +51,13 @@ class HandleInertiaRequests extends Middleware
             ],
         ];
 
+        $locale = app()->getLocale();
+        $translation = array_values(array_diff(config('translatable.locales'), [$locale]))[0];
+
         return array_merge(parent::share($request), [
-            'locale' => app()->getLocale(),
-            'navigation' => $navigation[app()->getLocale()],
+            'locale' => $locale,
+            'translation' => $translation,
+            'navigation' => $navigation[$locale],
         ]);
     }
 }
