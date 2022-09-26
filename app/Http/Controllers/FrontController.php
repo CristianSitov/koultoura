@@ -62,6 +62,7 @@ class FrontController extends Controller
             'days' => $days,
             'speakers' => $speakers,
             'presentations' => $presentationsByDay,
+            'detected_ip' => json_encode($userLocation ?? '[]', JSON_THROW_ON_ERROR),
         ]);
     }
 

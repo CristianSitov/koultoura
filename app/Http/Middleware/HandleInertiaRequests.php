@@ -58,7 +58,6 @@ class HandleInertiaRequests extends Middleware
             'locale' => $locale,
             'translation' => $translation,
             'navigation' => $navigation[$locale],
-            'detected_ip' => request()->ip(),
         ]);
     }
 }
