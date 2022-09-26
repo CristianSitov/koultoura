@@ -31,16 +31,6 @@ class FrontController extends Controller
      */
     public function index(Request $request): Response
     {
-        if(!Session::has('locale')) {
-            try {
-                $geoIpReader = new Reader(resource_path() . '/app/GeoLite2-Country.mmdb');
-                $userLocation = $geoIpReader->country($request->ip()); // '2a02:2f09:3419:af00:fd10:4ef8:8c40:d405'
-                App::setLocale(strtolower($userLocation->country->isoCode ?? 'en'));
-            } catch (AddressNotFoundException | InvalidDatabaseException $e) {
-                App::setLocale('en');
-            }
-        }
-
         $days = Day::query()
             ->with(['host'])
             ->get()
