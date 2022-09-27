@@ -38,10 +38,10 @@ const props = defineProps({
                          role="tabpanel" aria-labelledby="profile-tab">
                         <section class="text-white body-font">
                             <div class="md:w-3/4 mx-auto">
-                                <h3 class="text-2xl font-bold uppercase pt-12">{{ $page.props.days[index].title }}</h3>
+                                <h3 class="text-2xl font-bold uppercase pt-6 md:pt-12">{{ $page.props.days[index].title }}</h3>
                                 <p class="row-span-2 py-3" v-html="$page.props.days[index].description"></p>
                                 <p><span class="inline-flex leading-6 lg:leading-10 mb-4"><LocationMarkerIcon
-                                    class="h-5 md:h-9 sm:h-7 w-5 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>{{ $page.props.days[index].location }}</span></p>
+                                    class="h-6 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>{{ $page.props.days[index].location }}</span></p>
                                 <p><span class="inline-flex leading-6 lg:leading-10 mb-4"><UserIcon
                                     class="h-5 md:h-9 sm:h-7 w-5 md:w-9 sm:w-7 mr-4" aria-hidden="true"/>{{ $t('Host Moderator') }}: {{ $page.props.days[index].host?.full_name || 'TBA'}}</span></p>
                                 <p><span class="inline-flex leading-6 lg:leading-10 mb-4"><UserIcon

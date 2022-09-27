@@ -114,12 +114,12 @@ export default {
                     </div>
                     <div class="px-2 pt-2 pb-3 space-y-1">
                         <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
-                           class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t(item.name) }}</a>
-                        <Link class="block px-3 py-2 font-bold uppercase bg-red-600 text-white rounded" :href="route('register')">{{ $t('Register') }}</Link>
+                           class="block uppercase px-3 py-2 text-xs font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t(item.name) }}</a>
+                        <Link class="block uppercase px-3 py-2 text-xs font-medium text-white bg-red-600 rounded" :href="route('register')">{{ $t('Register') }}</Link>
                         <a :href="route('locale', {'locale': 'en'})"
                            type="button"
                            v-if="$page.props.translation !== 'ro'"
-                           class="font-bold uppercase px-3 py-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
+                           class="inline-flex uppercase px-3 py-2 text-xs font-medium justify-center items-center text-gray-700 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
                            role="menuitem"><div class="inline-flex items-center">ENGLISH
                             <svg aria-hidden="true" class="h-5 w-5 rounded-full mx-2"
                                  xmlns="http://www.w3.org/2000/svg" id="flag-icons-gb" viewBox="0 0 512 512">
@@ -132,7 +132,7 @@ export default {
                         <a :href="route('locale', {'locale': 'ro'})"
                            type="button"
                            v-if="$page.props.translation !== 'en'"
-                           class="font-bold uppercase px-3 py-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
+                           class="inline-flex uppercase px-3 py-2 text-xs font-medium justify-center items-center text-gray-700 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
                            role="menuitem"><div class="inline-flex items-center">ROMÂNĂ
                             <svg aria-hidden="true" class="h-5 w-5 rounded-full mx-2"
                                  xmlns="http://www.w3.org/2000/svg" id="flag-icons-ro" viewBox="0 0 512 512">
