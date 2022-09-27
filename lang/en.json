@@ -81,7 +81,7 @@
 
     "bottom tagline": "Conference focused on material and immaterial heritage, relationships between center and periphery, and migration.",
     "All Rights Reserved.": "All Rights Reserved.",
-    "Made with ♡": "Carefully crafted ❤️ by <strong>Tech Cultura</strong>, with local support from <a target=_blank href=//flowbite.com>Flowbite by Themesberg</a>.",
+    "Made with ♡": "Carefully crafted ❤️ by <span class=font-bold>Tech Cultura</span>, with local support from <a target=_blank class='underline font-bold' href=//flowbite.com>Flowbite by Themesberg</a>.",
 
     "cookie policy": "We use our own cookies as well as third-party cookies on our websites to enhance your experience, analyze our traffic, and for security and marketing. Select 'Accept' to allow them to be used. Read our <a href='' class='font-medium text-gray-900 hover:underline dark:text-white'>Cookie Policy</a>."
 }
