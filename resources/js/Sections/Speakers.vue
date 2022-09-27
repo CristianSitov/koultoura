@@ -10,7 +10,7 @@
                             <img class="md:col-span-2 mx-auto align-top mb-4 max-w-sm sm:w-full md:w-36 md:h-36 rounded-md md:rounded-full sm:ml-0 sm:mr-6"
                                  :src="route('home') + speaker.avatar"
                                  :alt="speaker.full_name">
-                            <div class="md:col-span-10 text-left md:ml-24">
+                            <div class="flex flex-col md:col-span-10 text-left md:ml-24">
                                 <h3 class="text-3xl font-bold tracking-tight text-center sm:text-left">{{ speaker.full_name }}</h3>
                                 <span class="text-xl italic text-center sm:text-left py-3">{{ speaker.role }}</span>
                                 <span class="text-lg text-center sm:text-left">{{ speaker.institution }}</span>
