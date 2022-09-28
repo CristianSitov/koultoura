@@ -29,30 +29,14 @@ class FrontController extends Controller
      * fallback: return Inertia::render('Splash');
      * @return Response
      */
-    public function index(Request $request): Response
+    public function index(): Response
     {
-        $days = Day::query()
-            ->with(['host'])
-            ->get()
-            ->keyBy('id');
-        $speakers = Person::query()
-            ->inRandomOrder()
-            ->get();
-        $presentations = Presentation::query()
-            ->with(['speakers', 'moderators'])
-            ->get();
-        $presentationsByDay = $presentations
-            ->groupBy('day_id');
-        $moderators = $presentations
-            ->groupBy('day_id')
-            ->transform(fn ($day) => $day->pluck('moderators', 'id')->flatten()->keyBy('id')->values());
-        $days->transform(fn ($day, $index) => collect($day)->merge(['moderators' => $moderators[$index]->toArray()]));
+        return Inertia::render('Home', $this->getPageData());
+    }
 
-        return Inertia::render('Home', [
-            'days' => $days,
-            'speakers' => $speakers,
-            'presentations' => $presentationsByDay,
-        ]);
+    public function schedule(): Response
+    {
+        return Inertia::render('Schedule', $this->getPageData());
     }
 
     public function eventRegistration(Request $request): RedirectResponse
@@ -151,5 +135,27 @@ class FrontController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    private function getPageData(): array
+    {
+        $days = Day::query()
+            ->with(['host'])
+            ->get()
+            ->keyBy('id');
+        $speakers = Person::query()
+            ->inRandomOrder()
+            ->get();
+        $presentationsList = Presentation::query()
+            ->with(['speakers', 'moderators'])
+            ->get();
+        $presentations = $presentationsList
+            ->groupBy('day_id');
+        $moderators = $presentationsList
+            ->groupBy('day_id')
+            ->transform(fn($day) => $day->pluck('moderators', 'id')->flatten()->keyBy('id')->values());
+        $days->transform(fn($day, $index) => collect($day)->merge(['moderators' => $moderators[$index]->toArray()]));
+
+        return compact(['days', 'speakers', 'presentations']);
     }
 }

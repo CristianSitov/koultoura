@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontController::class, 'index'])
     ->name('home');
+Route::get('/schedule', [FrontController::class, 'schedule'])
+    ->name('schedule');
 Route::get('/registration', [FrontController::class, 'registration'])
     ->name('registration');
 Route::post('/event-registration', [FrontController::class, 'eventRegistration'])
