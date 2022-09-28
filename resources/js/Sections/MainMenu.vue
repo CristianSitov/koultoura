@@ -53,7 +53,7 @@ export default {
                     </div>
                 </div>
                 <div class="hidden flex items-center md:block md:ml-10 md:pr-4 md:space-x-5">
-                    <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
+                    <a v-for="item in $page.props.navigation" :key="item.name" :href="route('home') + '/' + item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
                     <Link :href="route('register')"
                           class="font-bold uppercase bg-white text-red-600 p-2 rounded hover:underline">{{ $t('Register') }}</Link>
