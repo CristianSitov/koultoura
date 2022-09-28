@@ -10,14 +10,13 @@
 import mapboxgl from "mapbox-gl";
 // https://docs.mapbox.com/help/tutorials/custom-markers-gl-js/
 export default {
-    name: "BaseMap",
     data() {
         return {
-            map: {},
+            accessToken: 'pk.eyJ1IjoiY3Jpc3RpYW5zaXRvdiIsImEiOiJMcl9sX2F3In0.0OVCrFfICO66Rs-v3tBc0g',
         };
     },
     mounted() {
-        mapboxgl.accessToken = 'pk.eyJ1IjoiY3Jpc3RpYW5zaXRvdiIsImEiOiJMcl9sX2F3In0.0OVCrFfICO66Rs-v3tBc0g';
+        mapboxgl.accessToken = this.accessToken;
         this.map = new mapboxgl.Map({
             container: "mapContainer",
             style: "mapbox://styles/cristiansitov/cl74kh88m003b14p7z3lucmsu",
@@ -102,6 +101,7 @@ export default {
                         closeOnClick: false,
                         keepInView: true,
                         closeButton: false,
+                        focusAfterOpen: false
                     })
                         .setHTML(
                             `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
