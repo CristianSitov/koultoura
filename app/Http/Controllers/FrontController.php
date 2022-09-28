@@ -52,7 +52,6 @@ class FrontController extends Controller
             'days' => $days,
             'speakers' => $speakers,
             'presentations' => $presentationsByDay,
-            'detected_ip' => json_encode($userLocation ?? '[]', JSON_THROW_ON_ERROR),
         ]);
     }
 
@@ -65,12 +64,14 @@ class FrontController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'required_with:email_confimation', 'same:email_confirmation'],
+            'email_confirmation' => ['required', 'string', 'email', 'max:255'],
             'phone' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
             'job' => ['required', 'string'],
             'organization' => ['required', 'string'],
             'country' => ['required', 'string'],
-            'event_details.*' => ['required', 'numeric', 'in:1,2,3'],
+            'event_details' => ['required'],
+            'event_details.*' => ['numeric', 'in:1,2,3'],
         ])->validate();
 
         $user = User::create([

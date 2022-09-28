@@ -194,9 +194,10 @@ export default {
                                             v-model="form.country"
                                             class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                         <option v-for="(country, index) in $page.props.countries"
-                                                v-bind:selected="index === 'RO'"
+                                                v-bind:selected="index.toLowerCase() === $page.props.locale"
                                                 :value="index">{{ country }}</option>
                                     </select>
+                                    <JetInputError class="mt-2" :message="form.errors.country" />
                                 </div>
                             </div>
                         </div>
@@ -241,6 +242,7 @@ export default {
                                             </div>
                                         </div>
                                     </div>
+                                    <JetInputError class="mt-2" :message="form.errors.event_details" />
                                 </div>
                             </fieldset>
                         </div>
@@ -253,7 +255,9 @@ export default {
                             </JetLabel>
 
                             <div class="flex items-center mt-4">
-                                <JetButton class="px-15 py-5 bg-red-600 text-xl mx-auto my-10" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                <JetButton class="px-15 py-5 bg-red-600 text-xl mx-auto my-10"
+                                           :class="{ 'opacity-25': form.processing }"
+                                           :disabled="form.processing">
                                     {{ $t('Register me') }}
                                 </JetButton>
                             </div>

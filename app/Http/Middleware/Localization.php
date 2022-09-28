@@ -28,6 +28,7 @@ class Localization
                 Session::put('locale', $locale);
             } catch (AddressNotFoundException | InvalidDatabaseException $e) {
                 App::setLocale('en');
+                Session::put('locale', 'en');
             }
         }
 
