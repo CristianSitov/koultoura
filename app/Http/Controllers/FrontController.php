@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Jetstream\Jetstream;
 use MaxMind\Db\Reader\InvalidDatabaseException;
 
 class FrontController extends Controller
@@ -135,6 +136,26 @@ class FrontController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function terms(): Response
+    {
+        $termsFile = Jetstream::localizedMarkdownPath('terms.md');
+
+        return Inertia::render('TermsOfService', [
+            'termsTitle' => 'Terms of Service',
+            'terms' => Str::markdown(file_get_contents($termsFile)),
+        ]);
+    }
+
+    public function cookies(): Response
+    {
+        $termsFile = Jetstream::localizedMarkdownPath('cookies.md');
+
+        return Inertia::render('TermsOfService', [
+            'termsTitle' => 'Cookie Policy',
+            'terms' => Str::markdown(file_get_contents($termsFile)),
+        ]);
     }
 
     private function getPageData(): array

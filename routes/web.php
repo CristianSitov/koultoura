@@ -18,6 +18,10 @@ Route::get('/user/{id}', [FrontController::class, 'confirmation'])
 Route::get('/{locale}', [FrontController::class, 'switchLocale'])
     ->where('locale', 'en|ro')
     ->name('locale');
+Route::get('/terms', [FrontController::class, 'terms'])
+    ->name('terms');
+Route::get('/cookies', [FrontController::class, 'cookies'])
+    ->name('cookies');
 
 Route::middleware([
     'auth:sanctum',

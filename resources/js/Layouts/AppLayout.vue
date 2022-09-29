@@ -58,7 +58,7 @@ export default {
                 <slot name="header" />
                 <div class="grow"></div>
                 <div class="flex-none"
-                     v-if="usePage().props.value.user.email_verified_at">
+                     v-if="usePage().props.value.user?.email_verified_at">
                     <Link
                         :href="route('logout')"
                         method="post"
