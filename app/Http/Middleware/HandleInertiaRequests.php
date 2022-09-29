@@ -45,8 +45,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'ro' => [
                 ['name' => 'program', 'href' => '#schedule'],
-                ['name' => 'invitati', 'href' => '#speakers'],
-                ['name' => 'locatii', 'href' => '#venues'],
+                ['name' => 'invitați', 'href' => '#speakers'],
+                ['name' => 'locații', 'href' => '#venues'],
                 ['name' => 'parteneri', 'href' => '#partners'],
             ],
         ];
