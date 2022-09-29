@@ -1,5 +1,5 @@
 <script setup>
-import {UserIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
+import {LibraryIcon, LocationMarkerIcon, MicrophoneIcon} from '@heroicons/vue/outline'
 
 const props = defineProps({
     activeTab: {
@@ -43,10 +43,10 @@ const props = defineProps({
                                 <p class="flex flex-row mb-3"><span class="leading-6 lg:leading-10 mb-2"><LocationMarkerIcon
                                     class="h-6 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-2" aria-hidden="true"/></span>
                                     <span class="inline-flex font-bold">{{ $page.props.days[index].location }}</span></p>
-                                <p class="flex flex-row mb-3"><span class="leading-6 lg:leading-10 mb-2"><UserIcon
+                                <p class="flex flex-row mb-3"><span class="leading-6 lg:leading-10 mb-2"><LibraryIcon
                                     class="h-5 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-2" aria-hidden="true"/></span>
                                     <span class="inline-flex">{{ $t('Host Moderator') }}:&nbsp;<span class="font-bold">{{ $page.props.days[index].host?.full_name || 'TBA'}}</span></span></p>
-                                <p class="flex flex-row mb-3"><span class="leading-6 lg:leading-10 mb-2"><UserIcon
+                                <p class="flex flex-row mb-3"><span class="leading-6 lg:leading-10 mb-2"><MicrophoneIcon
                                     class="h-5 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-2" aria-hidden="true"/></span>
                                     <span class="inline-flex">{{ $t('Moderator(s)') }}:&nbsp;<span class="font-bold">{{ $page.props.days[index].moderators.map((m) => m.full_name).join(", ") || 'TBA'}}</span></span></p>
                             </div>
