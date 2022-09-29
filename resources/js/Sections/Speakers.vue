@@ -7,7 +7,7 @@
                         <h1 class="text-6xl font-bold uppercase text-white wcm" v-html="$t('Speakers')"></h1>
                         <span>{{ $t('schedule updating') }}</span>
                         <div v-for="speaker in $page.props.speakers" class="md:grid md:grid-cols-12 items-center py-8">
-                            <img class="md:col-span-2 mx-auto align-top mb-4 max-w-sm sm:w-full md:w-36 md:h-36 rounded-md md:rounded-full sm:ml-0 sm:mr-6"
+                            <img class="md:col-span-2 mx-auto align-top mb-4 w-75 sm:w-full md:w-36 md:h-36 rounded-md md:rounded-full sm:ml-0 sm:mr-6"
                                  :src="route('home') + speaker.avatar"
                                  :alt="speaker.full_name">
                             <div class="flex flex-col md:col-span-10 text-left md:ml-24">
