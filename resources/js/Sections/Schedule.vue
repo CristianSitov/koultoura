@@ -55,7 +55,7 @@ const props = defineProps({
                                     <div class="flex sm:mx-5 md:pl-8 sm:pl-6 sm:items-center items-start flex-col sm:flex-row">
                                         <div class="flex items-center justify-center -space-x-4 w-32">
                                             <div v-for="presenter in presentation.speakers" class="flex-none">
-                                                <img class="w-14 h-14 rounded-full" :src="presenter.avatar" :alt="presenter.full_name">
+                                                <img class="w-14 h-14 rounded-full" :src="route('home') + presenter.avatar" :alt="presenter.full_name">
                                             </div>
                                         </div>
                                         <div class="flex-1 md:pl-6 md:mt-6 md:mt-0">
@@ -70,8 +70,8 @@ const props = defineProps({
                                                 class="font-bold">{{ moderator.full_name }}<span v-if="index+1 < presentation.moderators.length">, </span></span></h3>
                                             <h3 class="font-light title-font mb-1 text-xl"
                                                 v-if="presentation.speakers.length > 0">{{ $t('Speakers') }}: <span
-                                                v-for="speaker in presentation.speakers"
-                                                class="font-bold">{{ speaker.full_name }}</span></h3>
+                                                v-for="(speaker, index) in presentation.speakers"
+                                                class="font-bold">{{ speaker.full_name }}<span v-if="index+1 < presentation.speakers.length">, </span></span></h3>
                                         </div>
                                     </div>
                                 </div>
