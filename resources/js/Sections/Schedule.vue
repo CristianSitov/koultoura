@@ -49,26 +49,26 @@ const props = defineProps({
                             </div>
                             <div class="container md:px-5 py-10 md:py-24 mx-auto flex flex-wrap">
                                 <div v-for="presentation in day" :key="presentation.id" class="flex relative pt-5 mt-3 md:pt-10 md:pb-20 sm:items-center mx-auto w-full">
-                                    <div class="flex-shrink-0 inline-flex relative text-2xl md:text-5xl px-4">
+                                    <div class="flex-shrink-0 inline-flex relative font-bold text-lg md:text-5xl px-4">
                                         {{ presentation.starts_at }}
                                     </div>
                                     <div class="flex sm:mx-5 md:pl-8 sm:pl-6 sm:items-center items-start flex-col sm:flex-row">
                                         <div class="flex-1 md:pl-6 md:mt-6 md:mt-0">
                                             <h4 class="font-medium title-font mb-1 text-lg" v-if="presentation.supratitle !== ''">{{ presentation.supratitle }}</h4>
                                             <h2 class="font-bold title-font mb-3 md:mb-5"
-                                                :class="{ 'text-xl md:text-2xl italic text-gray-400': presentation.flag === 'service', 'text-3xl md:text-4xl': presentation.flag === 'main' }">{{ presentation.title }}</h2>
+                                                :class="{ 'text-xl md:text-2xl italic text-gray-400': presentation.flag === 'service', 'text-2xl md:text-3xl': presentation.flag === 'main' }">{{ presentation.title }}</h2>
                                             <p class="leading-relaxed" v-html="presentation.description"></p>
                                             <h3 class="font-medium title-font mb-3 text-2xl">{{ presentation.subtitle }}</h3>
-                                            <h3 class="font-light title-font my-2 text-lg"
+                                            <h3 class="font-light title-font my-2 text-sm md:text-lg"
                                                 v-if="presentation.moderators.length > 0">{{ $t('Moderated by') }}: <span
                                                 v-for="(moderator, index) in presentation.moderators"
                                                 class="font-bold">{{ moderator.full_name }}<span v-if="index+1 < presentation.moderators.length">, </span></span></h3>
-                                            <h3 class="font-light title-font mb-1 text-xl"
+                                            <h3 class="font-light title-font mb-1 text-sm md:text-lg"
                                                 v-if="presentation.speakers.length > 0">{{ $t('Speakers') }}: <span
                                                 v-for="(speaker, index) in presentation.speakers"
                                                 class="font-bold">{{ speaker.full_name }}<span v-if="index+1 < presentation.speakers.length">, </span></span></h3>
-                                            <div class="flex flex-row flex-wrap items-center sm:items-left -space-x-2 mt-5">
-                                                <div v-for="presenter in presentation.speakers" class="flex-none">
+                                            <div class="flex flex-row flex-wrap items-center sm:items-left mt-5">
+                                                <div v-for="presenter in presentation.speakers" class="flex-none -ml-2">
                                                     <img class="w-14 h-14 rounded-full" :src="route('home') + presenter.avatar" :alt="presenter.full_name">
                                                 </div>
                                             </div>
