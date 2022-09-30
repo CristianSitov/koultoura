@@ -10,9 +10,12 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -99,20 +102,54 @@ class FrontController extends Controller
         ]);
     }
 
+    public function subscribersListByDay(Request $request, int $day): Response
+    {
+        return Inertia::render('Tools/Subscribers', [
+            'day_id' => $day,
+            'subscribers' => User::query()
+                ->joinSub(DB::query()
+                    ->fromRaw(DB::raw('profiles, JSON_TABLE(event_details, "$.days[*]" COLUMNS(day_id INT PATH "$")) days'))
+                    ->where('days.day_id', '=', $day),
+                    'days',
+                    function (JoinClause $joinClause) {
+                        $joinClause->on('users.id', '=', 'days.user_id');
+                    })
+                ->with('profile')
+                ->orderBy('users.last_name', 'ASC')
+                ->orderBy('users.first_name', 'ASC')
+                ->get()
+        ]);
+    }
+
     public function subscribersListPdf(Request $request): \Illuminate\Http\Response
     {
+        $day = $request->get('day', false);
+
         $data = User::query()
             ->with('profile')
+            ->when($day, static function ($query, $day) {
+                $query->joinSub(DB::query()
+                    ->fromRaw(DB::raw('profiles, JSON_TABLE(event_details, "$.days[*]" COLUMNS(day_id INT PATH "$")) days'))
+                    ->where('days.day_id', '=', $day),
+                    'days',
+                    function (JoinClause $joinClause) {
+                        $joinClause->on('users.id', '=', 'days.user_id');
+                    });
+            })
             ->whereNull('users.email_verified_at')
-            ->orderBy('users.name', 'DESC')
+            ->orderBy('users.last_name', 'ASC')
+            ->orderBy('users.first_name', 'ASC')
             ->get()
             ->toArray();
 
         view()->share('subscribers', $data);
 
+        $selectedDay = !is_null($day) ? "-day_{$day}-" : "";
+        $fileName = 'subscribers_' . $selectedDay . date('Y-m-d-His') . '.pdf';
+
         return PDF::loadView('pdf.subscribers', $data)
             ->setPaper('a4', 'landscape')
-            ->download('subscribers_'.date('Y-m-d-His').'.pdf');
+            ->download($fileName);
     }
 
     public function confirmation(Request $request, $userId): Response

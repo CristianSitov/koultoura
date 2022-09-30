@@ -32,6 +32,8 @@ Route::middleware([
         ->name('dashboard');
     Route::get('/dashboard/subscribers', [FrontController::class, 'subscribersList'])
         ->name('dashboard_subscribers');
+    Route::get('/dashboard/subscribers/day/{day}', [FrontController::class, 'subscribersListByDay'])
+        ->name('dashboard_subscribers_by_day');
     Route::get('/dashboard/subscribers.pdf', [FrontController::class, 'subscribersListPdf'])
         ->name('dashboard_subscribers_pdf');
 });

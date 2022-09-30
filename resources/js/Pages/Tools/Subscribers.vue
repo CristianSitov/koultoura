@@ -1,5 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import {Link} from '@inertiajs/inertia-vue3';
 </script>
 
 <template>
@@ -13,34 +14,36 @@ import AppLayout from '@/Layouts/AppLayout.vue';
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="w-full flex flex-row py-3">
-                    <div class="grow"></div>
+                    <div class="grow justify-content-start">
+                        <Link :href="route('dashboard_subscribers_by_day', 1)"
+                              :class="{ 'bg-white text-red-600': $page.props.day_id === 1, 'bg-red-600 text-white': $page.props.day_id !== 1 }"
+                              class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">Day 1</Link>
+                        <Link :href="route('dashboard_subscribers_by_day', 2)"
+                              :class="{ 'bg-white text-red-600': $page.props.day_id === 2, 'bg-red-600 text-white': $page.props.day_id !== 2 }"
+                              class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">Day 2</Link>
+                        <Link :href="route('dashboard_subscribers_by_day', 3)"
+                              :class="{ 'bg-white text-red-600': $page.props.day_id === 3, 'bg-red-600 text-white': $page.props.day_id !== 3 }"
+                              class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">Day 3</Link>
+                    </div>
                     <div class="none">
-                        <a :href="route('dashboard_subscribers_pdf')"
+                        <a :href="route('dashboard_subscribers_pdf', {day: $page.props.day_id || null})"
                            target="_blank"
-                           class="text-sm text-white font-bold bg-red-600 rounded p-2">Download</a>
+                           class="text-sm text-white font-bold bg-red-600 rounded p-2 mr-2 sm:mr-0">Download</a>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="overflow-x-auto relative">
-                        <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="py-3 px-6">
-                                    Subscribe Date
-                                </th>
-                                <th scope="col" class="py-3 px-6">
-                                    Full name
-                                </th>
-                                <th scope="col" class="py-3 px-6">
-                                    Organization / Job
-                                </th>
-                                <th scope="col-2" class="py-3 px-6 w-30">
-                                    Days
-                                </th>
+                        <table class="table flex table-auto w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+                            <tr class="hidden md:table-row">
+                                <th class="py-3 px-6">Subscribe Date</th>
+                                <th class="py-3 px-6">Full name</th>
+                                <th class="py-3 px-6">Organization / Job</th>
+                                <th class="py-3 px-6 md:w-30">Days</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                            <tbody class="flex-1 sm:flex-none">
+                            <tr class="flex md:table-row flex-col w-full flex-wrap bg-white border-b"
                                 v-for="subscriber in $page.props.subscribers">
                                 <td class="align-top py-4 px-6">
                                     <span class="block">{{ subscriber.created_diff }}</span>
@@ -49,7 +52,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
                                 <td class="align-top py-4 px-6">
                                     <a class="block text-lg text-gray-700"
                                        target="_blank"
-                                       :href="route('confirmation', {id: subscriber.slug })">{{ subscriber.name }}</a>
+                                       :href="route('confirmation', {id: subscriber.slug })">{{ subscriber.last_name }} {{ subscriber.first_name }}</a>
                                     <span class="block text-sm">Email: {{ subscriber.email }}</span>
                                     <span class="block text-sm">Phone: {{ subscriber.profile.phone }}</span>
                                 </td>
