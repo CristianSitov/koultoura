@@ -15,34 +15,37 @@
         }
 
         td, th {
+            text-align: left;
             border: 0.3pt solid #cccccc;
-            font-size: 10pt;
-            padding: 4pt;
+            font-size: 8pt;
+            padding: 2pt;
             vertical-align: top;
+        }
+        .name {
+            font-size: 10pt;
         }
     </style>
 </head>
 <body>
 <div style="width: 100%">
-    <table>
+    <table style="width: 100%">
         <thead>
         <tr class="table-danger">
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email/Phone</th>
-            <th scope="col">Org./Job</th>
+            <th style="width: 10%">#</th>
+            <th style="width: 30%">Name</th>
+            <th style="width: 60%">Email/Phone/Org./Job</th>
         </tr>
         </thead>
         <tbody class="table-group-divider">
-        @foreach($subscribers as $subscriber)
+        @foreach($subscribers as $l => $subscriber)
             <tr>
-                <th scope="row">{{ $subscriber['id'] }}</th>
-                <td>{{ $subscriber['last_name'] }} {{ $subscriber['first_name'] }}<br />
-                    <small>{{ implode(',', $subscriber['profile']['event_details']->days) }}</small></td>
-                <td>{{ $subscriber['email'] }}<br />
-                    {{ $subscriber['profile']['phone'] }}</td>
-                <td>{{ $subscriber['profile']['organization'] }}<br />
-                    <small>{{ $subscriber['profile']['job'] }}</small></td>
+                <th scope="row">{{ $l }} / {{ $subscriber['id'] }}<br />
+                    <small>{{ implode(',', $subscriber['profile']['event_details']->days) }}</small></th>
+                <td class="name">{{ $subscriber['last_name'] }} {{ $subscriber['first_name'] }}</td>
+                <td><small>{{ $subscriber['email'] }}<br />
+                    {{ $subscriber['profile']['phone'] }}<br />
+                    {{ $subscriber['profile']['organization'] }}<br />
+                    {{ $subscriber['profile']['job'] }}</small></td>
             </tr>
         @endforeach
         </tbody>
