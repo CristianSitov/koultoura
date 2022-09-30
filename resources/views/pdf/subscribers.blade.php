@@ -39,7 +39,7 @@
         <tbody class="table-group-divider">
         @foreach($subscribers as $l => $subscriber)
             <tr>
-                <th scope="row">{{ $l }} / {{ $subscriber['id'] }}<br />
+                <th scope="row">{{ $l+1 }} / {{ $subscriber['id'] }}<br />
                     <small>{{ implode(',', $subscriber['profile']['event_details']->days) }}</small></th>
                 <td class="name">{{ $subscriber['last_name'] }} {{ $subscriber['first_name'] }}</td>
                 <td><small>{{ $subscriber['email'] }}<br />

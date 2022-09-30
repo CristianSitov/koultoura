@@ -37,6 +37,9 @@ import {Link} from '@inertiajs/inertia-vue3';
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="overflow-x-auto relative">
                         <table class="table flex table-auto w-full text-sm text-left text-gray-500">
+                            <caption class="text-start leading-loose text-lg uppercase font-bold ml-4">
+                                Subcribers: {{ $page.props.subscribers.length }}
+                            </caption>
                             <thead class="text-xs text-gray-700 uppercase bg-gray-200">
                             <tr class="hidden md:table-row">
                                 <th class="py-3 px-6">Subscribe Date</th>
