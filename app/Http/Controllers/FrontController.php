@@ -107,14 +107,16 @@ class FrontController extends Controller
         return Inertia::render('Tools/Subscribers', [
             'day_id' => $day,
             'subscribers' => User::query()
-                ->joinSub(DB::query()
-                    ->fromRaw(DB::raw('profiles, JSON_TABLE(event_details, "$.days[*]" COLUMNS(day_id INT PATH "$")) days'))
-                    ->where('days.day_id', '=', $day),
-                    'days',
-                    function (JoinClause $joinClause) {
-                        $joinClause->on('users.id', '=', 'days.user_id');
-                    })
                 ->with('profile')
+                ->when($day, static function ($query, $day) {
+                    $query->joinSub(DB::query()
+                        ->from('profiles')
+                        ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(event_details, '$.days')) LIKE '%{$day}%'"),
+                        'days',
+                        function (JoinClause $joinClause) {
+                            $joinClause->on('users.id', '=', 'days.user_id');
+                        });
+                })
                 ->orderBy('users.last_name', 'ASC')
                 ->orderBy('users.first_name', 'ASC')
                 ->get()
@@ -129,8 +131,8 @@ class FrontController extends Controller
             ->with('profile')
             ->when($day, static function ($query, $day) {
                 $query->joinSub(DB::query()
-                    ->fromRaw(DB::raw('profiles, JSON_TABLE(event_details, "$.days[*]" COLUMNS(day_id INT PATH "$")) days'))
-                    ->where('days.day_id', '=', $day),
+                    ->from('profiles')
+                    ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(event_details, '$.days')) LIKE '%{$day}%'"),
                     'days',
                     function (JoinClause $joinClause) {
                         $joinClause->on('users.id', '=', 'days.user_id');
