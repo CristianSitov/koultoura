@@ -6,9 +6,9 @@
         <link rel="icon" type="image/png" sizes="16x16" href="assets/images/fav/favicon-16x16.png">
         <link rel="manifest" href="assets/images/fav/site.webmanifest">
 
-        <meta name="theme-color" content="#d03801">
-        <meta name="msapplication-navbutton-color" content="#d03801">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#d03801">
+        <meta name="theme-color" content="#e02424">
+        <meta name="msapplication-navbutton-color" content="#e02424">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#e02424">
 
         <meta charset="utf-8">
 
