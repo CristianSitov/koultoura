@@ -38,7 +38,6 @@ import {Link} from '@inertiajs/inertia-vue3';
                             <tr class="hidden md:table-row">
                                 <th class="py-3 px-6">Subscribe Date</th>
                                 <th class="py-3 px-6">Full name</th>
-                                <th class="py-3 px-6">Organization / Job</th>
                                 <th class="py-3 px-6 md:w-30">Days</th>
                             </tr>
                             </thead>
@@ -55,10 +54,8 @@ import {Link} from '@inertiajs/inertia-vue3';
                                        :href="route('confirmation', {id: subscriber.slug })">{{ subscriber.last_name }} {{ subscriber.first_name }}</a>
                                     <span class="block text-sm">Email: {{ subscriber.email }}</span>
                                     <span class="block text-sm">Phone: {{ subscriber.profile.phone }}</span>
-                                </td>
-                                <td class="align-top py-4 px-6 text-gray-700">
-                                    <span class="block text-lg">{{ subscriber.profile.organization }} ({{ subscriber.profile.country }})</span>
-                                    <span class="block text-md">{{ subscriber.profile.job }}</span>
+                                    <span class="block text-md">Org: {{ subscriber.profile.organization }} ({{ subscriber.profile.country }})</span>
+                                    <span class="block text-md">Job: {{ subscriber.profile.job }}</span>
                                 </td>
                                 <td class="align-top py-4 px-6">
                                     <div class="flex flex-row">

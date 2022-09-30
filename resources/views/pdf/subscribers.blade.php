@@ -8,7 +8,7 @@
     <title>Subscribers</title>
 
     <style>
-        body {font-family: Arial, Helvetica, sans-serif}
+        body, table, th, td {font-family: DejaVu Sans;}
         table {
             border: 0.3pt solid #cccccc;
             border-collapse: collapse;
