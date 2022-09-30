@@ -38,21 +38,21 @@ export default {
                  :class="{ '': !view.atTopOfPage }"
                  aria-label="Global">
                 <div class="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
-                    <div class="flex items-center justify-between w-full md:w-auto">
+                    <div class="flex items-center justify-between w-full lg:w-auto">
                         <Link :href="route('home')">
                             <span class="sr-only">why culture matters?</span>
-                            <a :href="route('home')" class="text-red-700 uppercase font-bold">why culture matters?</a>
+                            <span class="text-red-700 uppercase font-bold">why culture matters?</span>
                         </Link>
-                        <div class="-mr-2 flex items-center md:hidden">
+                        <div class="flex items-center lg:hidden">
                             <PopoverButton
-                                class="rounded-md p-2 inline-flex items-center justify-center text-white hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                                class="rounded-md p-2 inline-flex items-center text-white hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                 <span class="sr-only">{{ $t('Open main menu') }}</span>
                                 <MenuIcon class="h-6 w-6" aria-hidden="true"/>
                             </PopoverButton>
                         </div>
                     </div>
                 </div>
-                <div class="hidden flex items-center md:block md:ml-10 md:pr-4 md:space-x-5">
+                <div class="hidden flex items-center lg:block md:ml-10 md:pr-4 md:space-x-5">
                     <a v-for="item in $page.props.navigation" :key="item.name" :href="route('home') + '/' + item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
                     <Link :href="route('register')"
@@ -93,19 +93,19 @@ export default {
             </nav>
         </div>
 
-        <transition enter-active-class="duration-150 ease-out" enter-from-class="opacity-0 scale-95"
-                    enter-to-class="opacity-100 scale-100" leave-active-class="duration-100 ease-in"
-                    leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
+        <transition enter-active-class="duration-150 ease-out" enter-from-class="opacity-0 slide-95"
+                    enter-to-class="opacity-100 slide-100" leave-active-class="duration-100 ease-in"
+                    leave-from-class="opacity-100 slide-100" leave-to-class="opacity-0 slide-95">
             <PopoverPanel focus
-                          class="absolute z-20 top-0 inset-x-0 transition transform origin-top-right md:hidden">
+                          class="absolute z-20 top-0 inset-x-0 transition transform origin-top-right lg:hidden">
                 <div class="shadow-md bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
-                    <div class="pt-6 px-5 flex items-center justify-between">
-                        <div>
+                    <div class="pl-4 pt-0 flex items-center justify-between">
+                        <div class="mt-3">
                             <Link :href="route('home')" class="text-red-700 uppercase font-bold">why culture matters?</Link>
                         </div>
-                        <div class="-mr-2">
+                        <div class="pt-3 px-3">
                             <PopoverButton
-                                class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                                class="bg-white rounded-md p-2 mr-0 sm:mr-1 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                 <span class="sr-only">{{ $t('Close main menu') }}</span>
                                 <XIcon class="h-6 w-6" aria-hidden="true"/>
                             </PopoverButton>
