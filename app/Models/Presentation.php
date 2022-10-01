@@ -46,7 +46,8 @@ class Presentation extends Model implements TranslatableContract
             'presentation_id',
             'person_id'
         )
-            ->where('person_presentation.person_type', '=', self::SPEAKER);
+            ->where('person_presentation.person_type', '=', self::SPEAKER)
+            ->orderBy('person_presentation.order', 'ASC');
     }
 
     public function moderators(): BelongsToMany
@@ -57,6 +58,7 @@ class Presentation extends Model implements TranslatableContract
             'presentation_id',
             'person_id'
         )
-            ->where('person_presentation.person_type', '=', self::MODERATOR);
+            ->where('person_presentation.person_type', '=', self::MODERATOR)
+            ->orderBy('person_presentation.order', 'ASC');
     }
 }

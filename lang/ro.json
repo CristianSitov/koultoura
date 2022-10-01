@@ -80,8 +80,10 @@
     "Verification email resent": "Un nou email de verificare a fost trimis la adresa folosită pentru înregistrare.",
 
     "bottom tagline": "Conference focused on material and immaterial heritage, relationships between center and periphery, and migration.",
-    "All Rights Reserved.": "All Rights Reserved.",
-    "Made with ♡": "Realizat de <span class=font-bold>Tech Cultura</span>,<br />cu ajutorul <a target=_blank class='underline font-bold' href=//flowbite.com>Flowbite by Themesberg</a>.",
+    "All Rights Reserved.": "Toate drepturile rezervate.",
+    "Made with ♡": "Realizat ❤ de <span class=font-bold>Tech Cultura</span>,<br />cu ajutorul <a target=_blank class='underline font-bold' href=//flowbite.com>Flowbite by Themesberg</a>.",
 
+    "Terms": "Termeni",
+    "Cookies": "Cookies",
     "cookie policy": "Folosim cookies pentru a îmbunătăți experiența dumneavoastră și pentru a analiza traficul. Selectează 'Accept' pentru a continua. Citește <a href='' class='font-medium text-gray-900 hover:underline dark:text-white'>Politica de cookies</a>."
 }
