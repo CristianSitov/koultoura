@@ -96,7 +96,21 @@ class FrontController extends Controller
     {
         return Inertia::render('Tools/Subscribers', [
             'subscribers' => User::query()
-                ->with('profile')
+                ->withWhereHas('profile', static function ($query) {
+                    $query->where('profiles.type', '<>', 'volunteer');
+                })
+                ->orderBy('users.created_at', 'DESC')
+                ->get()
+        ]);
+    }
+
+    public function volunteersList(Request $request): Response
+    {
+        return Inertia::render('Tools/Subscribers', [
+            'subscribers' => User::query()
+                ->withWhereHas('profile', static function ($query) {
+                    $query->where('profiles.type', '=', 'volunteer');
+                })
                 ->orderBy('users.created_at', 'DESC')
                 ->get()
         ]);
@@ -108,14 +122,9 @@ class FrontController extends Controller
             'day_id' => $day,
             'subscribers' => User::query()
                 ->with('profile')
-                ->when($day, static function ($query, $day) {
-                    $query->joinSub(DB::query()
-                        ->from('profiles')
-                        ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(event_details, '$.days')) LIKE '%{$day}%'"),
-                        'days',
-                        function (JoinClause $joinClause) {
-                            $joinClause->on('users.id', '=', 'days.user_id');
-                        });
+                ->withWhereHas('profile', static function ($query) use ($day) {
+                    $query->where('profiles.type', '<>', 'volunteer')
+                        ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(event_details, '$.days')) LIKE '%{$day}%'");
                 })
                 ->orderBy('users.last_name', 'ASC')
                 ->orderBy('users.first_name', 'ASC')

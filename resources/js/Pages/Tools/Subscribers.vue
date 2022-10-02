@@ -16,8 +16,11 @@ import {Link} from '@inertiajs/inertia-vue3';
                 <div class="w-full flex flex-row py-3">
                     <div class="grow justify-content-start">
                         <Link :href="route('dashboard_subscribers')"
-                              :class="{ 'bg-white text-red-600': !$page.props.day_id, 'bg-red-600 text-white': $page.props.day_id }"
+                              :class="{ 'bg-white text-red-600': route().current('dashboard_subscribers'), 'bg-red-600 text-white': !route().current('dashboard_subscribers') }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">ALL</Link>
+                        <Link :href="route('dashboard_volunteers')"
+                              :class="{ 'bg-white text-red-600': route().current('dashboard_volunteers'), 'bg-red-600 text-white': !route().current('dashboard_volunteers') }"
+                              class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">Vol</Link>
                         <Link :href="route('dashboard_subscribers_by_day', 1)"
                               :class="{ 'bg-white text-red-600': $page.props.day_id === 1, 'bg-red-600 text-white': $page.props.day_id !== 1 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>1</Link>
