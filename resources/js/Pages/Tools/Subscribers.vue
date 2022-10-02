@@ -15,24 +15,24 @@ import {Link} from '@inertiajs/inertia-vue3';
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="w-full flex flex-row py-3">
                     <div class="grow justify-content-start">
-                        <Link :href="route('dashboard_subscribers')"
-                              :class="{ 'bg-white text-red-600': route().current('dashboard_subscribers'), 'bg-red-600 text-white': !route().current('dashboard_subscribers') }"
-                              class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">ALL</Link>
-                        <Link :href="route('dashboard_volunteers')"
-                              :class="{ 'bg-white text-red-600': route().current('dashboard_volunteers'), 'bg-red-600 text-white': !route().current('dashboard_volunteers') }"
+                        <Link :href="route('dashboard_subscribers', {day: 0, volunteers: 1})"
+                              :class="{ 'bg-white text-red-600': $page.props.volunteers === 1, 'bg-red-600 text-white': $page.props.volunteers === 0 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">Vol</Link>
-                        <Link :href="route('dashboard_subscribers_by_day', 1)"
-                              :class="{ 'bg-white text-red-600': $page.props.day_id === 1, 'bg-red-600 text-white': $page.props.day_id !== 1 }"
+                        <Link :href="route('dashboard_subscribers')"
+                              :class="{ 'bg-white text-red-600': $page.props.day === 0 && $page.props.volunteers === 0, 'bg-red-600 text-white': ($page.props.day === 0 && $page.props.volunteers === 1) || ($page.props.day !== 0 && $page.props.volunteers === 0)}"
+                              class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">ALL</Link>
+                        <Link :href="route('dashboard_subscribers', {day: 1})"
+                              :class="{ 'bg-white text-red-600': $page.props.day === 1, 'bg-red-600 text-white': $page.props.day !== 1 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>1</Link>
-                        <Link :href="route('dashboard_subscribers_by_day', 2)"
-                              :class="{ 'bg-white text-red-600': $page.props.day_id === 2, 'bg-red-600 text-white': $page.props.day_id !== 2 }"
+                        <Link :href="route('dashboard_subscribers', {day: 2})"
+                              :class="{ 'bg-white text-red-600': $page.props.day === 2, 'bg-red-600 text-white': $page.props.day !== 2 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>2</Link>
-                        <Link :href="route('dashboard_subscribers_by_day', 3)"
-                              :class="{ 'bg-white text-red-600': $page.props.day_id === 3, 'bg-red-600 text-white': $page.props.day_id !== 3 }"
+                        <Link :href="route('dashboard_subscribers', {day: 3})"
+                              :class="{ 'bg-white text-red-600': $page.props.day === 3, 'bg-red-600 text-white': $page.props.day !== 3 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>3</Link>
                     </div>
                     <div class="none">
-                        <a :href="route('dashboard_subscribers_pdf', {day: $page.props.day_id || null})"
+                        <a :href="route('dashboard_subscribers_pdf', {day: $page.props.day || 0, volunteers: $page.props.volunteers})"
                            target="_blank"
                            class="text-sm text-white font-bold bg-red-600 rounded p-2 mr-2 sm:mr-0">Download</a>
                     </div>

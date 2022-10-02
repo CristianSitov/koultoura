@@ -8,24 +8,20 @@ use App\Models\Presentation;
 use App\Models\Person;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
-use GeoIp2\Database\Reader;
-use GeoIp2\Exception\AddressNotFoundException;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Jetstream\Jetstream;
-use MaxMind\Db\Reader\InvalidDatabaseException;
 
 class FrontController extends Controller
 {
@@ -92,65 +88,27 @@ class FrontController extends Controller
         return Inertia::render('Dashboard');
     }
 
-    public function subscribersList(Request $request): Response
+    public function subscribersList(Request $request, int $day = 0, int $volunteers = 0): Response
     {
         return Inertia::render('Tools/Subscribers', [
-            'subscribers' => User::query()
-                ->withWhereHas('profile', static function ($query) {
-                    $query->where('profiles.type', '<>', 'volunteer');
-                })
-                ->orderBy('users.created_at', 'DESC')
-                ->get()
-        ]);
-    }
-
-    public function volunteersList(Request $request): Response
-    {
-        return Inertia::render('Tools/Subscribers', [
-            'subscribers' => User::query()
-                ->withWhereHas('profile', static function ($query) {
-                    $query->where('profiles.type', '=', 'volunteer');
-                })
-                ->orderBy('users.created_at', 'DESC')
-                ->get()
-        ]);
-    }
-
-    public function subscribersListByDay(Request $request, int $day): Response
-    {
-        return Inertia::render('Tools/Subscribers', [
-            'day_id' => $day,
-            'subscribers' => User::query()
-                ->with('profile')
-                ->withWhereHas('profile', static function ($query) use ($day) {
-                    $query->where('profiles.type', '<>', 'volunteer')
-                        ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(event_details, '$.days')) LIKE '%{$day}%'");
-                })
-                ->orderBy('users.last_name', 'ASC')
-                ->orderBy('users.first_name', 'ASC')
-                ->get()
+            'day' => $day,
+            'volunteers' => $volunteers,
+            'subscribers' => $this->getSubscribersList($day, $volunteers),
         ]);
     }
 
     public function subscribersListPdf(Request $request): \Illuminate\Http\Response
     {
         $day = $request->get('day', false);
+        $volunteersOnly = $request->get('volunteers', false);
 
-        $data = User::query()
-            ->with('profile')
-            ->when($day, static function ($query, $day) {
-                $query->joinSub(DB::query()
-                    ->from('profiles')
-                    ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(event_details, '$.days')) LIKE '%{$day}%'"),
-                    'days',
-                    function (JoinClause $joinClause) {
-                        $joinClause->on('users.id', '=', 'days.user_id');
-                    });
-            })
-            ->whereNull('users.email_verified_at')
-            ->orderBy('users.last_name', 'ASC')
-            ->orderBy('users.first_name', 'ASC')
-            ->get()
+        $data = $this->getSubscribersList($day, $volunteersOnly)
+            ->whereNull('email_verified_at')
+            ->sortBy([
+                ['last_name', 'asc'],
+                ['first_name', 'asc'],
+            ])
+            ->values()
             ->toArray();
 
         view()->share('subscribers', $data);
@@ -226,5 +184,24 @@ class FrontController extends Controller
         $days->transform(fn($day, $index) => collect($day)->merge(['moderators' => $moderators[$index]->toArray()]));
 
         return compact(['days', 'speakers', 'presentations']);
+    }
+
+    private function getSubscribersList(int $day, int $volunteersOnly): array|Collection
+    {
+        return User::query()
+            ->with('profile')
+            ->withWhereHas('profile', static function ($query) use ($day, $volunteersOnly) {
+                $query
+                    ->when($volunteersOnly, static function ($query) {
+                        $query->where('profiles.type', '=', 'volunteer');
+                    }, static function ($query) {
+                        $query->where('profiles.type', '<>', 'volunteer');
+                    })
+                    ->when($day, static function ($query, $day) {
+                        $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(event_details, '$.days')) LIKE '%{$day}%'");
+                    });
+            })
+            ->orderBy('created_at', 'DESC')
+            ->get();
     }
 }

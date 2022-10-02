@@ -30,12 +30,8 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', [FrontController::class, 'dashboard'])
         ->name('dashboard');
-    Route::get('/dashboard/subscribers', [FrontController::class, 'subscribersList'])
+    Route::get('/dashboard/subscribers/{day?}/{volunteers?}', [FrontController::class, 'subscribersList'])
         ->name('dashboard_subscribers');
-    Route::get('/dashboard/volunteers', [FrontController::class, 'volunteersList'])
-        ->name('dashboard_volunteers');
-    Route::get('/dashboard/subscribers/day/{day}', [FrontController::class, 'subscribersListByDay'])
-        ->name('dashboard_subscribers_by_day');
     Route::get('/dashboard/subscribers.pdf', [FrontController::class, 'subscribersListPdf'])
         ->name('dashboard_subscribers_pdf');
 });
