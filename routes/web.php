@@ -22,6 +22,8 @@ Route::get('/terms', [FrontController::class, 'terms'])
     ->name('terms');
 Route::get('/cookies', [FrontController::class, 'cookies'])
     ->name('cookies');
+Route::get('/news/{slug}', [FrontController::class, 'news'])
+    ->name('news');
 
 Route::middleware([
     'auth:sanctum',
