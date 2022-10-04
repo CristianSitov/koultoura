@@ -36,7 +36,7 @@
 
     "Registration form": "Formular de înregistrare",
     "Personal Information": "Informații personale",
-    "Personal Information details": "Participarea la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters?”</span> este gratuită în limita locurilor disponibile, dar <span class='underline'>înregistrarea în prealabil este obligatorie</span>.<br /><br />Te rugăm să completezi acest formular de înregistrare.",
+    "Personal Information details": "Participarea la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters<span class='text-red-700'>?</span>”</span> este gratuită în limita locurilor disponibile, dar <span class='underline'>înregistrarea în prealabil este obligatorie</span>.<br /><br />Te rugăm să completezi acest formular de înregistrare.",
     "First name": "Prenume",
     "Last name": "Nume",
     "Email address": "Adresă ta de e-mail",
@@ -58,11 +58,11 @@
     "schedule short 3 location": "Universitatea de Vest din Timișoara - Amfiteatrul 01 (Bd. Vasile Pârvan, nr. 4)",
 
     "hello": "Salut <span class='font-bold'>:name</span>,",
-    "thank you title": "Înregistrarea ta la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters?”</span> a fost realizată cu succes. Îți mulțumim!",
+    "thank you title": "Înregistrarea ta la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters<span class='text-red-700'>?</span>”</span> a fost realizată cu succes. Îți mulțumim!",
     "thank you subscription": "Ți-am trimis un mesaj de confirmare pe e-mail.<br />Verifică, mai jos, zilele evenimentului pentru care ai optat să participi.",
     "thank you email subscription": "Verifică, mai jos, zilele evenimentului pentru care ai optat să participi.",
     "thank you closing": "Îți mulțumim și te așteptăm la eveniment!<br />În cazul în care nu mai poți ajunge, te rugăm să ne trimiți un e-mail la adresa <a href='mailto:contact@prinbanat.ro' class='underline text-red-600 hover:text-black'>contact@prinbanat.ro</a>, pentru a oferi locul tău unui alt participant.",
-    "thank you footer": "Mergi înapoi la <a href=':home' class='underline text-red-600 hover:text-black'>website-ul simpozionului Why Culture Matters?</a><br /><br />Urmărește-ne pe <a href='https://facebook.com/PrinBanat' class='underline text-red-600 hover:text-black'>Facebook</a> și <a href='https://instagram.com/prinbanat' class='underline text-red-600 hover:text-black'>Instagram</a>, pentru a fi la curent cu toate noutățile despre simpozion.",
+    "thank you footer": "Mergi înapoi la <a href=':home' class='underline text-red-600 hover:text-black'>website-ul simpozionului Why Culture Matters<span class='text-black'>?</span></a><br /><br />Urmărește-ne pe <a href='https://facebook.com/PrinBanat' class='underline text-red-600 hover:text-black'>Facebook</a> și <a href='https://instagram.com/prinbanat' class='underline text-red-600 hover:text-black'>Instagram</a>, pentru a fi la curent cu toate noutățile despre simpozion.",
 
     "Why Culture Matters? // Verify Email Address": "Why Culture Matters? // Verificare adresa email",
     "In order to complete your registration at Why Culture Matters? International Symposium, we need to verify your email address. Please click the button below.": "Pentru a încheia înregistrarea la Simpozionul Internațional „Why Culture Matters?”, avem nevoie să verificăm adresa ta de e-mail. Te rugăm să dai click pe butonul de mai jos.",
@@ -71,7 +71,7 @@
     "Regards": "Toate cele bune",
     "association": "Asociația Prin Banat",
 
-    "GDPR": "Prin completarea acestui formular, sunteți de acord ca Asociația Prin Banat să prelucreze datele personale furnizate în scopul exclusiv al participării dumneavoastră la <span class='font-bold italic'>Simpozionul Internațional „Why Culture Matters?”</span>.<br /><br />Pe toată perioada desfășurării simpozionului se vor înregistra secvențe foto și video, situaţie care va conduce incidental şi la prelucrarea unor date personale reprezentând imagini foto și video ale participanților la acest eveniment. Prin participarea dumneavoastră la <span class='font-bold italic'>Simpozionul Internațional „Why Culture Matters?”</span>, vă daţi acordul pentru toate materialele audio /  foto / video / scrise ce urmează a fi folosite / transmise / afişate / publicate pe platforme media şi social – media (Facebook, Instagram etc), pe site-ul Asociației Prin Banat conturile de socializare ale proiectelor asociației, cât şi de partenerii organizației, precum şi în cadrul altor evenimente/proiecte viitoare.",
+    "GDPR": "Prin completarea acestui formular, sunteți de acord ca Asociația Prin Banat să prelucreze datele personale furnizate în scopul exclusiv al participării dumneavoastră la <span class='font-bold italic'>Simpozionul Internațional „Why Culture Matters<span class='text-red-700'>?</span>”</span>.<br /><br />Pe toată perioada desfășurării simpozionului se vor înregistra secvențe foto și video, situaţie care va conduce incidental şi la prelucrarea unor date personale reprezentând imagini foto și video ale participanților la acest eveniment. Prin participarea dumneavoastră la <span class='font-bold italic'>Simpozionul Internațional „Why Culture Matters?”</span>, vă daţi acordul pentru toate materialele audio /  foto / video / scrise ce urmează a fi folosite / transmise / afişate / publicate pe platforme media şi social – media (Facebook, Instagram etc), pe site-ul Asociației Prin Banat conturile de socializare ale proiectelor asociației, cât şi de partenerii organizației, precum şi în cadrul altor evenimente/proiecte viitoare.",
 
     "Email verification": "Validare email",
     "Email verification explanation": "Înainte de a continua, te rugăm să validezi adresa ta de email apăsând butonul de verificare din mailul pe care tocmai ți l-am trimis?<br /><br />Dacă nu ai primit nici un email de la noi, putem să îți mai trimitem unul.",

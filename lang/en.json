@@ -26,7 +26,7 @@
     "speakers heading": "The Why Culture Matters? International Symposium brings to Timișoara experts in the field of cultural heritage protection, and professionals in social, cultural & public policies.",
 
     "Financer": "Co-funded by",
-    "joint effort": "<strong>Why Culture Matters? International Symposium</strong> is part of “<a href=https://www.facebook.com/events/588427176398433 target=_blank class=text-red-600>A Week For Monuments</a>” program that combines local, national and international initiatives that approach material and immaterial heritage in various ways, with the purpose of creating a holistic image of the role that heritage and culture plays in the life of a community.",
+    "joint effort": "<strong>Why Culture Matters<span class='text-red-700'>?</span> International Symposium</strong> is part of “<a href=https://www.facebook.com/events/588427176398433 target=_blank class=text-red-600>A Week For Monuments</a>” program that combines local, national and international initiatives that approach material and immaterial heritage in various ways, with the purpose of creating a holistic image of the role that heritage and culture plays in the life of a community.",
     "Organizers": "Organized by",
     "organization explained": "As a joint-event of the cultural projects",
     "Strategic Partners": "Strategic Partners",
@@ -36,7 +36,7 @@
 
     "Registration form": "Registration form",
     "Personal Information": "Personal Information",
-    "Personal Information details": "Participation in the <span class='font-bold'>International Symposium Why Culture Matters?</span> is free, within the capacity of the venues.<br /><span class='underline'>Prior registration is required</span>.<br /><br />Please fill in this registration form.",
+    "Personal Information details": "Participation in the <span class='font-bold'>International Symposium Why Culture Matters<span class='text-red-700'>?</span></span> is free, within the capacity of the venues.<br /><span class='underline'>Prior registration is required</span>.<br /><br />Please fill in this registration form.",
     "First name": "First name",
     "Last name": "Last name",
     "Email address": "Email address",
@@ -58,11 +58,11 @@
     "schedule short 3 location": "West University of Timișoara - Amphitheater 01 (4, Vasile Pârvan Blvd.)",
 
     "hello": "Hello <span class='font-bold'>:name</span>,",
-    "thank you title": "Your registration at the <span class='font-bold'>Why Culture Matters? International Symposium</span> is complete.<br />Thank you!",
+    "thank you title": "Your registration at the <span class='font-bold'>Why Culture Matters<span class='text-red-700'>?</span> International Symposium</span> is complete.<br />Thank you!",
     "thank you subscription": "See below your attendance options.",
     "thank you email subscription": "See below your attendance options.",
     "thank you closing": "In the case you can not make it anymore, please let us know by sending us an email at <a href='mailto:contact@prinbanat.ro' class='underline text-red-600 hover:text-black'>contact@prinbanat.ro</a>",
-    "thank you footer": "Go back to the <a href=':home' class='underline text-red-600 hover:text-black'>Why Culture Matters? International Symposium</a><br /><br />Follow us on <a href='https://facebook.com/PrinBanat' class='underline text-red-600 hover:text-black'>Facebook</a> and <a href='https://instagram.com/prinbanat' class='underline text-red-600 hover:text-black'>Instagram</a>, to stay up to date with all the news about the Symposium.",
+    "thank you footer": "Go back to the <a href=':home' class='underline text-red-600 hover:text-black'>Why Culture Matters<span class='text-black'>?</span> International Symposium</a><br /><br />Follow us on <a href='https://facebook.com/PrinBanat' class='underline text-red-600 hover:text-black'>Facebook</a> and <a href='https://instagram.com/prinbanat' class='underline text-red-600 hover:text-black'>Instagram</a>, to stay up to date with all the news about the Symposium.",
 
     "Why Culture Matters? // Verify Email Address": "Why Culture Matters? // Verify Email Address",
     "In order to complete your registration at Why Culture Matters? International Symposium, we need to verify your email address. Please click the button below.": "In order to complete your registration at Why Culture Matters? International Symposium, we need to verify your email address. Please click the button below.",
@@ -71,7 +71,7 @@
     "Regards": "Best regards",
     "association": "Prin Banat Association",
 
-    "GDPR": "By completing this form, you agree that the Prin Banat Association will process personal data for the sole purpose of your attendance in the <span class='font-bold italic'>Why Culture Matters? International Symposium.</span><br /><br />Throughout the duration of the symposium, photo and video sequences will be recorded, a situation that will incidentally also lead to the processing of personal data representing photo/ video images of the participants in this event. By participating in the <span class='font-bold italic'>Why Culture Matters? International Symposium</span>, you give your consent for all audio / photo / video / written materials to be used / transmitted / displayed / published on media and social media platforms (Facebook, Instagram, etc.), on the Prin Banat Association website and on its social media accounts as well as its partners and in other future events/projects.",
+    "GDPR": "By completing this form, you agree that the Prin Banat Association will process personal data for the sole purpose of your attendance in the <span class='font-bold italic'>Why Culture Matters<span class='text-red-700'>?</span> International Symposium.</span><br /><br />Throughout the duration of the symposium, photo and video sequences will be recorded, a situation that will incidentally also lead to the processing of personal data representing photo/ video images of the participants in this event. By participating in the <span class='font-bold italic'>Why Culture Matters<span class='text-red-700'>?</span> International Symposium</span>, you give your consent for all audio / photo / video / written materials to be used / transmitted / displayed / published on media and social media platforms (Facebook, Instagram, etc.), on the Prin Banat Association website and on its social media accounts as well as its partners and in other future events/projects.",
 
     "Email verification": "Email verification",
     "Email verification explanation": "Before continuing, could you verify your email address by clicking on the link we just emailed to you?\nIf you didn't receive the email, we will gladly send you another.",
