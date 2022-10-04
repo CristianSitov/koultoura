@@ -221,15 +221,15 @@ export default {
                                                 :id="'event_details_day'+idx"
                                                 :value="idx"
                                                 v-model:checked="form.event_details"
-                                                :disabled="idx === '1'"
-                                                :class="{'appearance-none bg-gray-300': idx === '1'}"
+                                                :disabled="idx === '1' || idx === '3'"
+                                                :class="{'appearance-none bg-gray-300': idx === '1' || idx === '3'}"
                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                         </div>
                                         <div class="ml-3 text-sm">
                                             <label :for="'event_details_day'+idx"
                                                    class="font-medium text-gray-700 text-xl leading-5"
-                                                   :class="{'text-gray-300': idx === '1'}">{{ $t('Day '+idx) }}
-                                                <span v-if="idx === '1'"
+                                                   :class="{'text-gray-300': idx === '1' || idx === '3'}">{{ $t('Day '+idx) }}
+                                                <span v-if="idx === '1' || idx === '3'"
                                                       class="text-red-600"><br />{{ $t('occupied') }}</span></label>
                                             <div class="mt-3 mb-5">
                                                 <span class="block">
