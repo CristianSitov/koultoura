@@ -36,7 +36,6 @@
 
 @inertiaHead
 
-        <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
     </head>
     <body class="font-sans antialiased">
 
