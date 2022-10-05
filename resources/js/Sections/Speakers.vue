@@ -4,8 +4,7 @@
             <section class="max-w-7xl mx-auto px-4 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28">
                 <div class="py-8 px-4 mx-auto">
                     <div class="text-white sm:text-lg dark:text-gray-400">
-                        <h1 class="text-6xl font-bold uppercase text-white wcm" v-html="$tChoice('Speakers', 2)"></h1>
-                        <span>{{ $t('schedule updating') }}</span>
+                        <h1 class="mb-16 text-6xl font-bold uppercase text-white wcm" v-html="$tChoice('Speakers', 2)"></h1>
                         <div v-for="speaker in $page.props.speakers" class="md:grid md:grid-cols-12 items-center py-8">
                             <img class="md:col-span-2 mx-auto align-top mb-4 w-75 sm:w-full md:w-36 md:h-36 rounded-md md:rounded-full sm:ml-0 sm:mr-6"
                                  :src="route('home') + speaker.avatar"
