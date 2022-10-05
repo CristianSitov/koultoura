@@ -8,7 +8,7 @@ import {Link} from '@inertiajs/inertia-vue3'
         <div class="bg-red-700 bg-cover bg-no-repeat bg-[url('@/../assets/images/wall_1.jpg')]">
             <div class="w-full mx-auto">
                 <div class="">
-                    <div class="max-w-7xl mx-auto my-auto px-4 py-44">
+                    <div class="max-w-7xl mx-auto my-auto px-4 py-48">
                         <div class="flex flex-col align-middle text-center">
                             <h1 class="text-2xl sm:text-6xl md:text-8xl tracking-wide text-white">
                                 <span class="block text-2xl sm:text-xl  md:text-2xl font-brave my-6 uppercase">{{ $t('International Symposium') }}</span>
