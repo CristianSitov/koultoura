@@ -26,11 +26,11 @@
                                         <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg text-md mr-3">{{ $t('ucf description') }}</p>
                                         <div class="bg-gray-50 sm:flex">
                                             <a href="https://lnk.charityhero.live/ucf-eu-web" target="_blank"
-                                               class="inline-flex items-center justify-center px-3 py-3 mr-3 text-base font-bold text-center text-blue-600 hover:text-yellow-300 rounded-lg bg-yellow-300 hover:bg-blue-600 focus:ring-4 focus:ring-blue-600">
+                                               class="inline-flex items-center justify-center p-2 mr-2 text-base font-bold text-center text-blue-600 hover:text-yellow-300 rounded-lg bg-yellow-300 hover:bg-blue-600 border-2 border-yellow-300">
                                                 {{ $t('ucf cta') }}
                                             </a>
                                             <button type="button"
-                                                    class="inline-flex items-center justify-center px-3 py-3 mr-3 text-base font-bold text-center text-red-600 hover:text-white rounded-lg bg-white hover:bg-red-600 border-2 border-red-600" @click="open = false" ref="cancelButtonRef">{{ $t('close') }}</button>
+                                                    class="inline-flex items-center justify-center p-2 mr-2 text-base font-bold text-center text-red-600 hover:text-white rounded-lg bg-white hover:bg-red-600 border-2 border-red-600" @click="open = false" ref="cancelButtonRef">{{ $t('close') }}</button>
                                         </div>
 
                                     </div>
