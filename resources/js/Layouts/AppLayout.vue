@@ -3,6 +3,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
 import MainMenu from '@/Sections/MainMenu.vue';
 import Bottom from '@/Sections/Bottom.vue';
+import Ucf from '@/Sections/Ucf.vue';
 
 defineProps({
     title: String,
@@ -74,5 +75,7 @@ export default {
         </main>
 
         <Bottom />
+
+        <Ucf />
     </div>
 </template>

@@ -57,6 +57,11 @@
     "schedule short 3 hours": "8th of October, 2022 / h 12:30-17:00",
     "schedule short 3 location": "West University of Timișoara - Amphitheater 01 (4, Vasile Pârvan Blvd.)",
 
+    "ucf title": "Help to save Ukrainian culture now! Donate.",
+    "ucf description": "We would be grateful for your help and efforts. The funds raised will be transferred to the account of the Ukrainian Cultural Foundation. We believe that only together we may achieve a strategic goal and not only support Ukrainian culture, but also contribute to our common victory over the Russian aggressor.",
+    "ucf cta": "Donate now. Thank you!",
+    "close": "Close",
+
     "hello": "Hello <span class='font-bold'>:name</span>,",
     "thank you title": "Your registration at the <span class='font-bold'>Why Culture Matters<span class='text-red-700'>?</span> International Symposium</span> is complete.<br />Thank you!",
     "thank you subscription": "See below your attendance options.",
