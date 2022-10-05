@@ -6,7 +6,7 @@
             bg-yellow-300 text-blue-600
             uppercase font-bold text-md"
             @click="open = true">
-            {{ $t('ucf title') }}
+            {{ $t('ucf sticky') }}
         </button>
     </div>
     <TransitionRoot as="template" :show="open">
