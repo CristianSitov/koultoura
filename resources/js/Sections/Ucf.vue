@@ -1,10 +1,10 @@
 <template>
     <div>
-        <button class="w-full h-10
+        <button class="w-full h-12
             fixed left-0 bottom-0
             flex justify-center items-center
             bg-yellow-300 text-blue-600
-            uppercase font-bold text-md"
+            uppercase font-bold text-sm"
             @click="open = true">
             {{ $t('ucf sticky') }}
         </button>
@@ -23,7 +23,7 @@
                                 <div class="grid max-w-screen-xl p-4 mx-auto lg:gap-8 xl:gap-0 lg:grid-cols-12">
                                     <div class="mr-auto place-self-center lg:col-span-7 order-2 lg:order-1">
                                         <h1 class="max-w-2xl mb-4 text-4xl text-blue-700 font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl mr-3" v-html="$t('ucf title')"></h1>
-                                        <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg text-md mr-3">{{ $t('ucf description') }}</p>
+                                        <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg text-sm lg:text-md mr-3">{{ $t('ucf description') }}</p>
                                         <div class="bg-gray-50 sm:flex">
                                             <a href="https://lnk.charityhero.live/ucf-eu-web" target="_blank"
                                                class="inline-flex items-center justify-center p-2 mr-2 text-base font-bold text-center text-blue-600 hover:text-yellow-300 rounded-lg bg-yellow-300 hover:bg-blue-600 border-2 border-yellow-300">
