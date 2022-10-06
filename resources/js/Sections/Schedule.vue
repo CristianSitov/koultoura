@@ -70,7 +70,9 @@ const props = defineProps({
                                                 class="font-bold">{{ speaker.full_name }}<span v-if="index+1 < presentation.speakers.length">, </span></span></h3>
                                             <div class="flex flex-row flex-wrap items-center sm:items-left mt-5">
                                                 <div v-for="presenter in presentation.speakers" class="flex-none -ml-2">
-                                                    <img class="w-14 h-14 rounded-full" :src="route('home') + presenter.avatar" :alt="presenter.full_name">
+                                                    <a :href="'#'+presenter.slug">
+                                                        <img class="w-14 h-14 rounded-full" :src="route('home') + presenter.avatar" :alt="presenter.full_name">
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>

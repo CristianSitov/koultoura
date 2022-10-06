@@ -5,7 +5,9 @@
                 <div class="py-8 px-4 mx-auto">
                     <div class="text-white sm:text-lg dark:text-gray-400">
                         <h1 class="mb-16 text-6xl font-bold uppercase text-white wcm" v-html="$tChoice('Speakers', 2)"></h1>
-                        <div v-for="speaker in $page.props.speakers" class="md:grid md:grid-cols-12 items-center py-8">
+                        <div v-for="speaker in $page.props.speakers"
+                            :id="speaker.slug"
+                             class="md:grid md:grid-cols-12 items-center pt-14">
                             <img class="md:col-span-2 mx-auto align-top mb-4 w-75 sm:w-full md:w-36 md:h-36 rounded-md md:rounded-full sm:ml-0 sm:mr-6"
                                  :src="route('home') + speaker.avatar"
                                  :alt="speaker.full_name">

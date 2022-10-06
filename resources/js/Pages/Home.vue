@@ -6,6 +6,7 @@ import Schedule from '@/Sections/Schedule.vue';
 import Speakers from '@/Sections/Speakers.vue';
 import Venues from '@/Sections/Venues.vue';
 import Sponsors from '@/Sections/Sponsors.vue';
+import Ucf from '@/Sections/Ucf.vue';
 </script>
 
 <template>
@@ -21,5 +22,7 @@ import Sponsors from '@/Sections/Sponsors.vue';
         <Venues />
 
         <Sponsors />
+
+        <Ucf />
     </AppLayout>
 </template>
