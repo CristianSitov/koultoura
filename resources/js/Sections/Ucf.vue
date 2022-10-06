@@ -6,7 +6,7 @@
             bg-yellow-300 text-blue-600
             uppercase font-bold text-sm"
             @click="open = true">
-            {{ $t('ucf sticky') }}
+            {{ $t('Help Ukrainian culture now!') }}
         </button>
     </div>
     <TransitionRoot as="template" :show="open">
