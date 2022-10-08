@@ -4,7 +4,7 @@ import {LibraryIcon, LocationMarkerIcon, MicrophoneIcon} from '@heroicons/vue/ou
 const props = defineProps({
     activeTab: {
         type: String,
-        default: '2',
+        default: '3',
     },
 });
 
