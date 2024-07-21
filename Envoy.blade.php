@@ -1,6 +1,11 @@
 @servers(['localhost' => '127.0.0.1'])
 
 @task('deploy', ['on' => ['localhost']])
+    @if ($branch)
+        git fetch
+        git reset --hard origin/{{ $branch }}
+    @endif
+
     /usr/bin/php8.0 /usr/bin/composer install -o -vv
     /usr/bin/php8.0 artisan migrate --force
     /usr/bin/php8.0 artisan optimize:clear
