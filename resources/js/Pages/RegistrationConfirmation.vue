@@ -75,7 +75,7 @@ export default {
                     <div class="p-8 bg-white border-t border-gray-200">
                         <p v-html="$t('thank you closing')"></p>
                         <br/>
-                        <p v-html="$t('thank you footer', {'home': route('home')})"></p>
+                        <p v-html="$t('thank you footer', {'home': route('root')})"></p>
                     </div>
                 </div>
             </div>

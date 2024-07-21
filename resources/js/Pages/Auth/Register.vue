@@ -69,7 +69,7 @@ export default {
 
     <JetAuthenticationCard width="large">
         <div class="text-center my-8">
-            <span class="text-3xl text-black font-sans font-bold uppercase"><Link :href="route('home')">why culture matters<span class="text-red-600">?</span></Link></span><br />
+            <span class="text-3xl text-black font-sans font-bold uppercase"><Link :href="route('root')">why culture matters<span class="text-red-600">?</span></Link></span><br />
             <span class="text-xl text-black font-sans font-bold">{{ $t('International Symposium') }}</span><br />
             <span class="text-xl text-black font-sans font-bold">{{ $t('6-7-8 October 2022') }}</span>
         </div>

@@ -7,7 +7,7 @@ defineProps({
 
 <template>
     <div class="text-center my-8">
-        <Link :href="route('home')">
+        <Link :href="route('root')">
             <span class="text-3xl text-red-600 font-sans font-bold uppercase">why culture matters?</span>
         </Link>
     </div>

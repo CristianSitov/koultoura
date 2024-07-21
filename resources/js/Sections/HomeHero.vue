@@ -22,12 +22,8 @@ import {Link} from '@inertiajs/inertia-vue3'
                                                                                   aria-hidden="true"/>Timișoara, Romania</span>
                                 </span>
                             </h1>
-                            <div class="my-14">
-                                <Link
-                                    :href="route('register')"
-                                    replace
-                                    class="text-2xl md:text-3xl uppercase text-white font-bold py-4 px-12 lg:px-52 rounded-lg border-white border-4 bg-transparent hover:text-red-600 hover:bg-white"
-                                >{{ $t('Register') }}</Link>
+                            <div class="my-14 text-2xl md:text-3xl uppercase text-white font-bold py-4 px-12 lg:px-52 rounded-lg border-white border-4 bg-transparent hover:text-red-600">
+                                {{ $t('Registration closed') }}
                             </div>
                         </div>
                     </div>
