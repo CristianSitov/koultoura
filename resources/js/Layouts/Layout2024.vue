@@ -1,6 +1,5 @@
 <script setup>
-import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
-import Bottom from '@/Sections/Bottom.vue';
+import { Head } from '@inertiajs/inertia-vue3';
 
 defineProps({
     title: String,

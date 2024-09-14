@@ -1,6 +1,6 @@
 <script setup>
-import Layout2024 from '@/Layouts/Layout2024.vue';
-import Landing2024 from '@/Sections/Landing2024.vue';
+import Layout2024 from "../Layouts/Layout2024.vue";
+import Landing2024 from "../Sections/Landing2024.vue";
 </script>
 
 <template>
