@@ -38,12 +38,12 @@ class Front2022Controller extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('Home', $this->getPageData());
+        return Inertia::render('2022/Home', $this->getPageData());
     }
 
     public function schedule(): Response
     {
-        return Inertia::render('Schedule', $this->getPageData());
+        return Inertia::render('2022/Schedule', $this->getPageData());
     }
 
     public function eventRegistration(Request $request): RedirectResponse
