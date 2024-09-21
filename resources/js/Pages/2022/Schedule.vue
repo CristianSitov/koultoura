@@ -1,11 +1,8 @@
 <script setup>
 import AppLayout from '@/Layouts/Layout2022.vue';
-import HomeHero from '@/Sections/HomeHero.vue';
-import Event from '@/Sections/Event.vue';
-import Schedule from '@/Sections/Schedule.vue';
-import Speakers from '@/Sections/Speakers.vue';
-import Venues from '@/Sections/Venues.vue';
-import Sponsors from '@/Sections/Sponsors.vue';
+import HomeHero from '@/Sections/2022/HomeHero.vue';
+import Schedule from '@/Sections/2022/Schedule.vue';
+import Speakers from '@/Sections/2022/Speakers.vue';
 </script>
 
 <template>
