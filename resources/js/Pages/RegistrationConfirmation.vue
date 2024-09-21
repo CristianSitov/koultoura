@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue'
+import AppLayout from '@/Layouts/Layout2022.vue'
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 </script>
 <script>

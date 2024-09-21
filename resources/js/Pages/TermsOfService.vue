@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
+import AppLayout from '@/Layouts/Layout2022.vue';
 defineProps({
     termsTitle: String,
     terms: String,
