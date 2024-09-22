@@ -19,6 +19,6 @@ class DayTranslation extends Model
 
     public function getNameAttribute($value): string
     {
-        return Carbon::parse($value)->translatedFormat(app()->getLocale() === 'ro' ? 'd F' : 'F d');
+        return Carbon::parse($value)->translatedFormat(app()->getLocale() === 'ro' ? 'd F Y' : 'F d, Y');
     }
 }

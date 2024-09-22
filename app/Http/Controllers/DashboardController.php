@@ -11,14 +11,6 @@ use Inertia\Response;
 
 class DashboardController
 {
-
-    private Front2022Controller $front2022Controller;
-
-    public function __construct(Front2022Controller $front2022Controller)
-    {
-        $this->front2022Controller = $front2022Controller;
-    }
-
     public function dashboard(Request $request): Response
     {
         return Inertia::render('2022/Dashboard');

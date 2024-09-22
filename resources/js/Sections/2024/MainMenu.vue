@@ -39,9 +39,9 @@ export default {
                  aria-label="Global">
                 <div class="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
                     <div class="flex items-center justify-between w-full lg:w-auto">
-                        <Link :href="route('root')">
+                        <Link :href="route('2024.home')">
                             <span class="sr-only">why culture matters?</span>
-                            <span class="text-white uppercase font-bold">why culture matters<span class="text-red-500">?</span></span>
+                            <span class="text-white uppercase font-bold">why culture matters</span>
                         </Link>
                         <div class="flex items-center lg:hidden">
                             <PopoverButton
@@ -52,12 +52,12 @@ export default {
                         </div>
                     </div>
                 </div>
-                <div class="hidden flex items-center lg:block md:ml-10 md:pr-4 md:space-x-5">
-                    <a v-for="item in $page.props.navigation" :key="item.name" :href="route('2022.home') + '/' + item.href"
+                <div class="flex items-center lg:block md:ml-10 md:pr-4 md:space-x-5">
+                    <a v-for="item in $page.props.navigation" :key="item.name" :href="route('2024.home') + '/' + item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
                     <Link
-                          class="font-bold uppercase bg-white text-red-600 p-2 rounded hover:underline">{{ $t('Registration closed') }}</Link>
-                    <a :href="route('2022.locale', {'locale': 'en'})"
+                          :href="route('register')">{{ $t('Registration closed') }}</Link>
+                    <a :href="route('2024.locale', {'locale': 'en'})"
                        type="button"
                        v-if="$page.props.translation !== 'ro'"
                        class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -73,7 +73,7 @@ export default {
                             </svg>EN
                         </div>
                     </a>
-                    <a :href="route('2022.locale', {'locale': 'ro'})"
+                    <a :href="route('2024.locale', {'locale': 'ro'})"
                        type="button"
                        v-if="$page.props.translation !== 'en'"
                        class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
@@ -115,7 +115,7 @@ export default {
                         <a v-for="item in $page.props.navigation" :key="item.name" :href="route('2022.home') + '/' + item.href"
                            class="block uppercase px-3 py-2 text-xs font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t(item.name) }}</a>
                         <Link class="block uppercase px-3 py-2 text-xs font-medium text-white bg-red-600 rounded" :href="route('register')">{{ $t('Register') }}</Link>
-                        <a :href="route('2022.locale', {'locale': 'en'})"
+                        <a :href="route('2024.locale', {'locale': 'en'})"
                            type="button"
                            v-if="$page.props.translation !== 'ro'"
                            class="inline-flex uppercase px-3 py-2 text-xs font-medium justify-center items-center text-gray-700 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -128,7 +128,7 @@ export default {
                                 <path fill="#FFF" d="M176 0v512h160V0H176zM0 176v160h512V176H0z"/>
                                 <path fill="#C8102E" d="M0 208v96h512v-96H0zM208 0v512h96V0h-96z"/>
                             </svg></div></a>
-                        <a :href="route('2022.locale', {'locale': 'ro'})"
+                        <a :href="route('2024.locale', {'locale': 'ro'})"
                            type="button"
                            v-if="$page.props.translation !== 'en'"
                            class="inline-flex uppercase px-3 py-2 text-xs font-medium justify-center items-center text-gray-700 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"

@@ -21,24 +21,22 @@ class SetYearlyDatabase
         // Extract the year from the URL (assuming the year is in the first URL segment)
         $year = $request->segment(1) ?? '2024';
 
-        // Validate the year format (e.g., 2023, 2024)
-        if (preg_match('/^20\d{2}$/', $year)) {
-            $connection = 'wcm_' . $year;
-            try {
-                // Attempt to establish a connection
-                DB::connection($connection)->getPdo();
-            } catch (QueryException $e) {
-                return response()->json(['status' => 'error', 'message' => "Could not connect to the database: " . $e->getMessage()]);
-            } catch (\Exception $e) {
-                return response()->json(['status' => 'error', 'message' => "An error occurred: " . $e->getMessage()]);
-            }
+        $connection = preg_match('/^20\d{2}$/', $year) ? 'wcm_' . $year : 'wcm_2024';
 
-            // Set the correct database for the year dynamically
-            Config::set('database.default', $connection);
-
-            DB::purge();  // Clear all previous connections
-            DB::reconnect($connection);  // Reconnect with the new DB
+        try {
+            // Attempt to establish a connection
+            DB::connection($connection)->getPdo();
+        } catch (QueryException $e) {
+            return response()->json(['status' => 'error', 'message' => "Could not connect to the database: " . $e->getMessage()]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => "An error occurred: " . $e->getMessage()]);
         }
+
+        // Set the correct database for the year dynamically
+        Config::set('database.default', $connection);
+
+        DB::purge();  // Clear all previous connections
+        DB::reconnect($connection);  // Reconnect with the new DB
 
         return $next($request);
     }

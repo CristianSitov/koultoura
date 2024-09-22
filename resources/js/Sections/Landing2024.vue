@@ -23,8 +23,13 @@ import {Link} from '@inertiajs/inertia-vue3'
                                                                                   aria-hidden="true"/>Faber / Timișoara, Romania</span>
                                 </span>
                             </h1>
-                            <div class="my-14 text-2xl md:text-3xl uppercase text-white font-bold py-2 px-12 lg:px-52 rounded-lg border-white border-4 bg-transparent">
-                                {{ $t('Registration Will Open Soon') }}
+                            <div class="my-14 text-2xl md:text-3xl uppercase text-white font-bold py-2 px-12 lg:px-52 rounded-lg bg-transparent">
+                                <Link
+                                    :href="route('register')"
+                                    replace
+                                    class="text-2xl md:text-3xl uppercase text-white font-bold py-4 px-12 lg:px-52 rounded-lg border-white border-4 bg-transparent hover:text-red-600 hover:bg-white"
+                                >{{ $t('Register') }}
+                                </Link>
                             </div>
                             <div class="my-14 text-2xl md:text-3xl uppercase text-black font-bold py-2 px-12 lg:px-52 rounded-lg border-white border-4 bg-white w-1/2 mx-auto">
                                 <Link :href="route('2022.home')">{{ $t('2022 edition') }}</Link>

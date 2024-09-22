@@ -23,27 +23,20 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Jetstream\Jetstream;
 
-class Front2022Controller extends Controller
+class Front2024Controller extends Controller
 {
-    private DashboardController $dashboardController;
-
-    public function __construct()
-    {
-        $this->dashboardController = new DashboardController($this);
-    }
-
     /**
      * fallback: return Inertia::render('Splash');
      * @return Response
      */
     public function index(): Response
     {
-        return Inertia::render('2022/Home', $this->getPageData());
+        return Inertia::render('2024/Home', $this->getPageData());
     }
 
     public function schedule(): Response
     {
-        return Inertia::render('2022/Schedule', $this->getPageData());
+        return Inertia::render('2024/Schedule', $this->getPageData());
     }
 
     public function registration()
@@ -53,9 +46,63 @@ class Front2022Controller extends Controller
         return redirect('/register');
     }
 
+    public function eventRegistration(Request $request): RedirectResponse
+    {
+        $input = $request->input();
+        $input['name'] = implode(' ', [$input['first_name'], $input['last_name']]);
+
+        Validator::make($input, [
+            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'required_with:email_confimation', 'same:email_confirmation'],
+            'email_confirmation' => ['required', 'string', 'email', 'max:255'],
+            'phone' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
+            'job' => ['required', 'string'],
+            'organization' => ['required', 'string'],
+            'country' => ['required', 'string'],
+            'event_details' => ['required'],
+            'event_details.*' => ['numeric', 'in:1,2,3'],
+        ])->validate();
+
+        $user = User::create([
+            'slug' => Str::uuid(),
+            'name' => $input['name'],
+            'first_name' => $input['first_name'],
+            'last_name' => $input['last_name'],
+            'email' => $input['email'],
+            'password' => Hash::make(Str::uuid()),
+        ]);
+
+        $user->profile()->create([
+            'user_id' => $user->id,
+            'phone' => $input['phone'],
+            'job' => $input['job'],
+            'organization' => $input['organization'],
+            'country' => $input['country'],
+            'event_details' => json_encode(['days' => $input['event_details']], JSON_THROW_ON_ERROR),
+        ]);
+
+        Mail::to($user)
+            ->bcc(env('MAIL_FROM_ADDRESS'))
+            ->send(new EventRegistrationConfirmation($user->load('profile')));
+
+        return Redirect::route('2024.confirmation', ['id' => $user->slug]);
+    }
+
     public function dashboard(Request $request): Response
     {
         return $this->dashboardController->dashboard($request);
+    }
+
+    public function subscribersList(Request $request, int $day = 0, int $volunteers = 0): Response
+    {
+        return $this->dashboardController->subscribersList($request, $day, $volunteers);
+    }
+
+    public function subscribersListPdf(Request $request): \Illuminate\Http\Response
+    {
+        return $this->dashboardController->subscribersListPdf($request);
     }
 
     public function confirmation(Request $request, $userId): Response

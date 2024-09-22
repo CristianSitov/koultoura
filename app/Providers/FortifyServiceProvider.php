@@ -7,8 +7,10 @@ use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Responses\WhyCultureMattersRegisterResponse;
+use App\Models\Day;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
@@ -27,6 +29,9 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::registerView(static function () {
             return Inertia::render('Auth/Register', [
                 'countries' => (new CountryList)->getList(app()->getLocale()),
+                'days' => Day::query()
+                    ->orderBy('id')
+                    ->get()
             ]);
         });
         Fortify::createUsersUsing(CreateNewUser::class);

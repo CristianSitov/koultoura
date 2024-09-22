@@ -1,6 +1,7 @@
 <script setup>
-import AppLayout from '@/Layouts/Layout2022.vue'
+import AppLayout from '@/Layouts/Layout2024.vue'
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
+import {Head} from "@inertiajs/inertia-vue3";
 </script>
 <script>
 import { consentOptions } from "../consent";
@@ -39,9 +40,11 @@ export default {
         <template #header>
         </template>
 
+        <Head title="Registration Confirmation" />
+
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-8 bg-white border-b border-gray-200">
                         <div class="text-2xl">
                             <h3 v-html="$t('hello', {name: $page.props.user.name})"></h3>
@@ -53,7 +56,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="flex flex-col bg-gray-200 bg-opacity-25"
+                    <div class="flex flex-col bg-gray-200 bg-opacity-75"
                          v-for="idx in $page.props.profile.event_details.days">
                         <div class="w-7xl p-4 px-8 pt-12">
                             <h3 class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day ' + idx) }}</h3>
@@ -75,7 +78,7 @@ export default {
                     <div class="p-8 bg-white border-t border-gray-200">
                         <p v-html="$t('thank you closing')"></p>
                         <br/>
-                        <p v-html="$t('thank you footer', {'home': route('root')})"></p>
+                        <p v-html="$t('thank you footer', {'home': route('2024.home')})"></p>
                     </div>
                 </div>
             </div>

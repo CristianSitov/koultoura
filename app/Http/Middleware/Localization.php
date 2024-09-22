@@ -19,17 +19,30 @@ class Localization
     {
         if (Session::has('locale')) {
             App::setLocale(Session::get('locale'));
-        } else {
-            try {
-                $geoIpReader = new Reader(resource_path() . '/app/GeoLite2-Country.mmdb');
-                $userLocation = $geoIpReader->country($request->ip());
-                $locale = strtolower($userLocation->country->isoCode ?? 'en');
-                App::setLocale($locale);
-                Session::put('locale', $locale);
-            } catch (AddressNotFoundException | InvalidDatabaseException $e) {
-                App::setLocale('en');
-                Session::put('locale', 'en');
-            }
+
+            return $next($request);
+        }
+
+        // read browser language
+        $browserLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : 'en';
+        if (in_array($browserLanguage, config('app.locales'))) {
+            App::setLocale($browserLanguage);
+            Session::put('locale', $browserLanguage);
+
+            return $next($request);
+        }
+
+        // read user location
+        try {
+            $geoIpReader = new Reader(resource_path() . '/app/GeoLite2-Country.mmdb');
+            $userLocation = $geoIpReader->country($request->ip());
+            $locale = strtolower($userLocation->country->isoCode ?? 'en');
+
+            App::setLocale($locale);
+            Session::put('locale', $locale);
+        } catch (AddressNotFoundException | InvalidDatabaseException $e) {
+            App::setLocale('en');
+            Session::put('locale', 'en');
         }
 
         return $next($request);

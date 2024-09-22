@@ -2,11 +2,34 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front2022Controller;
+use App\Http\Controllers\Front2024Controller;
 use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'splash'])
     ->name('root');
+
+Route::name('2024.')
+    ->group(function () {
+       Route::controller(Front2024Controller::class)
+           ->group(function () {
+               Route::get('/home', 'index')
+                   ->name('home');
+               Route::get('/registration', 'registration')
+                   ->name('registration');
+               Route::post('/event-registration', 'eventRegistration')
+                   ->name('event-registration');
+               Route::get('/user/{id}', 'confirmation')
+                   ->name('confirmation');
+               Route::get('/{locale}', 'switchLocale')
+                   ->where('locale', 'en|ro')
+                   ->name('locale');
+               Route::get('/terms', 'terms')
+                   ->name('terms');
+               Route::get('/cookies', 'cookies')
+                   ->name('cookies');
+           });
+    });
 
 Route::prefix('2022')
     ->name('2022.')
@@ -17,12 +40,6 @@ Route::prefix('2022')
                     ->name('home');
                 Route::get('/schedule', 'schedule')
                     ->name('schedule');
-                Route::get('/registration', 'registration')
-                    ->name('registration');
-                Route::post('/event-registration', 'eventRegistration')
-                    ->name('event-registration');
-                Route::get('/user/{id}', 'confirmation')
-                    ->name('confirmation');
                 Route::get('/{locale}', 'switchLocale')
                     ->where('locale', 'en|ro')
                     ->name('locale');

@@ -13,6 +13,7 @@
         <meta charset="utf-8">
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <meta property="og:url" content="{{ env('APP_URL') }}">
         <meta property="og:type" content="website">
