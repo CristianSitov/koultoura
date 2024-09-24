@@ -1,13 +1,12 @@
 <script setup>
 import {LibraryIcon, LocationMarkerIcon, MicrophoneIcon} from '@heroicons/vue/outline'
+</script>
+<script>
+import { ref } from 'vue'
 
-const props = defineProps({
-    activeTab: {
-        type: String,
-        default: '1',
-    },
+const props = ref({
+    activeTab: '1',
 });
-
 </script>
 
 <template>
@@ -21,8 +20,8 @@ const props = defineProps({
                         <li v-for="(day, index) in $page.props.days" class="grow" role="presentation">
                             <button class="inline-block p-2 md:p-4 md:px-8 rounded-t-lg border-b-2 text-white hover:text-orange-600"
                                     id="profile-tab" :data-tabs-target="'#tab' + index" type="button"
-                                    v-on:click="activeTab = index"
-                                    :class="{ 'border-orange-600 text-orange-600': activeTab === index, 'border-transparent': activeTab !== index }"
+                                    v-on:click="props.activeTab = index"
+                                    :class="{ 'border-orange-600 text-orange-600': props.activeTab === index, 'border-transparent': props.activeTab !== index }"
                                     role="tab" aria-controls="profile" aria-selected="true">
                                 <span class="text-xl md:text-4xl font-bold block uppercase">{{ $t('Day :day', { day: index }) }}</span>
                                 <strong class="block md:text-xl">{{ day.name }}</strong></button>
@@ -32,7 +31,7 @@ const props = defineProps({
                 <div id="myTabContent">
                     <div v-for="(day, index) in $page.props.presentations"
                          :id="'tab' + index"
-                         :class="{ hidden: activeTab !== index }"
+                         :class="{ hidden: props.activeTab !== index }"
                          role="tabpanel" aria-labelledby="profile-tab">
                         <section class="text-white body-font">
                             <div class="md:w-3/4 mx-auto">
