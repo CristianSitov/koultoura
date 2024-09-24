@@ -25,6 +25,16 @@ export default {
             } else {
                 if (!this.view.atTopOfPage) this.view.atTopOfPage = true
             }
+        },
+        handleMenuClick(item) {
+            if (typeof item.method !== 'undefined') {
+                this[item.method](item.argument);
+            } else {
+                window.location.href = event.currentTarget.href;
+            }
+        },
+        flipToTab(tab) {
+            window.location.href = route('2024.home') + '#tab' + tab;
         }
     }
 }
@@ -53,7 +63,8 @@ export default {
                     </div>
                 </div>
                 <div class="flex items-center lg:block md:ml-10 md:pr-4 md:space-x-5">
-                    <a v-for="item in $page.props.navigation" :key="item.name" :href="route('2024.home') + '/' + item.href"
+                    <a v-for="item in $page.props.navigation" :key="item.name" :href="item.href"
+                       @click.prevent="handleMenuClick(item)"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
                     <Link
                         class="font-bold uppercase text-white hover:underline"
