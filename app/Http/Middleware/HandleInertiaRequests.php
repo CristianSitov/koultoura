@@ -39,12 +39,14 @@ class HandleInertiaRequests extends Middleware
         $navigation = [
             'en' => [
                 ['name' => 'schedule', 'href' => '#schedule'],
+                ['name' => 'workshops', 'href' => '#workshops', 'method' => 'flipToTab', 'argument' => '3'],
                 ['name' => 'speakers', 'href' => '#speakers'],
                 ['name' => 'venues', 'href' => '#venues'],
                 ['name' => 'partners', 'href' => '#partners'],
             ],
             'ro' => [
                 ['name' => 'program', 'href' => '#schedule'],
+                ['name' => 'ateliere', 'href' => '#ateliere', 'method' => 'flipToTab', 'argument' => '3'],
                 ['name' => 'invitați', 'href' => '#speakers'],
                 ['name' => 'locații', 'href' => '#venues'],
                 ['name' => 'parteneri', 'href' => '#partners'],

@@ -40,7 +40,7 @@ export default {
                 <div class="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
                     <div class="flex items-center justify-between w-full lg:w-auto">
                         <Link :href="route('2024.home')">
-                            <span class="sr-only">why culture matters?</span>
+                            <span class="sr-only">why culture matters</span>
                             <span class="text-white uppercase font-bold">why culture matters</span>
                         </Link>
                         <div class="flex items-center lg:hidden">
@@ -101,7 +101,7 @@ export default {
                 <div class="shadow-md bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
                     <div class="pl-4 pt-0 flex items-center justify-between">
                         <div class="mt-3">
-                            <Link :href="route('root')" class="uppercase font-bold">why culture matters<span class="text-red-700">?</span></Link>
+                            <Link :href="route('root')" class="uppercase font-bold">why culture matters</Link>
                         </div>
                         <div class="pt-3 px-3">
                             <PopoverButton
