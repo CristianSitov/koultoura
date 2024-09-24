@@ -56,7 +56,8 @@ export default {
                     <a v-for="item in $page.props.navigation" :key="item.name" :href="route('2024.home') + '/' + item.href"
                        class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</a>
                     <Link
-                          :href="route('register')">{{ $t('Registration closed') }}</Link>
+                        class="font-bold uppercase text-white hover:underline"
+                        :href="route('register')">{{ $t('Register') }}</Link>
                     <a :href="route('2024.locale', {'locale': 'en'})"
                        type="button"
                        v-if="$page.props.translation !== 'ro'"
