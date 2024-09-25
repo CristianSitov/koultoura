@@ -1,5 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
+import Bottom from "../Sections/2024/Bottom.vue";
 
 defineProps({
     title: String,
@@ -45,15 +46,17 @@ export default {
         </Head>
 
         <!-- Page Heading -->
-        <header v-if="$slots.header" class="bg-cover bg-no-repeat bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow">
+        <header v-if="$slots.header" class="bg-no-repeat bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow">
             <div class="max-w-7xl mx-auto flex flex-row py-6 px-4 sm:px-6 lg:px-8 h-30 pt-5">
                 <slot name="header" />
                 <div class="grow"></div>
             </div>
         </header>
 
-        <main class="bg-cover bg-no-repeat bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow min-h-screen">
+        <main class="bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow min-h-screen">
             <slot />
         </main>
+
+        <Bottom />
     </div>
 </template>
