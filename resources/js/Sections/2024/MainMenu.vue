@@ -2,6 +2,7 @@
 import {Link} from "@inertiajs/inertia-vue3";
 import {Popover, PopoverButton, PopoverPanel} from '@headlessui/vue'
 import {MenuIcon, XIcon} from '@heroicons/vue/outline'
+import {changeTab} from "./Schedule.vue";
 </script>
 
 <script>
@@ -28,7 +29,8 @@ export default {
         },
         handleMenuClick(item) {
             if (typeof item.method !== 'undefined') {
-                this[item.method](item.argument);
+                eval(item.method)(item.argument);
+                window.location.href = event.currentTarget.href;
             } else {
                 window.location.href = event.currentTarget.href;
             }

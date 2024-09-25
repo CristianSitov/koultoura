@@ -1,37 +1,47 @@
 <script setup>
 import {LibraryIcon, LocationMarkerIcon, MicrophoneIcon} from '@heroicons/vue/outline'
+import {TabGroup, TabList, Tab, TabPanels, TabPanel} from "@headlessui/vue";
+import {ref} from "vue";
 </script>
 <script>
-import { ref } from 'vue'
+import {ref} from "vue";
 
-const props = ref({
-    activeTab: '1',
-});
+const selectedTab = ref(0) // adjust this using time stamp
+
+export function changeTab(index) {
+    selectedTab.value = index
+}
 </script>
 
 <template>
     <div class="snap-start scroll-m-0 snap-both">
         <div id="schedule" class="bg-gray-900 w-full text-white">
             <section class="max-w-7xl mx-auto px-4 pt-8 sm:pt-12 sm:px-6 md:pt-16 lg:pt-20 lg:px-8 xl:pt-28">
+                <div id="ateliere"></div><div id="workshops"></div>
                 <h1 class="text-6xl font-bold uppercase wcm" v-html="$t('Schedule')"></h1>
 
+                <TabGroup :selectedIndex="selectedTab" @change="changeTab">
                 <div class="mt-14 mb-4 border-b border-white">
-                    <ul class="flex -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
-                        <li v-for="(day, index) in $page.props.days" class="grow" role="presentation">
-                            <button class="inline-block p-2 md:p-4 md:px-8 rounded-t-lg border-b-2 text-white hover:text-orange-600"
-                                    id="profile-tab" :data-tabs-target="'#tab' + index" type="button"
-                                    v-on:click="props.activeTab = index"
-                                    :class="{ 'border-orange-600 text-orange-600': props.activeTab === index, 'border-transparent': props.activeTab !== index }"
+                    <TabList class="flex -mb-px text-sm font-medium text-center" data-tabs-toggle="#myTabContent" role="tablist">
+                        <Tab v-for="(day, index) in $page.props.days"
+                             class="grow"
+                             as="template"
+                             :key="index"
+                             v-slot="{ selected }">
+                            <button class="inline-block p-2 md:p-4 md:px-8 rounded-t-lg border-b-2 ui-not-selected:text-white hover:text-orange-600"
+                                    id="profile-tab"
+                                    type="button"
+                                    :class="{ 'bg-white text-black': selected, 'border-transparent': !selected }"
                                     role="tab" aria-controls="profile" aria-selected="true">
                                 <span class="text-xl md:text-4xl font-bold block uppercase">{{ $t('Day :day', { day: index }) }}</span>
+
                                 <strong class="block md:text-xl">{{ day.name }}</strong></button>
-                        </li>
-                    </ul>
+                        </Tab>
+                    </TabList>
                 </div>
-                <div id="myTabContent">
-                    <div v-for="(day, index) in $page.props.presentations"
+                <TabPanels id="myTabContent">
+                    <TabPanel v-for="(day, index) in $page.props.presentations"
                          :id="'tab' + index"
-                         :class="{ hidden: props.activeTab !== index }"
                          role="tabpanel" aria-labelledby="profile-tab">
                         <section class="text-white body-font">
                             <div class="md:w-3/4 mx-auto">
@@ -79,8 +89,9 @@ const props = ref({
                                 </div>
                             </div>
                         </section>
-                    </div>
-                </div>
+                    </TabPanel>
+                </TabPanels>
+                </TabGroup>
             </section>
         </div>
     </div>
