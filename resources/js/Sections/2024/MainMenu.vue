@@ -2,7 +2,7 @@
 import {Link} from "@inertiajs/inertia-vue3";
 import {Popover, PopoverButton, PopoverPanel} from '@headlessui/vue'
 import {MenuIcon, XIcon} from '@heroicons/vue/outline'
-import {changeTab} from "./Schedule.vue";
+import {changeTab} from "./Schedule.vue"
 </script>
 
 <script>
@@ -30,14 +30,12 @@ export default {
         handleMenuClick(item) {
             if (typeof item.method !== 'undefined') {
                 eval(item.method)(item.argument);
+                window.location.href = route('2024.home') + '#tab' + item.argument;
                 window.location.href = event.currentTarget.href;
             } else {
                 window.location.href = event.currentTarget.href;
             }
         },
-        flipToTab(tab) {
-            window.location.href = route('2024.home') + '#tab' + tab;
-        }
     }
 }
 </script>
