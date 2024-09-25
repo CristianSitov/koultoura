@@ -5,12 +5,16 @@ import {ref} from "vue";
 </script>
 <script>
 import {ref} from "vue";
+import emitter from "../../emitter.js";
 
 const selectedTab = ref(0) // adjust this using time stamp
 
 export function changeTab(index) {
     selectedTab.value = index
 }
+
+emitter.on('flipToTab', e => selectedTab.value = e.arg )
+
 </script>
 
 <template>

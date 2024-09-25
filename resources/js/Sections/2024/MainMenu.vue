@@ -2,10 +2,11 @@
 import {Link} from "@inertiajs/inertia-vue3";
 import {Popover, PopoverButton, PopoverPanel} from '@headlessui/vue'
 import {MenuIcon, XIcon} from '@heroicons/vue/outline'
-import {changeTab} from "./Schedule.vue"
 </script>
 
 <script>
+import emitter from "../../emitter.js";
+
 export default {
     data () {
         return {
@@ -29,13 +30,12 @@ export default {
         },
         handleMenuClick(item) {
             if (typeof item.method !== 'undefined') {
-                eval(item.method)(item.argument);
-                window.location.href = route('2024.home') + '#tab' + item.argument;
+                emitter.emit(item.method, { arg: item.argument })
                 window.location.href = event.currentTarget.href;
             } else {
                 window.location.href = event.currentTarget.href;
             }
-        },
+        }
     }
 }
 </script>
