@@ -1,6 +1,6 @@
 <template>
     <div class="snap-start scroll-m-0 snap-both">
-        <div id="partners" class="w-full pt-8">
+        <div id="partners" class="w-full">
             <section class="bg-white dark:bg-gray-900">
                 <div class="py-8 lg:py-8 pt-0 px-4 mx-auto max-w-screen-xl">
                     <div class="md:pb-10 text-center">
