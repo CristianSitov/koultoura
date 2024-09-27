@@ -49,6 +49,16 @@
                            class="flex drop-shadow mx-auto w-2/3 md:w-full items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
                             <img src="assets/images/logos/administratia_fondului_cultural_national.png" alt=""/>
                         </a>
+                        <a href="//oar.archi"
+                           target="_blank"
+                           class="flex drop-shadow mx-auto w-2/3 md:w-full items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                            <img src="assets/images/logos/ordinul_arhitectilor_din_romania_timbrul_de_arhitectura.png" alt=""/>
+                        </a>
+                        <a href="//centruldeproiecte.ro"
+                           target="_blank"
+                           class="flex drop-shadow mx-auto w-2/3 md:w-full items-center p-8 text-center bg-gray-50 rounded hover:bg-gray-100">
+                            <img :src="'assets/images/logos/centrul_de_proiecte_timisoara_prin_guvernul_romaniei_' + $page.props.locale + '.png'" alt=""/>
+                        </a>
                     </div>
                     <p class="mx-auto text-left text-xs text-gray-400 leading-tight mt-4 mb-12">{{ $t('AFCN disclaimer') }}</p>
                     <h2 class="text-center md:text-left mb-2 mt-6 text-3xl font-extrabold tracking-tight leading-tight text-gray-900 md:text-4xl">{{ $t('Partners') }}</h2>
