@@ -227,13 +227,20 @@ export default {
                                                             <JetCheckbox
                                                                 :id="'event_details_day_'+idx.id.toString()"
                                                                 :value="idx.id"
+                                                                :disabled="idx.id.toString() === '3'"
+                                                                :class="{'appearance-none bg-gray-300': idx === '3'}"
                                                                 v-model:checked="form.event_details"
                                                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"></JetCheckbox>
                                                         </div>
                                                         <div class="ml-3 text-sm">
                                                             <label :for="'event_details_day_'+idx.id.toString()"
-                                                                   class="font-medium text-gray-700 text-xl leading-5">{{ $t('Day :day', { day: idx.id }) }} &mdash; {{ idx.name }}<br />
-                                                                {{ idx.title }}</label>
+                                                                   class="font-medium text-xl leading-5"
+                                                                   :class="{'text-gray-300': idx.id.toString() === '3'}">
+                                                                {{ $t('Day :day', { day: idx.id.toString() }) }} &mdash; {{ idx.name }}
+                                                                <br />
+                                                                {{ idx.title }}<br />
+                                                                <span v-if="idx.id.toString() === '3'"
+                                                                      class="text-red-600"><br />{{ $t('Registration Will Open Soon') }}</span></label>
                                                             <div class="mt-3 mb-5">
                                                         <span class="block">
                                                             <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
@@ -241,7 +248,7 @@ export default {
                                                                 aria-hidden="true"
                                                             />{{ $t('schedule short '+idx.id+' hours') }}</span>
                                                         </span>
-                                                                <span class="block">
+                                                        <span class="block">
                                                             <span class="text-sm inline-flex align-middle leading-6"><LocationMarkerIcon
                                                                 class="h-5 md:h-6 sm:h-4 w-5 md:w-7 sm:w-5 mr-3"
                                                                 aria-hidden="true"
