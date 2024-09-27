@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '@/Layouts/Layout2024.vue';
+import AppLayout from '../../Layouts/Layout2024.vue';
 import {Head, Link, useForm} from '@inertiajs/inertia-vue3';
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 import JetAuthenticationCard from '@/Components/AuthenticationCard.vue';
@@ -8,6 +8,7 @@ import JetInput from '@/Components/Input.vue';
 import JetInputError from '@/Components/InputError.vue';
 import JetCheckbox from '@/Components/Checkbox.vue';
 import JetLabel from '@/Components/Label.vue';
+import MainMenu from "../../Sections/2024/MainMenu.vue";
 
 const form = useForm({
     first_name: '',
@@ -67,6 +68,8 @@ export default {
 
 <template>
     <AppLayout title="Register">
+        <MainMenu />
+
         <template #header>
         </template>
 
