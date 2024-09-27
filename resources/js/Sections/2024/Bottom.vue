@@ -7,7 +7,7 @@ import {Link} from '@inertiajs/inertia-vue3'
             <div class="mx-auto max-w-screen-xl text-center">
                 <div class="mt-4 sm:mt-0 sm:flex sm:items-center sm:justify-between">
                     <div class="text-sm text-gray-500 text-center md:text-left">
-                        © 2022 <strong><a href="//prinbanat.ngo" class="hover:underline">Prin Banat NGO</a></strong>. {{ $t('All Rights Reserved.') }}<br />
+                        © 2022 &mdash; {{ $page.props.year }} <strong><a href="//prinbanat.ngo" class="hover:underline">Prin Banat NGO</a></strong>. {{ $t('All Rights Reserved.') }}<br />
                         <Link :href="route('2024.terms')">{{ $t('Terms') }}</Link> | <Link :href="route('2024.cookies')">{{ $t('Cookies') }}</Link></div>
                     <div class="text-sm text-gray-500 text-center md:text-right" v-html="$t('Made with ♡')"></div>
                 </div>
