@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '@/Layouts/Layout2024.vue'
+import AppLayout from '../Layouts/Layout2024.vue'
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 import {Head} from "@inertiajs/inertia-vue3";
 </script>
