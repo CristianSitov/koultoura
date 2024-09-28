@@ -1,8 +1,5 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
-import Bottom from "../Sections/2024/Bottom.vue";
-import Sponsors from "../Sections/2024/Sponsors.vue";
-import Venues from "../Sections/2024/Venues.vue";
 
 defineProps({
     title: String,
@@ -42,27 +39,19 @@ export default {
 </script>
 
 <template>
-    <div>
-        <Head>
-            <title>{{ title }}</title>
-        </Head>
+    <Head>
+        <title>{{ title }}</title>
+    </Head>
 
-        <!-- Page Heading -->
-        <header v-if="$slots.header" class="bg-no-repeat bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow">
-            <div class="max-w-7xl mx-auto flex flex-row py-6 px-4 sm:px-6 lg:px-8 h-30 pt-5">
-                <slot name="header" />
-                <div class="grow"></div>
-            </div>
-        </header>
+    <!-- Page Heading -->
+    <header v-if="$slots.header" class="bg-no-repeat bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow">
+        <div class="max-w-7xl mx-auto flex flex-row py-6 px-4 sm:px-6 lg:px-8 h-30 pt-5">
+            <slot name="header" />
+            <div class="grow"></div>
+        </div>
+    </header>
 
-        <main class="bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow min-h-screen px-2.5 pb-10">
-            <slot />
-        </main>
-
-        <Venues />
-
-        <Sponsors />
-
-        <Bottom />
-    </div>
+    <main class="bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow min-h-screen px-2.5 pb-10">
+        <slot />
+    </main>
 </template>

@@ -3,6 +3,9 @@ import AppLayout from '../Layouts/Layout2024.vue'
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 import {Head} from "@inertiajs/inertia-vue3";
 import MainMenu from "../Sections/2024/MainMenu.vue";
+import Sponsors from "../Sections/2024/Sponsors.vue";
+import Venues from "../Sections/2024/Venues.vue";
+import Bottom from "../Sections/2024/Bottom.vue";
 </script>
 <script>
 import { consentOptions } from "../consent";
@@ -87,4 +90,10 @@ export default {
             </div>
         </div>
     </AppLayout>
+
+    <Venues />
+
+    <Sponsors />
+
+    <Bottom />
 </template>

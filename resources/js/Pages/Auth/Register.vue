@@ -9,6 +9,9 @@ import JetInputError from '@/Components/InputError.vue';
 import JetCheckbox from '@/Components/Checkbox.vue';
 import JetLabel from '@/Components/Label.vue';
 import MainMenu from "../../Sections/2024/MainMenu.vue";
+import Sponsors from "../../Sections/2024/Sponsors.vue";
+import Venues from "../../Sections/2024/Venues.vue";
+import Bottom from "../../Sections/2024/Bottom.vue";
 
 const form = useForm({
     first_name: '',
@@ -67,8 +70,9 @@ export default {
 </script>
 
 <template>
+    <MainMenu />
+
     <AppLayout title="Register">
-        <MainMenu />
 
         <template #header>
         </template>
@@ -295,4 +299,10 @@ export default {
             </div>
         </div>
     </AppLayout>
+
+    <Venues />
+
+    <Sponsors />
+
+    <Bottom />
 </template>

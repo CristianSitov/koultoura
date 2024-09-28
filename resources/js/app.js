@@ -32,7 +32,7 @@ createInertiaApp({
             .use(VueGtag, {
                 enabled: false,
                 config: {
-                    id: "G-WYGPJKWNT1",
+                    id: "G-C3S8YMPKF0",
                     send_page_view: true
                 }
             })
