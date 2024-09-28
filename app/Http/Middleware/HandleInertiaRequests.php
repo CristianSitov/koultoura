@@ -38,18 +38,18 @@ class HandleInertiaRequests extends Middleware
     {
         $navigation = [
             'en' => [
-                ['name' => 'schedule', 'href' => '#schedule', 'method' => 'flipToTab', 'argument' => 0],
-                ['name' => 'workshops', 'href' => '#workshops', 'method' => 'flipToTab', 'argument' => 2],
-                ['name' => 'speakers', 'href' => '#speakers'],
-                ['name' => 'venues', 'href' => '#venues'],
-                ['name' => 'partners', 'href' => '#partners'],
+                ['name' => 'schedule', 'href' => '/#schedule', 'method' => 'flipToTab', 'argument' => 0],
+                ['name' => 'workshops', 'href' => '/#workshops', 'method' => 'flipToTab', 'argument' => 2],
+                ['name' => 'speakers', 'href' => '/#speakers'],
+                ['name' => 'venues', 'href' => '/#venues'],
+                ['name' => 'partners', 'href' => '/#partners'],
             ],
             'ro' => [
-                ['name' => 'program', 'href' => '#schedule', 'method' => 'flipToTab', 'argument' => 0],
-                ['name' => 'ateliere', 'href' => '#ateliere', 'method' => 'flipToTab', 'argument' => 2],
-                ['name' => 'invitați', 'href' => '#speakers'],
-                ['name' => 'locații', 'href' => '#venues'],
-                ['name' => 'parteneri', 'href' => '#partners'],
+                ['name' => 'program', 'href' => '/#schedule', 'method' => 'flipToTab', 'argument' => 0],
+                ['name' => 'ateliere', 'href' => '/#ateliere', 'method' => 'flipToTab', 'argument' => 2],
+                ['name' => 'invitați', 'href' => '/#speakers'],
+                ['name' => 'locații', 'href' => '/#venues'],
+                ['name' => 'parteneri', 'href' => '/#partners'],
             ],
         ];
 
