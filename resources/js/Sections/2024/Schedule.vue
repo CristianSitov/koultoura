@@ -61,7 +61,7 @@ emitter.on('flipToTab', e => selectedTab.value = e.arg )
                         </div>
                         <div class="container md:px-5 py-10 md:py-24 mx-auto flex flex-wrap">
                             <div v-for="presentation in day" :key="presentation.id" class="flex relative pt-5 mt-3 md:pt-10 md:pb-20 sm:items-center mx-auto w-full">
-                                <div class="flex-shrink-0 inline-flex relative font-bold text-lg md:text-5xl px-4">
+                                <div class="flex-shrink-0 inline-flex relative font-bold text-lg md:text-5xl pr-4">
                                     {{ presentation.starts_at }}
                                 </div>
                                 <div class="flex sm:mx-5 md:pl-8 sm:pl-6 sm:items-center items-start flex-col sm:flex-row">

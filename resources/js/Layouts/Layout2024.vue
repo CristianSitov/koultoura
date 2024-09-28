@@ -1,6 +1,8 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
 import Bottom from "../Sections/2024/Bottom.vue";
+import Sponsors from "../Sections/2024/Sponsors.vue";
+import Venues from "../Sections/2024/Venues.vue";
 
 defineProps({
     title: String,
@@ -53,9 +55,13 @@ export default {
             </div>
         </header>
 
-        <main class="bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow min-h-screen">
+        <main class="bg-[url('@/../assets/images/wall_2024_1.jpg')] shadow min-h-screen px-2.5 pb-10">
             <slot />
         </main>
+
+        <Venues />
+
+        <Sponsors />
 
         <Bottom />
     </div>

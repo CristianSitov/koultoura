@@ -41,7 +41,7 @@ export default {
 </script>
 
 <template>
-    <Popover class="fixed top-0 w-full animated z-200"
+    <Popover class="fixed top-0 w-full animated z-20"
              :class="{ 'scrolled bg-black': !view.atTopOfPage }">
         <div class="max-w-7xl relative mx-auto py-3 px-3 sm:px-4 lg:px-8 h-1/5">
             <nav class="relative flex items-center justify-between sm:h-10"
@@ -111,7 +111,7 @@ export default {
                 <div class="shadow-md bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
                     <div class="pl-4 pt-0 flex items-center justify-between">
                         <div class="mt-3">
-                            <Link :href="route('root')" class="uppercase font-bold">why culture matters</Link>
+                            <Link :href="route('2024.home')" class="uppercase font-bold">why culture matters</Link>
                         </div>
                         <div class="pt-3 px-3">
                             <PopoverButton

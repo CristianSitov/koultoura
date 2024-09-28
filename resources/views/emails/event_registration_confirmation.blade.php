@@ -17,7 +17,7 @@
 @endforeach
 
 <p>{!! __('thank you closing') !!}</p>
-<p>{!! __('thank you footer', ['home' => route('root')]) !!}</p>
+<p>{!! __('thank you footer', ['home' => route('2024.home')]) !!}</p>
 <p>{{ __('Regards') }}<br />{{ __('association') }}</p>
 
 @endcomponent

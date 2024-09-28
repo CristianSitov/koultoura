@@ -3,17 +3,13 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
-use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', [LandingController::class, 'splash'])
-    ->name('root');
 
 Route::name('2024.')
     ->group(function () {
        Route::controller(Front2024Controller::class)
            ->group(function () {
-               Route::get('/home', 'index')
+               Route::get('/', 'index')
                    ->name('home');
                Route::get('/registration', 'registration')
                    ->name('registration');

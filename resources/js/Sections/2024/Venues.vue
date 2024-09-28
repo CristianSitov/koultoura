@@ -1,7 +1,7 @@
 <template>
     <div class="snap-start scroll-pt-60 snap-both">
-        <div id="venues" class="w-full">
-            <div id="mapContainer"></div>
+        <div id="venues" class="w-full rounded-lg mb-5 bg-white">
+            <div id="mapContainer" class="rounded-lg"></div>
         </div>
     </div>
 </template>

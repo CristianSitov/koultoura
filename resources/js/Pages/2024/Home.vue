@@ -22,9 +22,9 @@ onBeforeRouteLeave((to, from) => {
 
 
 <template>
-    <AppLayout title="Home">
-        <MainMenu />
+    <MainMenu />
 
+    <AppLayout title="Home">
         <HomeHero />
 
         <Event />
@@ -32,9 +32,5 @@ onBeforeRouteLeave((to, from) => {
         <Schedule />
 
         <Speakers />
-
-        <Venues />
-
-        <Sponsors />
     </AppLayout>
 </template>
