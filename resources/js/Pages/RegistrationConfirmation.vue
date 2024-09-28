@@ -2,6 +2,7 @@
 import AppLayout from '../Layouts/Layout2024.vue'
 import {CalendarIcon, LocationMarkerIcon} from '@heroicons/vue/outline'
 import {Head} from "@inertiajs/inertia-vue3";
+import MainMenu from "../Sections/2024/MainMenu.vue";
 </script>
 <script>
 import { consentOptions } from "../consent";
@@ -36,6 +37,8 @@ export default {
 </script>
 
 <template>
+    <MainMenu />
+
     <AppLayout title="Registration Confirmation">
         <template #header>
         </template>
