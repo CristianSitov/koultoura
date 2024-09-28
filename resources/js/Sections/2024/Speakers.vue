@@ -3,7 +3,8 @@
         <div id="speakers" class="bg-white text-gray-700 max-w-7xl mx-auto my-24 px-4 sm:px-6 lg:px-8 pt-4 sm:pt-12 md:pt-16 rounded-lg snap-start scroll-m-0 snap-both">
             <div class="py-8 lg:px-4 mx-auto">
                 <div class="sm:text-lg">
-                    <h1 class="mb-16 text-6xl font-bold uppercase wcm" v-html="$tChoice('Speakers', 2)"></h1>
+                    <h1 class="text-6xl font-bold uppercase wcm" v-html="$tChoice('Speakers', 2)"></h1>
+                    <p class="mb-16">{{ $t('Speakers soon') }}</p>
                     <div v-for="speaker in $page.props.speakers"
                          :id="speaker.slug"
                          class="md:grid md:grid-cols-12 items-center pt-14">
