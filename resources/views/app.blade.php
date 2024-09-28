@@ -17,7 +17,7 @@
 
         <meta property="og:url" content="{{ env('APP_URL') }}">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="{!! __('Why Culture Matters? International Symposium') !!}">
+        <meta property="og:title" content="{!! __('Why Culture Matters International Symposium') !!}">
         <meta property="og:image" content="{{ env('APP_URL') }}assets/images/event_banner_2024.jpg">
         <meta property="og:description" content="{!! __('Event') !!}">
 
