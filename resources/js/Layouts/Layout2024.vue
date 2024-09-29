@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         track() {
-            this.gTracker.pageview(this.$inertia.page.url)
+            this.gTracker.pageview(this.$route)
             this.gTracker.event(this.$inertia.page.component, {value: this.title})
         }
     }

@@ -22,7 +22,7 @@ export default {
 
     methods: {
         handleScroll() {
-            if (window.pageYOffset > 0) {
+            if (window.scrollY > 0) {
                 if (this.view.atTopOfPage) this.view.atTopOfPage = false
             } else {
                 if (!this.view.atTopOfPage) this.view.atTopOfPage = true
@@ -31,9 +31,6 @@ export default {
         handleMenuClick(item) {
             if (typeof item.method !== 'undefined') {
                 emitter.emit(item.method, { arg: item.argument })
-                window.location.href = event.currentTarget.href;
-            } else {
-                window.location.href = event.currentTarget.href;
             }
         }
     }
@@ -41,7 +38,7 @@ export default {
 </script>
 
 <template>
-    <div  class="fixed top-0 w-full animated z-20"
+    <div  class="fixed w-full z-20"
           :class="{ 'scrolled bg-black': !view.atTopOfPage }">
         <div class="max-w-7xl relative mx-auto h-1/5">
             <nav class="relative flex items-center justify-between px-3 sm:px-4 lg:px-8"
@@ -57,7 +54,7 @@ export default {
                 </div>
                 <div class="hidden flex items-center lg:block md:ml-10 md:pr-4 md:space-x-5">
                     <Link v-for="item in $page.props.navigation"
-                          :href="item.href" @click.prevent="handleMenuClick(item)"
+                          :href="item.href" @click="handleMenuClick(item)"
                           :key="item.name"
                           class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</Link>
                     <Link :href="route('register')"

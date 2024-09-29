@@ -38,18 +38,18 @@ class HandleInertiaRequests extends Middleware
     {
         $navigation = [
             'en' => [
-                ['name' => 'schedule', 'href' => '/#schedule', 'method' => 'flipToTab', 'argument' => 0],
-                ['name' => 'workshops', 'href' => '/#workshops', 'method' => 'flipToTab', 'argument' => 2],
-                ['name' => 'speakers', 'href' => '/#speakers'],
-                ['name' => 'venues', 'href' => '/#venues'],
-                ['name' => 'partners', 'href' => '/#partners'],
+                ['name' => 'schedule', 'href' => route('2024.home').'#schedule', 'method' => 'flipToTab', 'argument' => 0],
+                ['name' => 'workshops', 'href' => route('2024.home').'#workshops', 'method' => 'flipToTab', 'argument' => 2],
+                ['name' => 'speakers', 'href' => route('2024.home').'#speakers'],
+                ['name' => 'venues', 'href' => route('2024.home').'#venues'],
+                ['name' => 'partners', 'href' => route('2024.home').'#partners'],
             ],
             'ro' => [
-                ['name' => 'program', 'href' => '/#schedule', 'method' => 'flipToTab', 'argument' => 0],
-                ['name' => 'ateliere', 'href' => '/#ateliere', 'method' => 'flipToTab', 'argument' => 2],
-                ['name' => 'invitați', 'href' => '/#speakers'],
-                ['name' => 'locații', 'href' => '/#venues'],
-                ['name' => 'parteneri', 'href' => '/#partners'],
+                ['name' => 'program', 'href' => route('2024.home').'#schedule', 'method' => 'flipToTab', 'argument' => 0],
+                ['name' => 'ateliere', 'href' => route('2024.home').'#ateliere', 'method' => 'flipToTab', 'argument' => 2],
+                ['name' => 'invitați', 'href' => route('2024.home').'#speakers'],
+                ['name' => 'locații', 'href' => route('2024.home').'#venues'],
+                ['name' => 'parteneri', 'href' => route('2024.home').'#partners'],
             ],
         ];
 
