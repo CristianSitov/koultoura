@@ -1,5 +1,5 @@
 <template>
-    <div id="event" class="bg-white max-w-7xl mx-auto rounded-lg text-gray-800 snap-start scroll-m-0 snap-both">
+    <div id="event" class="snap-start scroll-m-0 snap-both bg-white max-w-7xl mx-auto rounded-lg text-gray-800">
         <section class="px-4 sm:px-6 lg:px-8 pt-4">
             <div class="flex flex-col md:flex-row md:space-x-12">
                 <h1 class="md:basis-1/3 text-4xl sm:text-5xl lg:text-7xl py-5 drop-shadow-lg font-bold uppercase sm:mb-10 wcm">why culture matters</h1>

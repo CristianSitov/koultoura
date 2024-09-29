@@ -14,7 +14,8 @@ export default {
     data() {
         return {
             observer: null,
-            sections: ['schedule', 'speakers', 'venues', 'partners'], // IDs of sections to observe
+            sections: ['home', 'schedule', 'speakers', 'venues', 'partners'], // IDs of sections to observe
+            gTracker: this.$gtag
         };
     },
     methods: {
@@ -25,6 +26,7 @@ export default {
                 if (window.location.hash !== newHash) {
                     history.replaceState(null, null, newHash);
                 }
+                this.gTracker.pageview(this.$inertia.page.url)
             }
         },
         observeSections() {
@@ -32,11 +34,12 @@ export default {
                 (entries) => {
                     entries.forEach((entry) => {
                         this.updateURLHash(entry);
+                        console.log(entry.target.id, entry.isIntersecting);
                     });
                 },
                 {
                     root: null, // Use the viewport as root
-                    threshold: 0.5, // Trigger when 50% of the section is visible
+                    threshold: 0.05, // Trigger when 50% of the section is visible
                 }
             );
 
@@ -72,11 +75,11 @@ export default {
         <Schedule />
 
         <Speakers />
+
+        <Venues />
+
+        <Sponsors />
+
+        <Bottom />
     </AppLayout>
-
-    <Venues />
-
-    <Sponsors />
-
-    <Bottom />
 </template>

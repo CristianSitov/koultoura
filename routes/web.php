@@ -44,19 +44,19 @@ Route::prefix('2022')
                 Route::get('/cookies', 'cookies')
                     ->name('cookies');
             });
+    });
 
-        Route::controller(DashboardController::class)
-            ->middleware([
-                'auth:sanctum',
-                config('jetstream.auth_session'),
-                'verified',
-            ])
-            ->group(function () {
-                Route::get('/dashboard', 'dashboard')
-                    ->name('dashboard');
-                Route::get('/dashboard/subscribers/{day?}/{volunteers?}', 'subscribersList')
-                    ->name('dashboard_subscribers');
-                Route::get('/dashboard/subscribers.pdf', 'subscribersListPdf')
-                    ->name('dashboard_subscribers_pdf');
-            });
+Route::controller(DashboardController::class)
+    ->middleware([
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])
+    ->group(function () {
+        Route::get('/dashboard', 'dashboard')
+            ->name('dashboard');
+        Route::get('/dashboard/subscribers/{day?}/{volunteers?}', 'subscribersList')
+            ->name('dashboard_subscribers');
+        Route::get('/dashboard/subscribers.pdf', 'subscribersListPdf')
+            ->name('dashboard_subscribers_pdf');
     });

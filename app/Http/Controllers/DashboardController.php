@@ -13,7 +13,7 @@ class DashboardController
 {
     public function dashboard(Request $request): Response
     {
-        return Inertia::render('2022/Dashboard');
+        return Inertia::render('2024/Dashboard');
     }
 
     public function subscribersListPdf(Request $request): \Illuminate\Http\Response

@@ -33,7 +33,8 @@ createInertiaApp({
                 enabled: false,
                 config: {
                     id: "G-WYGPJKWNT1",
-                    send_page_view: true
+                    send_page_view: true,
+                    debug_mode: true
                 }
             })
             .use(CookieConsent, consentOptions)

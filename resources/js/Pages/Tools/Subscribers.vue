@@ -1,9 +1,11 @@
 <script setup>
-import AppLayout from '@/Layouts/Layout2022.vue';
 import {Link} from '@inertiajs/inertia-vue3';
+import AppLayout from '../../Layouts/Layout2024.vue';
+import MainMenu from "../../Sections/2024/MainMenu.vue";
 </script>
 
 <template>
+    <MainMenu></MainMenu>
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-white leading-tight mt-10">
@@ -11,30 +13,30 @@ import {Link} from '@inertiajs/inertia-vue3';
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-24">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="w-full flex flex-row py-3">
                     <div class="grow justify-content-start">
                         <Link :href="route('dashboard_subscribers', {day: 0, volunteers: 1})"
-                              :class="{ 'bg-white text-red-600': $page.props.volunteers === 1, 'bg-red-600 text-white': $page.props.volunteers === 0 }"
+                              :class="{ 'bg-white text-red-600 border-white': $page.props.volunteers === 1, 'bg-white border-red-600 text-gray-600': $page.props.volunteers === 0 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">Vol</Link>
                         <Link :href="route('dashboard_subscribers')"
-                              :class="{ 'bg-white text-red-600': $page.props.day === 0 && $page.props.volunteers === 0, 'bg-red-600 text-white': ($page.props.day === 0 && $page.props.volunteers === 1) || ($page.props.day !== 0 && $page.props.volunteers === 0)}"
+                              :class="{ 'bg-white text-red-600 border-white': $page.props.day === 0 && $page.props.volunteers === 0, 'bg-white border-red-600 text-gray-600': ($page.props.day === 0 && $page.props.volunteers === 1) || ($page.props.day !== 0 && $page.props.volunteers === 0)}"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">ALL</Link>
                         <Link :href="route('dashboard_subscribers', {day: 1})"
-                              :class="{ 'bg-white text-red-600': $page.props.day === 1, 'bg-red-600 text-white': $page.props.day !== 1 }"
+                              :class="{ 'bg-white text-red-600 border-white': $page.props.day === 1, 'bg-white border-red-600 text-gray-600': $page.props.day !== 1 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>1</Link>
                         <Link :href="route('dashboard_subscribers', {day: 2})"
-                              :class="{ 'bg-white text-red-600': $page.props.day === 2, 'bg-red-600 text-white': $page.props.day !== 2 }"
+                              :class="{ 'bg-white text-red-600 border-white': $page.props.day === 2, 'bg-white border-red-600 text-gray-600': $page.props.day !== 2 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>2</Link>
                         <Link :href="route('dashboard_subscribers', {day: 3})"
-                              :class="{ 'bg-white text-red-600': $page.props.day === 3, 'bg-red-600 text-white': $page.props.day !== 3 }"
+                              :class="{ 'bg-white text-red-600 border-white': $page.props.day === 3, 'bg-white border-red-600 text-gray-600': $page.props.day !== 3 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>3</Link>
                     </div>
                     <div class="none">
                         <a :href="route('dashboard_subscribers_pdf', {day: $page.props.day || 0, volunteers: $page.props.volunteers})"
                            target="_blank"
-                           class="text-sm text-white font-bold bg-red-600 rounded p-2 mr-2 sm:mr-0">Download</a>
+                           class="text-sm text-red-600 font-bold bg-white rounded p-2 mr-2 sm:mr-0">Download</a>
                     </div>
                 </div>
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -60,7 +62,7 @@ import {Link} from '@inertiajs/inertia-vue3';
                                 <td class="align-top py-4 px-6">
                                     <a class="block text-lg text-gray-700"
                                        target="_blank"
-                                       :href="route('confirmation', {id: subscriber.slug })">{{ subscriber.last_name }} {{ subscriber.first_name }}</a>
+                                       :href="route('2024.confirmation', {id: subscriber.slug })">{{ subscriber.last_name }} {{ subscriber.first_name }}</a>
                                     <span class="block text-sm">Email: {{ subscriber.email }}</span>
                                     <span class="block text-sm">Phone: {{ subscriber.profile.phone }}</span>
                                     <span class="block text-md">Org: {{ subscriber.profile.organization }} ({{ subscriber.profile.country }})</span>
