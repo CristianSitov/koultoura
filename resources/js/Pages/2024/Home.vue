@@ -10,12 +10,13 @@ import Venues from "../../Sections/2024/Venues.vue";
 import Bottom from "../../Sections/2024/Bottom.vue";
 </script>
 <script>
+import {pageview} from "vue-gtag";
+
 export default {
     data() {
         return {
             observer: null,
             sections: ['home', 'schedule', 'speakers', 'venues', 'partners'], // IDs of sections to observe
-            gTracker: this.$gtag
         };
     },
     methods: {
@@ -26,6 +27,7 @@ export default {
                 if (window.location.hash !== newHash) {
                     history.replaceState(null, null, newHash);
                 }
+                this.$gtag.pageview(this.$inertia.page.url)
             }
         },
         observeSections() {
@@ -33,7 +35,7 @@ export default {
                 (entries) => {
                     entries.forEach((entry) => {
                         this.updateURLHash(entry);
-                        console.log(entry.target.id, entry.isIntersecting);
+                        this.track(entry.target.id);
                     });
                 },
                 {
@@ -49,6 +51,9 @@ export default {
                     this.observer.observe(section);
                 }
             });
+        },
+        track(newHash) {
+            pageview(newHash);
         },
     },
     mounted() {

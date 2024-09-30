@@ -34,7 +34,6 @@ createInertiaApp({
                 config: {
                     id: "G-WYGPJKWNT1",
                     send_page_view: true,
-                    pageTrackerSkipSamePath: false,
                     debug_mode: true
                 }
             })
