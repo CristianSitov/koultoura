@@ -26,7 +26,6 @@ export default {
                 if (window.location.hash !== newHash) {
                     history.replaceState(null, null, newHash);
                 }
-                this.gTracker.pageview(this.$inertia.page.url)
             }
         },
         observeSections() {
