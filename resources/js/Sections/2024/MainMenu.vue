@@ -59,10 +59,10 @@ export default {
                           class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</Link>
                     <Link :href="route('register')"
                           class="font-bold uppercase text-white hover:underline">{{ $t('Register') }}</Link>
-                    <Link :href="route('2024.locale', {'locale': 'en'})"
+                    <a :href="route('2024.locale', {'locale': 'en'})"
                        type="button"
                        v-if="$page.props.translation !== 'ro'"
-                       class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
+                       class="font-bold uppercase text-white p-2 inline-flex justify-center items-center rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
                        role="menuitem">
                         <div class="inline-flex items-center">
                             <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2"
@@ -74,11 +74,11 @@ export default {
                                 <path fill="#C8102E" d="M0 208v96h512v-96H0zM208 0v512h96V0h-96z"/>
                             </svg>EN
                         </div>
-                    </Link>
-                    <Link :href="route('2024.locale', {'locale': 'ro'})"
+                    </a>
+                    <a :href="route('2024.locale', {'locale': 'ro'})"
                        type="button"
                        v-if="$page.props.translation !== 'en'"
-                       class="font-bold uppercase text-white p-2 inline-flex justify-center items-center text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
+                       class="font-bold uppercase text-white p-2 inline-flex justify-center items-center rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100"
                        role="menuitem">
                         <div class="inline-flex items-center">
                             <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2"
@@ -90,7 +90,7 @@ export default {
                                 </g>
                             </svg>RO
                         </div>
-                    </Link>
+                    </a>
                 </div>
                 <Menu as="div" class="lg:hidden py-3">
                     <div class="flex items-center">
@@ -127,7 +127,7 @@ export default {
                                               class="block uppercase px-3 py-2 text-xs font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t(item.name) }}</Link>
                                     </MenuItem>
                                     <Link class="block uppercase px-3 py-2 text-xs font-medium text-white bg-red-600 rounded" :href="route('register')">{{ $t('Register') }}</Link>
-                                    <Link :href="route('2024.locale', {'locale': 'en'})"
+                                    <a :href="route('2024.locale', {'locale': 'en'})"
                                        type="button"
                                        v-if="$page.props.translation !== 'ro'"
                                        class="inline-flex uppercase px-3 py-2 text-xs font-medium justify-center items-center text-gray-700 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -139,7 +139,7 @@ export default {
                                             <path fill="#C8102E" d="m184 324 11 34L42 512H0v-3l184-185zm124-12 54 8 150 147v45L308 312zM512 0 320 196l-4-44L466 0h46zM0 1l193 189-59-8L0 49V1z"/>
                                             <path fill="#FFF" d="M176 0v512h160V0H176zM0 176v160h512V176H0z"/>
                                             <path fill="#C8102E" d="M0 208v96h512v-96H0zM208 0v512h96V0h-96z"/>
-                                        </svg></div></Link>
+                                        </svg></div></a>
                                     <a :href="route('2024.locale', {'locale': 'ro'})"
                                        type="button"
                                        v-if="$page.props.translation !== 'en'"

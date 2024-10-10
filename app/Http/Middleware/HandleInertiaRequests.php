@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -53,8 +55,9 @@ class HandleInertiaRequests extends Middleware
             ],
         ];
 
-        $locale = app()->getLocale();
-        $locale = in_array($locale, config('translatable.locales'), true) ? $locale : 'en';
+        $locale = Session::has('locale')
+            ? Session::get('locale')
+            : App::getLocale();
         $translation = array_values(array_diff(config('translatable.locales'), [$locale]))[0];
 
         return array_merge(parent::share($request), [
