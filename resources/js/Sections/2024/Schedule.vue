@@ -83,6 +83,39 @@ emitter.on('flipToTab', e => selectedTab.value = e.arg )
                                             </div>
                                         </div>
                                         <h3 class="font-light title-font mt-1 text-sm md:text-lg"
+                                            v-if="presentation.chairpersons.length > 0">{{ $tChoice('Chairpersons', presentation.chairpersons.length) }}: <span
+                                            v-for="(chairperson, index) in presentation.chairpersons"
+                                            class="font-bold">{{ chairperson.full_name }}<span v-if="index+1 < presentation.chairpersons.length">, </span></span></h3>
+                                        <div class="flex flex-row flex-wrap items-center sm:items-left mt-2 mb-5">
+                                            <div v-for="chairperson in presentation.chairpersons" class="flex-none -ml-2">
+                                                <a :href="'#'+chairperson.slug">
+                                                    <img class="w-14 h-14 rounded-full" :src="chairperson.avatar" :alt="chairperson.full_name">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-light title-font mt-1 text-sm md:text-lg"
+                                            v-if="presentation.reporters.length > 0">{{ $tChoice('Reporters', presentation.reporters.length) }}: <span
+                                            v-for="(reporter, index) in presentation.reporters"
+                                            class="font-bold">{{ reporter.full_name }}<span v-if="index+1 < presentation.reporters.length">, </span></span></h3>
+                                        <div class="flex flex-row flex-wrap items-center sm:items-left mt-2 mb-5">
+                                            <div v-for="reporter in presentation.reporters" class="flex-none -ml-2">
+                                                <a :href="'#'+reporter.slug">
+                                                    <img class="w-14 h-14 rounded-full" :src="reporter.avatar" :alt="reporter.full_name">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-light title-font mt-1 text-sm md:text-lg"
+                                            v-if="presentation.facilitators.length > 0">{{ $tChoice('Facilitators', presentation.facilitators.length) }}: <span
+                                            v-for="(facilitator, index) in presentation.facilitators"
+                                            class="font-bold">{{ facilitator.full_name }}<span v-if="index+1 < presentation.facilitators.length">, </span></span></h3>
+                                        <div class="flex flex-row flex-wrap items-center sm:items-left mt-2 mb-5">
+                                            <div v-for="facilitator in presentation.facilitators" class="flex-none -ml-2">
+                                                <a :href="'#'+facilitator.slug">
+                                                    <img class="w-14 h-14 rounded-full" :src="facilitator.avatar" :alt="facilitator.full_name">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-light title-font mt-1 text-sm md:text-lg"
                                             v-if="presentation.speakers.length > 0">{{ $tChoice('Speakers', presentation.speakers.length) }}: <span
                                             v-for="(speaker, index) in presentation.speakers"
                                             class="font-bold">{{ speaker.full_name }}<span v-if="index+1 < presentation.speakers.length">, </span></span></h3>
@@ -90,6 +123,17 @@ emitter.on('flipToTab', e => selectedTab.value = e.arg )
                                             <div v-for="presenter in presentation.speakers" class="flex-none -ml-2">
                                                 <a :href="'#'+presenter.slug">
                                                     <img class="w-16 h-16 rounded-full" :src="presenter.avatar" :alt="presenter.full_name">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-light title-font mt-1 text-sm md:text-lg"
+                                            v-if="presentation.urban_guides.length > 0">{{ $tChoice('Urban Guides', presentation.urban_guides.length) }}: <span
+                                            v-for="(urban_guide, index) in presentation.urban_guides"
+                                            class="font-bold">{{ urban_guide.full_name }}<span v-if="index+1 < presentation.urban_guides.length">, </span></span></h3>
+                                        <div class="flex flex-row flex-wrap items-center sm:items-left mt-2 mb-5">
+                                            <div v-for="urban_guide in presentation.urban_guides" class="flex-none -ml-2">
+                                                <a :href="'#'+urban_guide.slug">
+                                                    <img class="w-16 h-16 rounded-full" :src="urban_guide.avatar" :alt="urban_guide.full_name">
                                                 </a>
                                             </div>
                                         </div>

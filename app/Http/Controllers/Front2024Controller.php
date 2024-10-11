@@ -84,25 +84,10 @@ class Front2024Controller extends Controller
         ]);
 
         Mail::to($user)
-            ->bcc(env('MAIL_FROM_ADDRESS'))
+            ->bcc(config('mail.from.address'))
             ->send(new EventRegistrationConfirmation($user->load('profile')));
 
         return Redirect::route('2024.confirmation', ['id' => $user->slug]);
-    }
-
-    public function dashboard(Request $request): Response
-    {
-        return $this->dashboardController->dashboard($request);
-    }
-
-    public function subscribersList(Request $request, int $day = 0, int $volunteers = 0): Response
-    {
-        return $this->dashboardController->subscribersList($request, $day, $volunteers);
-    }
-
-    public function subscribersListPdf(Request $request): \Illuminate\Http\Response
-    {
-        return $this->dashboardController->subscribersListPdf($request);
     }
 
     public function confirmation(Request $request, $userId): Response
@@ -158,7 +143,7 @@ class Front2024Controller extends Controller
             ->inRandomOrder()
             ->get();
         $presentationsList = Presentation::query()
-            ->with(['speakers', 'moderators'])
+            ->with(['speakers', 'moderators', 'facilitators', 'chairpersons', 'reporters', 'urban_guides'])
             ->get();
         $presentations = $presentationsList
             ->groupBy('day_id');
