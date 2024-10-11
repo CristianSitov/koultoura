@@ -55,9 +55,11 @@ emitter.on('flipToTab', e => selectedTab.value = e.arg )
                             <p class="flex flex-row mb-3"><span class="leading-6 lg:leading-10 mb-2"><LibraryIcon
                                 class="h-5 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-2" aria-hidden="true"/></span>
                                 <span class="inline-flex md:py-2">{{ $t('Host Moderator') }}:&nbsp;<span class="font-bold">{{ $page.props.days[index].host?.full_name || 'TBA'}}</span></span></p>
-                            <p class="flex flex-row mb-3"><span class="leading-6 lg:leading-10 mb-2"><MicrophoneIcon
+                            <p class="flex flex-row mb-3"><span class="leading-6 lg:leading-10 mb-2"
+                                v-if="$page.props.days[index].moderators.length"><MicrophoneIcon
                                 class="h-5 md:h-9 sm:h-7 w-7 md:w-9 sm:w-7 mr-2" aria-hidden="true"/></span>
-                                <span class="inline-flex md:py-2">{{ $tChoice('Moderators', $page.props.days[index].moderators.length) }}:&nbsp;<span class="font-bold">{{ $page.props.days[index].moderators.map((m) => m.full_name).join(", ") || 'TBA'}}</span></span></p>
+                                <span class="inline-flex md:py-2"
+                                      v-if="$page.props.days[index].moderators.length">{{ $tChoice('Moderators', $page.props.days[index].moderators.length) }}:&nbsp;<span class="font-bold">{{ $page.props.days[index].moderators.map((m) => m.full_name).join(", ") || 'TBA'}}</span></span></p>
                         </div>
                         <div class="container md:px-5 py-10 md:py-24 mx-auto flex flex-wrap">
                             <div v-for="presentation in day" :key="presentation.id" class="flex relative pt-5 mt-3 md:pt-10 md:pb-20 sm:items-center mx-auto w-full">
