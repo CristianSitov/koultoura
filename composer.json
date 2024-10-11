@@ -17,6 +17,7 @@
         "laravel/sanctum": "^4",
         "laravel/tinker": "^2",
         "monarobase/country-list": "^3.3",
+        "resend/resend-php": "^0.13.0",
         "symfony/http-client": "^6.0",
         "symfony/postmark-mailer": "^6.0",
         "tightenco/ziggy": "^1.0"
