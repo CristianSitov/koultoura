@@ -82,7 +82,7 @@ emitter.on('flipToTab', e => selectedTab.value = e.arg )
                                         <div class="flex flex-row flex-wrap items-center sm:items-left mt-5">
                                             <div v-for="presenter in presentation.speakers" class="flex-none -ml-2">
                                                 <a :href="'#'+presenter.slug">
-                                                    <img class="w-14 h-14 rounded-full" :src="route('2022.home') + presenter.avatar" :alt="presenter.full_name">
+                                                    <img class="w-14 h-14 rounded-full" :src="presenter.avatar" :alt="presenter.full_name">
                                                 </a>
                                             </div>
                                         </div>
