@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', session()->get('locale')) }}" class="scroll-smooth">
     <head>
-        <link rel="apple-touch-icon" sizes="180x180" href="assets/images/fav/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="assets/images/fav/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="assets/images/fav/favicon-16x16.png">
-        <link rel="manifest" href="assets/images/fav/site.webmanifest">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/fav/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/fav/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/fav/favicon-16x16.png">
+        <link rel="manifest" href="/assets/images/fav/site.webmanifest">
 
         <meta name="theme-color" content="#e02424">
         <meta name="msapplication-navbutton-color" content="#e02424">

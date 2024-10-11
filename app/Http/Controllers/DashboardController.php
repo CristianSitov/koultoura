@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EventRegistrationConfirmation;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,6 +50,17 @@ class DashboardController
             'volunteers' => $volunteers,
             'subscribers' => $this->getSubscribersList($day, $volunteers),
         ]);
+    }
+
+    public function reconfirmUser(Request $request, int $userId): \Illuminate\Http\RedirectResponse
+    {
+        $user = User::query()->find($userId);
+
+        Mail::to($user)
+            ->bcc(config('mail.from.address'))
+            ->send(new EventRegistrationConfirmation($user->load('profile')));
+
+        return Redirect::route('dashboard_subscribers');
     }
 
     private function getSubscribersList(int $day, int $volunteersOnly): array|Collection

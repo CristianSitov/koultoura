@@ -1,6 +1,6 @@
 @component('mail::message')
 <h2>{!! __('hello', ['name' => $user['name']]) !!}</h2>
-<p>{!! __('thank you title') !!}</p>
+<p>{!! __('thank you title', ['registration' => route('2024.confirmation', $user['slug'])]) !!}</p>
 <p>{!! __('thank you email subscription') !!}</p>
 
 @foreach ($user['profile']['event_details']->days as $day)

@@ -233,7 +233,7 @@ export default {
                                                         <div class="flex h-5 items-center">
                                                             <JetCheckbox
                                                                 :id="'event_details_day_'+idx.id.toString()"
-                                                                :value="idx.id"
+                                                                :value="idx.id.toString()"
                                                                 :disabled="idx.id.toString() === '3'"
                                                                 :class="{'appearance-none bg-gray-300': idx === '3'}"
                                                                 v-model:checked="form.event_details"

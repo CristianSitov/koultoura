@@ -1,5 +1,5 @@
 <script setup>
-import {Link} from "@inertiajs/inertia-vue3";
+import {Link, usePage} from "@inertiajs/inertia-vue3";
 import {Menu, MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverPanel} from '@headlessui/vue'
 import {MenuIcon, XIcon} from '@heroicons/vue/outline'
 </script>
@@ -58,7 +58,15 @@ export default {
                           :key="item.name"
                           class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</Link>
                     <Link :href="route('register')"
+                          v-if="!$page.props.auth.user"
                           class="font-bold uppercase text-white hover:underline">{{ $t('Register') }}</Link>
+                    <Link
+                        :href="route('logout')"
+                        v-if="$page.props.auth.user"
+                        method="post"
+                        as="button"
+                        class="px-4 py-2 rounded-md font-semibold text-xs text-red-600 uppercase tracking-widest bg-white hover:bg-red-800 hover:text-white ml-2"
+                    >Logout</Link>
                     <a :href="route('2024.locale', {'locale': 'en'})"
                        type="button"
                        v-if="$page.props.translation !== 'ro'"

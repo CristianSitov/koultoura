@@ -50,6 +50,7 @@ import MainMenu from "../../Sections/2024/MainMenu.vue";
                                 <th class="py-3 px-6">Subscribe Date</th>
                                 <th class="py-3 px-6">Full name</th>
                                 <th class="py-3 px-6 md:w-30">Days</th>
+                                <th class="py-3 px-6 md:w-30">Resend ✉︎</th>
                             </tr>
                             </thead>
                             <tbody class="flex-1 sm:flex-none">
@@ -60,7 +61,7 @@ import MainMenu from "../../Sections/2024/MainMenu.vue";
                                     <span class="block text-sm">{{ subscriber.created_date }}</span>
                                 </td>
                                 <td class="align-top py-4 px-6">
-                                    <a class="block text-lg text-gray-700"
+                                    <a class="block text-lg text-gray-700 hover:text-red-800 hover:underline"
                                        target="_blank"
                                        :href="route('2024.confirmation', {id: subscriber.slug })">{{ subscriber.last_name }} {{ subscriber.first_name }}</a>
                                     <span class="block text-sm">Email: {{ subscriber.email }}</span>
@@ -79,6 +80,9 @@ import MainMenu from "../../Sections/2024/MainMenu.vue";
                                                  v-html="day"></div>
                                         </div>
                                     </div>
+                                </td>
+                                <td class="align-top py-4 px-6">
+                                    <a :href="route('dashboard_subscribers_reconfirm', {id: subscriber.id})" class="hover:text-red-800 hover:underline">Resend</a>
                                 </td>
                             </tr>
                             </tbody>

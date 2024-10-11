@@ -55,6 +55,8 @@ Route::controller(DashboardController::class)
     ->group(function () {
         Route::get('/dashboard', 'dashboard')
             ->name('dashboard');
+        Route::get('/dashboard/subscribers/{user_id}/reconfirm', 'reconfirmUser')
+            ->name('dashboard_subscribers_reconfirm');
         Route::get('/dashboard/subscribers/{day?}/{volunteers?}', 'subscribersList')
             ->name('dashboard_subscribers');
         Route::get('/dashboard/subscribers.pdf', 'subscribersListPdf')
