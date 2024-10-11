@@ -71,18 +71,25 @@ emitter.on('flipToTab', e => selectedTab.value = e.arg )
                                             :class="{ 'text-xl md:text-2xl italic text-gray-400': presentation.flag === 'service', 'text-xl md:text-2xl': presentation.flag === 'main' }">{{ presentation.title }}</h2>
                                         <p class="leading-relaxed" v-html="presentation.description"></p>
                                         <h3 class="font-medium title-font mb-3 text-2xl">{{ presentation.subtitle }}</h3>
-                                        <h3 class="font-light title-font my-2 text-sm md:text-lg"
+                                        <h3 class="font-light title-font mt-1 text-sm md:text-lg"
                                             v-if="presentation.moderators.length > 0">{{ $tChoice('Moderators', presentation.moderators.length) }}: <span
                                             v-for="(moderator, index) in presentation.moderators"
                                             class="font-bold">{{ moderator.full_name }}<span v-if="index+1 < presentation.moderators.length">, </span></span></h3>
-                                        <h3 class="font-light title-font mb-1 text-sm md:text-lg"
+                                        <div class="flex flex-row flex-wrap items-center sm:items-left mt-2 mb-5">
+                                            <div v-for="moderator in presentation.moderators" class="flex-none -ml-2">
+                                                <a :href="'#'+moderator.slug">
+                                                    <img class="w-14 h-14 rounded-full" :src="moderator.avatar" :alt="moderator.full_name">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <h3 class="font-light title-font mt-1 text-sm md:text-lg"
                                             v-if="presentation.speakers.length > 0">{{ $tChoice('Speakers', presentation.speakers.length) }}: <span
                                             v-for="(speaker, index) in presentation.speakers"
                                             class="font-bold">{{ speaker.full_name }}<span v-if="index+1 < presentation.speakers.length">, </span></span></h3>
-                                        <div class="flex flex-row flex-wrap items-center sm:items-left mt-5">
+                                        <div class="flex flex-row flex-wrap items-center sm:items-left mt-2 mb-5">
                                             <div v-for="presenter in presentation.speakers" class="flex-none -ml-2">
                                                 <a :href="'#'+presenter.slug">
-                                                    <img class="w-14 h-14 rounded-full" :src="presenter.avatar" :alt="presenter.full_name">
+                                                    <img class="w-16 h-16 rounded-full" :src="presenter.avatar" :alt="presenter.full_name">
                                                 </a>
                                             </div>
                                         </div>
