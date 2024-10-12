@@ -143,15 +143,19 @@ class Front2024Controller extends Controller
             ->inRandomOrder()
             ->get();
         $presentationsList = Presentation::query()
-            ->with(['speakers', 'moderators', 'facilitators', 'chairpersons', 'reporters', 'urban_guides'])
+            ->with(['speakers', 'moderators', 'facilitators', 'chairpersons', 'reporters', 'urban_guides', 'venue'])
             ->get();
+        $venues = $presentationsList
+            ->groupBy('day_id')
+            ->map(fn (Collection $day) => $day->transform(fn($presentations) => $presentations->venue)->unique());
         $presentations = $presentationsList
-            ->groupBy('day_id');
+            ->groupBy('day_id')
+            ->map(fn (Collection $day) => $day->groupBy('venue_id')->values());
         $moderators = $presentationsList
             ->groupBy('day_id')
             ->transform(fn($day) => $day->pluck('moderators', 'id')->flatten()->keyBy('id')->values());
         $days->transform(fn($day, $index) => collect($day)->merge(['moderators' => $moderators[$index]->toArray()]));
 
-        return compact(['days', 'speakers', 'presentations']);
+        return compact(['days', 'speakers', 'presentations', 'venues']);
     }
 }

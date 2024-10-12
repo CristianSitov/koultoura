@@ -7,6 +7,7 @@ use Astrotomic\Translatable\Translatable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @package App\Models
@@ -40,6 +41,15 @@ class Presentation extends Model implements TranslatableContract
     public function getStartsAtAttribute($value): string
     {
         return Carbon::parse($value)->format('H:i');
+    }
+
+    public function venue(): HasOne
+    {
+        return $this->hasOne(
+            related: Venue::class,
+            foreignKey: 'id',
+            localKey: 'venue_id'
+        );
     }
 
     public function speakers(): BelongsToMany
