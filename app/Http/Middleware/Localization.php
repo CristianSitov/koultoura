@@ -32,19 +32,6 @@ class Localization
             return $next($request);
         }
 
-        // read user location
-        try {
-            $geoIpReader = new Reader(resource_path() . '/app/GeoLite2-Country.mmdb');
-            $userLocation = $geoIpReader->country($request->ip());
-            $locale = strtolower($userLocation->country->isoCode ?? 'en');
-
-            App::setLocale($locale);
-            Session::put('locale', $locale);
-        } catch (AddressNotFoundException | InvalidDatabaseException $e) {
-            App::setLocale('en');
-            Session::put('locale', 'en');
-        }
-
         return $next($request);
     }
 }
