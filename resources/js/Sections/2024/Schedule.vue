@@ -108,14 +108,14 @@ emitter.on('flipToTab', e => selectedTab.value = e.arg )
                                                 </div>
                                             </div>
                                             <h3 class="font-light title-font mt-1 text-sm md:text-lg"
-                                                v-if="presentation.reporters.length > 0">{{ $tChoice('Reporters', presentation.reporters.length) }}: <span
-                                                v-for="(reporter, index) in presentation.reporters"
-                                                class="font-bold">{{ reporter.full_name }}<span v-if="index+1 < presentation.reporters.length">, </span></span></h3>
+                                                v-if="presentation.rapporteurs.length > 0">{{ $tChoice('Rapporteurs', presentation.rapporteurs.length) }}: <span
+                                                v-for="(rapporteur, index) in presentation.rapporteurs"
+                                                class="font-bold">{{ rapporteur.full_name }}<span v-if="index+1 < presentation.rapporteurs.length">, </span></span></h3>
                                             <div class="flex flex-row flex-wrap items-center sm:items-left mt-2 mb-5"
-                                                 v-if="presentation.reporters.length > 0">
-                                                <div v-for="reporter in presentation.reporters" class="flex-none -ml-2">
-                                                    <a :href="'#'+reporter.slug">
-                                                        <img class="w-14 h-14 rounded-full" :src="reporter.avatar" :alt="reporter.full_name">
+                                                 v-if="presentation.rapporteurs.length > 0">
+                                                <div v-for="rapporteur in presentation.rapporteurs" class="flex-none -ml-2">
+                                                    <a :href="'#'+rapporteur.slug">
+                                                        <img class="w-14 h-14 rounded-full" :src="rapporteur.avatar" :alt="rapporteur.full_name">
                                                     </a>
                                                 </div>
                                             </div>

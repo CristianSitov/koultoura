@@ -143,7 +143,7 @@ class Front2024Controller extends Controller
             ->inRandomOrder()
             ->get();
         $presentationsList = Presentation::query()
-            ->with(['speakers', 'moderators', 'facilitators', 'chairpersons', 'reporters', 'urban_guides', 'venue'])
+            ->with(['speakers', 'moderators', 'facilitators', 'chairpersons', 'rapporteurs', 'urban_guides', 'venue'])
             ->get();
         $venues = $presentationsList
             ->groupBy('day_id')

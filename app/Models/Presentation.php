@@ -35,7 +35,7 @@ class Presentation extends Model implements TranslatableContract
     public const MODERATOR = 'moderator';
     public const FACILITATOR = 'facilitator';
     public const CHAIRPERSON = 'chairperson';
-    public const REPORTER = 'reporter';
+    public const REPORTER = 'rapporteur';
     public const URBAN_GUIDE = 'urban_guide';
 
     public function getStartsAtAttribute($value): string
@@ -100,7 +100,7 @@ class Presentation extends Model implements TranslatableContract
             ->orderBy('person_presentation.order', 'ASC');
     }
 
-    public function reporters(): BelongsToMany
+    public function rapporteurs(): BelongsToMany
     {
         return $this->belongsToMany(
             Person::class,
