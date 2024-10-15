@@ -20,21 +20,20 @@ export default {
         };
     },
     methods: {
-        updateURLHash(entry) {
+        updateUrlByDom(entry) {
             // Update the hash if the element is intersecting (visible)
+            // to obtain a hash that can be used for reporting to GA
             if (entry.isIntersecting) {
-                const newHash = `#${entry.target.id}`;
-                if (window.location.hash !== newHash) {
-                    history.replaceState(null, null, newHash);
-                }
+                const idName = entry.target.id;
                 this.$gtag.pageview(this.$inertia.page.url)
+                this.$gtag.event('Home/'+idName)
             }
         },
         observeSections() {
             this.observer = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((entry) => {
-                        this.updateURLHash(entry);
+                        this.updateUrlByDom(entry);
                         this.track(entry.target.id);
                     });
                 },
@@ -51,9 +50,6 @@ export default {
                     this.observer.observe(section);
                 }
             });
-        },
-        track(newHash) {
-            pageview(newHash);
         },
     },
     mounted() {

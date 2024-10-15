@@ -1,16 +1,15 @@
 <script setup>
 import {LibraryIcon, LocationMarkerIcon, MicrophoneIcon} from '@heroicons/vue/outline'
 import {TabGroup, TabList, Tab, TabPanels, TabPanel} from "@headlessui/vue";
-import {ref} from "vue";
 </script>
 <script>
 import {ref} from "vue";
 import emitter from "../../emitter.js";
 
-const selectedTab = ref(0) // adjust this using time stamp
+const selectedTab = ref(0) // TODO: adjust this using date
 
 export function changeTab(index) {
-    selectedTab.value = index
+    selectedTab.value = index;
 }
 
 emitter.on('flipToTab', e => selectedTab.value = e.arg )

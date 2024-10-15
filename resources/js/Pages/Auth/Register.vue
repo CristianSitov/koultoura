@@ -33,7 +33,7 @@ const submit = () => {
 </script>
 <script>
 import { consentOptions } from "@/consent";
-import emitter from "@/emitter";
+import emitter from "../../emitter.js";
 
 export default {
     beforeCreate() {
@@ -63,7 +63,12 @@ export default {
     methods: {
         track() {
             this.gTracker.pageview(this.$inertia.page.url)
-            this.gTracker.event(this.$inertia.page.component)
+            this.gTracker.event('Register')
+        },
+        handleMenuClick(item) {
+            if (typeof item.method !== 'undefined') {
+                emitter.emit(item.method, { arg: item.argument })
+            }
         }
     }
 }
@@ -246,8 +251,14 @@ export default {
                                                                 {{ $t('Day :day', { day: idx.id.toString() }) }} &mdash; {{ idx.name }}
                                                                 <br />
                                                                 {{ idx.title }}<br />
-                                                                <span v-if="idx.id.toString() === '3'"
-                                                                      class="text-red-600"><br />{{ $t('Registration Will Open Soon') }}</span></label>
+                                                                <strong v-if="idx.id.toString() === '3'"
+                                                                      class="text-red-600 mt-3 inline">
+                                                                    {{ $t('Registration for the workshops') }},
+                                                                    <Link
+                                                                        :href="route('2024.home')+'/#'+($page.props.locale === 'en' ? 'workshops' : 'ateliere')"
+                                                                        @click="handleMenuClick(item)"
+                                                                    >{{ $t('here') }}</Link>.
+                                                                </strong></label>
                                                             <div class="mt-3 mb-5">
                                                         <span class="block">
                                                             <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
