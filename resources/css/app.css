@@ -6,6 +6,13 @@ body.red {
     background: #ed1c24 !important;
     font-family: 'Nunito', sans-serif;
 }
+#speakers .speaker-description a {
+    text-decoration: underline;
+}
+#speakers .speaker-description a:hover {
+    color: rgb(220 38 38);
+    text-decoration: none;
+}
 #splash #container {
     position: absolute;
     top: 50%;

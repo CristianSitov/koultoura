@@ -14,7 +14,7 @@
                         <h3 class="text-3xl font-bold tracking-tight text-center sm:text-left">{{ speaker.full_name }}</h3>
                         <span class="text-xl italic text-center sm:text-left py-3">{{ speaker.role }}</span>
                         <span class="text-lg text-center sm:text-left">{{ speaker.institution }}</span>
-                        <p class="mt-3 mb-4 text-sm text-justify sm:text-left" v-html="speaker.description"></p>
+                        <p class="speaker-description mt-3 mb-4 text-sm text-justify sm:text-left" v-html="speaker.description"></p>
                     </div>
                 </div>
             </div>

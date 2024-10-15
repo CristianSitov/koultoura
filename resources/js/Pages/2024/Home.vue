@@ -34,7 +34,6 @@ export default {
                 (entries) => {
                     entries.forEach((entry) => {
                         this.updateUrlByDom(entry);
-                        this.track(entry.target.id);
                     });
                 },
                 {
