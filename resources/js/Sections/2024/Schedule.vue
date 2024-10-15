@@ -80,7 +80,8 @@ emitter.on('flipToTab', e => selectedTab.value = e.arg )
                                         <div class="flex-1 md:pl-6 md:mt-0">
                                             <h4 class="mb-1 text-lg" v-if="presentation.supratitle !== ''">{{ presentation.supratitle }}</h4>
                                             <h2 class="font-bold title-font mb-3 md:mb-5"
-                                                :class="{ 'text-xl md:text-2xl italic text-gray-400': presentation.flag === 'service', 'text-xl md:text-2xl': presentation.flag === 'main' }">{{ presentation.title }}</h2>
+                                                :class="{ 'text-xl md:text-2xl italic text-gray-400': presentation.flag === 'service', 'text-xl md:text-2xl': presentation.flag === 'main' }"
+                                                v-html="presentation.title"></h2>
                                             <p class="leading-relaxed" v-html="presentation.description"></p>
                                             <h3 class="font-medium title-font mb-3 text-2xl">{{ presentation.subtitle }}</h3>
                                             <h3 class="font-light title-font mt-1 text-sm md:text-lg"
