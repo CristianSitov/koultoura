@@ -252,13 +252,11 @@ export default {
                                                                 <br />
                                                                 {{ idx.title }}<br />
                                                                 <strong v-if="idx.id.toString() === '3'"
-                                                                      class="text-red-600 mt-3 inline">
-                                                                    {{ $t('Registration for the workshops') }},
-                                                                    <Link
-                                                                        :href="route('2024.home')+'/#'+($page.props.locale === 'en' ? 'workshops' : 'ateliere')"
-                                                                        @click="handleMenuClick(item)"
-                                                                    >{{ $t('here') }}</Link>.
-                                                                </strong></label>
+                                                                        v-html="$t('Registration for the workshops')"
+                                                                        class="text-red-600 mt-3 inline">
+                                                                </strong><Link
+                                                                :href="route('2024.home')+'/#'+($page.props.locale === 'en' ? 'workshops' : 'ateliere')"
+                                                                @click="handleMenuClick(item)">{{ $t('here') }}</Link>.</label>
                                                             <div class="mt-3 mb-5">
                                                         <span class="block">
                                                             <span class="text-sm inline-flex align-middle leading-6"><CalendarIcon
