@@ -8,8 +8,12 @@ import emitter from "../../emitter.js";
 
 const selectedTab = ref(0) // TODO: adjust this using date
 
-export function changeTab(index) {
-    selectedTab.value = index;
+export default {
+    methods: {
+        changeTab(index) {
+            emitter.emit('flipToTab', { arg: index })
+        }
+    }
 }
 
 emitter.on('flipToTab', e => selectedTab.value = e.arg )

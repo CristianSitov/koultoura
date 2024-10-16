@@ -10,7 +10,7 @@ import Venues from "../../Sections/2024/Venues.vue";
 import Bottom from "../../Sections/2024/Bottom.vue";
 </script>
 <script>
-import {pageview} from "vue-gtag";
+import emitter from "../../emitter.js";
 
 export default {
     data() {
@@ -53,6 +53,10 @@ export default {
     },
     mounted() {
         this.observeSections();
+
+        if ( window.location.hash === '#ateliere' ) {
+            emitter.emit('flipToTab', { arg: 2 })
+        }
     },
     beforeDestroy() {
         // Clean up observer when the component is destroyed
