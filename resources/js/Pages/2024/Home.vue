@@ -54,8 +54,11 @@ export default {
     mounted() {
         this.observeSections();
 
-        if ( window.location.hash === '#ateliere' ) {
+        if ( window.location.hash === '#ateliere' || window.location.hash === '#workshops' ) {
             emitter.emit('flipToTab', { arg: 2 })
+        }
+        if ( window.location.hash === '#program' || window.location.hash === '#schedule' ) {
+            emitter.emit('flipToTab', { arg: 0 })
         }
     },
     beforeDestroy() {
