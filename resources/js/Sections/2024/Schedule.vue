@@ -6,7 +6,7 @@ import {TabGroup, TabList, Tab, TabPanels, TabPanel} from "@headlessui/vue";
 import {ref} from "vue";
 import emitter from "../../emitter.js";
 
-const selectedTab = ref(1) // TODO: adjust this using date
+const selectedTab = ref(2) // TODO: adjust this using date
 
 export default {
     methods: {
