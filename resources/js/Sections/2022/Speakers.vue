@@ -9,7 +9,7 @@
                             :id="speaker.slug"
                              class="md:grid md:grid-cols-12 items-center pt-14">
                             <img class="md:col-span-2 mx-auto align-top mb-4 w-75 sm:w-full md:w-36 md:h-36 rounded-md md:rounded-full sm:ml-0 sm:mr-6"
-                                 :src="route('2022.home') + speaker.avatar"
+                                 :src="speaker.avatar"
                                  :alt="speaker.full_name">
                             <div class="flex flex-col md:col-span-10 text-left md:ml-24">
                                 <h3 class="text-3xl font-bold tracking-tight text-center sm:text-left">{{ speaker.full_name }}</h3>
