@@ -65,7 +65,7 @@ import { Head } from '@inertiajs/inertia-vue3';
                 <!-- Large Date Display -->
                 <div class="lg:col-span-8">
                      <p class="text-warm-mahogany uppercase tracking-widest text-sm font-bold mb-4">Save the Date</p>
-                    <div class="font-peclet text-6xl md:text-8xl lg:text-9xl leading-[1.1] md:leading-[0.8] lg:leading-[0.6] tracking-tighter flex flex-col">
+                    <div class="font-peclet text-6xl md:text-8xl lg:text-9xl leading-[1.1] md:leading-[0.6] tracking-tighter flex flex-col">
                         <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-30 date-line-1">07-10</span>
                         <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-20 date-line-2">October</span>
                         <span class="block relative z-10 date-line-3">2026</span>
