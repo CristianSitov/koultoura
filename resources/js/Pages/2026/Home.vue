@@ -65,9 +65,9 @@ import { Head } from '@inertiajs/inertia-vue3';
                 <!-- Large Date Display -->
                 <div class="lg:col-span-8">
                      <p class="text-warm-mahogany uppercase tracking-widest text-sm font-bold mb-4">Save the Date</p>
-                    <div class="font-peclet text-6xl md:text-8xl lg:text-9xl leading-[0.6] tracking-tighter flex flex-col">
-                        <span class="block -mb-4 lg:-mb-8 relative z-30 date-line-1">07-10</span>
-                        <span class="block -mb-4 lg:-mb-8 relative z-20 date-line-2">October</span>
+                    <div class="font-peclet text-6xl md:text-8xl lg:text-9xl leading-[1.1] md:leading-[0.8] lg:leading-[0.6] tracking-tighter flex flex-col">
+                        <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-30 date-line-1">07-10</span>
+                        <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-20 date-line-2">October</span>
                         <span class="block relative z-10 date-line-3">2026</span>
                         <span class="block text-3xl md:text-5xl text-white mt-8 tracking-normal leading-tight mx-1 opacity-80">Timișoara, RO</span>
                     </div>
@@ -89,13 +89,13 @@ import { Head } from '@inertiajs/inertia-vue3';
                     &copy; 2026 Why Culture Matters
                 </div>
                 
-                <div class="flex gap-8 font-peclet text-xl">
-                     <a href="/2024" class="text-zinc-400 hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group">
-                        <span class="w-2 h-2 rounded-full bg-zinc-600 group-hover:bg-warm-mahogany transition-colors"></span>
+                <div class="flex gap-8">
+                     <a href="/2024" class="text-zinc-400 hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group font-sans text-sm font-bold uppercase tracking-widest">
+                        <span class="w-1.5 h-1.5 rounded-full bg-zinc-600 group-hover:bg-warm-mahogany transition-colors"></span>
                         Archive 2024
                      </a>
-                     <a href="/2022" class="text-zinc-400 hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group">
-                        <span class="w-2 h-2 rounded-full bg-zinc-600 group-hover:bg-warm-mahogany transition-colors"></span>
+                     <a href="/2022" class="text-zinc-400 hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group font-sans text-sm font-bold uppercase tracking-widest">
+                        <span class="w-1.5 h-1.5 rounded-full bg-zinc-600 group-hover:bg-warm-mahogany transition-colors"></span>
                         Archive 2022
                      </a>
                 </div>
