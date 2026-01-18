@@ -19,9 +19,9 @@ class SetYearlyDatabase
     public function handle(Request $request, Closure $next): Response
     {
         // Extract the year from the URL (assuming the year is in the first URL segment)
-        $year = $request->segment(1) ?? '2024';
+        $year = $request->segment(1) ?? '2026';
 
-        $connection = preg_match('/^20\d{2}$/', $year) ? 'wcm_' . $year : 'wcm_2024';
+        $connection = preg_match('/^20\d{2}$/', $year) ? 'wcm_' . $year : 'wcm_2026';
 
         try {
             // Attempt to establish a connection

@@ -15,6 +15,12 @@ module.exports = {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
                 brave: ['Poppins', ...defaultTheme.fontFamily.sans],
+                peclet: ['Peclet-Regular', 'sans-serif'],
+            },
+            colors: {
+                'brand-red': '#ed1c24',
+                'brand-dark': '#010101',
+                'warm-mahogany': '#9d3e2e',
             },
         },
         screens: {
