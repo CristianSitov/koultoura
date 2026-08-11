@@ -54,8 +54,9 @@ import { Head } from '@inertiajs/inertia-vue3';
                     <span class="font-peclet text-2xl md:text-3xl text-white mb-2">V.2026</span>
                     <span class="text-xs text-zinc-500 max-w-[150px] leading-tight">
                         Organized by<br>
-                        PrinBanat x Heritage of Timișoara<br>
-                        x Moving Fireplaces
+                        Prin Banat Association<br>
+                        Heritage of Timișoara<br>
+                        Moving Fireplaces
                     </span>
                 </div>
             </header>
@@ -75,9 +76,15 @@ import { Head } from '@inertiajs/inertia-vue3';
 
                 <!-- Narrative Text -->
                 <div class="lg:col-span-4 lg:mb-4">
-                     <div class="max-w-md ml-auto lg:ml-0 border-l-2 border-warm-mahogany pl-6">
+                     <div class="max-w-md ml-auto lg:ml-0 border-l-2 border-warm-mahogany pl-6 space-y-4">
                         <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
-                            A convergence of heritage and future horizons. We explore the unseen threads that weave our collective identity, challenging perspectives and celebrating the resilience of culture in a shifting world.
+                            What we inherit. What we understand. What we choose to protect.
+                        </p>
+                        <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
+                            Why Culture Matters 2026 explores heritage under threat, heritage education and the narratives that shape our relationship with the past — and our responsibility for its future.
+                        </p>
+                        <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
+                            7–10 October 2026 · FABER · Timișoara
                         </p>
                     </div>
                 </div>
