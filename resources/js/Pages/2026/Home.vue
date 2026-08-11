@@ -66,9 +66,7 @@ const locale = computed(() => usePage().props.value.locale);
                     <span class="font-peclet text-2xl md:text-3xl text-white mb-2">V.2026</span>
                     <span class="text-xs text-zinc-500 max-w-[150px] leading-tight">
                         {{ $t('Organized by') }}<br>
-                        {{ $t('association') }}<br>
-                        Heritage of Timișoara<br>
-                        Moving Fireplaces
+                        {{ $t('association') }}
                     </span>
                 </div>
             </header>
