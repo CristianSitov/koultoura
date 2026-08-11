@@ -1,9 +1,16 @@
 <script setup>
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head, usePage } from '@inertiajs/inertia-vue3';
+import { computed } from 'vue';
+
+const locale = computed(() => usePage().props.value.locale);
 </script>
 
 <template>
-    <Head title="Coming Soon" />
+    <Head title="Coming Soon">
+        <link rel="alternate" hreflang="en" :href="route('home')">
+        <link rel="alternate" hreflang="ro" :href="route('home.ro')">
+        <link rel="alternate" hreflang="x-default" :href="route('home')">
+    </Head>
 
     <div class="bg-brand-dark min-h-screen text-white font-sans selection:bg-brand-red selection:text-white overflow-hidden relative">
         
@@ -50,11 +57,16 @@ import { Head } from '@inertiajs/inertia-vue3';
                     </h1>
                 </div>
                 <div class="text-right flex flex-col items-end">
-                    <span class="block text-zinc-400 text-sm uppercase tracking-widest mb-1">Edition</span>
+                    <div class="flex items-center gap-2 text-xs text-zinc-500 uppercase tracking-widest mb-3">
+                        <a href="/en" :class="['transition-colors', locale === 'en' ? 'text-white font-bold' : 'hover:text-warm-mahogany']">EN</a>
+                        <span class="text-zinc-700">/</span>
+                        <a href="/ro" :class="['transition-colors', locale === 'ro' ? 'text-white font-bold' : 'hover:text-warm-mahogany']">RO</a>
+                    </div>
+                    <span class="block text-zinc-400 text-sm uppercase tracking-widest mb-1">{{ $t('Edition') }}</span>
                     <span class="font-peclet text-2xl md:text-3xl text-white mb-2">V.2026</span>
                     <span class="text-xs text-zinc-500 max-w-[150px] leading-tight">
-                        Organized by<br>
-                        Prin Banat Association<br>
+                        {{ $t('Organized by') }}<br>
+                        {{ $t('association') }}<br>
                         Heritage of Timișoara<br>
                         Moving Fireplaces
                     </span>
@@ -65,10 +77,10 @@ import { Head } from '@inertiajs/inertia-vue3';
             <main class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end pointer-events-auto">
                 <!-- Large Date Display -->
                 <div class="lg:col-span-8">
-                     <p class="text-warm-mahogany uppercase tracking-widest text-sm font-bold mb-4">Save the Date</p>
+                     <p class="text-warm-mahogany uppercase tracking-widest text-sm font-bold mb-4">{{ $t('Save the Date') }}</p>
                     <div class="font-peclet text-6xl md:text-8xl lg:text-9xl leading-[1.1] md:leading-[0.6] tracking-tighter flex flex-col">
                         <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-30 date-line-1">07-10</span>
-                        <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-20 date-line-2">October</span>
+                        <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-20 date-line-2">{{ $t('October') }}</span>
                         <span class="block relative z-10 date-line-3">2026</span>
                         <span class="block text-3xl md:text-5xl text-white mt-8 tracking-normal leading-tight mx-1 opacity-80">Timișoara, RO</span>
                     </div>
@@ -78,13 +90,13 @@ import { Head } from '@inertiajs/inertia-vue3';
                 <div class="lg:col-span-4 lg:mb-4">
                      <div class="max-w-md ml-auto lg:ml-0 border-l-2 border-warm-mahogany pl-6 space-y-4">
                         <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
-                            What we inherit. What we understand. What we choose to protect.
+                            {{ $t('What we inherit. What we understand. What we choose to protect.') }}
                         </p>
                         <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
-                            Why Culture Matters 2026 explores heritage under threat, heritage education and the narratives that shape our relationship with the past — and our responsibility for its future.
+                            {{ $t('Why Culture Matters 2026 explores heritage under threat, heritage education and the narratives that shape our relationship with the past — and our responsibility for its future.') }}
                         </p>
                         <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
-                            7–10 October 2026 · FABER · Timișoara
+                            {{ $t('7–10 October 2026 · FABER · Timișoara') }}
                         </p>
                     </div>
                 </div>
@@ -99,11 +111,11 @@ import { Head } from '@inertiajs/inertia-vue3';
                 <div class="flex gap-8">
                      <a href="/2024" class="text-zinc-400 hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group font-sans text-sm font-bold uppercase tracking-widest">
                         <span class="w-1.5 h-1.5 rounded-full bg-zinc-600 group-hover:bg-warm-mahogany transition-colors"></span>
-                        Archive 2024
+                        {{ $t('Archive 2024') }}
                      </a>
                      <a href="/2022" class="text-zinc-400 hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group font-sans text-sm font-bold uppercase tracking-widest">
                         <span class="w-1.5 h-1.5 rounded-full bg-zinc-600 group-hover:bg-warm-mahogany transition-colors"></span>
-                        Archive 2022
+                        {{ $t('Archive 2022') }}
                      </a>
                 </div>
             </footer>

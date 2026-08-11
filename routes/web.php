@@ -5,7 +5,12 @@ use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [\App\Http\Controllers\Front2026Controller::class, 'index'])->name('home');
+Route::controller(\App\Http\Controllers\Front2026Controller::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('home');
+        Route::get('/en', 'en')->name('home.en');
+        Route::get('/ro', 'ro')->name('home.ro');
+    });
 
 Route::prefix('2024')
     ->name('2024.')
