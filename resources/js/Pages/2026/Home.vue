@@ -93,9 +93,6 @@ const locale = computed(() => usePage().props.value.locale);
                         <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
                             {{ $t('Why Culture Matters 2026 explores heritage under threat, heritage education and the narratives that shape our relationship with the past — and our responsibility for its future.') }}
                         </p>
-                        <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
-                            {{ $t('7–10 October 2026 · FABER · Timișoara') }}
-                        </p>
                     </div>
                 </div>
             </main>
