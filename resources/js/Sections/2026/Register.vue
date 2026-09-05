@@ -37,7 +37,7 @@ function submit() {
                         name="email"
                         required
                         placeholder="you@example.org"
-                        :aria-label="$t('Email address')"
+                        :aria-label="$t('Your email address')"
                     />
                     <button type="submit" class="btn btn-ghost btn-flush">{{ $t('Notify me') }}</button>
                 </form>

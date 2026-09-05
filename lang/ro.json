@@ -9,7 +9,7 @@
     "Partners": "Parteneri",
     "Open main menu": "Deschide meniul",
     "Close main menu": "Închide meniul",
-    "Register": "Înscrie-te",
+    "Register": "Înregistrează-te",
     "Register me": "Mă înregistrez",
     "Registration closed": "Înregistrare închisă",
     "International Symposium": "Simpozion Internațional",
@@ -48,7 +48,7 @@
     "Personal Information details": "Participarea la <span class='font-bold'>Simpozionul Internațional „Why Culture Matters”</span> este gratuită în limita locurilor disponibile, dar <span class='underline'>înregistrarea în prealabil este obligatorie</span>.<br /><br />Te rugăm să completezi acest formular de înregistrare.",
     "First name": "Prenume",
     "Last name": "Nume",
-    "Email address": "Adresă de e-mail",
+    "Email address": "Adresă ta de e-mail",
     "Confirm email": "Te rugăm să reintroduci adresa pentru confirmare",
     "Phone number": "Nr. de telefon",
     "Organisation": "Organizație",
@@ -237,5 +237,7 @@
     "A walk that asks questions": "O plimbare care pune întrebări",
     "Teaching heritage without a textbook": "Patrimoniu predat fără manual",
     "What we pass on": "Ce transmitem mai departe",
-    "What we choose to protect": "Ce alegem să protejăm"
+    "What we choose to protect": "Ce alegem să protejăm",
+    "Register interest": "Înscrie-te",
+    "Your email address": "Adresa ta de e-mail"
 }

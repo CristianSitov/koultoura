@@ -49,7 +49,7 @@ defineEmits(['toggle-theme', 'open-menu']);
                 </svg>
             </button>
 
-            <a href="#register" class="btn btn-primary btn-flush" style="height: 40px">{{ $t('Register') }}</a>
+            <a href="#register" class="btn btn-primary btn-flush" style="height: 40px">{{ $t('Register interest') }}</a>
 
             <button
                 type="button"
