@@ -1,8 +1,28 @@
 <script setup>
 import { Head, usePage } from '@inertiajs/inertia-vue3';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const locale = computed(() => usePage().props.value.locale);
+
+/*
+ * Light unless the visitor has asked for dark — the same rule and the same
+ * stored key as the 2026 landing page, so the choice carries between them.
+ * The system preference is deliberately ignored: dark is a choice made here.
+ *
+ * The palette is a straight swap of the ink and the ground; the reds are brand
+ * and do not move.
+ */
+const theme = ref('light');
+const isDark = computed(() => theme.value === 'dark');
+
+function toggleTheme() {
+    theme.value = isDark.value ? 'light' : 'dark';
+    localStorage.setItem('wcm-theme', theme.value);
+}
+
+onMounted(() => {
+    theme.value = localStorage.getItem('wcm-theme') === 'dark' ? 'dark' : 'light';
+});
 </script>
 
 <template>
@@ -12,10 +32,13 @@ const locale = computed(() => usePage().props.value.locale);
         <link rel="alternate" hreflang="x-default" :href="route('home')">
     </Head>
 
-    <div class="bg-brand-dark min-h-screen text-white font-sans selection:bg-brand-red selection:text-white overflow-hidden relative">
+    <div
+        :data-theme="theme"
+        class="wcm-splash min-h-screen font-sans selection:bg-brand-red selection:text-white overflow-hidden relative"
+    >
         
         <!-- 3D Curvy Wave Stack -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none perspective-container bg-black">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none perspective-container">
             <div class="wave-stack">
                 <!-- Multiple layers of curvy waves in 3D space -->
                 <div v-for="i in 15" :key="i"
@@ -50,21 +73,36 @@ const locale = computed(() => usePage().props.value.locale);
         <div class="relative z-20 max-w-7xl mx-auto px-6 py-12 md:py-20 min-h-screen flex flex-col justify-between pointer-events-none">
             
             <!-- Header / Top Bar (Enable pointer events for links/interactions) -->
-            <header class="flex justify-between items-start border-b border-white/10 pb-6 mb-12 pointer-events-auto">
+            <header class="flex justify-between items-start wcm-rule border-b pb-6 mb-12 pointer-events-auto">
                 <div>
                     <h1 class="font-peclet text-brand-red text-4xl md:text-5xl tracking-tight leading-none">
                         Why<br>Culture<br>Matters
                     </h1>
                 </div>
                 <div class="text-right flex flex-col items-end">
-                    <div class="flex items-center gap-2 text-xs text-zinc-500 uppercase tracking-widest mb-3">
-                        <a href="/en" :class="['transition-colors', locale === 'en' ? 'text-white font-bold' : 'hover:text-warm-mahogany']">EN</a>
-                        <span class="text-zinc-700">/</span>
-                        <a href="/ro" :class="['transition-colors', locale === 'ro' ? 'text-white font-bold' : 'hover:text-warm-mahogany']">RO</a>
+                    <div class="flex items-center gap-3 text-xs wcm-dim uppercase tracking-widest mb-3">
+                        <a href="/en" :class="['transition-colors', locale === 'en' ? 'wcm-ink font-bold' : 'hover:text-warm-mahogany']">EN</a>
+                        <span class="wcm-faint">/</span>
+                        <a href="/ro" :class="['transition-colors', locale === 'ro' ? 'wcm-ink font-bold' : 'hover:text-warm-mahogany']">RO</a>
+                        <button
+                            type="button"
+                            class="wcm-theme-toggle transition-colors"
+                            :aria-label="isDark ? $t('Switch to light mode') : $t('Switch to dark mode')"
+                            :title="isDark ? $t('Switch to light mode') : $t('Switch to dark mode')"
+                            @click="toggleTheme"
+                        >
+                            <svg v-if="isDark" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="4"></circle>
+                                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+                            </svg>
+                            <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <span class="block text-zinc-400 text-sm uppercase tracking-widest mb-1">{{ $t('Edition') }}</span>
-                    <span class="font-peclet text-2xl md:text-3xl text-white mb-2">V.2026</span>
-                    <span class="text-xs text-zinc-500 max-w-[150px] leading-tight">
+                    <span class="block wcm-muted text-sm uppercase tracking-widest mb-1">{{ $t('Edition') }}</span>
+                    <span class="font-peclet text-2xl md:text-3xl wcm-ink mb-2">V.2026</span>
+                    <span class="text-xs wcm-dim max-w-[150px] leading-tight">
                         {{ $t('Organized by') }}<br>
                         {{ $t('association') }}
                     </span>
@@ -80,17 +118,17 @@ const locale = computed(() => usePage().props.value.locale);
                         <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-30 date-line-1">07-10</span>
                         <span class="block -mb-0 md:-mb-4 lg:-mb-8 relative z-20 date-line-2">{{ $t('October') }}</span>
                         <span class="block relative z-10 date-line-3">2026</span>
-                        <span class="block text-3xl md:text-5xl text-white mt-8 tracking-normal leading-tight mx-1 opacity-80">Timișoara, RO</span>
+                        <span class="block text-3xl md:text-5xl wcm-ink mt-8 tracking-normal leading-tight mx-1 opacity-80">Timișoara, RO</span>
                     </div>
                 </div>
 
                 <!-- Narrative Text -->
                 <div class="lg:col-span-4 lg:mb-4">
                      <div class="max-w-md ml-auto lg:ml-0 border-l-2 border-warm-mahogany pl-6 space-y-4">
-                        <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
+                        <p class="text-lg md:text-xl wcm-body font-light leading-relaxed">
                             {{ $t('What we inherit. What we understand. What we choose to protect.') }}
                         </p>
-                        <p class="text-lg md:text-xl text-zinc-300 font-light leading-relaxed">
+                        <p class="text-lg md:text-xl wcm-body font-light leading-relaxed">
                             {{ $t('Why Culture Matters 2026 explores heritage under threat, heritage education and the narratives that shape our relationship with the past — and our responsibility for its future.') }}
                         </p>
                     </div>
@@ -98,18 +136,18 @@ const locale = computed(() => usePage().props.value.locale);
             </main>
 
             <!-- Footer / Links -->
-            <footer class="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 pointer-events-auto">
-                <div class="text-zinc-500 text-sm">
+            <footer class="mt-20 pt-8 wcm-rule border-t flex flex-col md:flex-row justify-between items-center gap-6 pointer-events-auto">
+                <div class="wcm-dim text-sm">
                     &copy; 2026 Why Culture Matters
                 </div>
                 
                 <div class="flex gap-8">
-                     <a href="/2024" class="text-zinc-400 hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group font-sans text-sm font-bold uppercase tracking-widest">
-                        <span class="w-1.5 h-1.5 rounded-full bg-zinc-600 group-hover:bg-warm-mahogany transition-colors"></span>
+                     <a href="/2024" class="wcm-muted hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group font-sans text-sm font-bold uppercase tracking-widest">
+                        <span class="wcm-dot w-1.5 h-1.5 rounded-full group-hover:bg-warm-mahogany transition-colors"></span>
                         {{ $t('Archive 2024') }}
                      </a>
-                     <a href="/2022" class="text-zinc-400 hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group font-sans text-sm font-bold uppercase tracking-widest">
-                        <span class="w-1.5 h-1.5 rounded-full bg-zinc-600 group-hover:bg-warm-mahogany transition-colors"></span>
+                     <a href="/2022" class="wcm-muted hover:text-warm-mahogany transition-colors duration-300 flex items-center gap-2 group font-sans text-sm font-bold uppercase tracking-widest">
+                        <span class="wcm-dot w-1.5 h-1.5 rounded-full group-hover:bg-warm-mahogany transition-colors"></span>
                         {{ $t('Archive 2022') }}
                      </a>
                 </div>
@@ -119,9 +157,60 @@ const locale = computed(() => usePage().props.value.locale);
 </template>
 
 <style scoped>
+/*
+ * One palette, two settings. Only the ink and the ground swap — the reds are
+ * brand colours and stay where they are in both.
+ */
+.wcm-splash {
+    --ground: #010101;
+    --ground-in: #110303;
+    --ink: #ffffff;
+    --body: #d4d4d8;
+    --muted: #a1a1aa;
+    --dim: #71717a;
+    --faint: #3f3f46;
+    --rule: rgba(255, 255, 255, 0.1);
+    --dot: #52525b;
+
+    background: var(--ground);
+    color: var(--ink);
+    transition: background 0.3s, color 0.3s;
+}
+
+.wcm-splash[data-theme='light'] {
+    --ground: #ffffff;
+    --ground-in: #fbf8f8;
+    --ink: #111111;
+    --body: #3f3f46;
+    --muted: #52525b;
+    --dim: #71717a;
+    --faint: #d4d4d8;
+    --rule: rgba(0, 0, 0, 0.12);
+    --dot: #a1a1aa;
+}
+
+.wcm-ink { color: var(--ink); }
+.wcm-body { color: var(--body); }
+.wcm-muted { color: var(--muted); }
+.wcm-dim { color: var(--dim); }
+.wcm-faint { color: var(--faint); }
+.wcm-rule { border-color: var(--rule); }
+.wcm-dot { background: var(--dot); }
+
+.wcm-theme-toggle {
+    color: var(--dim);
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+}
+
+.wcm-theme-toggle:hover {
+    color: #9d3e2e;
+}
+
 .perspective-container {
     perspective: 1000px;
-    background: radial-gradient(circle at center, #110303 0%, #000000 100%);
+    background: radial-gradient(circle at center, var(--ground-in) 0%, var(--ground) 100%);
 }
 
 .wave-stack {
