@@ -1,4 +1,5 @@
-/* The seven page sections, in order — shared by the menu overlay. */
+/* The seven page sections, in order — shared by the menu overlay. The label is
+   a translation key; the anchors are the same in every language. */
 export const menuItems = [
     { n: '01', label: 'About', href: '#about' },
     { n: '02', label: 'Format', href: '#format' },

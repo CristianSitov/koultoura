@@ -21,13 +21,13 @@ function submit() {
     <section id="register" class="wcm26-register">
         <div class="wcm26-register-inner">
             <h2>
-                <span>Free entry.</span>
-                <span>Registration required.</span>
+                <span>{{ $t('Pay what you can.') }}</span>
+                <span>{{ $t('Registration required.') }}</span>
             </h2>
 
             <div>
-                <p class="wcm26-register-title">Registration opens soon.</p>
-                <p class="wcm26-register-note">Leave your email and we will let you know the moment it does.</p>
+                <p class="wcm26-register-title">{{ $t('Registration opens soon.') }}</p>
+                <p class="wcm26-register-note">{{ $t('Leave your email and we will let you know the moment it does.') }}</p>
 
                 <form v-if="!submitted" @submit.prevent="submit">
                     <input
@@ -37,14 +37,12 @@ function submit() {
                         name="email"
                         required
                         placeholder="you@example.org"
-                        aria-label="Email address"
+                        :aria-label="$t('Email address')"
                     />
-                    <button type="submit" class="btn btn-ghost btn-flush">Notify me</button>
+                    <button type="submit" class="btn btn-ghost btn-flush">{{ $t('Notify me') }}</button>
                 </form>
 
-                <p v-else class="wcm26-register-done">
-                    Noted. We will write to {{ email }} when registration opens.
-                </p>
+                <p v-else class="wcm26-register-done">{{ $t('Noted. We will write to :email when registration opens.', { email }) }}</p>
             </div>
         </div>
     </section>

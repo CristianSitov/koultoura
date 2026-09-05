@@ -11,8 +11,9 @@ use Illuminate\Support\Facades\Session;
 use Throwable;
 
 /**
- * Scoped to the 2026 homepage routes (/, /en, /ro) only — does not touch
- * the session-based locale switching used by the 2022/2024 pages.
+ * Scoped to the 2026 pages — the announcement homepage (/, /en, /ro) and the
+ * landing page (/2026, /2026/{locale}, and the guest profiles under both).
+ * Does not touch the session-based locale switching used by 2022/2024.
  *
  * Must run before HandleInertiaRequests, which shares the current session
  * locale as a prop: setting it from inside the controller would be one
@@ -22,19 +23,23 @@ class Resolve2026Locale
 {
     public function handle(Request $request, Closure $next)
     {
-        if (! $request->routeIs('home', 'home.en', 'home.ro')) {
+        if (! $request->routeIs('home', 'home.en', 'home.ro', '2026.*')) {
             return $next($request);
         }
 
-        $locale = match ($request->route()->getName()) {
+        $name = $request->route()->getName();
+
+        // The landing page carries its locale in the URL: /2026/ro/...
+        $locale = match ($name) {
             'home.en' => 'en',
             'home.ro' => 'ro',
+            '2026.locale', '2026.locale.guest' => $request->route('locale'),
             default => null,
         };
 
         if ($locale === null) {
             if (! Session::has('locale_2026_resolved') && $this->isLikelyRomanian($request)) {
-                return redirect('/ro');
+                return redirect($this->romanianUrl($request, $name));
             }
             $locale = 'en';
         }
@@ -44,6 +49,19 @@ class Resolve2026Locale
         Session::put('locale_2026_resolved', true);
 
         return $next($request);
+    }
+
+    /**
+     * Where a first-time Romanian visitor should land, keeping whatever page
+     * they asked for rather than dropping them on a homepage.
+     */
+    private function romanianUrl(Request $request, ?string $name): string
+    {
+        return match ($name) {
+            '2026.home' => '/2026/ro',
+            '2026.guest' => '/2026/ro/guests/'.$request->route('slug'),
+            default => '/ro',
+        };
     }
 
     private function isLikelyRomanian(Request $request): bool

@@ -210,9 +210,8 @@
 }
 
 .wcm26-shell {
-    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 clamp(20px, 5vw, 72px);
+    padding: 0 clamp(20px, 5vw, 120px);
 }
 
 .wcm26-section {
@@ -308,13 +307,21 @@
 }
 
 .wcm26-bar {
-    max-width: 1280px;
     width: 100%;
     margin: 0 auto;
-    padding: 14px clamp(20px, 5vw, 72px);
+    padding: 14px clamp(20px, 5vw, 120px);
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+/*
+ * Header controls carry no outline — the bar already has its own rule beneath
+ * it, and three red boxes competing with the red CTA made the row shouty.
+ * Hover/active still give them a background, so they stay findable.
+ */
+.wcm26 .wcm26-bar .btn-secondary {
+    border-color: transparent;
 }
 
 .wcm26-brand {
@@ -377,14 +384,28 @@
 }
 
 .wcm26-menu-body {
-    max-width: 1280px;
     width: 100%;
     margin: 0 auto;
-    padding: clamp(32px, 6vh, 72px) clamp(20px, 5vw, 72px);
+    padding: clamp(32px, 6vh, 72px) clamp(20px, 5vw, 120px);
     display: grid;
     grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
     gap: 48px;
     flex: 1;
+}
+
+/* Language switch: a text button the same size as the theme icon beside it. */
+.wcm26-lang {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+}
+
+.wcm26-menu-lang {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 2px solid var(--color-divider);
 }
 
 .wcm26-menu-list {
@@ -481,17 +502,20 @@
     text-transform: lowercase;
 }
 
+/*
+ * Inline flow, not flex: the typed tail has to be able to wrap. The longest
+ * line ("what we choose to protect.") does not fit one phone line, and a flex
+ * item cannot break. min-height reserves the tallest line the sequence
+ * reaches so the page below does not jump as the text types and erases.
+ */
 .wcm26-hero-line {
-    display: flex;
-    align-items: baseline;
-    white-space: nowrap;
+    display: block;
     min-height: 1.3em;
 }
 
 .wcm26-hero-lead,
 .wcm26-hero-tail {
-    display: inline-block;
-    height: 1.3em;
+    display: inline;
     line-height: 1.3em;
 }
 
@@ -622,10 +646,35 @@
 }
 
 .wcm26-about-photo {
+    position: relative;
+    overflow: hidden;
     margin-top: 48px;
     aspect-ratio: 4 / 5;
     max-width: 440px;
     background: var(--color-surface);
+}
+
+/*
+ * Twelve frames stacked in one slot, cross-fading on a 60s loop: each is up for
+ * five seconds with a 0.6s dissolve, staggered by a negative delay so one
+ * animation definition serves all of them.
+ */
+.wcm26-about-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: wcm26-about-slides 60s linear infinite;
+}
+
+@keyframes wcm26-about-slides {
+    0% { opacity: 0; }
+    1% { opacity: 1; }
+    8.33% { opacity: 1; }
+    9.33% { opacity: 0; }
+    100% { opacity: 0; }
 }
 
 .wcm26-about-copy {
@@ -747,7 +796,7 @@
 
 .wcm26-themes {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     border-top: 2px solid var(--color-divider);
     border-left: 2px solid var(--color-divider);
 }
@@ -760,8 +809,43 @@
     padding: 28px 28px 36px;
 }
 
-.wcm26-theme-new {
+/* The Heritage School block: full width under the themes, not a fourth column. */
+.wcm26-school {
+    margin-top: clamp(28px, 4vh, 48px);
     background: var(--color-accent-100);
+    border: 2px solid var(--color-divider);
+    padding: 28px 28px 36px;
+}
+
+.wcm26-school-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.wcm26-school-body {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 32px clamp(32px, 6vw, 120px);
+}
+
+.wcm26-school-body h3 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(24px, 2.4vw, 34px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+}
+
+.wcm26-school-body .wcm26-theme-q {
+    margin-top: 20px;
+}
+
+.wcm26-school-body .wcm26-theme-p {
+    margin-top: 0;
 }
 
 .wcm26-theme-n {
@@ -780,6 +864,21 @@
     width: 10px;
     height: 10px;
     background: var(--color-accent);
+    flex: none;
+}
+
+/*
+ * A filled square marks one of the three themes; a hollow one marks the
+ * Heritage School, which runs across days rather than belonging to one. The
+ * pair is the whole visual argument, used in both Themes and Programme.
+ */
+.wcm26-square-open {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--color-accent);
+    background: none;
+    box-sizing: border-box;
     flex: none;
 }
 
@@ -831,20 +930,28 @@
 
 /* ── guests ──────────────────────────────────────────────────────────────── */
 
+/*
+ * Twelve columns, four-column cards: three per row. With eight guests plus the
+ * closing announcement cell that is nine items — three full rows, no orphan.
+ * (The reference indents its first row by a column; that only lands cleanly at
+ * its 79 cards, and here it left a single card stranded on the last row.)
+ */
 .wcm26-guests {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 56px 32px;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 54px 28px;
 }
 
 .wcm26-guest {
+    grid-column: span 4;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .wcm26-guest-photo {
     position: relative;
+    overflow: hidden;
     aspect-ratio: 3 / 4;
     background: var(--color-surface);
     border: 0;
@@ -856,37 +963,85 @@
     text-align: left;
 }
 
+/* The portraits stay black and white, hovered or not. */
+.wcm26-guest-photo .wcm26-slot img {
+    filter: grayscale(1) contrast(1.08);
+    transition: transform 0.45s ease;
+}
+
+.wcm26-guest-photo:hover .wcm26-slot img,
+.wcm26-guest-photo:focus-visible .wcm26-slot img {
+    transform: scale(1.04);
+}
+
+/*
+ * The shift is switched on by the script, on the one image the pointer is
+ * actually over — not by :hover, which a browser can leave behind on a card
+ * after a modal opens over it and is closed with the keyboard.
+ *
+ * Order matters: grayscale first, then the channel shift, so the picture stays
+ * black and white and the only colour is the fringe the cursor's speed drags
+ * out of it. Standing still, the offset is zero and it is plain grey again.
+ */
+.wcm26-guest-photo .wcm26-slot img.is-shifting {
+    filter: grayscale(1) contrast(1.08) url(#wcm26-rgbshift);
+}
+
+.wcm26-guest-photo:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+/* Role reads as a tab on the photograph rather than a line of text below it. */
+.wcm26-guest-tag {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    padding: 4px 12px 3px;
+    background: color-mix(in srgb, var(--color-text) 14%, var(--color-bg));
+    color: var(--color-text);
+    font-size: 11px;
+    line-height: 15px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
 .wcm26-guest-name {
-    margin: 0;
+    margin: 2px 0 0;
     font-family: var(--font-heading);
     font-weight: 800;
-    font-size: 19px;
-    line-height: 1.2;
-    letter-spacing: -0.025em;
+    font-size: clamp(26px, 2.4vw, 44px);
+    line-height: 0.94;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
 }
 
 .wcm26-guest-org {
-    margin: 6px 0 0;
-    font-size: 15px;
-    line-height: 1.4;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: color-mix(in srgb, var(--color-text) 65%, transparent);
 }
 
-.wcm26-guest-role {
-    margin: 8px 0 0;
-    font-size: 11px;
-    line-height: 14px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent-700);
+/*
+ * The closing cell is a full-width bar, not a ghost card: the guest count keeps
+ * changing, and a bar reads as a deliberate end to the section at any count,
+ * where a card-shaped box looks like a guest whose photo failed to load.
+ */
+.wcm26-guest:last-child {
+    grid-column: 1 / -1;
 }
 
 .wcm26-guest-more {
-    aspect-ratio: 3 / 4;
     border: 2px solid var(--color-divider);
     display: flex;
-    align-items: flex-end;
-    padding: 20px;
+    align-items: center;
+    min-height: 120px;
+    padding: 24px clamp(20px, 3vw, 40px);
 }
 
 .wcm26-guest-more p {
@@ -911,10 +1066,9 @@
 }
 
 .wcm26-profile-inner {
-    max-width: 1280px;
     min-height: 100%;
     margin: 0 auto;
-    padding: clamp(20px, 4vh, 48px) clamp(20px, 5vw, 72px) clamp(48px, 8vh, 96px);
+    padding: clamp(20px, 4vh, 48px) clamp(20px, 5vw, 120px) clamp(48px, 8vh, 96px);
     display: flex;
     flex-direction: column;
     gap: clamp(28px, 5vh, 56px);
@@ -957,6 +1111,19 @@
     gap: 24px;
 }
 
+/*
+ * The name's letters are always in the flow; only their colour changes, so the
+ * heading never reflows while it assembles. A pending letter is painted in the
+ * page background rather than hidden.
+ */
+.wcm26-profile-word {
+    display: inline-block;
+}
+
+.wcm26-profile-name .is-pending {
+    color: var(--color-bg);
+}
+
 .wcm26-profile-org {
     margin: 0;
     font-size: 13px;
@@ -976,6 +1143,57 @@
     font-weight: 500;
 }
 
+/* Step through the guests without leaving the overlay. */
+.wcm26-profile-pager {
+    margin-top: auto;
+    padding-top: clamp(32px, 5vh, 56px);
+    border-top: 2px solid var(--color-divider);
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.wcm26-profile-pager-btn {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    color: inherit;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.wcm26-profile-pager-next {
+    text-align: right;
+    align-items: flex-end;
+}
+
+.wcm26-profile-pager-label {
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.wcm26-profile-pager-name {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(20px, 2vw, 30px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+}
+
+.wcm26-profile-pager-btn:hover .wcm26-profile-pager-name,
+.wcm26-profile-pager-btn:focus-visible .wcm26-profile-pager-name {
+    color: var(--color-accent);
+}
+
 .wcm26-profile-bio {
     margin: 8px 0 0;
     font-size: clamp(17px, 1.3vw, 20px);
@@ -987,9 +1205,119 @@
 
 /* ── programme ───────────────────────────────────────────────────────────── */
 
+/* Theme spans: three per-day bars, then one bar carrying the umbrella across
+   the days it covers. Same four columns as the day grid below, so the bars line
+   up with the days they describe. */
+.wcm26-spans-label {
+    margin-bottom: 14px;
+}
+
+.wcm26-spans {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    row-gap: 8px;
+    margin-bottom: 12px;
+}
+
+.wcm26-span {
+    margin: 0;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    background: var(--color-accent-200);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.wcm26-span:nth-of-type(1) { grid-column: 1 / 2; }
+.wcm26-span:nth-of-type(2) { grid-column: 2 / 3; }
+.wcm26-span:nth-of-type(3) { grid-column: 3 / 5; } /* III runs over the last two days */
+
+.wcm26-span-school {
+    grid-column: 2 / 5;
+    background: var(--color-accent);
+    color: #f3f2f2;
+}
+
+.wcm26-span-school .wcm26-square-open {
+    border-color: #f3f2f2;
+}
+
+.wcm26-day-theme {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 2px solid var(--color-divider);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.wcm26-sessions {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.wcm26-session-tag {
+    gap: 7px;
+    margin-bottom: 6px;
+}
+
+.wcm26-session-tag .wcm26-square-open {
+    width: 8px;
+    height: 8px;
+}
+
+.wcm26-session-time {
+    margin: 0;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-accent-700);
+    font-feature-settings: 'tnum' 1;
+}
+
+.wcm26-session-title {
+    margin: 4px 0 0;
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.wcm26-session-who {
+    margin: 3px 0 0;
+    font-size: 12px;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.wcm26-legend {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.wcm26-legend .wcm26-square-open {
+    margin-left: 24px;
+}
+
 .wcm26-days {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     border-top: 2px solid var(--color-divider);
     border-left: 2px solid var(--color-divider);
 }
@@ -998,9 +1326,9 @@
     border-right: 2px solid var(--color-divider);
     border-bottom: 2px solid var(--color-divider);
     padding: 28px;
-    min-height: 240px;
     display: flex;
     flex-direction: column;
+    gap: 22px;
 }
 
 .wcm26-day-n {
@@ -1014,28 +1342,10 @@
 }
 
 .wcm26-day-label {
-    margin: auto 0 0;
+    margin: 14px 0 0;
     font-size: 15px;
     line-height: 20px;
     font-weight: 500;
-}
-
-.wcm26-soon {
-    margin: 40px 0 0;
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: clamp(21px, 2vw, 28px);
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    color: var(--color-accent);
-}
-
-.wcm26-soon-note {
-    margin: 12px 0 0;
-    font-size: 17px;
-    line-height: 1.55;
-    color: color-mix(in srgb, var(--color-text) 75%, transparent);
-    max-width: 52ch;
 }
 
 /* ── registration (the red field) ────────────────────────────────────────── */
@@ -1047,9 +1357,8 @@
 }
 
 .wcm26-register-inner {
-    max-width: 1280px;
     margin: 0 auto;
-    padding: clamp(80px, 12vh, 140px) clamp(20px, 5vw, 72px);
+    padding: clamp(80px, 12vh, 140px) clamp(20px, 5vw, 120px);
     display: grid;
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     gap: 48px clamp(32px, 6vw, 120px);
@@ -1164,9 +1473,14 @@
 
 /* ── partners ────────────────────────────────────────────────────────────── */
 
+/*
+ * Capped columns rather than fractions: with only two role slots left, 1fr
+ * each would stretch the logo plates to half the page.
+ */
 .wcm26-partners {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 300px));
+    justify-content: start;
     gap: 48px 32px;
 }
 
@@ -1179,32 +1493,72 @@
     color: color-mix(in srgb, var(--color-text) 60%, transparent);
 }
 
+/*
+ * No plate behind the organiser and financer marks: the surface tint is a
+ * hair off the page and only read as a stray box, with the logo floating in
+ * the middle of it while its label sat hard left. The mark now hangs straight
+ * under its label, on the same left edge as everything else in the column.
+ */
 .wcm26-partner-logo {
-    aspect-ratio: 5 / 2;
-    background: var(--color-surface);
+    position: relative;
+    height: 84px;
 }
 
-.wcm26-partner-empty {
-    aspect-ratio: 5 / 2;
-    border: 2px solid var(--color-divider);
-    display: flex;
-    align-items: flex-end;
-    padding: 16px;
+.wcm26-supporters-label {
+    margin-top: clamp(48px, 7vh, 88px);
 }
 
-.wcm26-partner-empty p {
+/*
+ * Logo row. The marks are wordmarks, emblems and squares in every proportion,
+ * so each gets an identical cell and is centred in it — left-aligning a set
+ * this uneven just reads as a ragged edge. Nothing is stretched: each logo
+ * takes the room it needs inside a shared 72px band.
+ */
+.wcm26-supporters {
     margin: 0;
-    font-size: 15px;
-    line-height: 20px;
-    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 44px 40px;
 }
 
-.wcm26-partner-name {
-    margin: 16px 0 0;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 1.3;
+/* Flex, not grid: thirteen marks never divide evenly into columns, and a
+   wrapped last row centres itself instead of trailing off to one lonely logo. */
+.wcm26-supporters li {
+    flex: 0 0 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 72px;
+}
+
+.wcm26-supporters img {
+    display: block;
+    max-width: 100%;
+    max-height: 72px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/*
+ * Several of these ship as JPEG or as PNG with a white plate baked in, which
+ * paints a bright rectangle on the page's warm grey. Multiplying drops the
+ * white into the background; in dark mode it would drop the ink instead, so
+ * there the marks are inverted to read light-on-dark.
+ */
+.wcm26 .wcm26-supporters img,
+.wcm26 .wcm26-partner-logo img {
+    filter: grayscale(1) contrast(1.08);
+    mix-blend-mode: multiply;
+}
+
+.wcm26[data-theme='dark'] .wcm26-supporters img,
+.wcm26[data-theme='dark'] .wcm26-partner-logo img {
+    filter: grayscale(1) invert(1) contrast(1.08);
+    mix-blend-mode: screen;
 }
 
 /* ── footer ──────────────────────────────────────────────────────────────── */
@@ -1274,6 +1628,30 @@
     object-fit: contain;
 }
 
+/*
+ * A slot inside an aspect-ratio box has to be taken out of flow, or a tall
+ * portrait's intrinsic height wins over the ratio and that one card grows
+ * taller than the rest of the grid row.
+ */
+.wcm26-guest-photo > .wcm26-slot,
+.wcm26-partner-logo > .wcm26-slot {
+    position: absolute;
+    inset: 0;
+    height: auto;
+}
+
+.wcm26-partner-logo > .wcm26-slot {
+    background: none;
+    padding: 0;
+    justify-content: flex-start;
+}
+
+.wcm26-partner-logo img {
+    width: auto;
+    max-width: 100%;
+    object-position: left center;
+}
+
 .wcm26-slot-empty {
     margin: 0;
     text-align: center;
@@ -1300,6 +1678,41 @@
 @media (max-width: 860px) {
     .wcm26-menu-body {
         grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 960px) {
+    /*
+     * Below four columns the spans cannot line up with the days they describe,
+     * so the bars stack full width and the umbrella says its own range instead.
+     */
+    .wcm26-spans,
+    .wcm26-days {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wcm26-span,
+    .wcm26-span:nth-of-type(1),
+    .wcm26-span:nth-of-type(2),
+    .wcm26-span:nth-of-type(3),
+    .wcm26-span-school {
+        grid-column: 1 / -1;
+    }
+
+    .wcm26-school-body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 860px) {
+    .wcm26-guest {
+        grid-column: span 6;
+    }
+}
+
+@media (max-width: 560px) {
+    .wcm26-guest {
+        grid-column: span 12;
     }
 }
 
@@ -1338,14 +1751,28 @@
     }
 }
 
+/* Below ~600px the hero font hits its 38px floor and the longest line needs
+   two rows. Reserve them up front. */
+@media (max-width: 600px) {
+    .wcm26-hero-line {
+        min-height: 2.6em;
+    }
+}
+
 /*
- * Phone header: the wordmark plus three labelled controls do not fit across
- * 390px, so the mark steps down and the menu button keeps its icon only.
- * Every control stays reachable.
+ * Phone header: the wordmark plus four controls do not fit across 390px, so the
+ * mark steps down and the menu button keeps its icon only. The CTA is the one
+ * label that stays, and it must not wrap — "Înscrie-te" is longer than
+ * "Register" and broke across two lines before the nowrap.
  */
 @media (max-width: 560px) {
     .wcm26-bar {
-        gap: 12px;
+        gap: 10px;
+    }
+
+    .wcm26-bar .btn {
+        white-space: nowrap;
+        padding-inline: 12px;
     }
 
     .wcm26-logo {
@@ -1367,6 +1794,24 @@
     .wcm26-lines .wave-layer,
     .wcm26-lines .animated-curve {
         animation: none;
+    }
+
+    .wcm26-guest-photo .wcm26-slot img {
+        transition: none;
+    }
+
+    /* Hold the first frame instead of cycling. */
+    .wcm26-about-photo img {
+        animation: none;
+    }
+
+    .wcm26-about-photo img:first-child {
+        opacity: 1;
+    }
+
+    .wcm26-guest-photo:hover .wcm26-slot img,
+    .wcm26-guest-photo:focus-visible .wcm26-slot img {
+        transform: none;
     }
 
     .wcm26-header {

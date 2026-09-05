@@ -26,7 +26,18 @@ Route::prefix('2026')
     ->group(function () {
         Route::controller(Front2026Controller::class)
             ->group(function () {
+                // /2026 is the English page; /2026/ro is the Romanian one.
+                // Resolve2026Locale sends first-time Romanian visitors across.
                 Route::get('/', 'landing')->name('home');
+                Route::get('/guests/{slug}', 'guest')
+                    ->where('slug', '[a-z0-9-]+')
+                    ->name('guest');
+                Route::get('/{locale}', 'landing')
+                    ->where('locale', 'en|ro')
+                    ->name('locale');
+                Route::get('/{locale}/guests/{slug}', 'guest')
+                    ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+'])
+                    ->name('locale.guest');
             });
     });
 
