@@ -3,13 +3,31 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
+use App\Http\Controllers\Front2026Controller;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(\App\Http\Controllers\Front2026Controller::class)
+/*
+ * The announcement page. When the 2026 landing page below takes over, this
+ * becomes a redirect:
+ *
+ *     Route::redirect('/', '/2026')->name('home');
+ *
+ * and the noindex in Pages/2026/Landing.vue comes off.
+ */
+Route::controller(Front2026Controller::class)
     ->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/en', 'en')->name('home.en');
         Route::get('/ro', 'ro')->name('home.ro');
+    });
+
+Route::prefix('2026')
+    ->name('2026.')
+    ->group(function () {
+        Route::controller(Front2026Controller::class)
+            ->group(function () {
+                Route::get('/', 'landing')->name('home');
+            });
     });
 
 Route::prefix('2024')
