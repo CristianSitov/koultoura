@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FABER, Timișoara — map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+html,body{margin:0;height:100%;background:#f3f2f2}
+#map{position:absolute;inset:0}
+.leaflet-tile-pane{filter:grayscale(1) contrast(1.08)}
+.leaflet-container{font-family:Manrope,system-ui,sans-serif;background:#f3f2f2}
+.leaflet-control-attribution{font-size:10px;background:rgba(243,242,242,.9);color:#201e1d}
+.leaflet-control-attribution a{color:#871b27}
+.leaflet-bar,.leaflet-bar a{border-radius:0!important}
+.leaflet-bar a{color:#201e1d;border-bottom:1px solid rgba(32,30,29,.4)}
+.leaflet-bar a:hover{background:#f7e9ea;color:#bf1a2c}
+.pin{width:18px;height:18px;background:#bf1a2c;outline:2px solid #f3f2f2}
+.pin-label{position:absolute;left:26px;top:-2px;white-space:nowrap;font:800 13px/1 Manrope,system-ui,sans-serif;color:#201e1d;letter-spacing:.02em}
+</style>
+</head>
+<body>
+<div id="map" role="img" aria-label="Map of Timișoara showing FABER on Splaiul Peneș Curcanul"></div>
+<script>
+const faber = [45.7545, 21.2395];
+const map = L.map('map', { center: faber, zoom: 15, scrollWheelZoom: false, zoomControl: true });
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(map);
+L.marker(faber, { icon: L.divIcon({ className: '', iconSize: [18, 18], iconAnchor: [9, 9], html: '<div class="pin"></div><div class="pin-label">FABER</div>' }) }).addTo(map);
+</script>
+</body>
+</html>
