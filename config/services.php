@@ -31,4 +31,14 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    /*
+     * Read-only Drive access for `php artisan guests:sync`. An API key is
+     * enough as long as the guests folder is shared with "anyone with the
+     * link"; a private folder needs OAuth or a service account instead.
+     */
+    'google_drive' => [
+        'key' => env('GOOGLE_DRIVE_API_KEY'),
+        'guests_folder' => env('GOOGLE_DRIVE_GUESTS_FOLDER'),
+    ],
+
 ];

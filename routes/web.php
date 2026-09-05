@@ -3,13 +3,42 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
+use App\Http\Controllers\Front2026Controller;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(\App\Http\Controllers\Front2026Controller::class)
+/*
+ * The announcement page. When the 2026 landing page below takes over, this
+ * becomes a redirect:
+ *
+ *     Route::redirect('/', '/2026')->name('home');
+ *
+ * and the noindex in Pages/2026/Landing.vue comes off.
+ */
+Route::controller(Front2026Controller::class)
     ->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/en', 'en')->name('home.en');
         Route::get('/ro', 'ro')->name('home.ro');
+    });
+
+Route::prefix('2026')
+    ->name('2026.')
+    ->group(function () {
+        Route::controller(Front2026Controller::class)
+            ->group(function () {
+                // /2026 is the English page; /2026/ro is the Romanian one.
+                // Resolve2026Locale sends first-time Romanian visitors across.
+                Route::get('/', 'landing')->name('home');
+                Route::get('/guests/{slug}', 'guest')
+                    ->where('slug', '[a-z0-9-]+')
+                    ->name('guest');
+                Route::get('/{locale}', 'landing')
+                    ->where('locale', 'en|ro')
+                    ->name('locale');
+                Route::get('/{locale}/guests/{slug}', 'guest')
+                    ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+'])
+                    ->name('locale.guest');
+            });
     });
 
 Route::prefix('2024')

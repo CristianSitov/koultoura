@@ -19,6 +19,16 @@ class Person extends Model implements TranslatableContract
 
     public $fillable = [
         'full_name',
+        'slug',
+        'avatar',
+        'position',
+        'drive_folder_id',
+        'drive_photo_id',
+        'synced_at',
+    ];
+
+    protected $casts = [
+        'synced_at' => 'datetime',
     ];
 
     public array $translatedAttributes = [
@@ -27,7 +37,12 @@ class Person extends Model implements TranslatableContract
         'description',
     ];
 
-    public function getSlugAttribute() {
-        return Str::studly(Str::slug($this->full_name));
+    /**
+     * 2026 stores the slug, because it is the profile's URL and has to survive
+     * a correction to the name. Earlier years have no such column and keep
+     * deriving it.
+     */
+    public function getSlugAttribute($value) {
+        return $value ?: Str::studly(Str::slug($this->full_name));
     }
 }
