@@ -19,15 +19,17 @@ import Bottom from '../../Sections/2026/Bottom.vue';
 
 const props = defineProps({
     guests: { type: Array, default: () => [] },
-    // Set when the page was entered at /2026/guests/{slug}.
+    // Set when the page was entered at a guest profile.
     guest: { type: String, default: '' },
+    // The page's own address, which carries a secret segment while unlisted.
+    base: { type: String, default: '/2026' },
 });
 
 const locale = computed(() => usePage().props.value.locale || 'en');
 const otherLocale = computed(() => (locale.value === 'ro' ? 'en' : 'ro'));
 
 // The same page in the other language, profile and all.
-const localeBase = (which) => (which === 'en' ? '/2026' : '/2026/ro');
+const localeBase = (which) => (which === 'en' ? props.base : `${props.base}/ro`);
 const otherLocaleUrl = computed(() =>
     openGuest.value ? `${localeBase(otherLocale.value)}/guests/${openGuest.value}` : localeBase(otherLocale.value)
 );
@@ -115,9 +117,9 @@ function onPopState(event) {
 
 <template>
     <Head :title="$t('International Symposium · 7–10 October 2026 · Timișoara')">
-        <link rel="alternate" hreflang="en" href="/2026" />
-        <link rel="alternate" hreflang="ro" href="/2026/ro" />
-        <link rel="alternate" hreflang="x-default" href="/2026" />
+        <link rel="alternate" hreflang="en" :href="base" />
+        <link rel="alternate" hreflang="ro" :href="`${base}/ro`" />
+        <link rel="alternate" hreflang="x-default" :href="base" />
         <!--
             Unlisted while the page is in review: nothing on the site links here
             and search engines are told to leave it alone. Drop this meta — and

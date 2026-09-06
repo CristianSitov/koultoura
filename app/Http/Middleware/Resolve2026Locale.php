@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Front2026Controller;
 use Closure;
 use GeoIp2\Database\Reader;
 use Illuminate\Http\Request;
@@ -58,8 +59,8 @@ class Resolve2026Locale
     private function romanianUrl(Request $request, ?string $name): string
     {
         return match ($name) {
-            '2026.home' => '/2026/ro',
-            '2026.guest' => '/2026/ro/guests/'.$request->route('slug'),
+            '2026.home' => Front2026Controller::BASE.'/ro',
+            '2026.guest' => Front2026Controller::BASE.'/ro/guests/'.$request->route('slug'),
             default => '/ro',
         };
     }

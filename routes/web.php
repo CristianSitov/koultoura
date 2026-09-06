@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\Route;
  * The announcement page. When the 2026 landing page below takes over, this
  * becomes a redirect:
  *
- *     Route::redirect('/', '/2026')->name('home');
+ *     Route::redirect('/', Front2026Controller::BASE)->name('home');
  *
- * and the noindex in Pages/2026/Landing.vue comes off.
+ * and the noindex in Pages/2026/Landing.vue comes off — at which point the
+ * secret segment in Front2026Controller::PATH should go too.
  */
 Route::controller(Front2026Controller::class)
     ->group(function () {
@@ -21,12 +22,12 @@ Route::controller(Front2026Controller::class)
         Route::get('/ro', 'ro')->name('home.ro');
     });
 
-Route::prefix('2026')
+Route::prefix(Front2026Controller::PATH)
     ->name('2026.')
     ->group(function () {
         Route::controller(Front2026Controller::class)
             ->group(function () {
-                // /2026 is the English page; /2026/ro is the Romanian one.
+                // The bare path is the English page, /ro the Romanian one.
                 // Resolve2026Locale sends first-time Romanian visitors across.
                 Route::get('/', 'landing')->name('home');
                 Route::get('/guests/{slug}', 'guest')

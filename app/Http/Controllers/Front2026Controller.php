@@ -9,6 +9,16 @@ use Inertia\Response;
 
 class Front2026Controller extends Controller
 {
+    /*
+     * The landing page lives behind an unguessable segment while it is
+     * unlisted — /2026 on its own is a 404, so a crawler walking the obvious
+     * years finds nothing. Change this one value to change the address; the
+     * routes, the locale switch and the profile URLs all read it.
+     */
+    public const PATH = '2026/faber26';
+
+    public const BASE = '/'.self::PATH;
+
     /**
      * Locale (redirect/session) is resolved by Resolve2026Locale middleware
      * before this runs — index/en/ro all just render the same page.
@@ -37,7 +47,10 @@ class Front2026Controller extends Controller
      */
     public function landing(): Response
     {
-        return Inertia::render('2026/Landing', ['guests' => $this->guests()]);
+        return Inertia::render('2026/Landing', [
+            'guests' => $this->guests(),
+            'base' => self::BASE,
+        ]);
     }
 
     /**
@@ -53,6 +66,7 @@ class Front2026Controller extends Controller
         return Inertia::render('2026/Landing', [
             'guests' => $this->guests(),
             'guest' => $guest->slug,
+            'base' => self::BASE,
         ]);
     }
 
