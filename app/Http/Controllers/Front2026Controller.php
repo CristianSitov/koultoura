@@ -15,7 +15,7 @@ class Front2026Controller extends Controller
      * years finds nothing. Change this one value to change the address; the
      * routes, the locale switch and the profile URLs all read it.
      */
-    public const PATH = '2026/faber26';
+    public const PATH = '2026-mulberry';
 
     public const BASE = '/'.self::PATH;
 
