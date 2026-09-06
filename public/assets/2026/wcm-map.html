@@ -26,7 +26,8 @@ html,body{margin:0;height:100%;background:#f3f2f2}
 <body>
 <div id="map" role="img" aria-label="Map of Timișoara showing FABER on Splaiul Peneș Curcanul"></div>
 <script>
-const faber = [45.7545, 21.2395];
+// FABER, from the venue's own Google Maps place entry.
+const faber = [45.7613981, 21.2515238];
 const map = L.map('map', { center: faber, zoom: 15, scrollWheelZoom: false, zoomControl: true });
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(map);
 L.marker(faber, { icon: L.divIcon({ className: '', iconSize: [18, 18], iconAnchor: [9, 9], html: '<div class="pin"></div><div class="pin-label">FABER</div>' }) }).addTo(map);

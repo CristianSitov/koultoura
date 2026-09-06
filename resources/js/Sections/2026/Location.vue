@@ -5,7 +5,7 @@ defineProps({
     isDark: { type: Boolean, default: false },
 });
 
-const mapsUrl = 'https://www.openstreetmap.org/?mlat=45.7545&mlon=21.2395#map=17/45.7545/21.2395';
+const mapsUrl = 'https://www.openstreetmap.org/?mlat=45.7613981&mlon=21.2515238#map=17/45.7613981/21.2515238';
 </script>
 
 <template>
