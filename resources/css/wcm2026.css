@@ -1561,6 +1561,145 @@
     mix-blend-mode: screen;
 }
 
+/* ── registration form ───────────────────────────────────────────────────── */
+
+/* Standalone pages sit under the fixed header, which the landing page clears
+   with its own hero padding. */
+.wcm26-page {
+    padding-top: 90px;
+}
+
+.wcm26-form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 640px;
+}
+
+.wcm26-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wcm26-field-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 24px;
+}
+
+.wcm26-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.wcm26-form .input {
+    min-height: 44px;
+    font-size: 16px;
+}
+
+.wcm26-hint {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    font-style: normal;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.wcm26-error {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--color-accent);
+}
+
+.wcm26-days-pick {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+}
+
+/* Hit targets, not decoration: the whole tile is the control. */
+.wcm26-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 44px;
+    padding: 12px 14px;
+    border: 2px solid var(--color-divider);
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.wcm26-check strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-feature-settings: 'tnum' 1;
+    margin-bottom: 4px;
+}
+
+.wcm26-check input {
+    margin: 2px 0 0;
+    accent-color: var(--color-accent);
+    width: 18px;
+    height: 18px;
+    flex: none;
+}
+
+.wcm26-check:has(input:checked) {
+    background: var(--color-accent-100);
+}
+
+.wcm26-check:focus-within {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.wcm26-check-row {
+    align-items: flex-start;
+}
+
+.wcm26-check-row .wcm26-hint {
+    display: block;
+    margin-top: 4px;
+}
+
+/* Off-screen rather than display:none — a bot reading the DOM should still
+   find it, a person and a screen reader should not. */
+.wcm26-trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.wcm26-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 8px 0 0;
+}
+
+.wcm26-note-sent {
+    font-weight: 500;
+    color: var(--color-accent);
+}
+
+@media (max-width: 720px) {
+    .wcm26-field-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
 /* ── footer ──────────────────────────────────────────────────────────────── */
 
 .wcm26-footer {
