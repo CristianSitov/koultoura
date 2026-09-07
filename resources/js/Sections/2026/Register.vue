@@ -1,20 +1,13 @@
 <script setup>
-import { ref } from 'vue';
-
 /*
- * Interest capture. Registration is not open yet and there is no endpoint for
- * it, so the form confirms client-side — point `submit` at the newsletter or
- * registration backend once it exists, and link the header's Register button
- * straight at the real form.
+ * Registration is open, so this band is a way in rather than a waiting list.
+ * It used to hold an email box that confirmed client-side and stored nothing —
+ * which was honest enough while there was no form to send anyone to, and
+ * misleading the moment there was.
  */
-const email = ref('');
-const submitted = ref(false);
-
-function submit() {
-    if (email.value) {
-        submitted.value = true;
-    }
-}
+defineProps({
+    base: { type: String, default: '/2026' },
+});
 </script>
 
 <template>
@@ -26,23 +19,14 @@ function submit() {
             </h2>
 
             <div>
-                <p class="wcm26-register-title">{{ $t('Registration opens soon.') }}</p>
-                <p class="wcm26-register-note">{{ $t('Leave your email and we will let you know the moment it does.') }}</p>
+                <p class="wcm26-register-title">{{ $t('register.band.title') }}</p>
+                <p class="wcm26-register-note">{{ $t('register.band.note') }}</p>
 
-                <form v-if="!submitted" @submit.prevent="submit">
-                    <input
-                        v-model="email"
-                        class="input"
-                        type="email"
-                        name="email"
-                        required
-                        placeholder="you@example.org"
-                        :aria-label="$t('Your email address')"
-                    />
-                    <button type="submit" class="btn btn-ghost btn-flush">{{ $t('Notify me') }}</button>
-                </form>
-
-                <p v-else class="wcm26-register-done">{{ $t('Noted. We will write to :email when registration opens.', { email }) }}</p>
+                <p class="wcm26-register-actions">
+                    <a :href="`${base}/register`" class="btn btn-primary btn-flush" style="height: 44px">
+                        {{ $t('register.submit') }}
+                    </a>
+                </p>
             </div>
         </div>
     </section>

@@ -7,6 +7,7 @@ const props = defineProps({
     // Hidden sections are not offered: a menu entry that scrolls nowhere is
     // worse than a shorter menu.
     programmeVisible: { type: Boolean, default: false },
+    base: { type: String, default: '/2026' },
     otherLocale: { type: String, default: 'ro' },
     otherLocaleUrl: { type: String, default: '/2026/ro' },
 });
@@ -62,12 +63,12 @@ defineEmits(['close']);
                     <p><a class="wcm26-menu-lang" :href="otherLocaleUrl">{{ otherLocale === 'ro' ? 'Română' : 'English' }}</a></p>
                 </div>
                 <a
-                    href="#register"
+                    :href="`${base}/register`"
                     class="btn btn-primary btn-flush"
                     style="height: 48px; font-size: 16px; align-self: flex-start"
                     @click="$emit('close')"
                 >
-                    {{ $t('Register your interest') }}
+                    {{ $t('register.submit') }}
                 </a>
             </div>
         </nav>

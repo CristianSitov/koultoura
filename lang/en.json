@@ -156,7 +156,6 @@
     "school.more3": "Why Culture Matters therefore becomes the first stage of testing and development for the Heritage School, before the programme is extended in 2027.",
     "Guests": "Guests",
     "Guest": "Guest",
-    "First announcement · more to come": "First announcement · more to come",
     "Open profile: :name": "Open profile: :name",
     "Portrait": "Portrait",
     "More guests to be announced": "More guests to be announced",
@@ -171,10 +170,6 @@
     "Day :n": "Day :n",
     "Pay what you can.": "Pay what you can.",
     "Registration required.": "Registration required.",
-    "Registration opens soon.": "Registration opens soon.",
-    "Leave your email and we will let you know the moment it does.": "Leave your email and we will let you know the moment it does.",
-    "Notify me": "Notify me",
-    "Noted. We will write to :email when registration opens.": "Noted. We will write to :email when registration opens.",
     "Location": "Location",
     "Romania": "Romania",
     "location.note": "An independent cultural centre on the banks of the Bega, in the Fabric district.",
@@ -189,7 +184,6 @@
     "Open menu": "Open menu",
     "Close menu": "Close menu",
     "Menu": "Menu",
-    "Register your interest": "Register your interest",
     "Language": "Language",
     "Switch language": "Switch language",
     "Switch to light mode": "Switch to light mode",
@@ -237,7 +231,6 @@
     "Teaching heritage without a textbook": "Teaching heritage without a textbook",
     "What we pass on": "What we pass on",
     "What we choose to protect": "What we choose to protect",
-    "Register interest": "Register",
     "Your email address": "Your email address",
     "Register · Why Culture Matters 2026": "Register · Why Culture Matters 2026",
     "Confirm your registration · Why Culture Matters 2026": "Confirm your registration · Why Culture Matters 2026",
@@ -306,5 +299,7 @@
     "theme.1.body2": "The section brings together experience and case studies on protection, prevention, documentation, emergency preparedness, intervention and recovery, putting moments of crisis in dialogue with the less spectacular but equally destructive processes that wear heritage down over time.",
     "theme.2.body2": "The section explores how heritage narratives are constructed, transmitted and reinterpreted, with attention to difficult, contested or forgotten histories, to cultural mediation, and to the part communities play in building new relationships with their own heritage.",
     "theme.3.body2": "We are interested in how heritage can become accessible, relevant and close to everyday experience, and in how the capacity to recognise, understand and protect it can be built from one generation to the next.",
-    "theme.3.more": "The 2026 edition also introduces the Heritage School, a new educational initiative piloted during the symposium and developed from 2027."
+    "theme.3.more": "The 2026 edition also introduces the Heritage School, a new educational initiative piloted during the symposium and developed from 2027.",
+    "register.band.title": "There is no fixed fee. You decide how much to contribute.",
+    "register.band.note": "We want Why Culture Matters to stay open to everyone, and to keep bringing guests, ideas and experience to Timișoara that are worth putting in dialogue. Your contribution helps make that possible — and it stays optional: registration is open, and free."
 }

@@ -156,7 +156,6 @@
     "school.more3": "Why Culture Matters devine astfel prima etapă de testare și dezvoltare a Școlii de patrimoniu cultural, înainte ca programul să fie extins în 2027.",
     "Guests": "Invitați",
     "Guest": "Invitat",
-    "First announcement · more to come": "Prima anunțare · urmează și alții",
     "Open profile: :name": "Deschide profilul: :name",
     "Portrait": "Portret",
     "More guests to be announced": "Urmează să fie anunțați și alți invitați",
@@ -171,10 +170,6 @@
     "Day :n": "Ziua :n",
     "Pay what you can.": "Contribuție liberă.",
     "Registration required.": "Înscrierea este obligatorie.",
-    "Registration opens soon.": "Înscrierile se deschid în curând.",
-    "Leave your email and we will let you know the moment it does.": "Lasă-ne adresa ta de e-mail și te anunțăm imediat ce se deschid.",
-    "Notify me": "Anunță-mă",
-    "Noted. We will write to :email when registration opens.": "Am notat. Îți scriem la :email când se deschid înscrierile.",
     "Location": "Locație",
     "Romania": "România",
     "location.note": "Un centru cultural independent pe malul Begăi, în cartierul Fabric.",
@@ -189,7 +184,6 @@
     "Open menu": "Deschide meniul",
     "Close menu": "Închide meniul",
     "Menu": "Meniu",
-    "Register your interest": "Anunță-ți interesul",
     "Language": "Limbă",
     "Switch language": "Schimbă limba",
     "Switch to light mode": "Comută pe modul luminos",
@@ -237,7 +231,6 @@
     "Teaching heritage without a textbook": "Patrimoniu predat fără manual",
     "What we pass on": "Ce transmitem mai departe",
     "What we choose to protect": "Ce alegem să protejăm",
-    "Register interest": "Înscrie-te",
     "Your email address": "Adresa ta de e-mail",
     "Register · Why Culture Matters 2026": "Înscriere · Why Culture Matters 2026",
     "Confirm your registration · Why Culture Matters 2026": "Confirmă-ți înscrierea · Why Culture Matters 2026",
@@ -306,5 +299,7 @@
     "theme.1.body2": "Secțiunea aduce împreună experiențe și studii de caz despre protecție, prevenție, documentare, pregătire pentru situații de urgență, intervenție și recuperare, punând în dialog contexte de criză cu procesele mai puțin spectaculoase, dar la fel de distructive, care afectează patrimoniul cultural în timp.",
     "theme.2.body2": "Secțiunea explorează cum sunt construite, transmise și reinterpretate narațiunile patrimoniului cultural, cu atenție pentru istorii dificile, contestate sau uitate, pentru mediere culturală și pentru rolul comunităților în construirea unor noi relații cu propriul patrimoniu.",
     "theme.3.body2": "Ne interesează cum poate deveni patrimoniul accesibil, relevant și apropiat de experiența de zi cu zi și cum putem construi, de la o generație la alta, capacitatea de a-l recunoaște, înțelege și proteja.",
-    "theme.3.more": "Ediția din 2026 introduce și Școala de patrimoniu cultural, o nouă inițiativă educațională care va fi pilotată în timpul simpozionului și dezvoltată începând din 2027."
+    "theme.3.more": "Ediția din 2026 introduce și Școala de patrimoniu cultural, o nouă inițiativă educațională care va fi pilotată în timpul simpozionului și dezvoltată începând din 2027.",
+    "register.band.title": "Nu avem o taxă fixă de participare. Tu alegi cu cât vrei să contribui.",
+    "register.band.note": "Vrem ca Why Culture Matters să rămână accesibil și să putem continua să aducem la Timișoara invitați, idei și experiențe care merită puse în dialog. Contribuția ta ne ajută să facem asta posibil — și rămâne opțională: înscrierea este deschisă și gratuită."
 }

@@ -1395,43 +1395,24 @@
     color: #efd0d3;
 }
 
-.wcm26-register form {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+.wcm26-register-actions {
+    margin: 20px 0 0;
 }
 
-.wcm26-register .input {
-    flex: 1 1 220px;
+.wcm26-register .btn-primary {
     min-height: 48px;
+    padding-inline: 22px;
     background: #f3f2f2;
     border-color: #f3f2f2;
     color: #201e1d;
     font-size: 16px;
 }
 
-.wcm26-register .btn-ghost {
-    min-height: 48px;
-    padding-inline: 18px;
-    color: #f3f2f2;
-    border: 2px solid #f3f2f2;
-    font-size: 16px;
-}
-
-.wcm26-register .btn-ghost:hover {
-    background: color-mix(in srgb, #f3f2f2 15%, transparent);
+.wcm26-register .btn-primary:hover {
+    background: transparent;
     color: #f3f2f2;
 }
 
-.wcm26-register-done {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 1.5;
-    border-top: 2px solid #f3f2f2;
-    padding-top: 16px;
-}
 
 /* ── location ────────────────────────────────────────────────────────────── */
 

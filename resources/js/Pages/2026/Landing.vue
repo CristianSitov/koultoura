@@ -134,6 +134,7 @@ function onPopState(event) {
 
     <div class="wcm26" :data-theme="theme" :lang="locale">
         <SiteNav
+            :base="base"
             :hidden="navHidden"
             :is-dark="isDark"
             :menu-open="menuOpen"
@@ -145,6 +146,7 @@ function onPopState(event) {
 
         <MenuOverlay
             v-if="menuOpen"
+            :base="base"
             :programme-visible="programmeVisible"
             :other-locale="otherLocale"
             :other-locale-url="otherLocaleUrl"
@@ -172,7 +174,7 @@ function onPopState(event) {
             </template>
         </div>
 
-        <Register />
+        <Register :base="base" />
 
         <div class="wcm26-shell">
             <Location :is-dark="isDark" />

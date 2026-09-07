@@ -7,6 +7,7 @@ defineProps({
     menuOpen: { type: Boolean, default: false },
     otherLocale: { type: String, default: 'ro' },
     otherLocaleUrl: { type: String, default: '/2026/ro' },
+    base: { type: String, default: '/2026' },
 });
 
 defineEmits(['toggle-theme', 'open-menu']);
@@ -49,7 +50,7 @@ defineEmits(['toggle-theme', 'open-menu']);
                 </svg>
             </button>
 
-            <a href="#register" class="btn btn-primary btn-flush" style="height: 40px">{{ $t('Register interest') }}</a>
+            <a :href="`${base}/register`" class="btn btn-primary btn-flush" style="height: 40px">{{ $t('register.submit') }}</a>
 
             <button
                 type="button"
