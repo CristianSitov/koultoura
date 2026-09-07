@@ -1,6 +1,6 @@
 <script setup>
-import { Head, useForm } from '@inertiajs/inertia-vue3';
-import { ref } from 'vue';
+import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
+import { computed, ref } from 'vue';
 import '../../../css/wcm2026.css';
 import PageShell from '../../Sections/2026/PageShell.vue';
 import SectionHead from '../../Sections/2026/SectionHead.vue';
@@ -13,6 +13,22 @@ const props = defineProps({
     // what was actually paid arrives on the webhook.
     paid: { type: Boolean, default: false },
     confirmed: { type: Boolean, default: false },
+    // { amount: minor units, currency } — for the thank-you only.
+    contribution: { type: Object, default: null },
+});
+
+// Formatted where the visitor is reading it, so Romanian gets its comma.
+const contributed = computed(() => {
+    if (!props.contribution) {
+        return null;
+    }
+
+    const locale = usePage().props.value.locale === 'ro' ? 'ro-RO' : 'en-GB';
+
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: props.contribution.currency,
+    }).format(props.contribution.amount / 100);
 });
 
 const resent = ref(false);
@@ -62,7 +78,11 @@ function resend() {
                     </template>
 
                     <div v-if="paid" class="wcm26-contribute">
-                        <p class="wcm26-contribute-note">{{ $t('Thank you for your contribution.') }}</p>
+                        <p class="wcm26-contribute-note">
+                            {{ contributed
+                                ? $t('Thank you — your contribution of :amount has gone through.', { amount: contributed })
+                                : $t('Thank you for your contribution.') }}
+                        </p>
                         <p class="wcm26-hint">{{ confirmed ? $t('Stripe will email you a receipt.') : $t('Stripe will email you a receipt. Your registration still needs confirming from the email above.') }}</p>
                     </div>
                     <!--

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Mail\RegistrationConfirmation;
+use App\Models\Contribution;
 use App\Models\Registration;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Stripe\Exception\ApiErrorException;
+use Stripe\StripeClient;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -107,6 +111,9 @@ class Front2026RegistrationController extends Controller
                 : Front2026Controller::BASE.'/contribute/'.$registration->token,
             'confirmed' => $registration->isConfirmed(),
             'paid' => $request->boolean('paid'),
+            'contribution' => $request->boolean('paid')
+                ? $this->contribution($registration, $request->query('session_id'))
+                : null,
         ]);
     }
 
@@ -164,6 +171,45 @@ class Front2026RegistrationController extends Controller
         $prefix = $registration->locale === 'ro' ? '/ro' : '';
 
         return Front2026Controller::BASE.$prefix.'/confirm/'.$registration->token;
+    }
+
+    /**
+     * What they just gave, for the thank-you.
+     *
+     * The webhook is what records a contribution, but it may not have landed
+     * by the time Stripe sends them back here — so read our own row first and
+     * ask Stripe only if it has not arrived yet. Either way this is for
+     * display; the row the webhook writes remains the record.
+     *
+     * @return array{amount: int, currency: string}|null
+     */
+    private function contribution(Registration $registration, ?string $sessionId): ?array
+    {
+        $row = Contribution::where('registration_id', $registration->id)
+            ->when($sessionId, fn ($query) => $query->orWhere('session_id', $sessionId))
+            ->latest('id')
+            ->first();
+
+        if ($row) {
+            return ['amount' => $row->amount, 'currency' => strtoupper($row->currency)];
+        }
+
+        if (! $sessionId || ! config('services.stripe.secret')) {
+            return null;
+        }
+
+        try {
+            $session = (new StripeClient(config('services.stripe.secret')))
+                ->checkout->sessions->retrieve($sessionId);
+        } catch (ApiErrorException $e) {
+            Log::warning('Could not read the checkout session for the thank-you', ['error' => $e->getMessage()]);
+
+            return null;
+        }
+
+        return $session->payment_status === 'paid'
+            ? ['amount' => (int) $session->amount_total, 'currency' => strtoupper($session->currency)]
+            : null;
     }
 
     private function sendConfirmation(Registration $registration): void
