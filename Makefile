@@ -19,7 +19,7 @@ setup: build ## First-time setup: deps, ziggy routes, assets
 	$(DC) up -d --wait wcm-mysql
 	$(APP) composer install --no-interaction
 	$(MAKE) assets
-	@echo "\nSetup complete. Run 'make up' — app at http://localhost:8123"
+	@echo "\nSetup complete. Run 'make up' — app at http://localhost:8123, inbox at http://localhost:8025"
 
 .PHONY: assets
 assets: ## Regenerate ziggy.js (gitignored, app.js imports it) and build the frontend
@@ -29,6 +29,7 @@ assets: ## Regenerate ziggy.js (gitignored, app.js imports it) and build the fro
 .PHONY: up
 up: ## Start the stack
 	$(DC) up -d
+	@echo "app: http://localhost:8123   ·   inbox: http://localhost:8025"
 
 .PHONY: down
 down: ## Stop the stack (keeps volumes)
@@ -41,3 +42,16 @@ logs: ## Tail all logs
 .PHONY: sh
 sh: ## Shell into the app container
 	$(DC) run --rm wcm-app bash
+
+.PHONY: registrations
+registrations: ## Show the registrations recorded so far
+	@$(DC) exec -T wcm-mysql mysql -uroot -psecret -t -e "\
+		select id, name, email, locale, days, workshop_interest as workshop, \
+		if(confirmed_at is null, 'pending', 'confirmed') as status, sent_count \
+		from wcm_2026.registrations order by id;" 2>/dev/null
+
+.PHONY: registrations-reset
+registrations-reset: ## Empty the registrations table and the dev inbox
+	@$(DC) exec -T wcm-mysql mysql -uroot -psecret -e "delete from wcm_2026.registrations;" 2>/dev/null
+	@curl -s -X DELETE http://localhost:8025/api/v1/messages >/dev/null || true
+	@echo "Registrations and inbox cleared."

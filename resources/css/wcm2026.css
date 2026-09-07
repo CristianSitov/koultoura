@@ -1628,7 +1628,6 @@
     gap: 12px;
     min-height: 44px;
     padding: 12px 14px;
-    border: 2px solid var(--color-divider);
     cursor: pointer;
     font-size: 15px;
     line-height: 1.35;
@@ -1653,7 +1652,9 @@
     flex: none;
 }
 
-.wcm26-check:has(input:checked) {
+/* Only the day tiles take a tint when checked. On the full-width rows, with
+   no border to frame it, it read as a stray highlight bar. */
+.wcm26-days-pick .wcm26-check:has(input:checked) {
     background: var(--color-accent-100);
 }
 
@@ -1664,6 +1665,8 @@
 
 .wcm26-check-row {
     align-items: flex-start;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .wcm26-check-row .wcm26-hint {
