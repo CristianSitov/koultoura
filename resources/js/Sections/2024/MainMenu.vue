@@ -57,9 +57,6 @@ export default {
                           :href="item.href" @click="handleMenuClick(item)"
                           :key="item.name"
                           class="font-bold uppercase text-white hover:underline">{{ $t(item.name) }}</Link>
-                    <Link :href="route('register')"
-                          v-if="!$page.props.auth.user"
-                          class="font-bold uppercase text-white hover:underline">{{ $t('Register') }}</Link>
                     <Link
                         :href="route('logout')"
                         v-if="$page.props.auth.user"
@@ -134,7 +131,6 @@ export default {
                                         <Link :href="item.href" @click.prevent="handleMenuClick(item)"
                                               class="block uppercase px-3 py-2 text-xs font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t(item.name) }}</Link>
                                     </MenuItem>
-                                    <Link class="block uppercase px-3 py-2 text-xs font-medium text-white bg-red-600 rounded" :href="route('register')">{{ $t('Register') }}</Link>
                                     <a :href="route('2024.locale', {'locale': 'en'})"
                                        type="button"
                                        v-if="$page.props.translation !== 'ro'"
