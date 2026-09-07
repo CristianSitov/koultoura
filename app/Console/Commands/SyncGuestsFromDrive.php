@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Person;
+use App\Support\GuestPhoto;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -30,9 +31,7 @@ class SyncGuestsFromDrive extends Command
 
     private const API = 'https://www.googleapis.com/drive/v3';
 
-    private const PHOTO_DIR = 'assets/2026/guests';
 
-    private const MAX_PHOTO_EDGE = 1000;
 
     public function handle(): int
     {
@@ -226,38 +225,9 @@ class SyncGuestsFromDrive extends Command
         return Http::get(self::API."/files/{$id}", ['alt' => 'media', 'key' => $key])->throw()->body();
     }
 
-    /**
-     * Portraits come off Drive at full camera resolution, so they are scaled
-     * down on the way in — this runs unattended and nobody is watching the
-     * page weight.
-     */
+    /** The bytes go through the same path and sizing as a backoffice upload. */
     private function downloadPhoto(array $photo, string $slug, string $key): string
     {
-        $bytes = $this->download($photo['id'], $key);
-        $image = @imagecreatefromstring($bytes);
-        $path = public_path(self::PHOTO_DIR."/{$slug}.jpg");
-
-        if (! is_dir(dirname($path))) {
-            mkdir(dirname($path), 0755, true);
-        }
-
-        if ($image === false) {
-            // Not something GD reads; keep the original bytes rather than lose it.
-            file_put_contents($path, $bytes);
-        } else {
-            $edge = max(imagesx($image), imagesy($image));
-            $scaled = $edge > self::MAX_PHOTO_EDGE
-                ? imagescale($image, (int) round(imagesx($image) * self::MAX_PHOTO_EDGE / $edge))
-                : $image;
-
-            imagejpeg($scaled, $path, 82);
-            imagedestroy($scaled);
-
-            if ($scaled !== $image) {
-                imagedestroy($image);
-            }
-        }
-
-        return '/'.self::PHOTO_DIR."/{$slug}.jpg";
+        return GuestPhoto::store($slug, $this->download($photo['id'], $key));
     }
 }

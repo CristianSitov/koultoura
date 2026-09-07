@@ -65,6 +65,9 @@ class HandleInertiaRequests extends Middleware
             'translation' => $translation,
             'navigation' => $navigation[$locale],
             'year' => date('Y'),
+            // One-off notices from the backoffice ("Session saved."). A closure
+            // so it is read at render time, after the action has flashed it.
+            'flash' => fn () => Session::get('flash'),
         ]);
     }
 }

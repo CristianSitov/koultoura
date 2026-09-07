@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\Overview2026Controller;
+use App\Http\Controllers\Admin\ProgrammeController;
+use App\Http\Controllers\Admin\RegistrationsController;
+use App\Http\Controllers\Admin\SpeakerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
@@ -161,4 +165,62 @@ Route::controller(DashboardController::class)
             ->name('dashboard_subscribers');
         Route::get('/dashboard/subscribers.pdf', 'subscribersListPdf')
             ->name('dashboard_subscribers_pdf');
+    });
+
+/*
+ * The 2026 backoffice.
+ *
+ * `year:2026` rather than the dashboard's 2024: these screens read and write
+ * the current edition's database. The login itself is unaffected — the guard
+ * looks in a fixed place (App\Models\Admin), whatever the URL selects.
+ */
+Route::prefix('dashboard/2026')
+    ->name('admin.2026.')
+    ->middleware([
+        'year:2026',
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+    ])
+    ->group(function () {
+        Route::get('/', Overview2026Controller::class)->name('overview');
+
+        Route::controller(SpeakerController::class)->group(function () {
+            Route::get('/speakers', 'index')->name('speakers');
+            Route::get('/speakers/new', 'create')->name('speakers.create');
+            Route::post('/speakers', 'store')->name('speakers.store');
+            Route::get('/speakers/{speaker}', 'edit')->name('speakers.edit');
+            // POST, not PUT: the form carries a photo, and PHP only parses
+            // multipart bodies on POST.
+            Route::post('/speakers/{speaker}', 'update')->name('speakers.update');
+            Route::delete('/speakers/{speaker}', 'destroy')->name('speakers.destroy');
+        });
+
+        Route::controller(ProgrammeController::class)->group(function () {
+            Route::get('/programme', 'index')->name('programme');
+
+            Route::post('/programme/days', 'storeDay')->name('days.store');
+            Route::put('/programme/days/{day}', 'updateDay')->name('days.update');
+            Route::delete('/programme/days/{day}', 'destroyDay')->name('days.destroy');
+
+            Route::post('/programme/themes', 'saveTheme')->name('themes.store');
+            Route::put('/programme/themes/{theme}', 'saveTheme')->name('themes.update');
+
+            Route::get('/programme/sessions/new', 'createSession')->name('sessions.create');
+            Route::post('/programme/sessions', 'storeSession')->name('sessions.store');
+            Route::get('/programme/sessions/{session}', 'editSession')->name('sessions.edit');
+            Route::put('/programme/sessions/{session}', 'updateSession')->name('sessions.update');
+            Route::put('/programme/sessions/{session}/published', 'toggleSession')->name('sessions.toggle');
+            Route::delete('/programme/sessions/{session}', 'destroySession')->name('sessions.destroy');
+        });
+
+        Route::controller(RegistrationsController::class)->group(function () {
+            Route::get('/registrations', 'index')->name('registrations');
+            Route::get('/registrations.csv', 'export')->name('registrations.export');
+            Route::post('/registrations/{registration}/resend', 'resendConfirmation')->name('registrations.resend');
+            Route::post('/registrations/{registration}/confirm', 'confirm')->name('registrations.confirm');
+
+            Route::get('/bookings', 'bookings')->name('bookings');
+            Route::post('/bookings/{booking}/cancel', 'cancelBooking')->name('bookings.cancel');
+        });
     });
