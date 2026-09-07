@@ -51,7 +51,15 @@ registrations: ## Show the registrations recorded so far
 		from wcm_2026.registrations order by id;" 2>/dev/null
 
 .PHONY: registrations-reset
-registrations-reset: ## Empty the registrations table and the dev inbox
-	@$(DC) exec -T wcm-mysql mysql -uroot -psecret -e "delete from wcm_2026.registrations;" 2>/dev/null
+registrations-reset: ## Empty registrations and contributions, and the dev inbox
+	@$(DC) exec -T wcm-mysql mysql -uroot -psecret -e "delete from wcm_2026.contributions; delete from wcm_2026.registrations;" 2>/dev/null
 	@curl -s -X DELETE http://localhost:8025/api/v1/messages >/dev/null || true
 	@echo "Registrations and inbox cleared."
+
+.PHONY: contributions
+contributions: ## Show the contributions recorded by the Stripe webhook
+	@$(DC) exec -T wcm-mysql mysql -uroot -psecret -t -e "\
+		select c.id, c.session_id, format(c.amount/100, 2) as amount, upper(c.currency) as ccy, \
+		c.status, coalesce(r.name, '(no registration)') as who, c.paid_at \
+		from wcm_2026.contributions c left join wcm_2026.registrations r on r.id = c.registration_id \
+		order by c.id;" 2>/dev/null

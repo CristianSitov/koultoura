@@ -262,7 +262,7 @@
     "Nothing arrived? It may take a minute, and it may have landed in spam.": "Nothing arrived? It may take a minute, and it may have landed in spam.",
     "Send it again": "Send it again",
     "Sent again. Give it a minute.": "Sent again. Give it a minute.",
-    "submitted.contribution": "Attending is free. If you would like to support the symposium with a contribution, we will tell you how in a follow-up email.",
+    "submitted.contribution": "Attending is free. If you would like to support the symposium, you can contribute any amount you choose — it changes nothing about your registration.",
     "You are registered": "You are registered",
     "See you in October.": "See you in October.",
     "Already confirmed.": "Already confirmed.",
@@ -278,5 +278,7 @@
     "See you in October,": "See you in October,",
     "Asociația Prin Banat": "Asociația Prin Banat",
     "register.title": "Register",
-    "register.submit": "Register"
+    "register.submit": "Register",
+    "Contribute": "Contribute",
+    "Any amount, or none — your place is already held.": "Any amount, or none — your place is already held."
 }

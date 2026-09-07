@@ -41,4 +41,15 @@ return [
         'guests_folder' => env('GOOGLE_DRIVE_GUESTS_FOLDER'),
     ],
 
+    /*
+     * Payment runs on Stripe-hosted payment links, so there is no API key here
+     * — only the secret needed to verify that a webhook really came from
+     * Stripe, and the links themselves.
+     */
+    'stripe' => [
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'payment_link' => env('STRIPE_PAYMENT_LINK'),
+        'payment_link_ro' => env('STRIPE_PAYMENT_LINK_RO'),
+    ],
+
 ];

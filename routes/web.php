@@ -5,6 +5,7 @@ use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
 use App\Http\Controllers\Front2026Controller;
 use App\Http\Controllers\Front2026RegistrationController;
+use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +23,13 @@ Route::controller(Front2026Controller::class)
         Route::get('/en', 'en')->name('home.en');
         Route::get('/ro', 'ro')->name('home.ro');
     });
+
+/*
+ * Stripe's webhook. Outside the 2026 group on purpose: that prefix carries a
+ * secret segment which may be rotated, and an address Stripe holds should not
+ * move when it is.
+ */
+Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 Route::prefix(Front2026Controller::PATH)
     ->name('2026.')

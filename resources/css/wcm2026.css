@@ -1692,6 +1692,12 @@
     margin: 8px 0 0;
 }
 
+.wcm26-contribute {
+    margin-top: 8px;
+    padding-top: 28px;
+    border-top: 2px solid var(--color-divider);
+}
+
 .wcm26-note-sent {
     font-weight: 500;
     color: var(--color-accent);

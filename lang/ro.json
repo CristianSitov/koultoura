@@ -262,7 +262,7 @@
     "Nothing arrived? It may take a minute, and it may have landed in spam.": "Nu a ajuns nimic? Poate dura un minut și se poate să fi ajuns în spam.",
     "Send it again": "Trimite din nou",
     "Sent again. Give it a minute.": "Am trimis din nou. Mai așteaptă un minut.",
-    "submitted.contribution": "Participarea este gratuită. Dacă vrei să susții simpozionul printr-o contribuție, îți spunem cum într-un e-mail următor.",
+    "submitted.contribution": "Participarea este gratuită. Dacă vrei să susții simpozionul, poți contribui cu orice sumă alegi — asta nu schimbă cu nimic înscrierea ta.",
     "You are registered": "Te-ai înscris",
     "See you in October.": "Ne vedem în octombrie.",
     "Already confirmed.": "Deja confirmat.",
@@ -278,5 +278,7 @@
     "See you in October,": "Ne vedem în octombrie,",
     "Asociația Prin Banat": "Asociația Prin Banat",
     "register.title": "Înscriere",
-    "register.submit": "Înscrie-te"
+    "register.submit": "Înscrie-te",
+    "Contribute": "Contribuie",
+    "Any amount, or none — your place is already held.": "Orice sumă sau deloc — locul tău este deja păstrat."
 }

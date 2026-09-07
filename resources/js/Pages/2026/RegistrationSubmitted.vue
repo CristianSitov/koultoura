@@ -8,6 +8,7 @@ import SectionHead from '../../Sections/2026/SectionHead.vue';
 const props = defineProps({
     base: { type: String, default: '/2026' },
     email: { type: String, default: '' },
+    contributeUrl: { type: String, default: null },
 });
 
 const resent = ref(false);
@@ -54,7 +55,16 @@ function resend() {
                         {{ $t('Send it again') }}
                     </button>
 
-                    <p class="wcm26-about-close">{{ $t('submitted.contribution') }}</p>
+                    <div v-if="contributeUrl" class="wcm26-contribute">
+                        <p class="wcm26-about-close">{{ $t('submitted.contribution') }}</p>
+                        <p class="wcm26-form-actions">
+                            <a :href="contributeUrl" class="btn btn-primary btn-flush" style="height: 48px">
+                                {{ $t('Contribute') }}
+                            </a>
+                            <span class="wcm26-hint">{{ $t('Any amount, or none — your place is already held.') }}</span>
+                        </p>
+                    </div>
+                    <p v-else class="wcm26-about-close">{{ $t('submitted.contribution') }}</p>
                 </div>
             </div>
         </section>
