@@ -10,6 +10,7 @@ use App\Http\Controllers\Front2024Controller;
 use App\Http\Controllers\Front2026Controller;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\Front2026RegistrationController;
+use App\Http\Controllers\Front2026SessionController;
 use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +89,34 @@ Route::prefix(Front2026Controller::PATH)
                 Route::get('/{locale}/confirm/{token}', 'confirm')
                     ->where(['locale' => 'en|ro', 'token' => '[A-Za-z0-9]+'])
                     ->name('locale.confirm');
+            });
+
+        /*
+         * A place in a capped session — its own small form, because the day
+         * registration does not cover it and the places run out.
+         */
+        Route::controller(Front2026SessionController::class)
+            ->group(function () {
+                Route::get('/sessions/{slug}', 'show')
+                    ->where('slug', '[a-z0-9-]+')
+                    ->name('session');
+                Route::get('/{locale}/sessions/{slug}', 'show')
+                    ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+'])
+                    ->name('locale.session');
+                Route::post('/sessions/{slug}', 'store')
+                    ->where('slug', '[a-z0-9-]+')
+                    ->middleware('throttle:10,60')
+                    ->name('session.book');
+                Route::post('/{locale}/sessions/{slug}', 'store')
+                    ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+'])
+                    ->middleware('throttle:10,60')
+                    ->name('locale.session.book');
+                Route::get('/sessions/{slug}/booked/{token}', 'booked')
+                    ->where(['slug' => '[a-z0-9-]+', 'token' => '[A-Za-z0-9]+'])
+                    ->name('session.booked');
+                Route::get('/{locale}/sessions/{slug}/booked/{token}', 'booked')
+                    ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+', 'token' => '[A-Za-z0-9]+'])
+                    ->name('locale.session.booked');
             });
 
         // The contribution step. The language comes from the registration, so

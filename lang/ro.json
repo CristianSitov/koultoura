@@ -291,5 +291,15 @@
     "contribute.intro": "Participarea este gratuită. Dacă vrei să susții simpozionul, poți contribui cu orice sumă alegi — asta nu schimbă cu nimic înscrierea ta, iar pasul următor este același oricum.",
     "contribute.fallback": "Plata se deschide pe pagina securizată a Stripe.",
     "submitted.contribution.short": "Participarea este gratuită. Dacă vrei totuși să susții simpozionul, poți contribui cu orice sumă.",
-    "Thank you — your contribution of :amount has gone through.": "Îți mulțumim — contribuția ta de :amount a fost înregistrată."
+    "Thank you — your contribution of :amount has gone through.": "Îți mulțumim — contribuția ta de :amount a fost înregistrată.",
+    "Book a place": "Rezervă un loc",
+    "Fully booked": "Locuri epuizate",
+    "Your place is held": "Locul tău este rezervat",
+    "This one is fully booked.": "Aici locurile s-au epuizat.",
+    "The rest of the programme is open — registering for the day needs no booking.": "Restul programului rămâne deschis — pentru zilele de simpozion nu e nevoie de rezervare.",
+    "Changed your mind? Write to us and we will free the place for someone else.": "Te-ai răzgândit? Scrie-ne și eliberăm locul pentru altcineva.",
+    "So we can reach you if the workshop moves. Optional.": "Ca să te putem anunța dacă atelierul se mută. Opțional.",
+    "The last place went while you were filling this in.": "Ultimul loc s-a ocupat cât completai formularul.",
+    "booking.held": "Gata, :name — locul tău este rezervat. Nu mai ai nimic de făcut; te așteptăm.",
+    "booking.places_left": "Locurile sunt limitate. Au mai rămas :n."
 }
