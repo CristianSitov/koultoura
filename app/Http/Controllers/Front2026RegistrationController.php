@@ -89,7 +89,7 @@ class Front2026RegistrationController extends Controller
 
         $this->sendConfirmation($registration);
 
-        return redirect($this->submittedUrl($registration));
+        return redirect(Front2026Controller::BASE.'/contribute/'.$registration->token);
     }
 
     public function submitted(Request $request): Response
@@ -102,7 +102,9 @@ class Front2026RegistrationController extends Controller
             // Our own route, which decides how to reach Stripe. Null when
             // there is no registration in the session — the page then simply
             // does not offer to take money.
-            'contributeUrl' => Front2026Controller::BASE.'/contribute/'.$registration->token,
+            'contributeUrl' => $registration->isConfirmed()
+                ? null
+                : Front2026Controller::BASE.'/contribute/'.$registration->token,
             'confirmed' => $registration->isConfirmed(),
             'paid' => $request->boolean('paid'),
         ]);

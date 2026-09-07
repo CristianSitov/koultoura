@@ -1692,6 +1692,15 @@
     margin: 8px 0 0;
 }
 
+/* Stripe paints its own form inside this; give it room and nothing else. */
+.wcm26-checkout {
+    min-height: 520px;
+}
+
+.wcm26-checkout-fallback {
+    padding-top: 8px;
+}
+
 .wcm26-contribute {
     margin-top: 8px;
     padding-top: 28px;

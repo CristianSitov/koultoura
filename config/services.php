@@ -52,6 +52,9 @@ return [
         // route. Needs the API secret and the id of the pay-what-you-want
         // price. Without both, the payment links below are used instead.
         'secret' => env('STRIPE_SECRET'),
+        // Publishable key: needed only to mount Stripe's embedded form in our
+        // own page. Without it the contribution step redirects instead.
+        'key' => env('STRIPE_KEY'),
         'price_id' => env('STRIPE_PRICE_ID'),
         'payment_link' => env('STRIPE_PAYMENT_LINK'),
         'payment_link_ro' => env('STRIPE_PAYMENT_LINK_RO'),

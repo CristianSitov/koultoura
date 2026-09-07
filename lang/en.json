@@ -284,5 +284,10 @@
     "Thank you for your contribution.": "Thank you for your contribution.",
     "Stripe will email you a receipt. Your registration still needs confirming from the email above.": "Stripe will email you a receipt. Your registration still needs confirming from the email above.",
     "This registration is confirmed. Nothing else is needed.": "This registration is confirmed. Nothing else is needed.",
-    "Stripe will email you a receipt.": "Stripe will email you a receipt."
+    "Stripe will email you a receipt.": "Stripe will email you a receipt.",
+    "Contribute · Why Culture Matters 2026": "Contribute · Why Culture Matters 2026",
+    "You are registered. This part is optional.": "You are registered. This part is optional.",
+    "Skip this": "Skip this",
+    "contribute.intro": "Attending is free. If you would like to support the symposium, contribute any amount you choose — it changes nothing about your registration, and the next step is the same either way.",
+    "contribute.fallback": "Payment opens on Stripe's secure page."
 }

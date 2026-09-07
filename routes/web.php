@@ -86,12 +86,18 @@ Route::prefix(Front2026Controller::PATH)
                     ->name('locale.confirm');
             });
 
-        // Off to Stripe. The language comes from the registration, so this
-        // needs no locale variant.
-        Route::get('/contribute/{token}', ContributionController::class)
-            ->where('token', '[A-Za-z0-9]+')
+        // The contribution step. The language comes from the registration, so
+        // these need no locale variant.
+        Route::controller(ContributionController::class)
             ->middleware('throttle:20,60')
-            ->name('contribute');
+            ->group(function () {
+                Route::get('/contribute/{token}', 'show')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('contribute');
+                Route::get('/contribute/{token}/redirect', 'redirectToStripe')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('contribute.redirect');
+            });
     });
 
 Route::prefix('2024')
