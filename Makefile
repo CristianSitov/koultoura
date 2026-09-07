@@ -43,6 +43,12 @@ logs: ## Tail all logs
 sh: ## Shell into the app container
 	$(DC) run --rm wcm-app bash
 
+.PHONY: admin
+admin: ## Create a local login for the backoffice: make admin EMAIL=you@example.com PASSWORD=secret
+	@test -n "$(EMAIL)" || (echo "Usage: make admin EMAIL=you@example.com PASSWORD=your-password"; exit 1)
+	@test -n "$(PASSWORD)" || (echo "Usage: make admin EMAIL=you@example.com PASSWORD=your-password"; exit 1)
+	@$(DC) exec -T wcm-app php artisan admin:create "$(EMAIL)" "$(PASSWORD)"
+
 .PHONY: registrations
 registrations: ## Show the registrations recorded so far
 	@$(DC) exec -T wcm-mysql mysql -uroot -psecret -t -e "\
