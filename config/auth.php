@@ -62,7 +62,10 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            // Admin, not User: same table, pinned to the database the
+            // organiser accounts live in rather than whichever one the URL
+            // happens to select. See App\Models\Admin.
+            'model' => App\Models\Admin::class,
         ],
 
         // 'users' => [

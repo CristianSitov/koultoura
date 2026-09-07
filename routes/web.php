@@ -4,6 +4,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
 use App\Http\Controllers\Front2026Controller;
+use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\Front2026RegistrationController;
+use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +25,13 @@ Route::controller(Front2026Controller::class)
         Route::get('/ro', 'ro')->name('home.ro');
     });
 
+/*
+ * Stripe's webhook. Outside the 2026 group on purpose: that prefix carries a
+ * secret segment which may be rotated, and an address Stripe holds should not
+ * move when it is.
+ */
+Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
+
 Route::prefix(Front2026Controller::PATH)
     ->name('2026.')
     ->group(function () {
@@ -39,6 +49,54 @@ Route::prefix(Front2026Controller::PATH)
                 Route::get('/{locale}/guests/{slug}', 'guest')
                     ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+'])
                     ->name('locale.guest');
+            });
+
+        // Registration. The confirm link carries its own language (the one the
+        // registration was made in), so it needs no locale variant.
+        Route::controller(Front2026RegistrationController::class)
+            ->group(function () {
+                Route::get('/register', 'create')->name('register');
+                Route::get('/{locale}/register', 'create')
+                    ->where('locale', 'en|ro')
+                    ->name('locale.register');
+                Route::post('/register', 'store')
+                    ->middleware('throttle:10,60')
+                    ->name('register.store');
+                /*
+                 * The token is in the address so this page survives a reload
+                 * and can be returned to from Stripe. It used to rely on a
+                 * flashed session value, which is consumed by the first render
+                 * — so a refresh, or coming back from checkout, lost the email
+                 * and the contribute button with it.
+                 */
+                Route::get('/registered/{token}', 'submitted')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('registered');
+                Route::get('/{locale}/registered/{token}', 'submitted')
+                    ->where(['locale' => 'en|ro', 'token' => '[A-Za-z0-9]+'])
+                    ->name('locale.registered');
+                Route::post('/resend', 'resendConfirmation')
+                    ->middleware('throttle:5,60')
+                    ->name('resend');
+                Route::get('/confirm/{token}', 'confirm')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('confirm');
+                Route::get('/{locale}/confirm/{token}', 'confirm')
+                    ->where(['locale' => 'en|ro', 'token' => '[A-Za-z0-9]+'])
+                    ->name('locale.confirm');
+            });
+
+        // The contribution step. The language comes from the registration, so
+        // these need no locale variant.
+        Route::controller(ContributionController::class)
+            ->middleware('throttle:20,60')
+            ->group(function () {
+                Route::get('/contribute/{token}', 'show')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('contribute');
+                Route::get('/contribute/{token}/redirect', 'redirectToStripe')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('contribute.redirect');
             });
     });
 
@@ -86,6 +144,10 @@ Route::prefix('2022')
 
 Route::controller(DashboardController::class)
     ->middleware([
+        // The subscribers this lists are 2024's, and nothing in /dashboard
+        // says so — without this it reads the current edition's database,
+        // which has no users at all.
+        'year:2024',
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',

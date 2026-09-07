@@ -15,11 +15,24 @@ services:
     environment:
       DB_HOST: wcm-mysql
       DB_PORT: 3306
+      MAIL_MAILER: smtp
+      MAIL_HOST: wcm-mailpit
+      MAIL_PORT: 1025
     volumes:
       - .:/var/www/html
     depends_on:
       wcm-mysql:
         condition: service_healthy
+      wcm-mailpit:
+        condition: service_started
+
+  # A real inbox for development: the confirmation mail lands here rather than
+  # in a log file, so the link can be clicked the way a visitor would.
+  wcm-mailpit:
+    image: axllent/mailpit:latest
+    container_name: wcm-mailpit
+    ports:
+      - "${WCM_MAILPIT_PORT:-8025}:8025"
 
   wcm-web:
     image: nginx:1.27-alpine

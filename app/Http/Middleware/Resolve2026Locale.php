@@ -30,19 +30,35 @@ class Resolve2026Locale
 
         $name = $request->route()->getName();
 
-        // The landing page carries its locale in the URL: /2026/ro/...
-        $locale = match ($name) {
+        /*
+         * The 2026 pages carry their locale as a route parameter, so read it
+         * from there rather than listing route names — a list silently fails
+         * open on the next route added, rendering English at a /ro address.
+         */
+        $locale = $request->route('locale') ?? match ($name) {
             'home.en' => 'en',
             'home.ro' => 'ro',
-            '2026.locale', '2026.locale.guest' => $request->route('locale'),
             default => null,
         };
 
         if ($locale === null) {
-            if (! Session::has('locale_2026_resolved') && $this->isLikelyRomanian($request)) {
+            /*
+             * Only the landing page's own addresses are authoritatively
+             * English — they are what hreflang points at. Everything else
+             * without a locale in the URL (form posts, the pages you are
+             * redirected to after one) keeps the language you were already
+             * reading in; forcing English there sent a Romanian visitor an
+             * English email.
+             */
+            $canonical = in_array($name, ['home', '2026.home', '2026.guest'], true);
+
+            if (! $canonical) {
+                $locale = Session::get('locale', 'en');
+            } elseif (! Session::has('locale_2026_resolved') && $this->isLikelyRomanian($request)) {
                 return redirect($this->romanianUrl($request, $name));
+            } else {
+                $locale = 'en';
             }
-            $locale = 'en';
         }
 
         App::setLocale($locale);
@@ -54,15 +70,19 @@ class Resolve2026Locale
 
     /**
      * Where a first-time Romanian visitor should land, keeping whatever page
-     * they asked for rather than dropping them on a homepage.
+     * they asked for rather than dropping them on a homepage: the same path
+     * with /ro spliced in after the landing page's base.
      */
     private function romanianUrl(Request $request, ?string $name): string
     {
-        return match ($name) {
-            '2026.home' => Front2026Controller::BASE.'/ro',
-            '2026.guest' => Front2026Controller::BASE.'/ro/guests/'.$request->route('slug'),
-            default => '/ro',
-        };
+        if (! str_starts_with((string) $name, '2026.')) {
+            return '/ro';
+        }
+
+        $base = Front2026Controller::BASE;
+        $rest = substr('/'.ltrim($request->path(), '/'), strlen($base));
+
+        return $base.'/ro'.$rest;
     }
 
     private function isLikelyRomanian(Request $request): bool

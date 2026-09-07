@@ -41,4 +41,23 @@ return [
         'guests_folder' => env('GOOGLE_DRIVE_GUESTS_FOLDER'),
     ],
 
+    /*
+     * Payment runs on Stripe-hosted payment links, so there is no API key here
+     * — only the secret needed to verify that a webhook really came from
+     * Stripe, and the links themselves.
+     */
+    'stripe' => [
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        // Checkout sessions: one product, the page's language, a real cancel
+        // route. Needs the API secret and the id of the pay-what-you-want
+        // price. Without both, the payment links below are used instead.
+        'secret' => env('STRIPE_SECRET'),
+        // Publishable key: needed only to mount Stripe's embedded form in our
+        // own page. Without it the contribution step redirects instead.
+        'key' => env('STRIPE_KEY'),
+        'price_id' => env('STRIPE_PRICE_ID'),
+        'payment_link' => env('STRIPE_PAYMENT_LINK'),
+        'payment_link_ro' => env('STRIPE_PAYMENT_LINK_RO'),
+    ],
+
 ];

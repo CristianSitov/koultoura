@@ -16,10 +16,12 @@ class SetYearlyDatabase
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, ?string $year = null): Response
     {
-        // Extract the year from the URL (assuming the year is in the first URL segment)
-        $year = $request->segment(1) ?? '2026';
+        // Extract the year from the URL (assuming the year is in the first URL
+        // segment). A route may name its year instead — the dashboard is a 2024
+        // tool and its address says nothing about that.
+        $year ??= $request->segment(1) ?? '2026';
 
         $connection = preg_match('/^20\d{2}$/', $year) ? 'wcm_' . $year : 'wcm_2026';
 

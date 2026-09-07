@@ -39,11 +39,14 @@ class Front2024Controller extends Controller
         return Inertia::render('2024/Schedule', $this->getPageData());
     }
 
+    /*
+     * Sign-up for 2024 ran through Fortify's /register — the same form that
+     * opened an account. That is off now, and the edition is over; an old link
+     * lands on the archive rather than an error.
+     */
     public function registration()
     {
-        auth()->logout();
-
-        return redirect('/register');
+        return redirect()->route('2024.home');
     }
 
     public function eventRegistration(Request $request): RedirectResponse

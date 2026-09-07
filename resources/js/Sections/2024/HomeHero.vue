@@ -18,12 +18,6 @@ import {Link} from '@inertiajs/inertia-vue3'
                                                                                   aria-hidden="true"/>Timișoara, Romania</span>
                                 </span>
             </h1>
-            <Link
-                :href="route('register')"
-                replace
-                class="w-2/3 mx-auto text-2xl md:text-3xl uppercase text-white font-bold py-4 px-5 lg:px-52 rounded-lg border-white border-4 bg-transparent hover:text-red-600 hover:bg-white"
-            >{{ $t('Register') }}
-            </Link>
         </div>
     </div>
 </template>

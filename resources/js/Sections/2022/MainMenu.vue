@@ -114,7 +114,6 @@ export default {
                     <div class="px-2 pt-2 pb-3 space-y-1">
                         <a v-for="item in $page.props.navigation" :key="item.name" :href="route('2022.home') + '/' + item.href"
                            class="block uppercase px-3 py-2 text-xs font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">{{ $t(item.name) }}</a>
-                        <Link class="block uppercase px-3 py-2 text-xs font-medium text-white bg-red-600 rounded" :href="route('register')">{{ $t('Register') }}</Link>
                         <a :href="route('2022.locale', {'locale': 'en'})"
                            type="button"
                            v-if="$page.props.translation !== 'ro'"

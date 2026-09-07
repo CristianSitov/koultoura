@@ -1561,6 +1561,259 @@
     mix-blend-mode: screen;
 }
 
+/* ── registration form ───────────────────────────────────────────────────── */
+
+/*
+ * The registration pages are a task, not a poster. Their content column
+ * inherits the landing page's full-bleed measure and 160px section padding,
+ * which are meant for something you scroll through and admire — here they
+ * spread four short paragraphs across a metre of screen.
+ *
+ * Only that column narrows. It sits centred on the page, with everything
+ * inside it ranged left, so the text still reads down a single edge.
+ */
+.wcm26-page {
+    padding-top: 88px;
+}
+
+.wcm26-page-main {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/*
+ * Narrow, but not cramped. The measure does the compacting; the rhythm inside
+ * it stays generous, because a short line with no air around it is just as
+ * hard to read as a long one.
+ */
+.wcm26-page-main .wcm26-section {
+    padding: 60px 0 76px;
+}
+
+.wcm26-page-main .wcm26-head {
+    margin-bottom: 48px;
+}
+
+.wcm26-page-main .wcm26-head-t {
+    font-size: clamp(30px, 3.6vw, 46px);
+}
+
+.wcm26-page-main .wcm26-lead {
+    font-size: clamp(19px, 1.8vw, 23px);
+}
+
+/*
+ * One column, so the page is read top to bottom: what this is, then the
+ * thing to fill in. Side by side, the copy and the form competed for the
+ * same first glance.
+ */
+.wcm26-page-main .wcm26-split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+}
+
+/* Reading measure, so a line of prose stops before it becomes a scan. */
+.wcm26-page-main .wcm26-about-copy {
+    max-width: 58ch;
+}
+
+.wcm26-page-main .wcm26-about-copy p {
+    margin: 0 0 22px;
+    line-height: 1.65;
+}
+
+.wcm26-page-main .wcm26-form {
+    gap: 30px;
+}
+
+.wcm26-form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 640px;
+}
+
+.wcm26-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wcm26-field-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 24px;
+}
+
+.wcm26-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.wcm26-form .input {
+    min-height: 44px;
+    font-size: 16px;
+}
+
+.wcm26-hint {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    font-style: normal;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.wcm26-error {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--color-accent);
+}
+
+/* Two by two rather than three and a stray one: the form column is ~420px, and
+   at a 120px minimum the fourth day wrapped on its own. */
+/*
+ * Four days, one row, at every width — they are a single choice and reading
+ * them as one line is the point. Auto-fit wrapped 3 + 1, which looked like
+ * the fourth day belonged to something else.
+ *
+ * They fit because each tile stacks: box, date, weekday under it.
+ */
+.wcm26-days-pick {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.wcm26-days-pick .wcm26-check {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 8px;
+    font-size: 13px;
+}
+
+.wcm26-days-pick .wcm26-check strong {
+    font-size: 20px;
+    margin-bottom: 2px;
+}
+
+/* Hit targets, not decoration: the whole tile is the control. */
+.wcm26-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-height: 44px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.wcm26-check strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-feature-settings: 'tnum' 1;
+    margin-bottom: 4px;
+}
+
+.wcm26-check input {
+    margin: 2px 0 0;
+    accent-color: var(--color-accent);
+    width: 18px;
+    height: 18px;
+    flex: none;
+}
+
+/* Only the day tiles take a tint when checked. On the full-width rows, with
+   no border to frame it, it read as a stray highlight bar. */
+.wcm26-days-pick .wcm26-check:has(input:checked) {
+    background: var(--color-accent-100);
+}
+
+.wcm26-check:focus-within {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.wcm26-check-row {
+    align-items: flex-start;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.wcm26-check-row .wcm26-hint {
+    display: block;
+    margin-top: 4px;
+}
+
+/* Off-screen rather than display:none — a bot reading the DOM should still
+   find it, a person and a screen reader should not. */
+.wcm26-trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.wcm26-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 8px 0 0;
+}
+
+/* Stripe paints its own form inside this; give it room and nothing else. */
+.wcm26-checkout {
+    min-height: 520px;
+}
+
+.wcm26-checkout-fallback {
+    padding-top: 8px;
+}
+
+/*
+ * The contribution note after signing up. It borrows nothing from the About
+ * section's closing statement any more: that style carries its own rule and
+ * its own 28ch measure, which stacked a second, shorter line under this
+ * block's rule and shouted a piece of small print in 25px bold.
+ */
+.wcm26-contribute {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 2px solid var(--color-divider);
+}
+
+.wcm26-contribute-note {
+    margin: 0;
+    font-size: clamp(16px, 1.2vw, 18px);
+    line-height: 1.6;
+    max-width: 46ch;
+}
+
+.wcm26-contribute .wcm26-form-actions {
+    margin-top: 20px;
+}
+
+.wcm26-note-sent {
+    font-weight: 500;
+    color: var(--color-accent);
+}
+
+@media (max-width: 720px) {
+    .wcm26-field-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
 /* ── footer ──────────────────────────────────────────────────────────────── */
 
 .wcm26-footer {
