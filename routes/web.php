@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
 use App\Http\Controllers\Front2026Controller;
+use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\Front2026RegistrationController;
 use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +76,13 @@ Route::prefix(Front2026Controller::PATH)
                     ->where(['locale' => 'en|ro', 'token' => '[A-Za-z0-9]+'])
                     ->name('locale.confirm');
             });
+
+        // Off to Stripe. The language comes from the registration, so this
+        // needs no locale variant.
+        Route::get('/contribute/{token}', ContributionController::class)
+            ->where('token', '[A-Za-z0-9]+')
+            ->middleware('throttle:20,60')
+            ->name('contribute');
     });
 
 Route::prefix('2024')

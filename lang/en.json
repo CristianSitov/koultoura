@@ -280,5 +280,7 @@
     "register.title": "Register",
     "register.submit": "Register",
     "Contribute": "Contribute",
-    "Any amount, or none — your place is already held.": "Any amount, or none — your place is already held."
+    "Any amount, or none — your place is already held.": "Any amount, or none — your place is already held.",
+    "Thank you for your contribution.": "Thank you for your contribution.",
+    "Stripe will email you a receipt. Your registration still needs confirming from the email above.": "Stripe will email you a receipt. Your registration still needs confirming from the email above."
 }

@@ -48,6 +48,11 @@ return [
      */
     'stripe' => [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        // Checkout sessions: one product, the page's language, a real cancel
+        // route. Needs the API secret and the id of the pay-what-you-want
+        // price. Without both, the payment links below are used instead.
+        'secret' => env('STRIPE_SECRET'),
+        'price_id' => env('STRIPE_PRICE_ID'),
         'payment_link' => env('STRIPE_PAYMENT_LINK'),
         'payment_link_ro' => env('STRIPE_PAYMENT_LINK_RO'),
     ],

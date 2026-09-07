@@ -9,6 +9,9 @@ const props = defineProps({
     base: { type: String, default: '/2026' },
     email: { type: String, default: '' },
     contributeUrl: { type: String, default: null },
+    // Set by Stripe's success_url. A hint for the visitor, not a record —
+    // what was actually paid arrives on the webhook.
+    paid: { type: Boolean, default: false },
 });
 
 const resent = ref(false);
@@ -55,7 +58,11 @@ function resend() {
                         {{ $t('Send it again') }}
                     </button>
 
-                    <div v-if="contributeUrl" class="wcm26-contribute">
+                    <div v-if="paid" class="wcm26-contribute">
+                        <p class="wcm26-about-close">{{ $t('Thank you for your contribution.') }}</p>
+                        <p class="wcm26-hint">{{ $t('Stripe will email you a receipt. Your registration still needs confirming from the email above.') }}</p>
+                    </div>
+                    <div v-else-if="contributeUrl" class="wcm26-contribute">
                         <p class="wcm26-about-close">{{ $t('submitted.contribution') }}</p>
                         <p class="wcm26-form-actions">
                             <a :href="contributeUrl" class="btn btn-primary btn-flush" style="height: 48px">

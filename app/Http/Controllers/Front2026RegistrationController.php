@@ -100,29 +100,16 @@ class Front2026RegistrationController extends Controller
         return Inertia::render('2026/RegistrationSubmitted', [
             'base' => Front2026Controller::BASE,
             'email' => $email,
-            // The hosted payment link, carrying the registration token so the
-            // webhook can tie the donation back to a person, and their address
-            // so they do not type it twice. Null when no link is configured —
-            // the page then simply does not offer to take money.
-            'contributeUrl' => $registration ? $this->contributeUrl($registration) : null,
+            // Our own route, which decides how to reach Stripe. Null when
+            // there is no registration in the session — the page then simply
+            // does not offer to take money.
+            'contributeUrl' => $registration
+                ? Front2026Controller::BASE.'/contribute/'.$registration->token
+                : null,
+            'paid' => $request->boolean('paid'),
         ]);
     }
 
-    private function contributeUrl(Registration $registration): ?string
-    {
-        $link = $registration->locale === 'ro'
-            ? config('services.stripe.payment_link_ro') ?: config('services.stripe.payment_link')
-            : config('services.stripe.payment_link');
-
-        if (! $link) {
-            return null;
-        }
-
-        return $link.'?'.http_build_query([
-            'client_reference_id' => $registration->token,
-            'prefilled_email' => $registration->email,
-        ]);
-    }
 
     public function confirm(Request $request): Response|RedirectResponse
     {

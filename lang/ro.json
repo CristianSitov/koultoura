@@ -280,5 +280,7 @@
     "register.title": "Înscriere",
     "register.submit": "Înscrie-te",
     "Contribute": "Contribuie",
-    "Any amount, or none — your place is already held.": "Orice sumă sau deloc — locul tău este deja păstrat."
+    "Any amount, or none — your place is already held.": "Orice sumă sau deloc — locul tău este deja păstrat.",
+    "Thank you for your contribution.": "Îți mulțumim pentru contribuție.",
+    "Stripe will email you a receipt. Your registration still needs confirming from the email above.": "Stripe îți trimite o chitanță pe e-mail. Înscrierea trebuie totuși confirmată din mesajul de mai sus."
 }
