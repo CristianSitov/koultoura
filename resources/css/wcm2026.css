@@ -1674,10 +1674,30 @@
 
 /* Two by two rather than three and a stray one: the form column is ~420px, and
    at a 120px minimum the fourth day wrapped on its own. */
+/*
+ * Four days, one row, at every width — they are a single choice and reading
+ * them as one line is the point. Auto-fit wrapped 3 + 1, which looked like
+ * the fourth day belonged to something else.
+ *
+ * They fit because each tile stacks: box, date, weekday under it.
+ */
 .wcm26-days-pick {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.wcm26-days-pick .wcm26-check {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 8px;
+    font-size: 13px;
+}
+
+.wcm26-days-pick .wcm26-check strong {
+    font-size: 20px;
+    margin-bottom: 2px;
 }
 
 /* Hit targets, not decoration: the whole tile is the control. */
