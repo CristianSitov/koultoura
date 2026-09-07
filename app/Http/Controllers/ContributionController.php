@@ -76,13 +76,16 @@ class ContributionController extends Controller
     {
         try {
             $session = $this->stripe()?->checkout->sessions->create([
-                'ui_mode' => 'embedded',
+                // 'embedded' was retired; the API asks for 'embedded_page'.
+                'ui_mode' => 'embedded_page',
                 'mode' => 'payment',
                 'line_items' => [['price' => config('services.stripe.price_id'), 'quantity' => 1]],
                 'client_reference_id' => $registration->token,
                 'customer_email' => $registration->email,
                 'locale' => $registration->locale,
-                'return_url' => url($this->submittedUrl($registration)).'?paid=1',
+                // Stripe substitutes the session id into this before it sends
+                // them back; the docs require the placeholder.
+                'return_url' => url($this->submittedUrl($registration)).'?paid=1&session_id={CHECKOUT_SESSION_ID}',
             ]);
         } catch (ApiErrorException $e) {
             Log::error('Stripe embedded session failed', ['error' => $e->getMessage()]);
