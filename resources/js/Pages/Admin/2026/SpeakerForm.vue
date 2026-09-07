@@ -14,6 +14,7 @@ const form = useForm({
     full_name: props.speaker.full_name,
     slug: props.speaker.slug,
     position: props.speaker.position,
+    institution_url: props.speaker.institution_url,
     en: { ...props.speaker.en },
     ro: { ...props.speaker.ro },
     photo: null,
@@ -63,6 +64,15 @@ function submit() {
                             <input v-model="form.position" type="number" min="0" class="w-full rounded border-gray-300 text-sm" />
                             <p class="mt-1 text-xs text-gray-500">Lower first on the public grid.</p>
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Institution link</label>
+                        <input v-model="form.institution_url" type="url" placeholder="https://" class="w-full rounded border-gray-300 text-sm" />
+                        <p class="mt-1 text-xs text-gray-500">
+                            The institution named below their name on the public page becomes a link to this.
+                        </p>
+                        <p v-if="form.errors.institution_url" class="mt-1 text-sm text-red-600">{{ form.errors.institution_url }}</p>
                     </div>
                 </div>
 

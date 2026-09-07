@@ -18,13 +18,13 @@ const formats = ['talks', 'conversations', 'workshops'];
                     <p class="wcm26-figure">3</p>
                     <p class="wcm26-figure-label">{{ $t('Themes') }}</p>
                 </div>
-                <p class="wcm26-figures-note">{{ $t('format.note') }}</p>
+                <p class="wcm26-figures-note" v-html="$t('format.note')"></p>
             </div>
 
             <ol class="wcm26-formats">
                 <li v-for="format in formats" :key="format">
                     <p class="wcm26-formats-label">{{ $t(`format.${format}.label`) }}</p>
-                    <p class="wcm26-formats-desc">{{ $t(`format.${format}.description`) }}</p>
+                    <p class="wcm26-formats-desc" v-html="$t(`format.${format}.description`)"></p>
                 </li>
             </ol>
         </div>

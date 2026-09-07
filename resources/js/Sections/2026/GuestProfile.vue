@@ -130,7 +130,7 @@ onBeforeUnmount(() => clearInterval(reveal));
                 </div>
 
                 <div class="wcm26-profile-text">
-                    <p class="wcm26-profile-org">{{ guest.org }}</p>
+                    <p v-if="guest.role" class="wcm26-profile-role">{{ guest.role }}</p>
                     <h2 class="wcm26-head-t wcm26-profile-name" :aria-label="guest.name">
                         <template v-for="(word, w) in words" :key="w"
                             ><span aria-hidden="true" class="wcm26-profile-word"
@@ -143,7 +143,12 @@ onBeforeUnmount(() => clearInterval(reveal));
                             ><template v-if="w < words.length - 1">{{ ' ' }}</template></template
                         >
                     </h2>
-                    <p v-if="guest.role" class="wcm26-profile-role">{{ guest.role }}</p>
+                    <!-- Role above the name is set in the markup above; the
+                         institution reads under it, linked where we have one. -->
+                    <p v-if="guest.org" class="wcm26-profile-org">
+                        <a v-if="guest.orgUrl" :href="guest.orgUrl" target="_blank" rel="noopener">{{ guest.org }}</a>
+                        <template v-else>{{ guest.org }}</template>
+                    </p>
                     <p class="wcm26-profile-bio">{{ guest.bio }}</p>
                 </div>
             </div>

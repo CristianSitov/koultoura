@@ -98,6 +98,9 @@ class Front2026Controller extends Controller
                     'id' => $person->slug,
                     'name' => $person->full_name,
                     'org' => $text->institution ?? '',
+                    // The institution's own site, so the credit can be followed
+                    // rather than only read.
+                    'orgUrl' => $person->institution_url,
                     'role' => $text->role ?? '',
                     'portrait' => $person->avatar,
                     'bio' => $text->description ?? '',

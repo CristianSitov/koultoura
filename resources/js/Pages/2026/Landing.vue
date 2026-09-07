@@ -41,7 +41,6 @@ const otherLocaleUrl = computed(() =>
 const theme = ref('light');
 const menuOpen = ref(false);
 const navHidden = ref(false);
-const themesExpanded = ref(false);
 const openGuest = ref(props.guests.some((g) => g.id === props.guest) ? props.guest : null);
 
 const isDark = computed(() => theme.value === 'dark');
@@ -162,7 +161,7 @@ function onPopState(event) {
             <Format />
             <hr class="wcm26-rule" />
 
-            <Themes :expanded="themesExpanded" @toggle="themesExpanded = !themesExpanded" />
+            <Themes />
             <hr class="wcm26-rule" />
 
             <Guests :guests="guests" @open="openGuest = $event" />

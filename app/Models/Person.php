@@ -22,6 +22,7 @@ class Person extends Model implements TranslatableContract
         'full_name',
         'slug',
         'avatar',
+        'institution_url',
         'position',
         'drive_folder_id',
         'drive_photo_id',

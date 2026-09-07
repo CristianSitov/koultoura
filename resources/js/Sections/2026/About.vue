@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from 'vue';
+import { trans } from 'laravel-vue-i18n';
 import SectionHead from './SectionHead.vue';
 
 /*
@@ -23,6 +25,17 @@ const photos = [
     { file: 11, position: 'center' },
     { file: 12, position: 'center' },
 ];
+
+/*
+ * "See the previous editions … – 2022 & 2024", with each year a link to the
+ * edition that is still online. The years are placeholders in the string so
+ * the sentence can be worded differently in each language.
+ */
+const archiveLine = computed(() =>
+    trans('about.archive')
+        .replace(':y2022', '<a href="/2022">2022</a>')
+        .replace(':y2024', '<a href="/2024">2024</a>')
+);
 </script>
 
 <template>
@@ -45,12 +58,16 @@ const photos = [
             </div>
 
             <div class="wcm26-about-copy">
-                <p>{{ $t('about.p1') }}</p>
+                <!-- v-html because the copy carries the emphasis the source
+                     document has; it is our own text, not anything typed in. -->
+                <p v-html="$t('about.p1')"></p>
                 <p>{{ $t('about.p2') }}</p>
-                <p>{{ $t('about.p3') }}</p>
-                <p>{{ $t('about.p4') }}</p>
-                <p>{{ $t('about.p5') }}</p>
+                <p v-html="$t('about.p3')"></p>
+                <p v-html="$t('about.p4')"></p>
+                <p v-html="$t('about.p5')"></p>
                 <p class="wcm26-about-close">{{ $t('about.close') }}</p>
+
+                <p class="wcm26-about-archive" v-html="archiveLine"></p>
             </div>
         </div>
     </section>

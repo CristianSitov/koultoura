@@ -102,6 +102,7 @@ class SpeakerController extends Controller
                 'full_name' => $person->full_name ?? '',
                 'slug' => $person->exists ? $person->slug : '',
                 'avatar' => $person->avatar ?? '',
+                'institution_url' => $person->institution_url ?? '',
                 'position' => $person->position ?? 0,
                 'en' => $this->translation($person, 'en'),
                 'ro' => $this->translation($person, 'ro'),
@@ -133,6 +134,7 @@ class SpeakerController extends Controller
                 Rule::unique('wcm_2026.people', 'slug')->ignore($person->id),
             ],
             'position' => ['nullable', 'integer', 'min:0', 'max:999'],
+            'institution_url' => ['nullable', 'url', 'max:255'],
             'en.role' => ['nullable', 'string', 'max:255'],
             'en.institution' => ['nullable', 'string', 'max:255'],
             'en.description' => ['nullable', 'string'],
@@ -146,6 +148,7 @@ class SpeakerController extends Controller
         // The slug is the profile's public URL, so it is only invented once.
         $person->slug = $data['slug'] ?: ($person->exists ? $person->slug : Str::slug($data['full_name']));
         $person->position = $data['position'] ?? 0;
+        $person->institution_url = $data['institution_url'] ?: null;
         $person->save();
 
         foreach (['en', 'ro'] as $locale) {

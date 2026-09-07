@@ -33,10 +33,16 @@ onBeforeUnmount(() => stopShift?.());
                     @click="$emit('open', guest.id)"
                 >
                     <ImageSlot :src="guest.portrait" :alt="guest.name" :placeholder="$t('Portrait')" />
-                    <span v-if="guest.role" class="wcm26-guest-tag">{{ guest.role }}</span>
                 </button>
+
+                <!-- What they do sits above the name; where they are from sits
+                     under it, as a link out to the institution. -->
+                <p v-if="guest.role" class="wcm26-guest-role">{{ guest.role }}</p>
                 <h3 class="wcm26-guest-name">{{ guest.name }}</h3>
-                <p class="wcm26-guest-org">{{ guest.org }}</p>
+                <p v-if="guest.org" class="wcm26-guest-org">
+                    <a v-if="guest.orgUrl" :href="guest.orgUrl" target="_blank" rel="noopener">{{ guest.org }}</a>
+                    <template v-else>{{ guest.org }}</template>
+                </p>
             </article>
 
             <article class="wcm26-guest">
