@@ -15,8 +15,10 @@ defineEmits(['toggle']);
  */
 const themes = [
     { numeral: 'I', key: 1, grow: true, more: false },
-    { numeral: 'II', key: 2, grow: false, more: true },
-    { numeral: 'III', key: 3, grow: true, more: false },
+    { numeral: 'II', key: 2, grow: true, more: false },
+    // The Heritage School belongs to the education strand, so its note hangs
+    // off that card rather than the middle one.
+    { numeral: 'III', key: 3, grow: false, more: true },
 ];
 </script>
 
@@ -37,7 +39,10 @@ const themes = [
                 <p class="wcm26-theme-p" :class="{ 'wcm26-theme-p-grow': theme.grow }">
                     {{ $t(`theme.${theme.key}.body`) }}
                 </p>
-                <p v-if="theme.more && expanded" class="wcm26-theme-p">{{ $t(`theme.${theme.key}.more`) }}</p>
+                <template v-if="expanded">
+                    <p class="wcm26-theme-p">{{ $t(`theme.${theme.key}.body2`) }}</p>
+                    <p v-if="theme.more" class="wcm26-theme-p">{{ $t(`theme.${theme.key}.more`) }}</p>
+                </template>
             </article>
         </div>
 

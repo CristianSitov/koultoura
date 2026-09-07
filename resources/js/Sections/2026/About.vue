@@ -48,6 +48,8 @@ const photos = [
                 <p>{{ $t('about.p1') }}</p>
                 <p>{{ $t('about.p2') }}</p>
                 <p>{{ $t('about.p3') }}</p>
+                <p>{{ $t('about.p4') }}</p>
+                <p>{{ $t('about.p5') }}</p>
                 <p class="wcm26-about-close">{{ $t('about.close') }}</p>
             </div>
         </div>
