@@ -62,7 +62,7 @@ class ContributionController extends Controller
     {
         $prefix = $registration->locale === 'ro' ? '/ro' : '';
 
-        return url(Front2026Controller::BASE.$prefix.'/registered');
+        return url(Front2026Controller::BASE.$prefix.'/registered/'.$registration->token);
     }
 
     private function paymentLink(Registration $registration): ?string

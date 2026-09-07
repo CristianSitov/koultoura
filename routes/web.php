@@ -62,9 +62,18 @@ Route::prefix(Front2026Controller::PATH)
                 Route::post('/register', 'store')
                     ->middleware('throttle:10,60')
                     ->name('register.store');
-                Route::get('/registered', 'submitted')->name('registered');
-                Route::get('/{locale}/registered', 'submitted')
-                    ->where('locale', 'en|ro')
+                /*
+                 * The token is in the address so this page survives a reload
+                 * and can be returned to from Stripe. It used to rely on a
+                 * flashed session value, which is consumed by the first render
+                 * — so a refresh, or coming back from checkout, lost the email
+                 * and the contribute button with it.
+                 */
+                Route::get('/registered/{token}', 'submitted')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('registered');
+                Route::get('/{locale}/registered/{token}', 'submitted')
+                    ->where(['locale' => 'en|ro', 'token' => '[A-Za-z0-9]+'])
                     ->name('locale.registered');
                 Route::post('/resend', 'resendConfirmation')
                     ->middleware('throttle:5,60')

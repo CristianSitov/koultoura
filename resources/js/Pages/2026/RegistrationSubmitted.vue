@@ -12,6 +12,7 @@ const props = defineProps({
     // Set by Stripe's success_url. A hint for the visitor, not a record —
     // what was actually paid arrives on the webhook.
     paid: { type: Boolean, default: false },
+    confirmed: { type: Boolean, default: false },
 });
 
 const resent = ref(false);
@@ -40,27 +41,29 @@ function resend() {
                 </div>
 
                 <div class="wcm26-about-copy">
-                    <p v-if="email">
-                        {{ $t('We have written to :email. Open it and confirm, and your registration is done.', { email }) }}
-                    </p>
-                    <p v-else>{{ $t('We have written to the address you gave. Open it and confirm, and your registration is done.') }}</p>
+                    <template v-if="confirmed">
+                        <p>{{ $t('This registration is confirmed. Nothing else is needed.') }}</p>
+                    </template>
+                    <template v-else>
+                        <p>{{ $t('We have written to :email. Open it and confirm, and your registration is done.', { email }) }}</p>
 
-                    <p>{{ $t('Nothing arrived? It may take a minute, and it may have landed in spam.') }}</p>
+                        <p>{{ $t('Nothing arrived? It may take a minute, and it may have landed in spam.') }}</p>
 
-                    <p v-if="resent" class="wcm26-note-sent">{{ $t('Sent again. Give it a minute.') }}</p>
-                    <button
-                        v-else-if="email"
-                        type="button"
-                        class="btn btn-ghost btn-flush"
-                        :disabled="form.processing"
-                        @click="resend"
-                    >
-                        {{ $t('Send it again') }}
-                    </button>
+                        <p v-if="resent" class="wcm26-note-sent">{{ $t('Sent again. Give it a minute.') }}</p>
+                        <button
+                            v-else
+                            type="button"
+                            class="btn btn-ghost btn-flush"
+                            :disabled="form.processing"
+                            @click="resend"
+                        >
+                            {{ $t('Send it again') }}
+                        </button>
+                    </template>
 
                     <div v-if="paid" class="wcm26-contribute">
                         <p class="wcm26-about-close">{{ $t('Thank you for your contribution.') }}</p>
-                        <p class="wcm26-hint">{{ $t('Stripe will email you a receipt. Your registration still needs confirming from the email above.') }}</p>
+                        <p class="wcm26-hint">{{ confirmed ? $t('Stripe will email you a receipt.') : $t('Stripe will email you a receipt. Your registration still needs confirming from the email above.') }}</p>
                     </div>
                     <div v-else-if="contributeUrl" class="wcm26-contribute">
                         <p class="wcm26-about-close">{{ $t('submitted.contribution') }}</p>

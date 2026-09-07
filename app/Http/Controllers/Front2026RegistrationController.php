@@ -24,12 +24,12 @@ class Front2026RegistrationController extends Controller
 {
     private const DAYS = [1, 2, 3, 4];
 
-    /** The submitted page in whatever language the form was in. */
-    private function submittedUrl(): string
+    /** The submitted page for this registration, in its own language. */
+    private function submittedUrl(Registration $registration): string
     {
-        $prefix = app()->getLocale() === 'ro' ? '/ro' : '';
+        $prefix = $registration->locale === 'ro' ? '/ro' : '';
 
-        return Front2026Controller::BASE.$prefix.'/registered';
+        return Front2026Controller::BASE.$prefix.'/registered/'.$registration->token;
     }
 
     public function create(): Response
@@ -43,8 +43,10 @@ class Front2026RegistrationController extends Controller
     public function store(Request $request): RedirectResponse
     {
         // A bot fills every field it is given; a person never sees this one.
+        // Sent to the landing page rather than a registration page it has no
+        // registration for.
         if (filled($request->input('website'))) {
-            return redirect($this->submittedUrl());
+            return redirect(Front2026Controller::BASE);
         }
 
         $input = $request->validate([
@@ -69,8 +71,7 @@ class Front2026RegistrationController extends Controller
         // re-sends the link rather than erroring — the common case is someone
         // who never received the first one.
         if ($registration->exists && ! $registration->canResend()) {
-            return redirect($this->submittedUrl())
-                ->with('registration_email', $registration->email);
+            return redirect($this->submittedUrl($registration));
         }
 
         $registration->fill([
@@ -88,24 +89,21 @@ class Front2026RegistrationController extends Controller
 
         $this->sendConfirmation($registration);
 
-        return redirect($this->submittedUrl())
-            ->with('registration_email', $registration->email);
+        return redirect($this->submittedUrl($registration));
     }
 
     public function submitted(Request $request): Response
     {
-        $email = $request->session()->get('registration_email');
-        $registration = $email ? Registration::where('email', $email)->first() : null;
+        $registration = Registration::where('token', $request->route('token'))->firstOrFail();
 
         return Inertia::render('2026/RegistrationSubmitted', [
             'base' => Front2026Controller::BASE,
-            'email' => $email,
+            'email' => $registration->email,
             // Our own route, which decides how to reach Stripe. Null when
             // there is no registration in the session — the page then simply
             // does not offer to take money.
-            'contributeUrl' => $registration
-                ? Front2026Controller::BASE.'/contribute/'.$registration->token
-                : null,
+            'contributeUrl' => Front2026Controller::BASE.'/contribute/'.$registration->token,
+            'confirmed' => $registration->isConfirmed(),
             'paid' => $request->boolean('paid'),
         ]);
     }
@@ -156,7 +154,7 @@ class Front2026RegistrationController extends Controller
 
         // Always the same answer: whether an address is registered is not
         // something a stranger gets to probe for.
-        return back()->with('registration_email', $email);
+        return back();
     }
 
     private function confirmUrl(Registration $registration): string

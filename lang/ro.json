@@ -282,5 +282,7 @@
     "Contribute": "Contribuie",
     "Any amount, or none — your place is already held.": "Orice sumă sau deloc — locul tău este deja păstrat.",
     "Thank you for your contribution.": "Îți mulțumim pentru contribuție.",
-    "Stripe will email you a receipt. Your registration still needs confirming from the email above.": "Stripe îți trimite o chitanță pe e-mail. Înscrierea trebuie totuși confirmată din mesajul de mai sus."
+    "Stripe will email you a receipt. Your registration still needs confirming from the email above.": "Stripe îți trimite o chitanță pe e-mail. Înscrierea trebuie totuși confirmată din mesajul de mai sus.",
+    "This registration is confirmed. Nothing else is needed.": "Această înscriere este confirmată. Nu mai este nevoie de nimic.",
+    "Stripe will email you a receipt.": "Stripe îți trimite o chitanță pe e-mail."
 }

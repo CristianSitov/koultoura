@@ -282,5 +282,7 @@
     "Contribute": "Contribute",
     "Any amount, or none — your place is already held.": "Any amount, or none — your place is already held.",
     "Thank you for your contribution.": "Thank you for your contribution.",
-    "Stripe will email you a receipt. Your registration still needs confirming from the email above.": "Stripe will email you a receipt. Your registration still needs confirming from the email above."
+    "Stripe will email you a receipt. Your registration still needs confirming from the email above.": "Stripe will email you a receipt. Your registration still needs confirming from the email above.",
+    "This registration is confirmed. Nothing else is needed.": "This registration is confirmed. Nothing else is needed.",
+    "Stripe will email you a receipt.": "Stripe will email you a receipt."
 }
