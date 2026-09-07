@@ -21,6 +21,8 @@ const props = defineProps({
     guests: { type: Array, default: () => [] },
     programme: { type: Array, default: () => [] },
     themeBars: { type: Array, default: () => [] },
+    // The section is off until there is a schedule worth showing.
+    programmeVisible: { type: Boolean, default: false },
     // Set when the page was entered at a guest profile.
     guest: { type: String, default: '' },
     // The page's own address, which carries a secret segment while unlisted.
@@ -143,6 +145,7 @@ function onPopState(event) {
 
         <MenuOverlay
             v-if="menuOpen"
+            :programme-visible="programmeVisible"
             :other-locale="otherLocale"
             :other-locale-url="otherLocaleUrl"
             @close="menuOpen = false"
@@ -161,9 +164,12 @@ function onPopState(event) {
             <hr class="wcm26-rule" />
 
             <Guests :guests="guests" @open="openGuest = $event" />
-            <hr class="wcm26-rule" />
 
-            <Programme :days="programme" :theme-bars="themeBars" />
+            <template v-if="programmeVisible">
+                <hr class="wcm26-rule" />
+
+                <Programme :days="programme" :theme-bars="themeBars" />
+            </template>
         </div>
 
         <Register />

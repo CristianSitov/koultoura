@@ -6,6 +6,8 @@ import Admin2026 from '../../../Layouts/Admin2026.vue';
 const props = defineProps({
     days: { type: Array, default: () => [] },
     themes: { type: Array, default: () => [] },
+    // Whether the section is on the public page at all.
+    visible: { type: Boolean, default: false },
     publicBase: { type: String, default: '' },
 });
 
@@ -72,6 +74,37 @@ function saveTheme() {
                 Add day
             </button>
         </template>
+
+        <!-- One switch above everything else, because while it is off nothing
+             below it is on the site regardless of what is published. -->
+        <div
+            :class="[
+                'mb-6 flex flex-wrap items-center justify-between gap-3 rounded border p-4',
+                visible ? 'border-green-200 bg-green-50' : 'border-amber-200 bg-amber-50',
+            ]"
+        >
+            <div>
+                <p class="font-semibold">
+                    {{ visible ? 'The programme is on the public page.' : 'The programme is hidden from the public page.' }}
+                </p>
+                <p class="text-sm text-gray-600 mt-0.5">
+                    {{ visible
+                        ? 'Visitors see the published days and sessions below, and the menu links to them.'
+                        : 'Nothing below is on the site — not even published sessions — and the menu has no Programme entry.' }}
+                </p>
+            </div>
+
+            <Link
+                href="/dashboard/programme/visibility"
+                method="put"
+                as="button"
+                type="button"
+                :class="[
+                    'rounded px-4 py-2 text-sm font-semibold text-white',
+                    visible ? 'bg-gray-700 hover:bg-gray-800' : 'bg-green-700 hover:bg-green-800',
+                ]"
+            >{{ visible ? 'Hide the programme' : 'Show the programme' }}</Link>
+        </div>
 
         <!-- Themes first: a day points at one, so they have to exist before the
              days can be arranged. -->

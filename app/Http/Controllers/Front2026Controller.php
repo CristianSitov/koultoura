@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Person;
 use App\Models\ProgrammeDay;
 use App\Models\Session;
+use App\Models\Setting;
 use App\Models\Theme;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -54,6 +55,7 @@ class Front2026Controller extends Controller
             'guests' => $this->guests(),
             'programme' => $this->programme(),
             'themeBars' => $this->themeBars(),
+            'programmeVisible' => $this->programmeVisible(),
             'base' => self::BASE,
         ]);
     }
@@ -72,6 +74,7 @@ class Front2026Controller extends Controller
             'guests' => $this->guests(),
             'programme' => $this->programme(),
             'themeBars' => $this->themeBars(),
+            'programmeVisible' => $this->programmeVisible(),
             'guest' => $guest->slug,
             'base' => self::BASE,
         ]);
@@ -110,8 +113,25 @@ class Front2026Controller extends Controller
      * Text is written in English and a locale without its own translation
      * falls back to it, the same rule the guest list follows.
      */
+    /**
+     * Whether the section is on the page at all — a switch of its own, apart
+     * from what is published inside it.
+     *
+     * Hidden by default: the schedule is drafted long before there is anything
+     * worth showing, and a section that appears half-built is worse than one
+     * that has not appeared yet.
+     */
+    private function programmeVisible(): bool
+    {
+        return Setting::bool(Setting::PROGRAMME_VISIBLE);
+    }
+
     private function programme(): array
     {
+        if (! $this->programmeVisible()) {
+            return [];
+        }
+
         return ProgrammeDay::with(['theme.translations', 'sessions' => fn ($q) => $q->published(), 'sessions.translations', 'sessions.speakers'])
             ->where('published', true)
             ->orderBy('position')

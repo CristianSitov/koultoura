@@ -240,6 +240,7 @@ Route::prefix('dashboard')
 
         Route::controller(ProgrammeController::class)->group(function () {
             Route::get('/programme', 'index')->name('programme');
+            Route::put('/programme/visibility', 'toggleVisibility')->name('programme.visibility');
 
             Route::post('/programme/days', 'storeDay')->name('days.store');
             Route::put('/programme/days/{day}', 'updateDay')->name('days.update');

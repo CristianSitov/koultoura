@@ -7,6 +7,7 @@ use App\Http\Controllers\Front2026Controller;
 use App\Models\Person;
 use App\Models\ProgrammeDay;
 use App\Models\Session;
+use App\Models\Setting;
 use App\Models\Theme;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -64,8 +65,25 @@ class ProgrammeController extends Controller
                     'description_ro' => $t->translate('ro')?->description ?? '',
                     'position' => $t->position,
                 ]),
+            'visible' => Setting::bool(Setting::PROGRAMME_VISIBLE),
             'publicBase' => Front2026Controller::BASE,
         ]);
+    }
+
+    /**
+     * Show or hide the whole section on the public page.
+     *
+     * Separate from publishing a session: this is "is there a programme to
+     * look at yet", and while it is off nothing inside it matters.
+     */
+    public function toggleVisibility(): RedirectResponse
+    {
+        $visible = ! Setting::bool(Setting::PROGRAMME_VISIBLE);
+        Setting::put(Setting::PROGRAMME_VISIBLE, $visible);
+
+        return back()->with('flash', $visible
+            ? 'The programme is now on the public page.'
+            : 'The programme is hidden from the public page.');
     }
 
     /* ---------------------------------------------------------------- days */
