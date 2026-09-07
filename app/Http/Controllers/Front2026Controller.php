@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Person;
+use App\Models\ProgrammeDay;
+use App\Models\Session;
+use App\Models\Setting;
+use App\Models\Theme;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -49,6 +53,9 @@ class Front2026Controller extends Controller
     {
         return Inertia::render('2026/Landing', [
             'guests' => $this->guests(),
+            'programme' => $this->programme(),
+            'themeBars' => $this->themeBars(),
+            'programmeVisible' => $this->programmeVisible(),
             'base' => self::BASE,
         ]);
     }
@@ -65,6 +72,9 @@ class Front2026Controller extends Controller
 
         return Inertia::render('2026/Landing', [
             'guests' => $this->guests(),
+            'programme' => $this->programme(),
+            'themeBars' => $this->themeBars(),
+            'programmeVisible' => $this->programmeVisible(),
             'guest' => $guest->slug,
             'base' => self::BASE,
         ]);
@@ -94,5 +104,82 @@ class Front2026Controller extends Controller
                 ];
             })
             ->all();
+    }
+
+    /**
+     * The programme as the page consumes it. Only published days and sessions:
+     * the schedule is edited for weeks before it is fit to show.
+     *
+     * Text is written in English and a locale without its own translation
+     * falls back to it, the same rule the guest list follows.
+     */
+    /**
+     * Whether the section is on the page at all — a switch of its own, apart
+     * from what is published inside it.
+     *
+     * Hidden by default: the schedule is drafted long before there is anything
+     * worth showing, and a section that appears half-built is worse than one
+     * that has not appeared yet.
+     */
+    private function programmeVisible(): bool
+    {
+        return Setting::bool(Setting::PROGRAMME_VISIBLE);
+    }
+
+    private function programme(): array
+    {
+        if (! $this->programmeVisible()) {
+            return [];
+        }
+
+        return ProgrammeDay::with(['theme.translations', 'sessions' => fn ($q) => $q->published(), 'sessions.translations', 'sessions.speakers'])
+            ->where('published', true)
+            ->orderBy('position')
+            ->orderBy('date')
+            ->get()
+            ->map(fn (ProgrammeDay $day, int $i) => [
+                'id' => $day->id,
+                'num' => $day->date->format('d'),
+                'day' => $i + 1,
+                'name' => $this->text($day)->name ?? '',
+                'theme' => $day->theme ? [
+                    'numeral' => $day->theme->numeral,
+                    'title' => $this->text($day->theme)->title ?? '',
+                ] : null,
+                'sessions' => $day->sessions->map(fn (Session $session) => [
+                    'id' => $session->id,
+                    // 10:00, not 10:00:00 — the page prints this as it comes.
+                    'time' => substr($session->starts_at, 0, 5),
+                    'kind' => $session->kind,
+                    'title' => $this->text($session)->title ?? '',
+                    // Who is speaking, or who it is for when nobody is named.
+                    'who' => $session->speakers->pluck('full_name')->implode(', ')
+                        ?: ($this->text($session)->audience ?? ''),
+                    'school' => $session->school,
+                    'booking' => $session->bookable && $session->slug
+                        ? ['url' => self::BASE.'/sessions/'.$session->slug, 'full' => $session->isFull()]
+                        : null,
+                ])->all(),
+            ])
+            ->all();
+    }
+
+    /** The three theme bars above the grid, in their own order. */
+    private function themeBars(): array
+    {
+        return Theme::with('translations')
+            ->orderBy('position')
+            ->get()
+            ->map(fn (Theme $theme) => [
+                'numeral' => $theme->numeral,
+                'title' => $this->text($theme)->title ?? '',
+            ])
+            ->all();
+    }
+
+    /** The row for the current locale, or the English one it falls back to. */
+    private function text($model)
+    {
+        return $model->translate(app()->getLocale()) ?? $model->translate('en');
     }
 }

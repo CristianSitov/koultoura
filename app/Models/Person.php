@@ -5,6 +5,7 @@ namespace App\Models;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 class Person extends Model implements TranslatableContract
@@ -44,5 +45,14 @@ class Person extends Model implements TranslatableContract
      */
     public function getSlugAttribute($value) {
         return $value ?: Str::studly(Str::slug($this->full_name));
+    }
+
+    /**
+     * What this person is down to speak at. 2026 only: earlier editions have
+     * no sessions table, and nothing on their pages asks for this.
+     */
+    public function sessions(): BelongsToMany
+    {
+        return $this->belongsToMany(Session::class)->withPivot('position');
     }
 }

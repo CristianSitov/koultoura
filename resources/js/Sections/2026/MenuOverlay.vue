@@ -1,11 +1,19 @@
 <script setup>
 import Logo from './Logo.vue';
+import { computed } from 'vue';
 import { menuItems } from './menu';
 
-defineProps({
+const props = defineProps({
+    // Hidden sections are not offered: a menu entry that scrolls nowhere is
+    // worse than a shorter menu.
+    programmeVisible: { type: Boolean, default: false },
     otherLocale: { type: String, default: 'ro' },
     otherLocaleUrl: { type: String, default: '/2026/ro' },
 });
+
+const items = computed(() =>
+    menuItems.filter((item) => item.href !== '#programme' || props.programmeVisible)
+);
 
 defineEmits(['close']);
 </script>
@@ -32,7 +40,7 @@ defineEmits(['close']);
 
         <nav class="wcm26-menu-body">
             <ol class="wcm26-menu-list">
-                <li v-for="item in menuItems" :key="item.n">
+                <li v-for="item in items" :key="item.n">
                     <a :href="item.href" class="wcm26-menu-link" @click="$emit('close')">
                         <span>{{ item.n }}</span>{{ $t(item.label) }}
                     </a>

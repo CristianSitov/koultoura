@@ -291,5 +291,15 @@
     "contribute.intro": "Attending is free. If you would like to support the symposium, contribute any amount you choose — it changes nothing about your registration, and the next step is the same either way.",
     "contribute.fallback": "Payment opens on Stripe's secure page.",
     "submitted.contribution.short": "Attending is free. If you would still like to support the symposium, you can contribute any amount.",
-    "Thank you — your contribution of :amount has gone through.": "Thank you — your contribution of :amount has gone through."
+    "Thank you — your contribution of :amount has gone through.": "Thank you — your contribution of :amount has gone through.",
+    "Book a place": "Book a place",
+    "Fully booked": "Fully booked",
+    "Your place is held": "Your place is held",
+    "This one is fully booked.": "This one is fully booked.",
+    "The rest of the programme is open — registering for the day needs no booking.": "The rest of the programme is open — registering for the day needs no booking.",
+    "Changed your mind? Write to us and we will free the place for someone else.": "Changed your mind? Write to us and we will free the place for someone else.",
+    "So we can reach you if the workshop moves. Optional.": "So we can reach you if the workshop moves. Optional.",
+    "The last place went while you were filling this in.": "The last place went while you were filling this in.",
+    "booking.held": "That is it, :name — a place is held for you. Nothing else to do; just come.",
+    "booking.places_left": "Places are limited. :n left."
 }
