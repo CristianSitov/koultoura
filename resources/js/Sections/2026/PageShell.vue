@@ -34,7 +34,7 @@ onMounted(() => {
 
 <template>
     <div class="wcm26" :data-theme="theme" :lang="locale">
-        <header class="wcm26-header wcm26-header-narrow">
+        <header class="wcm26-header">
             <div class="wcm26-bar">
                 <a :href="base" class="wcm26-brand">
                     <Logo />
@@ -70,7 +70,12 @@ onMounted(() => {
         </header>
 
         <div class="wcm26-shell wcm26-page">
-            <slot />
+            <!-- Only the content column is narrowed; the bar above and the
+                 footer below keep the full width the landing page uses. -->
+            <div class="wcm26-page-main">
+                <slot />
+            </div>
+
             <hr class="wcm26-rule" />
             <Bottom />
         </div>

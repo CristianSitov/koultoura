@@ -1564,16 +1564,21 @@
 /* ── registration form ───────────────────────────────────────────────────── */
 
 /*
- * The registration pages are a task, not a poster. They inherit the landing
- * page's shell, whose full-bleed measure and 160px section padding are meant
- * for something you scroll through and admire — here they just spread four
- * short paragraphs across a metre of screen. So: a capped measure, tighter
- * rhythm, and a heading at a working size rather than a display one.
+ * The registration pages are a task, not a poster. Their content column
+ * inherits the landing page's full-bleed measure and 160px section padding,
+ * which are meant for something you scroll through and admire — here they
+ * spread four short paragraphs across a metre of screen.
+ *
+ * Only that column narrows. The bar above it and the footer below keep the
+ * full width, so the page still reads as part of the same site.
  */
 .wcm26-page {
+    padding-top: 88px;
+}
+
+.wcm26-page-main {
     max-width: 920px;
     margin: 0 auto;
-    padding-top: 88px;
 }
 
 /*
@@ -1581,49 +1586,38 @@
  * it stays generous, because a short line with no air around it is just as
  * hard to read as a long one.
  */
-.wcm26-page .wcm26-section {
+.wcm26-page-main .wcm26-section {
     padding: 60px 0 76px;
 }
 
-.wcm26-page .wcm26-head {
+.wcm26-page-main .wcm26-head {
     margin-bottom: 48px;
 }
 
-.wcm26-page .wcm26-head-t {
+.wcm26-page-main .wcm26-head-t {
     font-size: clamp(30px, 3.6vw, 46px);
 }
 
-.wcm26-page .wcm26-lead {
+.wcm26-page-main .wcm26-lead {
     font-size: clamp(19px, 1.8vw, 23px);
 }
 
-.wcm26-page .wcm26-split {
+.wcm26-page-main .wcm26-split {
     gap: 40px clamp(32px, 4vw, 64px);
 }
 
 /* Reading measure, so a line of prose stops before it becomes a scan. */
-.wcm26-page .wcm26-about-copy {
+.wcm26-page-main .wcm26-about-copy {
     max-width: 58ch;
 }
 
-.wcm26-page .wcm26-about-copy p {
+.wcm26-page-main .wcm26-about-copy p {
     margin: 0 0 22px;
     line-height: 1.65;
 }
 
-.wcm26-page .wcm26-form {
+.wcm26-page-main .wcm26-form {
     gap: 30px;
-}
-
-/* The bar follows the page's measure, so the wordmark sits on the same left
-   edge as the heading under it rather than out at the window's edge. */
-.wcm26-header-narrow .wcm26-bar {
-    max-width: 920px;
-    margin: 0 auto;
-}
-
-.wcm26-page .wcm26-footer {
-    padding: 32px 0 48px;
 }
 
 .wcm26-form {
