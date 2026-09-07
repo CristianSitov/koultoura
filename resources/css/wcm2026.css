@@ -1577,7 +1577,7 @@
 }
 
 .wcm26-page-main {
-    max-width: 920px;
+    max-width: 720px;
     margin: 0 auto;
 }
 
@@ -1602,8 +1602,14 @@
     font-size: clamp(19px, 1.8vw, 23px);
 }
 
+/*
+ * One column, so the page is read top to bottom: what this is, then the
+ * thing to fill in. Side by side, the copy and the form competed for the
+ * same first glance.
+ */
 .wcm26-page-main .wcm26-split {
-    gap: 40px clamp(32px, 4vw, 64px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
 }
 
 /* Reading measure, so a line of prose stops before it becomes a scan. */
