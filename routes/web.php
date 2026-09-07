@@ -144,6 +144,10 @@ Route::prefix('2022')
 
 Route::controller(DashboardController::class)
     ->middleware([
+        // The subscribers this lists are 2024's, and nothing in /dashboard
+        // says so — without this it reads the current edition's database,
+        // which has no users at all.
+        'year:2024',
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',

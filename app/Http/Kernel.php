@@ -67,5 +67,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        // 'year:2024' — read and write that edition's database, whatever the URL says.
+        'year' => \App\Http\Middleware\SetYearlyDatabase::class,
     ];
 }

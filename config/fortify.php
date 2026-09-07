@@ -132,7 +132,8 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // No public registration: organiser accounts are created by hand.
+        // Features::registration(),
         // Features::resetPasswords(),
         Features::emailVerification(),
         // Features::updateProfileInformation(),
