@@ -33,13 +33,13 @@ function saveDay() {
     const done = { onSuccess: () => (editingDay.value = null) };
 
     editingDay.value === 'new'
-        ? dayForm.post('/dashboard/2026/programme/days', done)
-        : dayForm.put(`/dashboard/2026/programme/days/${editingDay.value}`, done);
+        ? dayForm.post('/dashboard/programme/days', done)
+        : dayForm.put(`/dashboard/programme/days/${editingDay.value}`, done);
 }
 
 function removeDay(day) {
     if (confirm(`Remove ${day.date}? Its ${day.sessions.length} session(s) go with it.`)) {
-        toggle.delete(`/dashboard/2026/programme/days/${day.id}`);
+        toggle.delete(`/dashboard/programme/days/${day.id}`);
     }
 }
 
@@ -60,8 +60,8 @@ function saveTheme() {
     const done = { onSuccess: () => (editingTheme.value = null) };
 
     editingTheme.value === 'new'
-        ? themeForm.post('/dashboard/2026/programme/themes', done)
-        : themeForm.put(`/dashboard/2026/programme/themes/${editingTheme.value}`, done);
+        ? themeForm.post('/dashboard/programme/themes', done)
+        : themeForm.put(`/dashboard/programme/themes/${editingTheme.value}`, done);
 }
 </script>
 
@@ -117,7 +117,7 @@ function saveTheme() {
                         <button type="button" class="text-gray-500 hover:text-gray-900" @click="openDay(day)">Edit day</button>
                         <button type="button" class="text-gray-500 hover:text-red-600" @click="removeDay(day)">Remove</button>
                         <Link
-                            :href="`/dashboard/2026/programme/sessions/new?day=${day.id}`"
+                            :href="`/dashboard/programme/sessions/new?day=${day.id}`"
                             class="rounded border border-gray-300 px-3 py-1.5 hover:border-red-400"
                         >Add session</Link>
                     </div>
@@ -129,7 +129,7 @@ function saveTheme() {
                             <td class="px-5 py-3 w-20 font-mono text-gray-600">{{ session.time }}</td>
                             <td class="px-2 py-3 w-32 text-gray-500">{{ session.kind || '—' }}</td>
                             <td class="px-2 py-3">
-                                <Link :href="`/dashboard/2026/programme/sessions/${session.id}`" class="font-medium hover:text-red-600">
+                                <Link :href="`/dashboard/programme/sessions/${session.id}`" class="font-medium hover:text-red-600">
                                     {{ session.title }}
                                 </Link>
                                 <span v-if="session.school" class="ml-2 rounded bg-red-50 px-1.5 py-0.5 text-xs text-red-700">School</span>
@@ -142,7 +142,7 @@ function saveTheme() {
                                 <!-- One click, because publishing is the thing
                                      done most often and least worth a form. -->
                                 <Link
-                                    :href="`/dashboard/2026/programme/sessions/${session.id}/published`"
+                                    :href="`/dashboard/programme/sessions/${session.id}/published`"
                                     method="put"
                                     as="button"
                                     type="button"

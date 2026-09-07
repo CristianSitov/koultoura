@@ -19,16 +19,16 @@ function filterUrl(day, status) {
     if (status && status !== 'all') params.set('status', status);
     const query = params.toString();
 
-    return `/dashboard/2026/registrations${query ? `?${query}` : ''}`;
+    return `/dashboard/registrations${query ? `?${query}` : ''}`;
 }
 
 function resend(registration) {
-    action.post(`/dashboard/2026/registrations/${registration.id}/resend`, { preserveScroll: true });
+    action.post(`/dashboard/registrations/${registration.id}/resend`, { preserveScroll: true });
 }
 
 function confirmByHand(registration) {
     if (confirm(`Mark ${registration.name} as confirmed without them clicking the email?`)) {
-        action.post(`/dashboard/2026/registrations/${registration.id}/confirm`, { preserveScroll: true });
+        action.post(`/dashboard/registrations/${registration.id}/confirm`, { preserveScroll: true });
     }
 }
 </script>
@@ -36,7 +36,7 @@ function confirmByHand(registration) {
 <template>
     <Admin2026 title="Registrations" :public-base="publicBase">
         <template #actions>
-            <a href="/dashboard/2026/registrations.csv" class="rounded border border-gray-300 px-4 py-2 text-sm hover:border-red-400">
+            <a href="/dashboard/registrations.csv" class="rounded border border-gray-300 px-4 py-2 text-sm hover:border-red-400">
                 Download CSV
             </a>
         </template>

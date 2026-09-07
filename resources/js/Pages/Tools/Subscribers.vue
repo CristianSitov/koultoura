@@ -82,7 +82,7 @@ import MainMenu from "../../Sections/2024/MainMenu.vue";
                                     </div>
                                 </td>
                                 <td class="align-top py-4 px-6">
-                                    <a :href="route('dashboard_subscribers_reconfirm', {id: subscriber.id})" class="hover:text-red-800 hover:underline">Resend</a>
+                                    <a :href="route('dashboard_subscribers_reconfirm', {user_id: subscriber.id})" class="hover:text-red-800 hover:underline">Resend</a>
                                 </td>
                             </tr>
                             </tbody>

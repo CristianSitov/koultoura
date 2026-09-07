@@ -30,14 +30,14 @@ function pickPhoto(event) {
 function submit() {
     // POST either way: a multipart body is only parsed on POST, and this form
     // can carry a photo.
-    form.post(editing ? `/dashboard/2026/speakers/${props.speaker.id}` : '/dashboard/2026/speakers');
+    form.post(editing ? `/dashboard/speakers/${props.speaker.id}` : '/dashboard/speakers');
 }
 </script>
 
 <template>
     <Admin2026 :title="editing ? speaker.full_name : 'New speaker'" :public-base="publicBase">
         <template #actions>
-            <Link href="/dashboard/2026/speakers" class="text-sm text-gray-500 hover:text-gray-900">← All speakers</Link>
+            <Link href="/dashboard/speakers" class="text-sm text-gray-500 hover:text-gray-900">← All speakers</Link>
         </template>
 
         <form class="grid gap-6 lg:grid-cols-3" @submit.prevent="submit">

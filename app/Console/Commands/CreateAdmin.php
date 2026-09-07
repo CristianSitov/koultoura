@@ -52,7 +52,7 @@ class CreateAdmin extends Command
         ])->save();
 
         $this->info(($existed ? 'Password updated for ' : 'Created ').$email);
-        $this->line('Log in at /login — the 2026 backoffice is at /dashboard/2026');
+        $this->line('Log in at /login — the backoffice is at /dashboard');
 
         return self::SUCCESS;
     }

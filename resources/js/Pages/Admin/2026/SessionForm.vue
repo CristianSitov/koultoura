@@ -33,15 +33,15 @@ const noSpeakers = computed(() => form.speakers.length === 0);
 
 function submit() {
     editing
-        ? form.put(`/dashboard/2026/programme/sessions/${props.session.id}`)
-        : form.post('/dashboard/2026/programme/sessions');
+        ? form.put(`/dashboard/programme/sessions/${props.session.id}`)
+        : form.post('/dashboard/programme/sessions');
 }
 </script>
 
 <template>
     <Admin2026 :title="editing ? session.en.title || 'Session' : 'New session'" :public-base="publicBase">
         <template #actions>
-            <Link href="/dashboard/2026/programme" class="text-sm text-gray-500 hover:text-gray-900">← Programme</Link>
+            <Link href="/dashboard/programme" class="text-sm text-gray-500 hover:text-gray-900">← Programme</Link>
         </template>
 
         <form class="grid gap-6 lg:grid-cols-3" @submit.prevent="submit">

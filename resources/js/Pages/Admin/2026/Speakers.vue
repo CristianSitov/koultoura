@@ -11,7 +11,7 @@ const form = useForm({});
 
 function remove(speaker) {
     if (confirm(`Remove ${speaker.name}? Their sessions stay, without them attached.`)) {
-        form.delete(`/dashboard/2026/speakers/${speaker.id}`);
+        form.delete(`/dashboard/speakers/${speaker.id}`);
     }
 }
 </script>
@@ -19,7 +19,7 @@ function remove(speaker) {
 <template>
     <Admin2026 title="Speakers" :public-base="publicBase">
         <template #actions>
-            <Link href="/dashboard/2026/speakers/new" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
+            <Link href="/dashboard/speakers/new" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">
                 Add speaker
             </Link>
         </template>
@@ -43,7 +43,7 @@ function remove(speaker) {
                                 <img v-if="speaker.avatar" :src="speaker.avatar" alt="" class="h-9 w-9 rounded object-cover bg-gray-100" />
                                 <span v-else class="h-9 w-9 rounded bg-gray-100"></span>
                                 <div>
-                                    <Link :href="`/dashboard/2026/speakers/${speaker.id}`" class="font-semibold hover:text-red-600">{{ speaker.name }}</Link>
+                                    <Link :href="`/dashboard/speakers/${speaker.id}`" class="font-semibold hover:text-red-600">{{ speaker.name }}</Link>
                                     <p class="text-xs text-gray-500">{{ speaker.institution }}</p>
                                 </div>
                             </div>

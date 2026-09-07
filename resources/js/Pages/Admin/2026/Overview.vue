@@ -15,12 +15,12 @@ const draft = props.stats.sessions - props.stats.sessionsPublished;
 <template>
     <Admin2026 title="Overview" :public-base="publicBase">
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Link href="/dashboard/2026/speakers" class="block bg-white rounded border border-gray-200 p-5 hover:border-red-300">
+            <Link href="/dashboard/speakers" class="block bg-white rounded border border-gray-200 p-5 hover:border-red-300">
                 <p class="text-xs uppercase tracking-wide text-gray-500">Speakers</p>
                 <p class="text-3xl font-bold mt-1">{{ stats.speakers }}</p>
             </Link>
 
-            <Link href="/dashboard/2026/programme" class="block bg-white rounded border border-gray-200 p-5 hover:border-red-300">
+            <Link href="/dashboard/programme" class="block bg-white rounded border border-gray-200 p-5 hover:border-red-300">
                 <p class="text-xs uppercase tracking-wide text-gray-500">Programme</p>
                 <p class="text-3xl font-bold mt-1">{{ stats.sessions }}<span class="text-base font-normal text-gray-500"> sessions</span></p>
                 <p class="text-sm text-gray-500 mt-1">
@@ -28,13 +28,13 @@ const draft = props.stats.sessions - props.stats.sessionsPublished;
                 </p>
             </Link>
 
-            <Link href="/dashboard/2026/registrations" class="block bg-white rounded border border-gray-200 p-5 hover:border-red-300">
+            <Link href="/dashboard/registrations" class="block bg-white rounded border border-gray-200 p-5 hover:border-red-300">
                 <p class="text-xs uppercase tracking-wide text-gray-500">Registrations</p>
                 <p class="text-3xl font-bold mt-1">{{ stats.registrations }}</p>
                 <p class="text-sm text-gray-500 mt-1">{{ stats.confirmed }} confirmed their address</p>
             </Link>
 
-            <Link href="/dashboard/2026/bookings" class="block bg-white rounded border border-gray-200 p-5 hover:border-red-300">
+            <Link href="/dashboard/bookings" class="block bg-white rounded border border-gray-200 p-5 hover:border-red-300">
                 <p class="text-xs uppercase tracking-wide text-gray-500">Capped sessions</p>
                 <p class="text-3xl font-bold mt-1">{{ stats.bookable }}</p>
                 <p class="text-sm text-gray-500 mt-1">with a booking form of their own</p>

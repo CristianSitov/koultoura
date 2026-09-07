@@ -15,7 +15,7 @@ function toggleBooking(booking) {
         : `Release ${booking.name}’s place? They keep the row; the place goes back to the pool.`;
 
     if (confirm(question)) {
-        action.post(`/dashboard/2026/bookings/${booking.id}/cancel`, { preserveScroll: true });
+        action.post(`/dashboard/bookings/${booking.id}/cancel`, { preserveScroll: true });
     }
 }
 </script>

@@ -175,26 +175,38 @@ Route::prefix('2022')
             });
     });
 
+/*
+ * The 2024 dashboard, now under its own year: /dashboard belongs to the
+ * edition being run, and that is no longer 2024.
+ *
+ * `year:2024` because the subscribers it lists are that edition's, and nothing
+ * in the address says so — without it these read the current database, which
+ * has no users at all.
+ */
 Route::controller(DashboardController::class)
+    ->prefix('dashboard/2024')
     ->middleware([
-        // The subscribers this lists are 2024's, and nothing in /dashboard
-        // says so — without this it reads the current edition's database,
-        // which has no users at all.
         'year:2024',
         'auth:sanctum',
         config('jetstream.auth_session'),
         'verified',
     ])
     ->group(function () {
-        Route::get('/dashboard', 'dashboard')
-            ->name('dashboard');
-        Route::get('/dashboard/subscribers/{user_id}/reconfirm', 'reconfirmUser')
+        Route::get('/', 'dashboard')
+            ->name('dashboard_2024');
+        Route::get('/subscribers/{user_id}/reconfirm', 'reconfirmUser')
             ->name('dashboard_subscribers_reconfirm');
-        Route::get('/dashboard/subscribers/{day?}/{volunteers?}', 'subscribersList')
+        Route::get('/subscribers/{day?}/{volunteers?}', 'subscribersList')
             ->name('dashboard_subscribers');
-        Route::get('/dashboard/subscribers.pdf', 'subscribersListPdf')
+        Route::get('/subscribers.pdf', 'subscribersListPdf')
             ->name('dashboard_subscribers_pdf');
     });
+
+// Addresses that were handed out before the move. Bookmarks and old emails
+// still work; nobody has to know the dashboard was rearranged.
+Route::redirect('/dashboard/2026', '/dashboard');
+Route::get('/dashboard/subscribers{rest?}', fn (string $rest = '') => redirect('/dashboard/2024/subscribers'.$rest))
+    ->where('rest', '.*');
 
 /*
  * The 2026 backoffice.
@@ -203,7 +215,7 @@ Route::controller(DashboardController::class)
  * the current edition's database. The login itself is unaffected — the guard
  * looks in a fixed place (App\Models\Admin), whatever the URL selects.
  */
-Route::prefix('dashboard/2026')
+Route::prefix('dashboard')
     ->name('admin.2026.')
     ->middleware([
         'year:2026',
@@ -212,6 +224,7 @@ Route::prefix('dashboard/2026')
         'verified',
     ])
     ->group(function () {
+        // /dashboard itself: the edition being run is the one you land on.
         Route::get('/', Overview2026Controller::class)->name('overview');
 
         Route::controller(SpeakerController::class)->group(function () {

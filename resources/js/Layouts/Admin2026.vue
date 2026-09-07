@@ -16,15 +16,15 @@ const flash = computed(() => page.props.value.flash);
 const current = computed(() => page.url.value);
 
 const nav = [
-    { label: 'Overview', href: '/dashboard/2026' },
-    { label: 'Speakers', href: '/dashboard/2026/speakers' },
-    { label: 'Programme', href: '/dashboard/2026/programme' },
-    { label: 'Registrations', href: '/dashboard/2026/registrations' },
-    { label: 'Bookings', href: '/dashboard/2026/bookings' },
+    { label: 'Overview', href: '/dashboard' },
+    { label: 'Speakers', href: '/dashboard/speakers' },
+    { label: 'Programme', href: '/dashboard/programme' },
+    { label: 'Registrations', href: '/dashboard/registrations' },
+    { label: 'Bookings', href: '/dashboard/bookings' },
 ];
 
 // The overview matches only itself; the rest match their whole subtree.
-const isCurrent = (href) => (href.endsWith('/2026') ? current.value === href : current.value.startsWith(href));
+const isCurrent = (href) => (href === '/dashboard' ? current.value === href : current.value.startsWith(href));
 </script>
 
 <template>
@@ -35,7 +35,7 @@ const isCurrent = (href) => (href.endsWith('/2026') ? current.value === href : c
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-14">
                     <div class="flex items-center gap-8">
-                        <Link href="/dashboard/2026" class="font-bold text-red-600 uppercase tracking-wide text-sm">
+                        <Link href="/dashboard" class="font-bold text-red-600 uppercase tracking-wide text-sm">
                             WCM 2026
                         </Link>
                         <nav class="hidden md:flex gap-6 text-sm">
@@ -55,7 +55,7 @@ const isCurrent = (href) => (href.endsWith('/2026') ? current.value === href : c
 
                     <div class="flex items-center gap-4 text-sm text-gray-500">
                         <a v-if="publicBase" :href="publicBase" target="_blank" class="hover:text-gray-900">View site ↗</a>
-                        <Link href="/dashboard" class="hover:text-gray-900">2024</Link>
+                        <Link href="/dashboard/2024" class="hover:text-gray-900">2024</Link>
                         <Link href="/logout" method="post" as="button" type="button" class="hover:text-gray-900">Log out</Link>
                     </div>
                 </div>
