@@ -1569,8 +1569,8 @@
  * which are meant for something you scroll through and admire — here they
  * spread four short paragraphs across a metre of screen.
  *
- * Only that column narrows, and it stays on the left edge the bar and the
- * footer start from — the whole page reads down one line, not two.
+ * Only that column narrows. It sits centred on the page, with everything
+ * inside it ranged left, so the text still reads down a single edge.
  */
 .wcm26-page {
     padding-top: 88px;
@@ -1578,6 +1578,7 @@
 
 .wcm26-page-main {
     max-width: 920px;
+    margin: 0 auto;
 }
 
 /*
