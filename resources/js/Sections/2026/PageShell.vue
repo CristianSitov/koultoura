@@ -34,7 +34,7 @@ onMounted(() => {
 
 <template>
     <div class="wcm26" :data-theme="theme" :lang="locale">
-        <header class="wcm26-header">
+        <header class="wcm26-header wcm26-header-narrow">
             <div class="wcm26-bar">
                 <a :href="base" class="wcm26-brand">
                     <Logo />
