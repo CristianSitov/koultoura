@@ -19,6 +19,8 @@ import Bottom from '../../Sections/2026/Bottom.vue';
 
 const props = defineProps({
     guests: { type: Array, default: () => [] },
+    programme: { type: Array, default: () => [] },
+    themeBars: { type: Array, default: () => [] },
     // Set when the page was entered at a guest profile.
     guest: { type: String, default: '' },
     // The page's own address, which carries a secret segment while unlisted.
@@ -161,7 +163,7 @@ function onPopState(event) {
             <Guests :guests="guests" @open="openGuest = $event" />
             <hr class="wcm26-rule" />
 
-            <Programme />
+            <Programme :days="programme" :theme-bars="themeBars" />
         </div>
 
         <Register />
