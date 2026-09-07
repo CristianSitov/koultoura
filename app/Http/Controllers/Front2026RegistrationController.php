@@ -103,12 +103,11 @@ class Front2026RegistrationController extends Controller
         return Inertia::render('2026/RegistrationSubmitted', [
             'base' => Front2026Controller::BASE,
             'email' => $registration->email,
-            // Our own route, which decides how to reach Stripe. Null when
-            // there is no registration in the session — the page then simply
-            // does not offer to take money.
-            'contributeUrl' => $registration->isConfirmed()
-                ? null
-                : Front2026Controller::BASE.'/contribute/'.$registration->token,
+            // Our own route, which decides how to reach Stripe. Offered
+            // whether or not the address is confirmed: contributing is a
+            // separate thing from confirming, and someone who skipped it on
+            // the way through is exactly who this is for.
+            'contributeUrl' => Front2026Controller::BASE.'/contribute/'.$registration->token,
             'confirmed' => $registration->isConfirmed(),
             'paid' => $request->boolean('paid'),
             'contribution' => $request->boolean('paid')

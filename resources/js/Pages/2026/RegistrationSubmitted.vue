@@ -49,18 +49,19 @@ function resend() {
 
     <PageShell :base="base">
         <section class="wcm26-section">
-            <SectionHead n="→" :title="$t('Check your email')" />
+            <SectionHead n="→" :title="confirmed ? $t('You are registered') : $t('Check your email')" />
 
             <div class="wcm26-split">
                 <div>
-                    <p class="wcm26-lead" style="max-width: 22ch">{{ $t('One step left.') }}</p>
+                    <p class="wcm26-lead" style="max-width: 22ch">
+                        {{ confirmed ? $t('Nothing left to do.') : $t('One step left.') }}
+                    </p>
                 </div>
 
                 <div class="wcm26-about-copy">
-                    <template v-if="confirmed">
-                        <p>{{ $t('This registration is confirmed. Nothing else is needed.') }}</p>
-                    </template>
-                    <template v-else>
+                    <!-- Confirmed: the heading says so, and repeating it here
+                         only pushed the one thing still on offer further down. -->
+                    <template v-if="! confirmed">
                         <p>{{ $t('We have written to :email. Open it and confirm, and your registration is done.', { email }) }}</p>
 
                         <p>{{ $t('Nothing arrived? It may take a minute, and it may have landed in spam.') }}</p>
