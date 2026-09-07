@@ -289,5 +289,6 @@
     "You are registered. This part is optional.": "You are registered. This part is optional.",
     "Skip this": "Skip this",
     "contribute.intro": "Attending is free. If you would like to support the symposium, contribute any amount you choose — it changes nothing about your registration, and the next step is the same either way.",
-    "contribute.fallback": "Payment opens on Stripe's secure page."
+    "contribute.fallback": "Payment opens on Stripe's secure page.",
+    "submitted.contribution.short": "Attending is free. If you would still like to support the symposium, you can contribute any amount."
 }

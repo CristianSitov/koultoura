@@ -289,5 +289,6 @@
     "You are registered. This part is optional.": "Te-ai înscris. Partea aceasta este opțională.",
     "Skip this": "Sari peste",
     "contribute.intro": "Participarea este gratuită. Dacă vrei să susții simpozionul, poți contribui cu orice sumă alegi — asta nu schimbă cu nimic înscrierea ta, iar pasul următor este același oricum.",
-    "contribute.fallback": "Plata se deschide pe pagina securizată a Stripe."
+    "contribute.fallback": "Plata se deschide pe pagina securizată a Stripe.",
+    "submitted.contribution.short": "Participarea este gratuită. Dacă vrei totuși să susții simpozionul, poți contribui cu orice sumă."
 }

@@ -1701,10 +1701,27 @@
     padding-top: 8px;
 }
 
+/*
+ * The contribution note after signing up. It borrows nothing from the About
+ * section's closing statement any more: that style carries its own rule and
+ * its own 28ch measure, which stacked a second, shorter line under this
+ * block's rule and shouted a piece of small print in 25px bold.
+ */
 .wcm26-contribute {
-    margin-top: 8px;
+    margin-top: 32px;
     padding-top: 28px;
     border-top: 2px solid var(--color-divider);
+}
+
+.wcm26-contribute-note {
+    margin: 0;
+    font-size: clamp(16px, 1.2vw, 18px);
+    line-height: 1.6;
+    max-width: 46ch;
+}
+
+.wcm26-contribute .wcm26-form-actions {
+    margin-top: 20px;
 }
 
 .wcm26-note-sent {

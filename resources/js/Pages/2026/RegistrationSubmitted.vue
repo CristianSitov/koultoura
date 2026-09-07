@@ -62,19 +62,22 @@ function resend() {
                     </template>
 
                     <div v-if="paid" class="wcm26-contribute">
-                        <p class="wcm26-about-close">{{ $t('Thank you for your contribution.') }}</p>
+                        <p class="wcm26-contribute-note">{{ $t('Thank you for your contribution.') }}</p>
                         <p class="wcm26-hint">{{ confirmed ? $t('Stripe will email you a receipt.') : $t('Stripe will email you a receipt. Your registration still needs confirming from the email above.') }}</p>
                     </div>
+                    <!--
+                        A quiet second chance for anyone who skipped the
+                        contribution step. Deliberately understated: this page
+                        has one job, and it is getting them into their inbox.
+                    -->
                     <div v-else-if="contributeUrl" class="wcm26-contribute">
-                        <p class="wcm26-about-close">{{ $t('submitted.contribution') }}</p>
+                        <p class="wcm26-contribute-note">{{ $t('submitted.contribution.short') }}</p>
                         <p class="wcm26-form-actions">
-                            <a :href="contributeUrl" class="btn btn-primary btn-flush" style="height: 48px">
+                            <a :href="contributeUrl" class="btn btn-secondary btn-flush" style="height: 44px">
                                 {{ $t('Contribute') }}
                             </a>
-                            <span class="wcm26-hint">{{ $t('Any amount, or none — your place is already held.') }}</span>
                         </p>
                     </div>
-                    <p v-else class="wcm26-about-close">{{ $t('submitted.contribution') }}</p>
                 </div>
             </div>
         </section>
