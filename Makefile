@@ -51,10 +51,14 @@ registrations: ## Show the registrations recorded so far
 		from wcm_2026.registrations order by id;" 2>/dev/null
 
 .PHONY: registrations-reset
-registrations-reset: ## Empty registrations and contributions, and the dev inbox
-	@$(DC) exec -T wcm-mysql mysql -uroot -psecret -e "delete from wcm_2026.contributions; delete from wcm_2026.registrations;" 2>/dev/null
+registrations-reset: ## Empty registrations and the dev inbox (contributions are kept)
+	@$(DC) exec -T wcm-mysql mysql -uroot -psecret -e "update wcm_2026.contributions set registration_id = null; delete from wcm_2026.registrations;" 2>/dev/null
 	@curl -s -X DELETE http://localhost:8025/api/v1/messages >/dev/null || true
-	@echo "Registrations and inbox cleared."
+	@echo "Registrations and inbox cleared. Contributions kept — run 'make contributions' to see them."
+
+.PHONY: contributions-reconcile
+contributions-reconcile: ## Write in any paid Stripe session the webhook missed
+	@$(DC) exec -T wcm-app php artisan contributions:reconcile
 
 .PHONY: contributions
 contributions: ## Show the contributions recorded by the Stripe webhook

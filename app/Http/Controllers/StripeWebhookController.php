@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contribution;
-use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -48,36 +47,10 @@ class StripeWebhookController extends Controller
         }
 
         if ($event->type === 'checkout.session.completed') {
-            $this->record($event->data->object);
+            Contribution::recordSession($event->data->object);
         }
 
         // Anything else is acknowledged so Stripe stops retrying it.
         return response('', 200);
-    }
-
-    private function record(object $session): void
-    {
-        if (($session->payment_status ?? null) !== 'paid') {
-            return;
-        }
-
-        $registration = filled($session->client_reference_id ?? null)
-            ? Registration::where('token', $session->client_reference_id)->first()
-            : null;
-
-        // Keyed on the session id: Stripe retries, and a retry must not double
-        // count the same donation.
-        Contribution::updateOrCreate(
-            ['session_id' => $session->id],
-            [
-                'registration_id' => $registration?->id,
-                'payment_intent_id' => $session->payment_intent ?? null,
-                'email' => $session->customer_details->email ?? null,
-                'amount' => (int) ($session->amount_total ?? 0),
-                'currency' => strtolower($session->currency ?? 'ron'),
-                'status' => $session->payment_status,
-                'paid_at' => now(),
-            ]
-        );
     }
 }
