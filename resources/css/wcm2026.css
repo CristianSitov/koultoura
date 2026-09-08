@@ -2373,3 +2373,98 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
+
+/* ── support us ──────────────────────────────────────────────────────────── */
+
+.wcm26-support {
+    display: grid;
+    gap: 56px;
+    margin-top: 48px;
+    max-width: 66ch;
+}
+
+.wcm26-support article + article,
+.wcm26-support .wcm26-cued + .wcm26-cued {
+    padding-top: 56px;
+    border-top: 1px solid var(--color-divider);
+}
+
+.wcm26-support-title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(22px, 2.4vw, 30px);
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.wcm26-support-heading {
+    margin: 6px 0 20px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 17px;
+    color: color-mix(in srgb, var(--color-text) 75%, transparent);
+}
+
+.wcm26-support p {
+    margin: 0 0 18px;
+    line-height: 1.65;
+}
+
+.wcm26-support-close {
+    font-weight: 700;
+}
+
+.wcm26-support-mail {
+    color: var(--color-accent);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+}
+
+/* The bank details: a table of facts, set so an IBAN can be read in one go. */
+.wcm26-account {
+    display: grid;
+    grid-template-columns: minmax(0, 12em) minmax(0, 1fr);
+    gap: 2px 20px;
+    margin: 0 0 22px;
+    padding: 20px 22px;
+    background: var(--color-surface);
+}
+
+.wcm26-account dt {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    align-self: center;
+}
+
+.wcm26-account dd {
+    margin: 0 0 8px;
+    font-size: 15px;
+}
+
+.wcm26-account-cur {
+    color: var(--color-accent);
+}
+
+.wcm26-account-iban {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+    .wcm26-account {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+
+    .wcm26-account dt {
+        margin-top: 12px;
+    }
+}

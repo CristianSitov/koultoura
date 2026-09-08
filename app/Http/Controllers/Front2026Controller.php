@@ -188,6 +188,14 @@ class Front2026Controller extends Controller
             ->all();
     }
 
+    /** Three ways to support the symposium: donate, sponsor, volunteer. */
+    public function support(): Response
+    {
+        return Inertia::render('2026/Support', [
+            'base' => self::BASE,
+        ]);
+    }
+
     /**
      * The cookie policy, carried over from the earlier editions.
      *

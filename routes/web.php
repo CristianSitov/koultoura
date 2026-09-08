@@ -54,6 +54,10 @@ Route::prefix(Front2026Controller::PATH)
                 Route::get('/{locale}/guests/{slug}', 'guest')
                     ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+'])
                     ->name('locale.guest');
+                Route::get('/support', 'support')->name('support');
+                Route::get('/{locale}/support', 'support')
+                    ->where('locale', 'en|ro')
+                    ->name('locale.support');
                 Route::get('/cookies', 'cookies')->name('cookies');
                 Route::get('/{locale}/cookies', 'cookies')
                     ->where('locale', 'en|ro')
