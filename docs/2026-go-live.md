@@ -68,7 +68,32 @@ The webhook is the only thing that records a contribution; a browser returning
 from Stripe proves nothing. If the endpoint is misconfigured, money arrives and
 the table stays empty — which is exactly what `contributions:reconcile` is for.
 
-## 4. The programme
+## 4. Email — currently broken
+
+**Nothing can be confirmed until this is fixed.** Registrations save, but the
+confirmation email does not go out, so nobody can complete a registration.
+
+- [ ] **Replace `RESEND_KEY` in the server's `.env`.** The key there is
+      rejected by Resend itself — a bare call to their API with it returns
+      `400 API key is invalid`. Nothing in the app is misconfigured: the
+      constant `RESEND_KEY` matches `config/services.php`, and the app reads
+      the value fine.
+      A working key for the same account sits in
+      `/var/www/heritageoftimisoara.ro/.env` as `RESEND_API_KEY` — it returns
+      200 and lists `prinbanat.ro` as verified, which is the domain this site
+      sends from. Copy that one, or issue a new key for this site.
+- [ ] No deploy needed afterwards — the config is not cached on this server.
+      Check with `php artisan tinker` that `config('services.resend.key')`
+      shows the new value, then register once and watch for the email.
+- [ ] Anyone who registered while it was broken can be rescued: the
+      confirmation page has a "send it again" button, and the backoffice has
+      Resend next to each pending row.
+
+A failed send no longer takes the registration down with it — it is caught and
+logged (`2026 confirmation email failed` in `storage/logs/laravel.log`) — so
+this fails quietly rather than with a 500. Quietly is still fatal to the flow.
+
+## 5. The programme
 
 - [ ] Replace the **placeholder schedule**. The guests are real; what they are
       down to speak about is invented. Edit at `/dashboard/programme`.
@@ -80,7 +105,7 @@ the table stays empty — which is exactly what `contributions:reconcile` is for
 - [ ] Decide about the **"Draft · subject to change"** marker in
       `Programme.vue` — it should probably go once the schedule is settled.
 
-## 5. Capped sessions
+## 6. Capped sessions
 
 The eight Heritage School workshops are the ones that fill up.
 
@@ -93,18 +118,17 @@ The eight Heritage School workshops are the ones that fill up.
       confirmation page and the office sees the row. Decide whether that is
       good enough before the workshops open.
 
-## 6. Content still outstanding
+## 7. Content still outstanding
 
 - [ ] **Partner logos**: Oradea Heritage and Fundația Culturală Jazz Banat are
       still shown as names rather than marks.
-- [ ] **FAINA's logo** is light yellow; the partner strip greyscales
-      everything, which leaves it washed out against the page. Either a darker
-      variant, or exempt that one file from the greyscale.
+- [ ] **Centrul de Proiecte** — the current mark is the older one; the
+      replacement sent so far was a different logo.
 - [ ] **Guests** are applied from `Database\Seeders\Guests2026Seeder` with
       `php artisan guests:sync`. Adding one is a row there plus their portrait
       committed under `public/assets/2026/guests`.
 
-## 7. Test data to clear out
+## 8. Test data to clear out
 
 - [ ] `wcm_2026.registrations` holds test sign-ups.
 - [ ] `wcm_2026.contributions` holds test-mode Stripe rows (RON amounts that
@@ -113,7 +137,7 @@ The eight Heritage School workshops are the ones that fill up.
       **keeps contributions on purpose** — payment records are not scratch data.
       Clear those by hand, and only in test mode.
 
-## 8. Accounts and access
+## 9. Accounts and access
 
 - [ ] Backoffice logins are made with `php artisan admin:create <email>
       <password>`. There is no public sign-up form, deliberately.
@@ -122,7 +146,7 @@ The eight Heritage School workshops are the ones that fill up.
       after the event.
 - [ ] `/dashboard` is the 2026 backoffice; `/dashboard/2024` is the old one.
 
-## 9. Deploying
+## 10. Deploying
 
     ssh -p 2221 root@heritageoftimisoara.ro
     cd /var/www/whyculturematters.eu && php8.2 vendor/bin/envoy run deploy --branch=main
@@ -136,7 +160,7 @@ Ziggy and rebuilds the assets.
       several migrations whose tables already exist, so a bare `migrate` tries
       to re-create them. Production's ledger is consistent and migrates fine.
 
-## 10. Worth a look before announcing
+## 11. Worth a look before announcing
 
 - [ ] Register once with a real address, end to end, in both languages.
 - [ ] Confirm the email arrives from `why-culture-matters@prinbanat.ro` and
