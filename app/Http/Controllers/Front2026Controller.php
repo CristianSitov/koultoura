@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Person;
+use Illuminate\Support\Str;
 use App\Models\ProgrammeDay;
 use App\Models\Session;
 use App\Models\Setting;
@@ -185,6 +186,26 @@ class Front2026Controller extends Controller
                 'title' => $this->text($theme)->title ?? '',
             ])
             ->all();
+    }
+
+    /**
+     * The cookie policy, carried over from the earlier editions.
+     *
+     * Markdown rather than a component: it is a document, it is long, and the
+     * people who maintain it are not going to open a .vue file to fix a
+     * sentence. The Romanian is the published text; the English is a
+     * translation of it.
+     */
+    public function cookies(): Response
+    {
+        $locale = app()->getLocale() === 'ro' ? 'ro' : 'en';
+        $path = resource_path("markdown/2026/cookies.{$locale}.md");
+
+        return Inertia::render('2026/Cookies', [
+            'base' => self::BASE,
+            'title' => $locale === 'ro' ? 'Politica de cookie-uri' : 'Cookie policy',
+            'body' => Str::markdown(file_get_contents($path)),
+        ]);
     }
 
     /** The row for the current locale, or the English one it falls back to. */

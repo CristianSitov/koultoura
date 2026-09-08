@@ -101,7 +101,7 @@ onMounted(() => {
             </div>
 
             <hr class="wcm26-rule" />
-            <Bottom />
+            <Bottom :base="base" />
         </div>
     </div>
 </template>

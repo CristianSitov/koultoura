@@ -2145,3 +2145,52 @@
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-text) 70%, transparent);
 }
+
+/*
+ * A long document — the cookie policy — in the page's own type rather than the
+ * browser's. Narrow measure, because it is read rather than scanned.
+ */
+.wcm26-doc {
+    max-width: 68ch;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+.wcm26-doc h1 {
+    margin: 40px 0 12px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(19px, 1.8vw, 23px);
+    letter-spacing: -0.02em;
+}
+
+.wcm26-doc h1:first-child {
+    margin-top: 0;
+}
+
+.wcm26-doc p {
+    margin: 0 0 18px;
+}
+
+.wcm26-doc ul,
+.wcm26-doc ol {
+    margin: 0 0 18px;
+    padding-left: 22px;
+}
+
+.wcm26-doc li {
+    margin-bottom: 8px;
+}
+
+.wcm26-doc code {
+    padding: 1px 5px;
+    background: var(--color-surface);
+    font-size: 14px;
+}
+
+.wcm26-doc a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+}

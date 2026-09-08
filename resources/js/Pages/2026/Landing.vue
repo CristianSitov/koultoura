@@ -182,7 +182,7 @@ function onPopState(event) {
             <Partners />
             <hr class="wcm26-rule" />
 
-            <Bottom />
+            <Bottom :base="base" />
         </div>
 
         <GuestProfile v-if="openGuest" :guests="guests" :guest-id="openGuest" @close="openGuest = null" @open="openGuest = $event" />
