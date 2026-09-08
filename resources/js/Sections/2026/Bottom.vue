@@ -1,4 +1,6 @@
 <script setup>
+import Logo from './Logo.vue';
+
 /*
  * Social handles are still open items from the handoff — swap the two
  * placeholder hrefs for the symposium's real Instagram and Facebook pages.
@@ -11,9 +13,14 @@ defineProps({
 
 <template>
     <footer class="wcm26-footer">
-        <div>
-            <p class="wcm26-footer-brand">Why Culture Matters</p>
-            <p>{{ $t('International Symposium · Timișoara') }}</p>
+        <!-- The same mark and the same ruled tagline as the bar at the top,
+             rather than the name set as text. -->
+        <div class="wcm26-footer-mark">
+            <Logo />
+            <span class="wcm26-tagline">
+                <span>{{ $t('International Symposium · 3rd edition · Timișoara') }}</span>
+                <span>{{ $t('by Prin Banat Association') }}</span>
+            </span>
         </div>
 
         <div class="wcm26-footer-links">

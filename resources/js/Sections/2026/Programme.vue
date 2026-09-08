@@ -35,6 +35,39 @@ const schoolDayList = computed(() => {
 
     return `${days.join(', ')} ${trans('and')} ${last}`;
 });
+
+/*
+ * The umbrella is drawn as one bar per unbroken run of School days, because
+ * they are no longer unbroken: the 8th sits between the 7th and the 9th, and a
+ * single bar stretched across all three would claim a day the School does not
+ * run on.
+ *
+ * The widest run carries the wording; the others are marked quiet and show the
+ * open square alone, so the sentence is not repeated across the row. Below the
+ * four-column layout only the wording survives — see the stylesheet, where the
+ * bars stack and lining them up with anything stops being possible.
+ */
+const schoolSpans = computed(() => {
+    const runs = [];
+
+    props.days.forEach((day, i) => {
+        if (! props.schoolDays.includes(Number(day.num))) {
+            return;
+        }
+
+        const open = runs[runs.length - 1];
+
+        if (open && open.to === i + 1) {
+            open.to = i + 2;
+        } else {
+            runs.push({ from: i + 1, to: i + 2 });
+        }
+    });
+
+    const widest = runs.reduce((a, b) => (b.to - b.from > a.to - a.from ? b : a), runs[0]);
+
+    return runs.map((run) => ({ ...run, primary: run === widest }));
+});
 </script>
 
 <template>
@@ -50,8 +83,15 @@ const schoolDayList = computed(() => {
             <p v-for="bar in themeBars" :key="bar.numeral" class="wcm26-span">
                 <span class="wcm26-square"></span>{{ bar.numeral }} · {{ bar.title }}
             </p>
-            <p class="wcm26-span wcm26-span-school">
-                <span class="wcm26-square-open"></span>{{ $t('Heritage School — eight pilot workshops, :days October', { days: schoolDayList }) }}
+            <p
+                v-for="span in schoolSpans"
+                :key="span.from"
+                class="wcm26-span wcm26-span-school"
+                :class="{ 'wcm26-span-school-quiet': !span.primary }"
+                :style="{ '--span-from': span.from, '--span-to': span.to }"
+            >
+                <span class="wcm26-square-open"></span>
+                <span class="wcm26-span-text">{{ $t('Heritage School — eight pilot workshops, :days October', { days: schoolDayList }) }}</span>
             </p>
         </div>
 
