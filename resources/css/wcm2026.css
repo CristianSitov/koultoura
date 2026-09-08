@@ -1495,9 +1495,10 @@
  */
 .wcm26-partners {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 300px));
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     justify-content: start;
-    gap: 48px 32px;
+    gap: 48px clamp(32px, 5vw, 80px);
+    max-width: 900px;
 }
 
 .wcm26-partner-role {
@@ -1990,6 +1991,10 @@
         grid-template-columns: minmax(0, 1fr);
     }
 
+    .wcm26-partners {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .wcm26-register-inner {
         grid-template-columns: minmax(0, 1fr);
     }
@@ -2139,10 +2144,4 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-text) 70%, transparent);
-}
-
-/* Reversed on a solid ground: it is a plate, not a mark on the page. */
-.wcm26 .wcm26-partner-logo img[src*="centrul-de-proiecte"] {
-    filter: none;
-    mix-blend-mode: normal;
 }
