@@ -31,8 +31,8 @@ const supporters = [
     { name: 'Youth.Heritage.Europe', logo: '/assets/2026/partners/youth-heritage-europe.png', url: 'https://www.youth-heritage-europe.org' },
     { name: 'FAINA', logo: '/assets/2026/partners/faina.png', url: 'https://www.facebook.com/faina.ua.community/' },
     { name: 'Institutul Polonez București', logo: '/assets/2026/partners/institutul-polonez.svg', url: 'https://instytutpolski.pl/bucuresti/' },
-    { name: 'Visit Timișoara', logo: '/assets/2026/partners/visit-timisoara.jpg', url: 'https://visit-timisoara.com/' },
-    { name: 'Librăriile Cărturești Timișoara', logo: '/assets/2026/partners/carturesti.svg', url: 'http://carturesti.ro/' },
+    { name: 'Visit Timișoara', logo: '/assets/2026/partners/visit-timisoara.png', url: 'https://visit-timisoara.com/' },
+    { name: 'Librăriile Cărturești Timișoara', logo: '/assets/2026/partners/carturesti.png', url: 'http://carturesti.ro/' },
     { name: 'Fundația Culturală Jazz Banat', logo: '/assets/2026/partners/jazz-banat.png' },
 ];
 </script>

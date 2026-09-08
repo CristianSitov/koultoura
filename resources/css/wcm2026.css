@@ -1636,14 +1636,23 @@
    The cell is spacing only — the even padding is what gives the uneven set a
    common rhythm, without drawing a frame around each one. */
 .wcm26-supporters li {
-    /* Flexible rather than fixed: at 170px exactly, two cells and their gap
-       came to three pixels more than a phone's column and dropped to one. */
-    flex: 1 1 150px;
-    max-width: 190px;
+    /*
+     * Sized to the artwork: the marks are drawn on a 560 × 280 canvas and shown
+     * at 210 × 105 of it plus the padding — a quarter down from half size, so
+     * the supporters sit below the organisers' and the financer's marks rather
+     * than over them. The source is still 2.7× the rendered size, so a retina
+     * screen has more than it needs.
+     *
+     * Growing is off. Every mark is on the same canvas so the set renders at
+     * one size; letting the last row's cells share out the leftover space made
+     * those marks about a tenth larger than the rest.
+     */
+    flex: 0 1 250px;
+    max-width: 250px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 108px;
+    min-height: 141px;
     padding: 18px 20px;
 }
 
@@ -1683,7 +1692,7 @@ a.wcm26-partner-logo:focus-visible {
 .wcm26-supporters img {
     display: block;
     max-width: 100%;
-    max-height: 72px;
+    max-height: 105px;
     width: auto;
     height: auto;
     object-fit: contain;

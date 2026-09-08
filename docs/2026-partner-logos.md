@@ -10,10 +10,10 @@ Every supporter cell is `175 × 108`, padded `18px 20px`, so the artwork gets a
 box of **135 × 72 CSS px**. The image is `max-width: 100%; max-height: 72px`,
 so each mark is scaled down until it fits — whichever edge it hits first.
 
-Two cells in the last row come out `190px` wide rather than `175px`, because
-the row's remaining space is shared out by flexbox. Cărturești and Jazz Banat
-are therefore about 11% larger than everything else. Worth pinning the cell
-width before doing any of this by hand.
+Two cells in the last row used to come out `190px` wide rather than `175px`,
+because the row's remaining space was shared out by flexbox, making Cărturești
+and Jazz Banat about 11% larger than everything else. The cells no longer grow,
+so all fourteen are `175px`.
 
 ## The problem is height, not width
 
@@ -53,22 +53,43 @@ all of them, with no per-logo CSS anywhere. The sizes below give each mark the
 same optical area inside that canvas, so a wide wordmark and a square emblem
 carry the same weight.
 
+### Still to do — on their original canvases
+
+Measured from each file's own artwork, so these supersede any earlier numbers:
+several marks turned out to have different proportions once redrawn.
+
 | file | draw at, inside 560 × 280 |
 | --- | --- |
-| `inp.png` | 426 × 129 |
-| `visit-timisoara.jpg` | 425 × 130 |
 | `djc.svg` | 420 × 131 |
-| `jazz-banat.png` | 406 × 135 |
-| `faina.png` | 385 × 143 |
-| `carturesti.svg` | 385 × 143 |
 | `kek.svg` | 366 × 150 |
-| `oradea-heritage.png` | 346 × 159 |
-| `youth-heritage-europe.png` | 338 × 163 |
 | `uvt-arte.svg` | 332 × 166 |
 | `institutul-polonez.svg` | 332 × 166 |
+| `carturesti.svg` | 385 × 143 |
 | `oar-timis.svg` | 304 × 181 |
 | `cicasp.svg` | 260 × 212 |
-| `imagine-heritage.png` | 239 × 230 |
+
+`uvt-arte.svg` and `institutul-polonez.svg` are already 2:1 and happen to land at
+the same rendered size as the finished set, so they are the least urgent.
+
+### Done, with corrections
+
+These are on the 560 × 280 canvas and rendering at an identical 135 × 68. The
+ink inside a few of them is off the mark — the target is recomputed from each
+one's actual proportions, which changed when the artwork was redrawn.
+
+| file | ink now | should be | scale by |
+| --- | --- | --- | --- |
+| `jazz-banat.png` | 406 × 135 | — | exact |
+| `imagine-heritage.png` | 238 × 230 | — | exact |
+| `inp.png` | 461 × 139 | 427 × 129 | 0.93× |
+| `faina.png` | 430 × 143 | 407 × 135 | 0.95× — also sits 20px right of centre |
+| `visit-timisoara.png` | 400 × 122 | 425 × 130 | 1.06× |
+| `youth-heritage-europe.png` | 338 × 136 | 370 × 149 | 1.09× |
+| `oradea-heritage.png` | 325 × 92 | 441 × 125 | 1.36× — also 12px left of centre |
+
+`imagine-heritage.png` is the right size but drawn in hairlines, and at 135px
+wide in greyscale it very nearly disappears next to its neighbours. It needs a
+heavier weight rather than a bigger box.
 
 Equal bounding-box area is a good proxy, not the last word. A solid, dense mark
 reads heavier than an airy wordmark covering the same area, so once these are
@@ -84,9 +105,9 @@ fix it.
 
 Three files are worth changing anyway, for reasons other than sharpness:
 
-- **`visit-timisoara.jpg` — replace it.** The only JPEG, no alpha, a white
-  plate. It only looks right because the whole row is set in
-  `mix-blend-mode: multiply` to knock the white out. Transparent PNG or SVG.
+- **`visit-timisoara.jpg` — done.** It was the only JPEG, no alpha, a white
+  plate, kept legible only by the row's `mix-blend-mode: multiply`. Replaced
+  with a transparent PNG on the shared canvas.
 - **`cjt.svg` (132 KB, two embedded rasters) and `scart.svg` (one)** are PNGs in
   an SVG wrapper — the worst of both. Neither is on the page at the moment, so
   this only matters if they come back.
