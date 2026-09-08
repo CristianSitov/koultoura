@@ -2300,3 +2300,9 @@
     font-size: 14px;
     color: color-mix(in srgb, var(--color-text) 70%, transparent);
 }
+
+/* Capitals in the styling, so the word stays a word in the language files. */
+.wcm26-donate {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}

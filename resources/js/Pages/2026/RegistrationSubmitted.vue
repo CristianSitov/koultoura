@@ -139,8 +139,8 @@ function resend() {
                         <div>
                             <p class="wcm26-contribute-note" v-html="$t('submitted.contribution.short')"></p>
                             <p class="wcm26-form-actions">
-                                <a :href="contributeUrl" class="btn btn-secondary btn-flush" style="height: 44px">
-                                    {{ $t('Contribute') }}
+                                <a :href="contributeUrl" class="btn btn-secondary btn-flush wcm26-donate" style="height: 44px">
+                                    {{ $t('Donate') }}
                                 </a>
                             </p>
                         </div>
