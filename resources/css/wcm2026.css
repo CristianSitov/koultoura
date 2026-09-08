@@ -2163,6 +2163,17 @@
     object-fit: contain;
 }
 
+/*
+ * The financer's mark is a long horizontal lockup: at the organisers' height
+ * it out-measured both of them put together. Sized to sit level with them
+ * rather than to match their height.
+ */
+.wcm26-partner-marks:not(.wcm26-partner-marks-organisers) .wcm26-partner-logo,
+.wcm26-partner-marks:not(.wcm26-partner-marks-organisers) .wcm26-slot img {
+    height: 76px;
+    max-width: 230px;
+}
+
 /* A partner whose logo has not arrived yet still belongs on the list. */
 .wcm26-supporter-name {
     display: inline-block;
