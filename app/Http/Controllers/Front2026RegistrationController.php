@@ -71,10 +71,14 @@ class Front2026RegistrationController extends Controller
 
         $registration = Registration::firstOrNew(['email' => $input['email']]);
 
-        // Registering again with the same address updates the details and
-        // re-sends the link rather than erroring — the common case is someone
-        // who never received the first one.
-        if ($registration->exists && ! $registration->canResend()) {
+        /*
+         * An address that has already registered keeps the days it chose. The
+         * common case is someone who never received the email and fills the
+         * form in again — they are shown what they booked and offered the link
+         * again, rather than silently overwriting a reservation the office may
+         * already have counted.
+         */
+        if ($registration->exists) {
             return redirect($this->submittedUrl($registration));
         }
 
@@ -90,8 +94,11 @@ class Front2026RegistrationController extends Controller
             'consented_at' => now(),
         ])->save();
 
-        $this->sendConfirmation($registration);
-
+        /*
+         * No email yet. It is sent when they reach the "check your email" page
+         * — after contributing or after skipping — so that one message arrives
+         * at the end of the whole thing rather than mid-way through it.
+         */
         return redirect(Front2026Controller::BASE.'/contribute/'.$registration->token);
     }
 
@@ -99,9 +106,21 @@ class Front2026RegistrationController extends Controller
     {
         $registration = Registration::where('token', $request->route('token'))->firstOrFail();
 
+        /*
+         * The end of the flow, and where the confirmation is sent from: whether
+         * they contributed or skipped, this is the page that tells them to go
+         * and look for it. Only the first time — a reload is not a reason to
+         * send another.
+         */
+        if ($registration->sent_count === 0 && ! $registration->isConfirmed()) {
+            $this->sendConfirmation($registration);
+        }
+
         return Inertia::render('2026/RegistrationSubmitted', [
             'base' => Front2026Controller::BASE,
             'email' => $registration->email,
+            // Shown, not editable: what this address is down for.
+            'days' => $registration->days,
             // Our own route, which decides how to reach Stripe. Offered
             // whether or not the address is confirmed: contributing is a
             // separate thing from confirming, and someone who skipped it on

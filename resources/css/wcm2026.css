@@ -118,7 +118,11 @@
 }
 
 .wcm26 .btn-primary:hover {
-    background: var(--color-accent-600);
+    /* Red on darker red reads as a smudge rather than a state. Hovering
+       hollows the button out instead: the ink stays, the fill goes. */
+    background: transparent;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
 }
 
 .wcm26 .btn-primary:active {
@@ -2193,4 +2197,67 @@
     text-decoration: underline;
     text-underline-offset: 3px;
     overflow-wrap: anywhere;
+}
+
+/*
+ * The contribution step. Stripe's form has a mind of its own about width, so
+ * the column is set to what it settles at and the copy above it follows the
+ * same measure — otherwise the words run wide and the form floats in the
+ * middle of them.
+ */
+.wcm26-contribute-col {
+    max-width: 520px;
+}
+
+.wcm26-contribute-col .wcm26-lead {
+    max-width: 22ch;
+}
+
+.wcm26-contribute-intro {
+    margin: 24px 0 32px;
+}
+
+.wcm26-contribute-col .wcm26-checkout {
+    min-height: 420px;
+}
+
+/* Quieter than the form it declines, and clear of it. */
+.wcm26-contribute-skip {
+    margin: 28px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-divider);
+}
+
+/* The address is the thing to go and look for, so it is not just more prose. */
+.wcm26-email {
+    padding: 1px 6px;
+    background: var(--color-accent-100);
+    color: var(--color-accent-700);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+/* What this registration is down for — a statement, not a control. */
+.wcm26-booked {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 32px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-divider);
+}
+
+.wcm26-booked-day {
+    padding: 3px 10px 2px;
+    background: var(--color-surface);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 18px;
+    font-feature-settings: 'tnum' 1;
+}
+
+.wcm26-booked-month {
+    font-size: 14px;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
 }

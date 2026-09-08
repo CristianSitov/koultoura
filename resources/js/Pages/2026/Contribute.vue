@@ -66,31 +66,26 @@ onBeforeUnmount(() => checkout?.destroy());
         <section class="wcm26-section">
             <SectionHead n="→" :title="$t('Contribute')" />
 
-            <div class="wcm26-split">
-                <div>
-                    <p class="wcm26-lead" style="max-width: 20ch">{{ $t('You are registered. This part is optional.') }}</p>
-                    <p class="wcm26-body" style="margin-top: 28px; max-width: 42ch">
-                        {{ $t('contribute.intro') }}
-                    </p>
+            <!-- One column, one measure: the words and the payment form share
+                 a left edge, and skipping sits under the thing being skipped. -->
+            <div class="wcm26-contribute-col">
+                <p class="wcm26-lead">{{ $t('You are registered. This part is optional.') }}</p>
+                <p class="wcm26-body wcm26-contribute-intro">{{ $t('contribute.intro') }}</p>
+
+                <div v-if="clientSecret && !failed" id="wcm-checkout" class="wcm26-checkout"></div>
+
+                <div v-else class="wcm26-checkout-fallback">
+                    <p class="wcm26-body">{{ $t('contribute.fallback') }}</p>
                     <p class="wcm26-form-actions">
-                        <a :href="skipUrl" class="btn btn-secondary btn-flush" style="height: 44px">
-                            {{ $t('Skip this') }}
+                        <a :href="redirectUrl" class="btn btn-primary btn-flush" style="height: 48px">
+                            {{ $t('Contribute') }}
                         </a>
                     </p>
                 </div>
 
-                <div>
-                    <div v-if="clientSecret && !failed" id="wcm-checkout" class="wcm26-checkout"></div>
-
-                    <div v-else class="wcm26-checkout-fallback">
-                        <p class="wcm26-body">{{ $t('contribute.fallback') }}</p>
-                        <p class="wcm26-form-actions">
-                            <a :href="redirectUrl" class="btn btn-primary btn-flush" style="height: 48px">
-                                {{ $t('Contribute') }}
-                            </a>
-                        </p>
-                    </div>
-                </div>
+                <p class="wcm26-contribute-skip">
+                    <a :href="skipUrl" class="btn btn-ghost btn-flush">{{ $t('Skip this') }}</a>
+                </p>
             </div>
         </section>
     </PageShell>

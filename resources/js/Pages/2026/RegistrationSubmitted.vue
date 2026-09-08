@@ -8,6 +8,8 @@ import SectionHead from '../../Sections/2026/SectionHead.vue';
 const props = defineProps({
     base: { type: String, default: '/2026' },
     email: { type: String, default: '' },
+    // What this address is down for. Shown, never editable here.
+    days: { type: Array, default: () => [] },
     contributeUrl: { type: String, default: null },
     // Set by Stripe's success_url. A hint for the visitor, not a record —
     // what was actually paid arrives on the webhook.
@@ -30,6 +32,9 @@ const contributed = computed(() => {
         currency: props.contribution.currency,
     }).format(props.contribution.amount / 100);
 });
+
+// 7–10 October; the numbers are what the form and the database speak in.
+const dayLabels = { 1: '07', 2: '08', 3: '09', 4: '10' };
 
 const resent = ref(false);
 const form = useForm({ email: props.email });
@@ -62,21 +67,35 @@ function resend() {
                     <!-- Confirmed: the heading says so, and repeating it here
                          only pushed the one thing still on offer further down. -->
                     <template v-if="! confirmed">
-                        <p>{{ $t('We have written to :email. Open it and confirm, and your registration is done.', { email }) }}</p>
+                        <p>
+                            {{ $t('We have written to') }} <strong class="wcm26-email">{{ email }}</strong>{{ '.' }}
+                            {{ $t('Open it and confirm, and your registration is done.') }}
+                        </p>
 
                         <p>{{ $t('Nothing arrived? It may take a minute, and it may have landed in spam.') }}</p>
 
                         <p v-if="resent" class="wcm26-note-sent">{{ $t('Sent again. Give it a minute.') }}</p>
-                        <button
-                            v-else
-                            type="button"
-                            class="btn btn-ghost btn-flush"
-                            :disabled="form.processing"
-                            @click="resend"
-                        >
-                            {{ $t('Send it again') }}
-                        </button>
+                        <p v-else class="wcm26-form-actions">
+                            <button
+                                type="button"
+                                class="btn btn-secondary btn-flush"
+                                style="height: 44px"
+                                :disabled="form.processing"
+                                @click="resend"
+                            >
+                                {{ $t('Send it again') }}
+                            </button>
+                        </p>
                     </template>
+
+                    <!-- Someone filling the form in again with the same
+                         address lands here: this is what they are down for,
+                         and it is not changed by asking twice. -->
+                    <p v-if="days.length" class="wcm26-booked">
+                        <span class="wcm26-label">{{ $t('You are coming on') }}</span>
+                        <span v-for="day in days" :key="day" class="wcm26-booked-day">{{ dayLabels[day] }}</span>
+                        <span class="wcm26-booked-month">{{ $t('October 2026') }}</span>
+                    </p>
 
                     <div v-if="paid" class="wcm26-contribute">
                         <p class="wcm26-contribute-note">
