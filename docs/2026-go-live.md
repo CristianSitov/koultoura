@@ -21,26 +21,24 @@ bookings.
 Going live is three environment variables on the server. No code change, no
 deploy: edit `.env`, clear the config cache, done. It flips back the same way.
 
+Both sets of values are already written into the server's `.env`, one of them
+commented out. Flipping is a matter of swapping which — no value to look up, no
+line to type from memory.
+
 **Go live**
 
     ssh -p 2221 root@heritageoftimisoara.ro
     cd /var/www/whyculturematters.eu
 
-    # in .env
-    WCM_2026_PATH=2026
-    WCM_2026_PUBLIC=true
-    WCM_2026_OLD_PATHS=2026-mulberry
-
+    # in .env, under "The 2026 edition": comment the PREVIEW three,
+    # uncomment the LIVE three. Then:
     php8.2 artisan config:clear
 
-**Go back**
+**Go back** — the same swap the other way, then `config:clear` again.
 
-    # in .env
-    WCM_2026_PATH=2026-mulberry
-    WCM_2026_PUBLIC=false
-    WCM_2026_OLD_PATHS=
-
-    php8.2 artisan config:clear
+The Stripe block above it is laid out the same way, with an empty LIVE set to
+fill in. That one is not just an uncomment: the four live values have to be
+created in the Stripe dashboard first (§3).
 
 ### What each one does
 
