@@ -2132,6 +2132,9 @@
     align-items: center;
     gap: clamp(20px, 3vw, 40px);
     flex-wrap: wrap;
+    /* Both role slots reserve the height of the tallest mark, so a short one
+       sits on the same middle line rather than hanging from the label. */
+    min-height: 128px;
 }
 
 .wcm26-partner-marks .wcm26-partner-logo {
