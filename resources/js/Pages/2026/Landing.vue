@@ -21,6 +21,7 @@ const props = defineProps({
     guests: { type: Array, default: () => [] },
     programme: { type: Array, default: () => [] },
     themeBars: { type: Array, default: () => [] },
+    schoolDays: { type: Array, default: () => [] },
     // The section is off until there is a schedule worth showing.
     programmeVisible: { type: Boolean, default: false },
     // Set when the page was entered at a guest profile.
@@ -169,7 +170,7 @@ function onPopState(event) {
             <template v-if="programmeVisible">
                 <hr class="wcm26-rule" />
 
-                <Programme :days="programme" :theme-bars="themeBars" />
+                <Programme :days="programme" :theme-bars="themeBars" :school-days="schoolDays" />
             </template>
         </div>
 

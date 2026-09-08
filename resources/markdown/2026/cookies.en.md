@@ -14,12 +14,14 @@ Two: session and persistent. Session cookies are temporary and remain on the dev
 A visit to this site may place cookies for the purposes of site performance, visitor analysis, and remembering choices you have made.
 
 # 5.1 The cookies used on whyculturematters.eu
-This site uses a small number of cookies, all of them necessary for it to work:
+This site uses a small number of cookies. All but the analytics ones are necessary for it to work, and the analytics ones are set only if you agree to them:
 
 * `why_culture_matters_consent` — remembers your choice about cookies, so you are not asked on every visit (12 months).
 * The site's session cookie — keeps the registration form's state between pages, for as long as the browser is open.
 * `wcm-theme` — remembers whether you chose the light or dark version of the page. It is stored locally in your browser and never sent to our server.
 * Stripe's cookies — only if you choose to contribute. They are set by Stripe, inside their payment form, to process the payment and prevent fraud. Card details never reach our servers.
+
+* `_ga` and `_ga_*` — Google Analytics. Set **only if you accept the analytics category**, and used to count visits and see which pages are read, so we can improve them. Decline, or leave the analytics toggle off in the cookie settings, and they are never set. You can change your mind at any time through the same settings.
 
 We use no advertising cookies and do not track visitors across other sites.
 

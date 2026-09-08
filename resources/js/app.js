@@ -11,7 +11,8 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { Ziggy } from './ziggy';
 import CookieConsent from 'vue-cookieconsent';
 import { consentOptions } from './consent';
-import VueGtag from 'vue-gtag';
+import VueGtag, { optIn, optOut } from 'vue-gtag';
+import emitter from './emitter';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Why Culture Matters?';
 
@@ -43,3 +44,19 @@ createInertiaApp({
 });
 
 InertiaProgress.init({ color: '#4B5563' });
+
+/*
+ * Analytics is off until it is consented to — `enabled: false` above is the
+ * default, and this turns it on.
+ *
+ * Only when the analytics category itself is accepted: the banner's "Reject"
+ * button still fires onAccept, with necessary alone, and the pages that used to
+ * do this each called optIn() on any accept at all — so declining analytics
+ * switched analytics on. Reading the level fixes that for every year's pages at
+ * once, which is also why this lives here rather than in three layouts.
+ */
+emitter.on('consentAccepted', ({ consent }) => {
+    const levels = Array.isArray(consent) ? consent : [consent];
+
+    levels.includes('analytics') ? optIn() : optOut();
+});

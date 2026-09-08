@@ -56,6 +56,7 @@ class Front2026Controller extends Controller
             'guests' => $this->guests(),
             'programme' => $this->programme(),
             'themeBars' => $this->themeBars(),
+            'schoolDays' => $this->schoolDays(),
             'programmeVisible' => $this->programmeVisible(),
             'base' => self::BASE,
         ]);
@@ -75,6 +76,7 @@ class Front2026Controller extends Controller
             'guests' => $this->guests(),
             'programme' => $this->programme(),
             'themeBars' => $this->themeBars(),
+            'schoolDays' => $this->schoolDays(),
             'programmeVisible' => $this->programmeVisible(),
             'guest' => $guest->slug,
             'base' => self::BASE,
@@ -134,7 +136,9 @@ class Front2026Controller extends Controller
      */
     private function programmeVisible(): bool
     {
-        return Setting::bool(Setting::PROGRAMME_VISIBLE);
+        // Signed in is the preview: the office can read the section, and the
+        // drafts inside it, before any of it is on the public page.
+        return Setting::bool(Setting::PROGRAMME_VISIBLE) || auth()->check();
     }
 
     private function programme(): array
@@ -143,14 +147,31 @@ class Front2026Controller extends Controller
             return [];
         }
 
-        return ProgrammeDay::with(['theme.translations', 'sessions' => fn ($q) => $q->published(), 'sessions.translations', 'sessions.speakers'])
-            ->where('published', true)
+        /*
+         * Signed in, the unpublished days and sessions come too, each marked so
+         * the page can show it as a draft. Everyone else gets what is published
+         * and a day that has nothing published reads as "coming soon".
+         */
+        $preview = auth()->check();
+
+        return ProgrammeDay::with([
+            'theme.translations',
+            'sessions' => fn ($q) => $preview ? $q : $q->published(),
+            'sessions.translations',
+            'sessions.speakers',
+        ])
+            ->when(! $preview, fn ($q) => $q->where('published', true))
             ->orderBy('position')
             ->orderBy('date')
             ->get()
             ->map(fn (ProgrammeDay $day, int $i) => [
                 'id' => $day->id,
                 'num' => $day->date->format('d'),
+                // Short, because the column is narrow and they are all October.
+                // Romanian abbreviates with a full stop ("oct."), which reads
+                // badly once the page sets it in capitals.
+                'month' => rtrim($day->date->translatedFormat('M'), '.'),
+                'draft' => ! $day->published,
                 'day' => $i + 1,
                 'name' => $this->text($day)->name ?? '',
                 'theme' => $day->theme ? [
@@ -167,12 +188,24 @@ class Front2026Controller extends Controller
                     'who' => $session->speakers->pluck('full_name')->implode(', ')
                         ?: ($this->text($session)->audience ?? ''),
                     'school' => $session->school,
+                    'draft' => ! $session->published,
                     'booking' => $session->bookable && $session->slug
                         ? ['url' => self::BASE.'/sessions/'.$session->slug, 'full' => $session->isFull()]
                         : null,
                 ])->all(),
             ])
             ->all();
+    }
+
+    /*
+     * The days the Heritage School runs on. Taken from the rule rather than
+     * from the sessions, so the umbrella line still reads correctly while every
+     * workshop is still a draft. The page joins them, because the last comma
+     * becomes "and" in one language and "și" in the other.
+     */
+    private function schoolDays(): array
+    {
+        return ProgrammeDay::SCHOOL_DAYS;
     }
 
     /** The three theme bars above the grid, in their own order. */

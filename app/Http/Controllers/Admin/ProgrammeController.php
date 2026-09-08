@@ -261,7 +261,27 @@ class ProgrammeController extends Controller
             'starts_at' => ['required', 'date_format:H:i'],
             'ends_at' => ['nullable', 'date_format:H:i'],
             'kind' => ['nullable', 'string', 'max:255'],
-            'school' => ['boolean'],
+            'school' => [
+                'boolean',
+                /*
+                 * The Heritage School runs on three of the four days. Guarding
+                 * it here rather than only hiding the checkbox: the day and the
+                 * flag are two separate fields, and moving a workshop onto the
+                 * 8th afterwards would otherwise slip straight through.
+                 */
+                function (string $attribute, $value, callable $fail) use ($request) {
+                    if (! $value) {
+                        return;
+                    }
+
+                    $day = ProgrammeDay::find($request->input('programme_day_id'));
+
+                    if ($day && ! $day->hostsSchool()) {
+                        $fail('The Heritage School only runs on '
+                            .implode(', ', ProgrammeDay::SCHOOL_DAYS).' October.');
+                    }
+                },
+            ],
             'published' => ['boolean'],
             'position' => ['nullable', 'integer', 'min:0', 'max:99'],
             'bookable' => ['boolean'],

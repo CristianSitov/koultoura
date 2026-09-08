@@ -78,7 +78,7 @@ class HandleInertiaRequests extends Middleware
              * every other page on the site, none of which has a menu that asks.
              */
             'programmeVisible' => fn () => $request->routeIs('2026.*')
-                && Setting::bool(Setting::PROGRAMME_VISIBLE),
+                && (Setting::bool(Setting::PROGRAMME_VISIBLE) || $request->user() !== null),
         ]);
     }
 }

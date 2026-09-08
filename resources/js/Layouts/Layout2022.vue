@@ -14,7 +14,6 @@ const logout = () => {
 </script>
 <script>
 import { consentOptions } from "../consent";
-import emitter from "../emitter";
 
 export default {
     beforeCreate() {
@@ -25,7 +24,6 @@ export default {
     },
     created() {
         this.$cc.run(consentOptions);
-        emitter.on("consentAccepted", () => this.$gtag.optIn());
     },
     mounted() {
         this.track()

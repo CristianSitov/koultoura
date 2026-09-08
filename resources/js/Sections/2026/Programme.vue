@@ -1,18 +1,39 @@
 <script setup>
+import { computed } from 'vue';
+import { trans } from 'laravel-vue-i18n';
 import SectionHead from './SectionHead.vue';
 
 /*
- * Four days, three themes, and the Heritage School as an umbrella across days
- * 2–4. The spans row above the grid says it at a glance; inside the columns
+ * Four days, three themes, and the Heritage School as an umbrella over three of
+ * them. The spans row above the grid says it at a glance; inside the columns
  * each Heritage School session carries its own tag, so the umbrella reads both
  * ways. A filled square is a theme, a hollow one is the School.
  *
+ * Sessions and days marked `draft` only ever reach here for a signed-in reader
+ * — the controller does not send them to anybody else — so the yellow band is
+ * a note to the office, not something a visitor can stumble into.
+ *
  * All of it comes from the database now, already in the right language — so
- * nothing here goes through $t(), unlike the rest of the page.
+ * only the fixed furniture goes through $t().
  */
-defineProps({
+const props = defineProps({
     days: { type: Array, default: () => [] },
     themeBars: { type: Array, default: () => [] },
+    schoolDays: { type: Array, default: () => [] },
+});
+
+// "7, 9 and 10" — the last separator is a word, and not the same word in both
+// languages, so it is joined here rather than on the server.
+const schoolDayList = computed(() => {
+    const days = [...props.schoolDays];
+
+    if (days.length < 2) {
+        return days.join('');
+    }
+
+    const last = days.pop();
+
+    return `${days.join(', ')} ${trans('and')} ${last}`;
 });
 </script>
 
@@ -30,15 +51,18 @@ defineProps({
                 <span class="wcm26-square"></span>{{ bar.numeral }} · {{ bar.title }}
             </p>
             <p class="wcm26-span wcm26-span-school">
-                <span class="wcm26-square-open"></span>{{ $t('Heritage School — eight pilot workshops, days 2–4') }}
+                <span class="wcm26-square-open"></span>{{ $t('Heritage School — eight pilot workshops, :days October', { days: schoolDayList }) }}
             </p>
         </div>
 
         <div class="wcm26-days">
             <div v-for="day in days" :key="day.id" class="wcm26-day">
                 <div>
-                    <p class="wcm26-label">{{ day.name }}</p>
-                    <p class="wcm26-day-n">{{ day.num }}</p>
+                    <p class="wcm26-label">
+                        {{ day.name }}
+                        <span v-if="day.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
+                    </p>
+                    <p class="wcm26-day-n">{{ day.num }}<span class="wcm26-day-month">{{ day.month }}</span></p>
                     <p class="wcm26-day-label">{{ $t('Day :n', { n: day.day }) }}</p>
                 </div>
 
@@ -46,8 +70,11 @@ defineProps({
                     <span class="wcm26-square"></span>{{ day.theme.numeral }} · {{ day.theme.title }}
                 </p>
 
-                <ol class="wcm26-sessions">
-                    <li v-for="session in day.sessions" :key="session.id">
+                <p v-if="!day.sessions.length" class="wcm26-day-soon">{{ $t('Coming soon') }}</p>
+
+                <ol v-else class="wcm26-sessions">
+                    <li v-for="session in day.sessions" :key="session.id" :class="{ 'is-draft': session.draft }">
+                        <span v-if="session.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
                         <span v-if="session.school" class="tag tag-accent wcm26-session-tag">
                             <span class="wcm26-square-open"></span>{{ $t('Heritage School') }}
                         </span>

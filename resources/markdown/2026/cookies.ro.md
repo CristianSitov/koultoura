@@ -28,6 +28,8 @@ Pe acest site folosim un număr mic de cookie-uri, toate necesare funcționării
 * `wcm-theme` — reține dacă ai ales varianta luminoasă sau întunecată a paginii. Este stocat local în browser, nu este trimis către server.
 * Cookie-uri Stripe — doar dacă alegi să contribui. Sunt plasate de Stripe, în formularul lor de plată, pentru procesarea plății și prevenirea fraudei. Datele cardului nu ajung niciodată pe serverele noastre.
 
+* `_ga` și `_ga_*` — Google Analytics. Sunt plasate **doar dacă accepți categoria de analiză** și sunt folosite pentru a număra vizitele și a vedea ce pagini sunt citite, ca să le putem îmbunătăți. Dacă refuzi, sau dacă lași categoria dezactivată în setările de cookie-uri, nu sunt plasate niciodată. Te poți răzgândi oricând din aceleași setări.
+
 Nu folosim cookie-uri de publicitate și nu urmărim vizitatorii pe alte site-uri.
 
 # 6. Conțin cookie-urile date personale?
