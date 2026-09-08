@@ -38,7 +38,12 @@ onBeforeUnmount(() => stopShift?.());
                 <!-- What they do sits above the name; where they are from sits
                      under it, as a link out to the institution. -->
                 <p v-if="guest.role" class="wcm26-guest-role">{{ guest.role }}</p>
-                <h3 class="wcm26-guest-name">{{ guest.name }}</h3>
+                <!-- Given name over family name: two short lines read better
+                     in this column than one that has to shrink to fit. -->
+                <h3 class="wcm26-guest-name">
+                    <span>{{ guest.name.split(' ')[0] }}</span>
+                    <span>{{ guest.name.split(' ').slice(1).join(' ') }}</span>
+                </h3>
                 <p v-if="guest.org" class="wcm26-guest-org">
                     <a v-if="guest.orgUrl" :href="guest.orgUrl" target="_blank" rel="noopener">{{ guest.org }}</a>
                     <template v-else>{{ guest.org }}</template>

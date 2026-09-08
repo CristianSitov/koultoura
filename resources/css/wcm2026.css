@@ -1018,6 +1018,10 @@
     color: var(--color-accent);
 }
 
+.wcm26-guest-name span {
+    display: block;
+}
+
 .wcm26-guest-name {
     margin: 2px 0 0;
     font-family: var(--font-heading);

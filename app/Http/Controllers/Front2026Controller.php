@@ -87,10 +87,17 @@ class Front2026Controller extends Controller
      */
     private function guests(): array
     {
+        /*
+         * Shuffled on every load: the grid is a list of people, and whoever is
+         * printed first on a fixed list reads as the headline act. The stored
+         * position is left alone — it is what the backoffice sorts by, and the
+         * order the office thinks in.
+         */
         return Person::with('translations')
             ->orderBy('position')
             ->orderBy('id')
             ->get()
+            ->shuffle()
             ->map(function (Person $person) {
                 $text = $person->translate(app()->getLocale()) ?? $person->translate('en');
 
