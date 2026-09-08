@@ -1,12 +1,18 @@
 # Why Culture Matters 2026 — going live
 
-Everything the 2026 site is currently holding back, and what has to change when
-it stops being an unlisted preview and becomes the public site. Written
-2026-09-08; tick items off in the repo rather than in someone's head.
+Everything the 2026 site is holding back, and what has to change when it stops
+being an unlisted preview and becomes the public site. Written 2026-09-08,
+reviewed the same evening against what is actually on the server; tick items off
+in the repo rather than in someone's head.
 
-The site is already deployed and working at an address nobody is given. Going
-live is mostly *removing* the things that keep it quiet, plus the Stripe
-switch, which is the only part that touches money.
+The site is deployed and working at an address nobody is given. Going live is
+mostly *removing* the things that keep it quiet, plus the Stripe switch, which
+is the only part that touches money.
+
+**Verified on the server as of this review:** `APP_ENV=production`,
+`APP_DEBUG=false`, `APP_URL=https://whyculturematters.eu/`, mail going out
+through Resend, Stripe in test mode, no registrations, no contributions, no
+bookings.
 
 ---
 
@@ -38,19 +44,22 @@ Six pages send `noindex, nofollow` while the site is unlisted:
 - [ ] **Leave it on the other five.** A registration form, a confirmation page
       and a booking form have nothing to offer a search result, and the last
       three carry a token in the URL.
+- [ ] **`Support.vue` and `Cookies.vue` carry no `noindex`** and never did.
+      Harmless while the address is secret; decide whether they should be
+      indexed once it is not.
 
 ## 3. Stripe — the only part that handles money
 
-**Production currently has no Stripe keys at all.** The contribution step
-detects this and skips itself: someone registering goes straight from the form
-to "check your email", and no money can be taken. That is the correct
-behaviour for a preview, and it means going live is the first time real cards
-are involved.
+**Production is in test mode.** `STRIPE_KEY` is a `pk_test_` key,
+`STRIPE_SECRET` an `sk_test_`, and `STRIPE_PRICE_ID` and
+`STRIPE_WEBHOOK_SECRET` are both set and working. Someone can complete the
+contribution step today with a test card and no money moves. Going live is a
+swap of all four, not a first configuration.
 
 - [ ] Create the contribution **price in live mode**. A test-mode price id does
       not work with live keys, and prices are immutable — a new amount means a
       new price.
-- [ ] Put the four live values in the server's `.env`:
+- [ ] Replace all four values in the server's `.env`:
       `STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET`.
 - [ ] Register the **webhook endpoint in live mode**:
       `https://whyculturematters.eu/stripe/webhook`, event
@@ -68,50 +77,47 @@ The webhook is the only thing that records a contribution; a browser returning
 from Stripe proves nothing. If the endpoint is misconfigured, money arrives and
 the table stays empty — which is exactly what `contributions:reconcile` is for.
 
-## 4. Email — currently broken
+## 4. Email — working
 
-**Nothing can be confirmed until this is fixed.** Registrations save, but the
-confirmation email does not go out, so nobody can complete a registration.
+`MAIL_MAILER=resend`, `RESEND_KEY` is set and accepted, and mail goes out from
+`why-culture-matters@prinbanat.ro`. The key that was rejected has been replaced.
 
-- [ ] **Replace `RESEND_KEY` in the server's `.env`.** The key there is
-      rejected by Resend itself — a bare call to their API with it returns
-      `400 API key is invalid`. Nothing in the app is misconfigured: the
-      constant `RESEND_KEY` matches `config/services.php`, and the app reads
-      the value fine.
-      A working key for the same account sits in
-      `/var/www/heritageoftimisoara.ro/.env` as `RESEND_API_KEY` — it returns
-      200 and lists `prinbanat.ro` as verified, which is the domain this site
-      sends from. Copy that one, or issue a new key for this site.
-- [ ] No deploy needed afterwards — the config is not cached on this server.
-      Check with `php artisan tinker` that `config('services.resend.key')`
-      shows the new value, then register once and watch for the email.
-- [ ] Anyone who registered while it was broken can be rescued: the
-      confirmation page has a "send it again" button, and the backoffice has
-      Resend next to each pending row.
-
-A failed send no longer takes the registration down with it — it is caught and
-logged (`2026 confirmation email failed` in `storage/logs/laravel.log`) — so
-this fails quietly rather than with a 500. Quietly is still fatal to the flow.
+- [ ] Nothing to do before launch. Send yourself one real registration as part
+      of the final checks in §11.
+- [ ] A failed send is caught and logged (`2026 confirmation email failed` in
+      `storage/logs/laravel.log`) rather than taking the registration down with
+      it — so it would fail quietly. Worth a look at that log after the first
+      day of real sign-ups.
 
 ## 5. The programme
 
+**The section is already public.** The "Show the programme" switch is on, so
+anyone with the address sees the four days — each reading "coming soon",
+because every session is a draft. That is a reasonable holding state, but it is
+live, not hidden.
+
 - [ ] Replace the **placeholder schedule**. The guests are real; what they are
       down to speak about is invented. Edit at `/dashboard/programme`.
-- [ ] **Publish** each day and each session — both carry their own flag, and
-      nothing unpublished reaches the public page.
-- [ ] Flip the **"Show the programme"** switch at the top of
-      `/dashboard/programme`. Until it is on, the section is not on the site at
-      all and the menu has no Programme entry.
+- [ ] **Publish** each session as it is settled. Signed in, drafts are visible
+      on the public page on a yellow band; signed out they are not sent at all,
+      and a day with nothing published says "coming soon".
 - [ ] Decide about the **"Draft · subject to change"** marker in
       `Programme.vue` — it should probably go once the schedule is settled.
+- [ ] The **Heritage School** runs on the 7th, 9th and 10th
+      (`ProgrammeDay::SCHOOL_DAYS`). The backoffice refuses a School session on
+      the 8th.
 
-## 6. Capped sessions
+## 6. Capped sessions and the workshop day
 
-The eight Heritage School workshops are the ones that fill up.
+Registration covers **7–9 October only**. The 10th is the Heritage School's
+workshop day, and those are booked one at a time through their own forms.
 
-- [ ] For each: tick **"Places are limited"**, set the number of places, check
-      the address it generates. Each gets its own form at
-      `/2026/sessions/{slug}`; the day registration does not cover it.
+- [ ] **No workshop is bookable yet** — all 20 sessions have `bookable` off.
+      For each of the eight: tick **"Places are limited"**, set the number of
+      places, check the address it generates. Each gets its own form at
+      `/2026/sessions/{slug}`.
+- [ ] **Nothing links to those forms yet.** They are reachable only from a
+      published programme session. Decide how someone finds them.
 - [ ] Bookings appear at `/dashboard/bookings`, where a place can be released
       back to the pool.
 - [ ] **No email is sent when someone books a workshop.** They see a
@@ -120,39 +126,56 @@ The eight Heritage School workshops are the ones that fill up.
 
 ## 7. Content still outstanding
 
-- [ ] **Partner logos**: Oradea Heritage and Fundația Culturală Jazz Banat are
-      still shown as names rather than marks.
-- [ ] **Centrul de Proiecte** — the current mark is the older one; the
-      replacement sent so far was a different logo.
+- [ ] **Partner marks**: `djc`, `kek`, `cicasp` and `oar-timis` are still on
+      their original canvases and sit at odds with the rest of the row. See
+      `docs/2026-partner-logos.md` for the sizes.
+- [ ] **`arhabito.png`** is in the assets folder but on no row and with no link.
+      It is not in the partner list in the source document.
+- [ ] **Fundația Culturală Jazz Banat** is the one mark with no link; 15 of the
+      16 are linked.
+- [ ] **Social links in the footer** are still `instagram.com` and
+      `facebook.com` — placeholders from the handoff.
 - [ ] **Guests** are applied from `Database\Seeders\Guests2026Seeder` with
-      `php artisan guests:sync`. Adding one is a row there plus their portrait
-      committed under `public/assets/2026/guests`.
+      `php artisan guests:sync`, which is **not part of the deploy** — it has to
+      be run on the server by hand after any guest change.
 
-## 8. Test data to clear out
+## 8. Test data
 
-- [ ] `wcm_2026.registrations` holds test sign-ups.
-- [ ] `wcm_2026.contributions` holds test-mode Stripe rows (RON amounts that
-      were never real money).
+- [ ] Nothing to clear: registrations, contributions and bookings are all empty
+      on production.
 - [ ] `make registrations-reset` clears registrations and the dev inbox but
       **keeps contributions on purpose** — payment records are not scratch data.
-      Clear those by hand, and only in test mode.
 
 ## 9. Accounts and access
 
+- [ ] **47 accounts can sign into the backoffice.** `App\Models\Admin` reads
+      the `users` table on the **2024** database, which is also the 2024
+      subscriber list, so every row there with a password is a login. Worth
+      auditing before the address is public; a signed-in visitor now also sees
+      draft programme sessions.
 - [ ] Backoffice logins are made with `php artisan admin:create <email>
       <password>`. There is no public sign-up form, deliberately.
-- [ ] The account rows live in the **2024** database, whatever URL is being
-      visited — see `App\Models\Admin`. Changing that is a schema decision for
-      after the event.
 - [ ] `/dashboard` is the 2026 backoffice; `/dashboard/2024` is the old one.
 
-## 10. Deploying
+## 10. Analytics and cookies
+
+- [ ] **Google Analytics is live** (`G-WYGPJKWNT1`), and fires only when the
+      visitor accepts the analytics category. Confirm one real accept produces
+      a `googletagmanager.com` request — this has not been watched end to end.
+- [ ] The consent tables in `resources/js/consent.js` name the domain
+      **`prinbanat.ngo`** and link to `//prinbanat.ngo/contact/`. Both are wrong
+      for this site.
+- [ ] The cookie policy lists `_ga` and says it is set only on consent. Keep
+      that true.
+
+## 11. Deploying
 
     ssh -p 2221 root@heritageoftimisoara.ro
     cd /var/www/whyculturematters.eu && php8.2 vendor/bin/envoy run deploy --branch=main
 
 That resets the working tree to `origin/main`, installs, migrates, regenerates
-Ziggy and rebuilds the assets.
+Ziggy and rebuilds the assets. It does **not** run `guests:sync`, and it does
+not touch programme or settings data.
 
 - [ ] Locally, run migrations **by path**, not bare:
       `php artisan migrate --path=database/migrations/<one file>.php`.
@@ -160,10 +183,11 @@ Ziggy and rebuilds the assets.
       several migrations whose tables already exist, so a bare `migrate` tries
       to re-create them. Production's ledger is consistent and migrates fine.
 
-## 11. Worth a look before announcing
+## 12. Worth a look before announcing
 
 - [ ] Register once with a real address, end to end, in both languages.
 - [ ] Confirm the email arrives from `why-culture-matters@prinbanat.ro` and
       that its links point at the new address.
 - [ ] Check the landing page at 393px as well as on a desktop.
 - [ ] Both languages: `/2026` and `/2026/ro`.
+- [ ] The menu, on every page — it is no longer landing-page only.
