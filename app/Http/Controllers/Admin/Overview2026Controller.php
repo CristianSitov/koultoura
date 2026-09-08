@@ -30,7 +30,7 @@ class Overview2026Controller extends Controller
                 'contributed' => Contribution::where('status', 'paid')->sum('amount') / 100,
                 'bookable' => Session::where('bookable', true)->count(),
             ],
-            'publicBase' => Front2026Controller::BASE,
+            'publicBase' => Front2026Controller::base(),
         ]);
     }
 }

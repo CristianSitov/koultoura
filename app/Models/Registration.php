@@ -73,6 +73,6 @@ class Registration extends Model
     {
         $prefix = $this->locale === 'ro' ? '/ro' : '';
 
-        return url(\App\Http\Controllers\Front2026Controller::BASE.$prefix.'/confirm/'.$this->token);
+        return url(\App\Http\Controllers\Front2026Controller::base().$prefix.'/confirm/'.$this->token);
     }
 }

@@ -20,9 +20,18 @@ class Front2026Controller extends Controller
      * years finds nothing. Change this one value to change the address; the
      * routes, the locale switch and the profile URLs all read it.
      */
-    public const PATH = '2026-mulberry';
 
-    public const BASE = '/'.self::PATH;
+    /** The segment this edition is served under — see config/wcm.php. */
+    public static function path(): string
+    {
+        return config('wcm.path');
+    }
+
+    /** The same, as the prefix every address on the page is built from. */
+    public static function base(): string
+    {
+        return '/'.self::path();
+    }
 
     /**
      * Locale (redirect/session) is resolved by Resolve2026Locale middleware
@@ -56,9 +65,10 @@ class Front2026Controller extends Controller
             'guests' => $this->guests(),
             'programme' => $this->programme(),
             'themeBars' => $this->themeBars(),
+            'isPublic' => config('wcm.public'),
             'schoolDays' => $this->schoolDays(),
             'programmeVisible' => $this->programmeVisible(),
-            'base' => self::BASE,
+            'base' => self::base(),
         ]);
     }
 
@@ -76,10 +86,11 @@ class Front2026Controller extends Controller
             'guests' => $this->guests(),
             'programme' => $this->programme(),
             'themeBars' => $this->themeBars(),
+            'isPublic' => config('wcm.public'),
             'schoolDays' => $this->schoolDays(),
             'programmeVisible' => $this->programmeVisible(),
             'guest' => $guest->slug,
-            'base' => self::BASE,
+            'base' => self::base(),
         ]);
     }
 
@@ -190,7 +201,7 @@ class Front2026Controller extends Controller
                     'school' => $session->school,
                     'draft' => ! $session->published,
                     'booking' => $session->bookable && $session->slug
-                        ? ['url' => self::BASE.'/sessions/'.$session->slug, 'full' => $session->isFull()]
+                        ? ['url' => self::base().'/sessions/'.$session->slug, 'full' => $session->isFull()]
                         : null,
                 ])->all(),
             ])
@@ -225,7 +236,7 @@ class Front2026Controller extends Controller
     public function support(): Response
     {
         return Inertia::render('2026/Support', [
-            'base' => self::BASE,
+            'base' => self::base(),
         ]);
     }
 
@@ -243,7 +254,7 @@ class Front2026Controller extends Controller
         $path = resource_path("markdown/2026/cookies.{$locale}.md");
 
         return Inertia::render('2026/Cookies', [
-            'base' => self::BASE,
+            'base' => self::base(),
             'title' => $locale === 'ro' ? 'Politica de cookie-uri' : 'Cookie policy',
             'body' => Str::markdown(file_get_contents($path)),
         ]);

@@ -65,7 +65,7 @@ class RegistrationsController extends Controller
             ]),
             'filters' => ['day' => $day, 'status' => $status ?: 'all'],
             'counts' => $this->counts(),
-            'publicBase' => Front2026Controller::BASE,
+            'publicBase' => Front2026Controller::base(),
         ]);
     }
 
@@ -190,7 +190,7 @@ class RegistrationsController extends Controller
                         'created' => $b->created_at->toDateTimeString(),
                     ]),
                 ]),
-            'publicBase' => Front2026Controller::BASE,
+            'publicBase' => Front2026Controller::base(),
         ]);
     }
 

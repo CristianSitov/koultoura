@@ -66,7 +66,7 @@ class ProgrammeController extends Controller
                     'position' => $t->position,
                 ]),
             'visible' => Setting::bool(Setting::PROGRAMME_VISIBLE),
-            'publicBase' => Front2026Controller::BASE,
+            'publicBase' => Front2026Controller::base(),
         ]);
     }
 
@@ -238,7 +238,7 @@ class ProgrammeController extends Controller
                 ->map(fn ($d) => ['id' => $d->id, 'label' => $d->date->format('D d M').' — '.($d->translate('en')?->name ?? '')]),
             'people' => Person::orderBy('full_name')->get(['id', 'full_name'])
                 ->map(fn ($p) => ['id' => $p->id, 'name' => $p->full_name]),
-            'publicBase' => Front2026Controller::BASE,
+            'publicBase' => Front2026Controller::base(),
         ]);
     }
 

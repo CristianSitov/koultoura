@@ -28,6 +28,8 @@ const props = defineProps({
     guest: { type: String, default: '' },
     // The page's own address, which carries a secret segment while unlisted.
     base: { type: String, default: '/2026' },
+    // Whether the edition is public — WCM_2026_PUBLIC, via config/wcm.php.
+    isPublic: { type: Boolean, default: false },
 });
 
 const locale = computed(() => usePage().props.value.locale || 'en');
@@ -35,6 +37,10 @@ const otherLocale = computed(() => (locale.value === 'ro' ? 'en' : 'ro'));
 
 // The same page in the other language, profile and all.
 const localeBase = (which) => (which === 'en' ? props.base : `${props.base}/ro`);
+
+// Once the page is indexable it should say which of its two addresses is the
+// one to keep; before that there is nothing to be canonical about.
+const canonical = computed(() => localeBase(locale.value));
 const otherLocaleUrl = computed(() =>
     openGuest.value ? `${localeBase(otherLocale.value)}/guests/${openGuest.value}` : localeBase(otherLocale.value)
 );
@@ -126,10 +132,15 @@ function onPopState(event) {
         <link rel="alternate" hreflang="x-default" :href="base" />
         <!--
             Unlisted while the page is in review: nothing on the site links here
-            and search engines are told to leave it alone. Drop this meta — and
-            add a canonical — when the page goes live.
+            and search engines are told to leave it alone. Public, it says so
+            instead and names its canonical address — one switch, no edit here.
         -->
-        <meta head-key="robots" name="robots" content="noindex, nofollow" />
+        <meta
+            head-key="robots"
+            name="robots"
+            :content="isPublic ? 'index, follow' : 'noindex, nofollow'"
+        />
+        <link v-if="isPublic" head-key="canonical" rel="canonical" :href="canonical" />
     </Head>
 
     <div class="wcm26" :data-theme="theme" :lang="locale">

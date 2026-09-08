@@ -16,37 +16,77 @@ bookings.
 
 ---
 
-## 1. The address
+## 1. The switch — one recipe, on or off
 
-The landing page lives behind an unguessable segment so that a crawler walking
-the obvious years finds nothing.
+Going live is three environment variables on the server. No code change, no
+deploy: edit `.env`, clear the config cache, done. It flips back the same way.
 
-- [ ] **`Front2026Controller::PATH`** — `'2026-mulberry'` → `'2026'`.
-      One constant; the routes, the locale switch, the guest URLs, the
-      registration links and the emails all read it.
-- [ ] **`routes/web.php`** — the announcement page at `/` becomes a redirect to
-      the landing page. The note at the top of the file has the exact line.
-- [ ] **Keep the old prefix alive for a few months.** Every confirmation email
-      already sent carries `/2026-mulberry/confirm/{token}`. Add
-      `Route::redirect('/2026-mulberry/{rest?}', ...)` or those links die.
-- [ ] **`config/ziggy.php`** — drop `'except' => ['2026.*']`. It exists so the
-      secret path is not shipped into `app.js` on every page; once the address
-      is public it is only getting in the way.
+**Go live**
+
+    ssh -p 2221 root@heritageoftimisoara.ro
+    cd /var/www/whyculturematters.eu
+
+    # in .env
+    WCM_2026_PATH=2026
+    WCM_2026_PUBLIC=true
+    WCM_2026_OLD_PATHS=2026-mulberry
+
+    php8.2 artisan config:clear
+
+**Go back**
+
+    # in .env
+    WCM_2026_PATH=2026-mulberry
+    WCM_2026_PUBLIC=false
+    WCM_2026_OLD_PATHS=
+
+    php8.2 artisan config:clear
+
+### What each one does
+
+`WCM_2026_PATH` — the segment the whole edition is served under. Everything is
+built from it: the routes, the locale switch, the guest pages, the registration
+links, and the addresses inside confirmation emails already sent.
+
+`WCM_2026_PUBLIC` — off, the landing page sends `noindex, nofollow`, the 2026
+routes are withheld from the Ziggy table shipped inside `app.js`, and `/` shows
+the announcement page. On, all three reverse: the page says `index, follow`,
+names a canonical address for the language being read, ships its routes, and `/`
+redirects to the landing page.
+
+`WCM_2026_OLD_PATHS` — a comma-separated list of segments the site used to
+answer on. Each one keeps answering and forwards whatever follows it, so a
+confirmation link posted as `/2026-mulberry/confirm/{token}` lands on
+`/2026/confirm/{token}` rather than a 404. **Leave `2026-mulberry` in this list
+for as long as any of those emails might still be clicked** — months, not days.
+
+### Checked both ways
+
+Flipped on and off locally before this was written:
+
+| | preview | live |
+| --- | --- | --- |
+| `/` | announcement page, 200 | 302 → `/2026` |
+| `/2026` | 404 | 200 |
+| `/2026-mulberry` | 200 | 302 → `/2026` |
+| `/2026-mulberry/ro/register` | 200 | 302 → `/2026/ro/register` |
+| robots | `noindex, nofollow` | `index, follow` |
+| canonical | none | the address for the language read |
+| 2026 routes in `app.js` | withheld | shipped |
 
 ## 2. Search engines
 
-Six pages send `noindex, nofollow` while the site is unlisted:
+`WCM_2026_PUBLIC` handles the landing page. The rest stays as it is:
 
-`Landing.vue`, `Registration.vue`, `RegistrationSubmitted.vue`,
-`RegistrationConfirmed.vue`, `Contribute.vue`, `SessionBooking.vue`
-
-- [ ] Remove it from **`Landing.vue`** — that page wants to be found.
-- [ ] **Leave it on the other five.** A registration form, a confirmation page
-      and a booking form have nothing to offer a search result, and the last
-      three carry a token in the URL.
+- [ ] **Leave `noindex` on the other five** — `Registration.vue`,
+      `RegistrationSubmitted.vue`, `RegistrationConfirmed.vue`, `Contribute.vue`
+      and `SessionBooking.vue`. A registration form, a confirmation page and a
+      booking form have nothing to offer a search result, and three of them
+      carry a token in the URL.
 - [ ] **`Support.vue` and `Cookies.vue` carry no `noindex`** and never did.
       Harmless while the address is secret; decide whether they should be
       indexed once it is not.
+- [ ] Consider a `sitemap.xml` and a `robots.txt` once the address is public.
 
 ## 3. Stripe — the only part that handles money
 
@@ -148,23 +188,31 @@ workshop day, and those are booked one at a time through their own forms.
 
 ## 9. Accounts and access
 
-- [ ] **47 accounts can sign into the backoffice.** `App\Models\Admin` reads
-      the `users` table on the **2024** database, which is also the 2024
-      subscriber list, so every row there with a password is a login. Worth
-      auditing before the address is public; a signed-in visitor now also sees
-      draft programme sessions.
-- [ ] Backoffice logins are made with `php artisan admin:create <email>
-      <password>`. There is no public sign-up form, deliberately.
+Backoffice logins are the rows flagged `backoffice` on the 2024 `users` table.
+That table is also the 2024 subscriber list, so before this flag every row in it
+carrying a password hash was a working login — forty-seven of them. The flag is
+enforced by a global scope on `App\Models\Admin`, so it covers the guard's own
+credential lookup, not just queries written by hand.
+
+    php8.2 artisan admin:create <email> <password>   # grants access
+    php8.2 artisan admin:revoke <email>              # takes it away
+
+- [ ] Check who holds access before the address is public:
+      `Admin::pluck('email')`. A signed-in visitor sees draft programme
+      sessions, so this is not only a write concern.
+- [ ] There is no public sign-up form, deliberately.
 - [ ] `/dashboard` is the 2026 backoffice; `/dashboard/2024` is the old one.
+- [ ] The account rows still live on the **2024** database whatever URL is being
+      visited. Moving them is a schema decision for after the event.
 
 ## 10. Analytics and cookies
 
 - [ ] **Google Analytics is live** (`G-WYGPJKWNT1`), and fires only when the
       visitor accepts the analytics category. Confirm one real accept produces
       a `googletagmanager.com` request — this has not been watched end to end.
-- [ ] The consent tables in `resources/js/consent.js` name the domain
-      **`prinbanat.ngo`** and link to `//prinbanat.ngo/contact/`. Both are wrong
-      for this site.
+- [x] The consent tables named `prinbanat.ngo` and linked to
+      `//prinbanat.ngo/contact/`. Now `whyculturematters.eu` and the
+      association's own `https://prinbanat.ro/contact/`.
 - [ ] The cookie policy lists `_ga` and says it is set only on consent. Keep
       that true.
 

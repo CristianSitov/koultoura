@@ -48,7 +48,7 @@ class SpeakerController extends Controller
                     'locales' => $p->translations->filter(fn ($t) => filled($t->description))->pluck('locale')->values(),
                     'fromDrive' => $p->drive_folder_id !== null,
                 ]),
-            'publicBase' => Front2026Controller::BASE,
+            'publicBase' => Front2026Controller::base(),
         ]);
     }
 
@@ -110,7 +110,7 @@ class SpeakerController extends Controller
                     ? $person->sessions()->with('translations')->get()->map(fn ($s) => $s->title)->all()
                     : [],
             ],
-            'publicBase' => Front2026Controller::BASE,
+            'publicBase' => Front2026Controller::base(),
         ]);
     }
 

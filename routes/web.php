@@ -15,20 +15,32 @@ use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
 
 /*
- * The announcement page. When the 2026 landing page below takes over, this
- * becomes a redirect:
- *
- *     Route::redirect('/', Front2026Controller::BASE)->name('home');
- *
- * and the noindex in Pages/2026/Landing.vue comes off — at which point the
- * secret segment in Front2026Controller::PATH should go too.
+ * The front door. While the edition is a preview this is the announcement page;
+ * once `WCM_2026_PUBLIC` is on it hands straight over to the landing page. One
+ * switch, no edit here — see config/wcm.php and docs/2026-go-live.md.
  */
-Route::controller(Front2026Controller::class)
-    ->group(function () {
-        Route::get('/', 'index')->name('home');
-        Route::get('/en', 'en')->name('home.en');
-        Route::get('/ro', 'ro')->name('home.ro');
-    });
+if (config('wcm.public')) {
+    Route::redirect('/', Front2026Controller::base())->name('home');
+    Route::redirect('/en', Front2026Controller::base().'/en')->name('home.en');
+    Route::redirect('/ro', Front2026Controller::base().'/ro')->name('home.ro');
+} else {
+    Route::controller(Front2026Controller::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('home');
+            Route::get('/en', 'en')->name('home.en');
+            Route::get('/ro', 'ro')->name('home.ro');
+        });
+}
+
+/*
+ * Addresses the edition used to answer on. A confirmation email sent under the
+ * old segment carries that segment for good, so the prefix keeps answering and
+ * forwards whatever follows it.
+ */
+foreach (config('wcm.old_paths') as $oldPath) {
+    Route::redirect('/'.$oldPath, Front2026Controller::base());
+    Route::redirect('/'.$oldPath.'/{rest}', Front2026Controller::base().'/{rest}')->where('rest', '.*');
+}
 
 /*
  * Stripe's webhook. Outside the 2026 group on purpose: that prefix carries a
@@ -37,7 +49,7 @@ Route::controller(Front2026Controller::class)
  */
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
-Route::prefix(Front2026Controller::PATH)
+Route::prefix(Front2026Controller::path())
     ->name('2026.')
     ->group(function () {
         Route::controller(Front2026Controller::class)

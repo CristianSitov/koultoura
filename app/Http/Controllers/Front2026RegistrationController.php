@@ -40,13 +40,13 @@ class Front2026RegistrationController extends Controller
     {
         $prefix = $registration->locale === 'ro' ? '/ro' : '';
 
-        return Front2026Controller::BASE.$prefix.'/registered/'.$registration->token;
+        return Front2026Controller::base().$prefix.'/registered/'.$registration->token;
     }
 
     public function create(): Response
     {
         return Inertia::render('2026/Registration', [
-            'base' => Front2026Controller::BASE,
+            'base' => Front2026Controller::base(),
             'days' => self::DAYS,
         ]);
     }
@@ -57,7 +57,7 @@ class Front2026RegistrationController extends Controller
         // Sent to the landing page rather than a registration page it has no
         // registration for.
         if (filled($request->input('website'))) {
-            return redirect(Front2026Controller::BASE);
+            return redirect(Front2026Controller::base());
         }
 
         $input = $request->validate([
@@ -105,7 +105,7 @@ class Front2026RegistrationController extends Controller
          * — after contributing or after skipping — so that one message arrives
          * at the end of the whole thing rather than mid-way through it.
          */
-        return redirect(Front2026Controller::BASE.'/contribute/'.$registration->token);
+        return redirect(Front2026Controller::base().'/contribute/'.$registration->token);
     }
 
     public function submitted(Request $request): Response
@@ -123,7 +123,7 @@ class Front2026RegistrationController extends Controller
         }
 
         return Inertia::render('2026/RegistrationSubmitted', [
-            'base' => Front2026Controller::BASE,
+            'base' => Front2026Controller::base(),
             'email' => $registration->email,
             // Shown, not editable: what this address is down for.
             'days' => $registration->days,
@@ -131,7 +131,7 @@ class Front2026RegistrationController extends Controller
             // whether or not the address is confirmed: contributing is a
             // separate thing from confirming, and someone who skipped it on
             // the way through is exactly who this is for.
-            'contributeUrl' => Front2026Controller::BASE.'/contribute/'.$registration->token,
+            'contributeUrl' => Front2026Controller::base().'/contribute/'.$registration->token,
             'confirmed' => $registration->isConfirmed(),
             'paid' => $request->boolean('paid'),
             'contribution' => $request->boolean('paid')
@@ -171,7 +171,7 @@ class Front2026RegistrationController extends Controller
         }
 
         return Inertia::render('2026/RegistrationConfirmed', [
-            'base' => Front2026Controller::BASE,
+            'base' => Front2026Controller::base(),
             'name' => $registration->name,
             'alreadyConfirmed' => $alreadyConfirmed,
         ]);

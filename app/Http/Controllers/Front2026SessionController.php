@@ -28,7 +28,7 @@ class Front2026SessionController extends Controller
         $session = $this->session($request);
 
         return Inertia::render('2026/SessionBooking', [
-            'base' => Front2026Controller::BASE,
+            'base' => Front2026Controller::base(),
             'session' => $this->payload($session),
             'booked' => null,
         ]);
@@ -40,7 +40,7 @@ class Front2026SessionController extends Controller
 
         // A bot fills every field it is given; a person never sees this one.
         if (filled($request->input('website'))) {
-            return redirect(Front2026Controller::BASE);
+            return redirect(Front2026Controller::base());
         }
 
         $input = $request->validate([
@@ -99,7 +99,7 @@ class Front2026SessionController extends Controller
         $booking = SessionBooking::where('token', $request->route('token'))->firstOrFail();
 
         return Inertia::render('2026/SessionBooking', [
-            'base' => Front2026Controller::BASE,
+            'base' => Front2026Controller::base(),
             'session' => $this->payload($session),
             'booked' => ['name' => $booking->name, 'cancelled' => $booking->isCancelled()],
         ]);
@@ -109,7 +109,7 @@ class Front2026SessionController extends Controller
     {
         $prefix = app()->getLocale() === 'ro' ? '/ro' : '';
 
-        return Front2026Controller::BASE.$prefix.'/sessions/'.$session->slug.'/booked/'.$token;
+        return Front2026Controller::base().$prefix.'/sessions/'.$session->slug.'/booked/'.$token;
     }
 
     /** Bookable and published, or it is not offered at all. */
@@ -138,7 +138,7 @@ class Front2026SessionController extends Controller
             'placesLeft' => $session->places_left,
             'full' => $session->isFull(),
             // Where the form posts, in the language being read.
-            'bookUrl' => Front2026Controller::BASE
+            'bookUrl' => Front2026Controller::base()
                 .(app()->getLocale() === 'ro' ? '/ro' : '')
                 .'/sessions/'.$session->slug,
         ];

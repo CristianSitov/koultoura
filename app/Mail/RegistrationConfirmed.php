@@ -45,7 +45,7 @@ class RegistrationConfirmed extends Mailable
         return new Content(
             markdown: 'emails.registration-confirmed',
             with: [
-                'programmeUrl' => url(Front2026Controller::BASE.($locale === 'ro' ? '/ro' : '').'#programme'),
+                'programmeUrl' => url(Front2026Controller::base().($locale === 'ro' ? '/ro' : '').'#programme'),
                 'googleCalendarUrl' => SymposiumCalendar::googleUrl($locale),
             ],
         );

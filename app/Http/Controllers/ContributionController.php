@@ -39,13 +39,13 @@ class ContributionController extends Controller
         }
 
         return Inertia::render('2026/Contribute', [
-            'base' => Front2026Controller::BASE,
+            'base' => Front2026Controller::base(),
             'skipUrl' => $this->submittedUrl($registration),
             'publishableKey' => config('services.stripe.key'),
             // Present only when the form can be embedded; otherwise the page
             // offers the redirect below instead.
             'clientSecret' => config('services.stripe.key') ? $this->embeddedSecret($registration) : null,
-            'redirectUrl' => Front2026Controller::BASE.'/contribute/'.$registration->token.'/redirect',
+            'redirectUrl' => Front2026Controller::base().'/contribute/'.$registration->token.'/redirect',
         ]);
     }
 
@@ -62,7 +62,7 @@ class ContributionController extends Controller
                 'customer_email' => $registration->email,
                 'locale' => $registration->locale,
                 'success_url' => url($this->submittedUrl($registration)).'?paid=1',
-                'cancel_url' => url(Front2026Controller::BASE.'/contribute/'.$registration->token),
+                'cancel_url' => url(Front2026Controller::base().'/contribute/'.$registration->token),
             ]);
         } catch (ApiErrorException $e) {
             Log::error('Stripe checkout session failed', ['error' => $e->getMessage()]);
@@ -113,7 +113,7 @@ class ContributionController extends Controller
     {
         $prefix = $registration->locale === 'ro' ? '/ro' : '';
 
-        return Front2026Controller::BASE.$prefix.'/registered/'.$registration->token;
+        return Front2026Controller::base().$prefix.'/registered/'.$registration->token;
     }
 
     private function paymentLink(Registration $registration): ?string

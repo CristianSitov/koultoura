@@ -79,7 +79,7 @@ class Resolve2026Locale
             return '/ro';
         }
 
-        $base = Front2026Controller::BASE;
+        $base = Front2026Controller::base();
         $rest = substr('/'.ltrim($request->path(), '/'), strlen($base));
 
         return $base.'/ro'.$rest;

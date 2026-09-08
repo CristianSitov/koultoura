@@ -34,7 +34,8 @@ class CreateAdmin extends Command
             return self::FAILURE;
         }
 
-        $admin = Admin::firstOrNew(['email' => $email]);
+        // withoutGlobalScopes: an account being granted access is not one yet.
+        $admin = Admin::withoutGlobalScopes()->firstOrNew(['email' => $email]);
         $existed = $admin->exists;
 
         $name = $this->option('name') ?: Str::headline(Str::before($email, '@'));
@@ -47,6 +48,7 @@ class CreateAdmin extends Command
             'first_name' => Str::before($name, ' '),
             'last_name' => Str::after($name, ' ') ?: '',
             'slug' => $admin->slug ?: Str::slug($email),
+            'backoffice' => true,
             'password' => Hash::make($password),
             'email_verified_at' => $admin->email_verified_at ?? now(),
         ])->save();

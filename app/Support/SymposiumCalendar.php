@@ -31,7 +31,7 @@ class SymposiumCalendar
             ? 'A treia ediție a simpozionului Why Culture Matters, organizat de Asociația Prin Banat. Programul complet: '
             : 'The third edition of the Why Culture Matters symposium, organised by Asociația Prin Banat. Full programme: ';
 
-        $url = url(Front2026Controller::BASE.($locale === 'ro' ? '/ro' : '').'#programme');
+        $url = url(Front2026Controller::base().($locale === 'ro' ? '/ro' : '').'#programme');
 
         $lines = [
             'BEGIN:VCALENDAR',
@@ -70,7 +70,7 @@ class SymposiumCalendar
             'text' => $summary,
             'dates' => self::START.'/'.self::END,
             'location' => self::VENUE,
-            'details' => url(Front2026Controller::BASE.($locale === 'ro' ? '/ro' : '').'#programme'),
+            'details' => url(Front2026Controller::base().($locale === 'ro' ? '/ro' : '').'#programme'),
         ]);
     }
 

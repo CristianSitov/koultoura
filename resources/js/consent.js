@@ -1,4 +1,8 @@
 // See: https://github.com/orestbida/cookieconsent#all-configuration-options
+//
+// The cookie tables name the domain the cookies are actually set on, and the
+// contact link points at the association's own site. Both used to read
+// prinbanat.ngo, which is neither.
 import emitter from "./emitter";
 
 const consentOptions = {
@@ -66,13 +70,13 @@ const consentOptions = {
                         cookie_table: [
                             {
                                 col1: 'why_culture_matters_session',
-                                col2: 'prinbanat.ngo',
+                                col2: 'whyculturematters.eu',
                                 col3: 'Tracking your registration funnel.',
                                 is_regex: false,
                             },
                             {
                                 col1: 'XSRF-TOKEN',
-                                col2: 'prinbanat.ngo',
+                                col2: 'whyculturematters.eu',
                                 col3: 'Ensuring security on submitted fields.',
                                 is_regex: false,
                             }
@@ -88,7 +92,7 @@ const consentOptions = {
                         cookie_table: [
                             {
                                 col1: '^_ga',
-                                col2: 'prinbanat.ngo',
+                                col2: 'whyculturematters.eu',
                                 col3: 'Registers a unique ID that is used to generate statistical data on how the visitor uses the website.',
                                 path: window.location.pathname,
                                 is_regex: true
@@ -96,7 +100,7 @@ const consentOptions = {
                         ]
                     },{
                         title : "More information",
-                        description: 'For any queries in relation to our policy on cookies and your choices, please <a class="cc-link" target="_blank" href="//prinbanat.ngo/contact/">contact us</a>.',
+                        description: 'For any queries in relation to our policy on cookies and your choices, please <a class="cc-link" target="_blank" href="https://prinbanat.ro/contact/">contact us</a>.',
                     }
                 ]
             }
@@ -140,13 +144,13 @@ const consentOptions = {
                         cookie_table: [
                             {
                                 col1: 'why_culture_matters_session',
-                                col2: 'prinbanat.ngo',
+                                col2: 'whyculturematters.eu',
                                 col3: 'Urmărirea procesului de înregistrare.',
                                 is_regex: false,
                             },
                             {
                                 col1: 'XSRF-TOKEN',
-                                col2: 'prinbanat.ngo',
+                                col2: 'whyculturematters.eu',
                                 col3: 'Asigurarea securității câmpurilor trimise.',
                                 is_regex: false,
                             }
@@ -162,7 +166,7 @@ const consentOptions = {
                         cookie_table: [
                             {
                                 col1: '^_ga',
-                                col2: 'prinbanat.ngo',
+                                col2: 'whyculturematters.eu',
                                 col3: 'Înregistrează un ID unic care este utilizat pentru a genera date statistice despre modul în care vizitatorul folosește site-ul web.',
                                 path: window.location.pathname,
                                 is_regex: true
@@ -170,7 +174,7 @@ const consentOptions = {
                         ]
                     },{
                         title : "Mai multe informații",
-                        description: 'Pentru orice întrebări legate de politica noastră privind cookie-urile și opțiunile dumneavoastră, vă rugăm <a class="cc-link" target="_blank" href="//prinbanat.ngo/contact/">să ne contactați</a>.',
+                        description: 'Pentru orice întrebări legate de politica noastră privind cookie-urile și opțiunile dumneavoastră, vă rugăm <a class="cc-link" target="_blank" href="https://prinbanat.ro/contact/">să ne contactați</a>.',
                     }
                 ]
             }

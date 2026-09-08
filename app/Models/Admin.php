@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+
 /*
  * The account that logs in.
  *
@@ -15,6 +17,11 @@ namespace App\Models;
  * So the guard gets its own model, pinned to the database the organiser
  * accounts actually live in. Everything else about it is `User`; only where to
  * look is fixed.
+ *
+ * And narrowed: that table is also the 2024 subscriber list, so a password hash
+ * on any row in it was a working backoffice login. Only rows flagged
+ * `backoffice` are accounts here — the scope is global, so it covers the
+ * guard's own credential lookup and not just the queries written by hand.
  */
 class Admin extends User
 {
@@ -22,4 +29,9 @@ class Admin extends User
 
     // Without this, Eloquent would go looking for an `admins` table.
     protected $table = 'users';
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('backoffice', fn (Builder $query) => $query->where('backoffice', true));
+    }
 }
