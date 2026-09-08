@@ -26,14 +26,14 @@ const supporters = [
     { name: 'CICASP', logo: '/assets/2026/partners/cicasp.svg' },
     { name: 'OAR — Filiala Teritorială Timiș', logo: '/assets/2026/partners/oar-timis.svg' },
     { name: 'KÉK — Contemporary Architecture Centre', logo: '/assets/2026/partners/kek.svg' },
-    { name: 'Oradea Heritage', logo: null },
+    { name: 'Oradea Heritage', logo: '/assets/2026/partners/oradea-heritage.png' },
     { name: 'Imagine Heritage', logo: '/assets/2026/partners/imagine-heritage.png' },
     { name: 'Youth.Heritage.Europe', logo: '/assets/2026/partners/youth-heritage-europe.png' },
     { name: 'FAINA', logo: '/assets/2026/partners/faina.png' },
     { name: 'Institutul Polonez București', logo: '/assets/2026/partners/institutul-polonez.svg' },
     { name: 'Visit Timișoara', logo: '/assets/2026/partners/visit-timisoara.jpg' },
     { name: 'Librăriile Cărturești Timișoara', logo: '/assets/2026/partners/carturesti.svg' },
-    { name: 'Fundația Culturală Jazz Banat', logo: null },
+    { name: 'Fundația Culturală Jazz Banat', logo: '/assets/2026/partners/jazz-banat.png' },
 ];
 </script>
 
