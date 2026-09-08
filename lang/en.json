@@ -277,7 +277,6 @@
     "Stripe will email you a receipt.": "Stripe will email you a receipt.",
     "Contribute · Why Culture Matters 2026": "Contribute · Why Culture Matters 2026",
     "You are registered. This part is optional.": "You are registered. This part is optional.",
-    "Skip this": "Skip this",
     "contribute.intro": "There is no fixed participation fee. You decide how much you’d like to contribute, and <strong>if you can, your donation helps us keep Why Culture Matters open to everyone and continue bringing great people, ideas and experiences to Timișoara.</strong>",
     "contribute.fallback": "Payment opens on Stripe's secure page.",
     "submitted.contribution.short": "Attending is free. If you would still like to support the symposium, you can <strong>contribute any amount</strong>.",
@@ -307,5 +306,6 @@
     "October 2026": "October 2026",
     "confirmed.body": "Thank you, <strong>:name</strong>. Your place at <strong>Why Culture Matters 2026</strong> is confirmed — <strong>7–10 October 2026</strong>, <strong>FABER</strong>, Timișoara.",
     "email.intro": "Thank you for registering for **Why Culture Matters 2026**, **7–10 October 2026**, at **FABER** in Timișoara. One step is left: confirm this address so we know we can reach you.",
-    "contribute.lead": "Pay what you can."
+    "contribute.lead": "Pay what you can.",
+    "Skip this step": "Skip this step"
 }

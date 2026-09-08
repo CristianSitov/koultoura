@@ -84,7 +84,7 @@ onBeforeUnmount(() => checkout?.destroy());
                 </div>
 
                 <p class="wcm26-contribute-skip">
-                    <a :href="skipUrl" class="btn btn-secondary wcm26-skip">{{ $t('Skip this') }}</a>
+                    <a :href="skipUrl" class="btn btn-secondary wcm26-skip">{{ $t('Skip this step') }}</a>
                 </p>
             </div>
         </section>
