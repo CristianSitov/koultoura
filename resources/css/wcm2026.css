@@ -1541,7 +1541,9 @@
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    /* Right, so a short last row ends level with the block above it rather
+       than floating in the middle of the column. */
+    justify-content: flex-end;
     gap: 16px;
 }
 
@@ -2467,4 +2469,20 @@
     .wcm26-account dt {
         margin-top: 12px;
     }
+}
+
+/* Beside the way in, and the first thing to go when the bar runs out of room. */
+@media (max-width: 1100px) {
+    /* Scoped, or .wcm26 .btn's own display wins on specificity and the link
+       stays in a bar that has no room for it. */
+    .wcm26 .wcm26-nav-support {
+        display: none;
+    }
+}
+
+.wcm26-menu-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-self: flex-start;
 }

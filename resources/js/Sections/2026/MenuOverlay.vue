@@ -62,14 +62,25 @@ defineEmits(['close']);
                     <p>{{ $t('Language') }}</p>
                     <p><a class="wcm26-menu-lang" :href="otherLocaleUrl">{{ otherLocale === 'ro' ? 'Română' : 'English' }}</a></p>
                 </div>
-                <a
-                    :href="`${base}/register`"
-                    class="btn btn-primary btn-flush"
-                    style="height: 48px; font-size: 16px; align-self: flex-start"
-                    @click="$emit('close')"
-                >
-                    {{ $t('register.submit') }}
-                </a>
+                <div class="wcm26-menu-actions">
+                    <a
+                        :href="`${base}/register`"
+                        class="btn btn-primary btn-flush"
+                        style="height: 48px; font-size: 16px"
+                        @click="$emit('close')"
+                    >
+                        {{ $t('register.submit') }}
+                    </a>
+
+                    <a
+                        :href="`${base}/support`"
+                        class="btn btn-secondary btn-flush"
+                        style="height: 48px; font-size: 16px"
+                        @click="$emit('close')"
+                    >
+                        {{ $t('Support us') }}
+                    </a>
+                </div>
             </div>
         </nav>
     </div>

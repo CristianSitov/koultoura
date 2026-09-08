@@ -50,6 +50,10 @@ defineEmits(['toggle-theme', 'open-menu']);
                 </svg>
             </button>
 
+            <a :href="`${base}/support`" class="btn btn-secondary btn-flush wcm26-nav-support" style="height: 40px">
+                {{ $t('Support us') }}
+            </a>
+
             <a :href="`${base}/register`" class="btn btn-primary btn-flush" style="height: 40px">{{ $t('register.submit') }}</a>
 
             <button
