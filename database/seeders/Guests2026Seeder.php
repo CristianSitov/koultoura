@@ -47,14 +47,14 @@ class Guests2026Seeder extends Seeder
             'avatar' => '/assets/2026/guests/mudra.jpg',
             'institution_url' => 'https://www.kek.org.hu/',
             'en' => [
-                'role' => 'Architect',
+                'role' => 'Architect, Budapest100 team member',
                 'institution' => 'KÉK — Contemporary Architecture Centre',
                 'description' => 'András Mudra graduated in architecture from the Budapest University of Technology and Economics (BME) in 2024 and has since been working at DANU architecture studio. As an architect, he considers it essential to create livable, sustainable, and community-oriented spaces both within buildings and in their surrounding environments. He is particularly interested in working at the urban and public-building scale. He joined KÉK in 2022, initially as an intern, where he became a member of the Pecha Kucha Night Budapest and DANUrB+ teams. His main areas of interest include late modern architectural heritage, its public perception and preservation, as well as grassroots urban initiatives supported and shaped by local communities. In recent years, he has served as project lead for Budapest100, the KÉK Mentor Program, ModernTéka, and Pecha Kucha Night Budapest, while also being a regular participant in building camps. Since 2023, he has been part of the Urban Walks team as an organizer, and since 2025, as a guide. He is also the project manager of the Danube Ruralscapes project, which focuses on the regional-scale renewal of rural townscape practices.
 
 KÉK — Contemporary Architecture Centre (Budapest) is an independent organisation founded in 2006, working in architecture, built heritage and participatory urban development. Known internationally for Budapest100, KÉK develops programmes that bring together professionals, communities and public administrations to imagine cities that are more inclusive, more sustainable and better connected to their heritage.',
             ],
             'ro' => [
-                'role' => 'Arhitect',
+                'role' => 'Arhitect, membru Budapest100',
                 'institution' => 'KÉK — Centrul de Arhitectură Contemporană',
                 'description' => 'András Mudra a absolvit arhitectura la Universitatea de Tehnologie și Economie din Budapesta (BME) în 2024 și lucrează de atunci la studioul de arhitectură DANU. Ca arhitect, consideră esențială crearea unor spații locuibile, sustenabile și orientate spre comunitate, atât în interiorul clădirilor, cât și în jurul lor, cu un interes aparte pentru scara urbană și cea a clădirilor publice. S-a alăturat KÉK în 2022, inițial ca stagiar, devenind membru al echipelor Pecha Kucha Night Budapest și DANUrB+. Principalele sale teme de interes sunt patrimoniul arhitectural modern târziu, percepția publică și conservarea acestuia, precum și inițiativele urbane pornite de la firul ierbii, susținute și modelate de comunitățile locale. În ultimii ani a coordonat proiectele Budapest100, KÉK Mentor Program, ModernTéka și Pecha Kucha Night Budapest și a participat constant la tabere de construcție. Din 2023 face parte din echipa Urban Walks ca organizator, iar din 2025 și ca ghid. Este totodată managerul proiectului Danube Ruralscapes, dedicat reînnoirii la scară regională a practicilor de peisaj urban rural.
 
@@ -68,14 +68,14 @@ KÉK – Contemporary Architecture Centre (Budapesta) este o organizație indepe
             'avatar' => '/assets/2026/guests/szij.jpg',
             'institution_url' => 'https://www.kek.org.hu/',
             'en' => [
-                'role' => 'Head of Research',
+                'role' => 'Architect, Budapest100 Head of Research',
                 'institution' => 'KÉK — Contemporary Architecture Centre',
                 'description' => 'Barbara Szij graduated in art history from Eötvös Loránd University (ELTE), specializing in architectural and urban history. She began volunteering as a researcher for Budapest100 in 2014, and since 2016 has served as the programme’s Head of Research. In connection with this role, she also contributed to projects such as URBACT Come In! — which supported the international adaptation of the Budapest100 model — as well as DANUrB and the Csepel Works: Open Factory Weekend initiative. Alongside these projects, she worked at the Budapest History Museum in the communications department and later as an exhibition project assistant, before joining KÉK full-time. In 2023 and 2024, she served as project manager of Budapest100, and from 2025 onward, returned to coordinating the programme’s volunteer researchers. Her main area of interest is the relationship between architecture networks and urban development, as well as finding ways to involve broader audiences in the preservation, presentation, and public discourse surrounding built heritage.
 
 KÉK — Contemporary Architecture Centre (Budapest) is an independent organisation founded in 2006, working in architecture, built heritage and participatory urban development. Known internationally for Budapest100, KÉK develops programmes that bring together professionals, communities and public administrations to imagine cities that are more inclusive, more sustainable and better connected to their heritage.',
             ],
             'ro' => [
-                'role' => 'Coordonatoare de cercetare',
+                'role' => 'Arhitect, Coordonatoare de cercetare Budapest100',
                 'institution' => 'KÉK — Centrul de Arhitectură Contemporană',
                 'description' => 'Barbara Szij a absolvit istoria artei la Universitatea Eötvös Loránd (ELTE), cu specializare în istoria arhitecturii și a orașului. A început să lucreze ca cercetătoare voluntară pentru Budapest100 în 2014, iar din 2016 este coordonatoarea de cercetare a programului. În această calitate a contribuit și la proiecte precum URBACT Come In! — care a sprijinit adaptarea internațională a modelului Budapest100 —, DANUrB și inițiativa Csepel Works: Open Factory Weekend. În paralel, a lucrat la Muzeul de Istorie al Budapestei, în departamentul de comunicare și apoi ca asistentă de proiect expozițional, înainte de a se alătura KÉK cu normă întreagă. În 2023 și 2024 a fost managerul de proiect al Budapest100, iar din 2025 a revenit la coordonarea cercetătorilor voluntari ai programului. Principalul său domeniu de interes este relația dintre rețelele de arhitectură și dezvoltarea urbană, precum și modalitățile prin care publicul larg poate fi implicat în conservarea, prezentarea și discuția publică despre patrimoniul construit.
 
@@ -89,14 +89,14 @@ KÉK – Contemporary Architecture Centre (Budapesta) este o organizație indepe
             'avatar' => '/assets/2026/guests/trifa.jpg',
             'institution_url' => 'https://www.uauim.ro/',
             'en' => [
-                'role' => 'Lecturer',
+                'role' => 'Architect, Lecturer',
                 'institution' => '“Ion Mincu” University of Architecture and Urbanism',
                 'description' => 'Raluca-Maria Trifa is an architect, researcher, and lecturer at the “Ion Mincu” University of Architecture and Urbanism in Bucharest. Her research focuses on industrial architecture and the transformation of post-industrial cities, with a particular interest in the relationship between heritage, memory, and identity.
 
 She has published studies and articles on these topics and is the author of Historic Industrial Architecture: Possibilities for Sustainable Recovery. The Case of Timișoara (ACS Publishing House, 2023), a volume dedicated to Timișoara’s industrial heritage and the possibilities for its recovery and adaptive reuse. In 2024–2025, she was a fellow at New Europe College, where she conducted a comparative analysis of the industrial and urban development of four peripheral cities of the Habsburg Empire: Timișoara, Pécs, Rijeka, and Brno. Her research examined both the similarities and distinctive features of these cities, as well as the processes of knowledge, technology, and architectural model transfer that accompanied their industrial development.',
             ],
             'ro' => [
-                'role' => 'Lector universitar',
+                'role' => 'Arhitect, Lector universitar',
                 'institution' => 'Universitatea de Arhitectură și Urbanism „Ion Mincu”',
                 'description' => 'Raluca-Maria Trifa este arhitectă, cercetătoare și lector universitar la Universitatea de Arhitectură și Urbanism „Ion Mincu” din București. Activitatea sa de cercetare se concentrează asupra arhitecturii industriale și transformării orașelor postindustriale, cu un interes particular pentru relația dintre patrimoniu, memorie și identitate.
 
@@ -108,17 +108,17 @@ A publicat studii și articole pe aceste teme și este autoarea volumului Arhite
             'full_name' => 'Gabriela Robeci',
             'position' => 5,
             'avatar' => '/assets/2026/guests/robeci.jpg',
-            'institution_url' => 'https://uvt.ro/',
+            'institution_url' => 'https://arte.uvt.ro/',
             'en' => [
                 'role' => 'Research Assistant',
-                'institution' => 'West University of Timișoara',
+                'institution' => 'Faculty of Arts & Design, West University of Timișoara',
                 'description' => 'Gabriela Robeci is a research assistant with a background in the history and theory of visual arts. Since 2022, she has been teaching seminars and courses at the Faculty of Arts and Design, West University of Timișoara, Romania. Her research has been presented at local and international symposia and conferences, most recently at the AICA symposium Re-imagining the Global South in Johannesburg, South Africa.
 
 Curating exhibitions, coordinating documentary video materials and publishing articles are among the ways in which she shares her academic work. Some of her research interests can be found in journals and publications available through the CEEOL platform, cicasp.uvt.ro, as well as in Parabol, Arta and Caietele de Arte și Design. Her research focuses on visual arts and built cultural heritage from the beginning of the 20th century to the present. She examines the contexts that drive cultural change through case studies of site-specific interventions, immersive spaces, temporary artworks, abstraction, and the translation of philosophical ideas into object-based forms.',
             ],
             'ro' => [
                 'role' => 'Asistentă de cercetare',
-                'institution' => 'Universitatea de Vest din Timișoara',
+                'institution' => 'Facultatea de Arte și Design, Universitatea de Vest din Timișoara',
                 'description' => 'Gabriela Robeci, asistentă de cercetare, are o formare în istoria și teoria artelor vizuale și predă seminarii și cursuri la Facultatea de Arte și Design a Universității de Vest din Timișoara, România, începând din 2022. Cercetările sale au fost prezentate la simpozioane și conferințe locale și internaționale, cel mai recent fiind simpozionul AICA „Re-imagining the Global South”, desfășurat la Johannesburg, în Africa de Sud.
 
 Curatorierea expozițiilor, coordonarea materialelor video documentare și publicarea de articole se numără printre modalitățile prin care își împărtășește activitatea academică. Unele dintre temele de interes pot fi regăsite în reviste și publicații, inclusiv cele disponibile pe platforma CEEOL, cicasp.uvt.ro și în revistele Parabol, Arta și Caietele de Arte și Design.
@@ -131,15 +131,15 @@ Interesul de cercetare se concentrează pe artele vizuale și patrimoniul cultur
             'full_name' => 'Nicoleta Mușat',
             'position' => 6,
             'avatar' => '/assets/2026/guests/musat.jpg',
-            'institution_url' => 'https://uvt.ro/',
+            'institution_url' => 'https://lift.uvt.ro/',
             'en' => [
                 'role' => 'Educator & field researcher',
-                'institution' => 'West University of Timișoara',
+                'institution' => 'Faculty of Letters, History, Philosophy & Theology, West University of Timișoara',
                 'description' => 'Nicoleta is an educator and field researcher. Trained as a philologist at the Faculty of Letters in Timișoara, she discovered the history of mentalities, ethnological fieldwork and life-story interviews while pursuing her master’s studies more than two decades ago. Her research has focused primarily on the Banat region, where she has taken part in multidisciplinary projects exploring funeral rituals, different forms of heritage and the processes through which heritage is created and negotiated within communities. She has also studied human migration and the stories that accompany it. She is fascinated by life stories, family archives and the objects people collect and pass down from one generation to another. More recently, her attention has turned to the ways Romanian is taught through textbooks, how it is transmitted within families as a heritage language, and how language contributes to shaping identity in Romanian communities abroad.',
             ],
             'ro' => [
                 'role' => 'Profesoară și om de teren',
-                'institution' => 'Universitatea de Vest din Timișoara',
+                'institution' => 'Facultatea de Litere, Istorie, Filosofie și Teologie, Universitatea de Vest din Timișoara',
                 'description' => 'Nicoleta este profesoară și om de teren; s-a format, ca filolog, la Literele timișorene, unde, urmând cursuri masterale, în urmă cu peste două decenii, a descoperit istoria mentalităților, terenul etnologic și interviurile de tip povestea vieții. A făcut cercetări, în special, în Banat, în proiecte multidisciplinare în care s-a interesat de ritualizarea înmormântării, de diferitele tipuri de patrimoniu și de manierele de patrimonializare care se produc în comunități. Totodată, s-a preocupat de migrațiile oamenilor și de poveștile care le însoțesc. Este fascinată de poveștile de viață, de arhivele de familie, de obiectele pe care le strâng oamenii și pe care le lasă moștenire. În ultimul timp, și-a îndreptat atenția spre manierele în care se predă limba română prin manuale, spre cum se transmite ea în cadrul familial ca limbă de patrimoniu și cum vine să creeze identitate în comunități din afara țării.',
             ],
         ],
@@ -194,10 +194,10 @@ Anđela Petrović se alătură Why Culture Matters 2026 ca reprezentantă a Yout
             'full_name' => 'Andreea Lazea',
             'position' => 9,
             'avatar' => '/assets/2026/guests/lazea.jpg',
-            'institution_url' => 'https://uvt.ro/',
+            'institution_url' => 'https://arte.uvt.ro/',
             'en' => [
-                'role' => 'Associate professor',
-                'institution' => 'West University of Timișoara',
+                'role' => 'Associate professor, CICASP Manager',
+                'institution' => 'Faculty of Arts & Design, West University of Timișoara',
                 'description' => 'Andreea Lazea is an Associate Professor at the Faculty of Arts and Design, West University of Timișoara, where she teaches courses in cultural heritage, aesthetics and art history. She is also Director of the Centre for Research in Curatorship, Art History and Criticism, and Heritage Studies (CICASP).
 
 Her recent research focuses on contemporary public art in Romania, as well as on cultural heritage and its capacity to foster creativity and innovation. Her publications include Arta publică în Timișoara după 1989 [Public Art in Timișoara after 1989] (UVT Publishing House, 2025) and Pentru o antropologie a patrimoniului și patrimonializării. Perspective asupra monumentelor istorice în România [Towards an Anthropology of Heritage and Heritagisation. Perspectives on Historic Monuments in Romania] (Lumen Publishing House, 2012).
@@ -205,8 +205,8 @@ Her recent research focuses on contemporary public art in Romania, as well as on
 Alongside her teaching and research, Andreea Lazea is active as a curator and develops and implements projects for broader audiences, including Patrimoniul de aproape [Heritage Up Close] (Timișoara, 2023).',
             ],
             'ro' => [
-                'role' => 'Conferențiară universitară',
-                'institution' => 'Universitatea de Vest din Timișoara',
+                'role' => 'Conferențiară universitară, directoare CICASP',
+                'institution' => 'Facultatea de Arte și Design, Universitatea de Vest din Timișoara',
                 'description' => 'Andreea Lazea este conferențiar universitar la Facultatea de Arte și Design, Universitatea de Vest din Timișoara, unde predă cursuri în domeniul patrimoniului cultural, al esteticii și al istoriei artei, și director al Centrului de Cercetări în Curatoriat, Istoria și Critica de Artă, Studii Patrimoniale (CICASP). Cercetările sale recente vizează arta publică contemporană din România, precum și patrimoniul cultural și capacitatea acestuia de a stimula creativitatea și inovația. Printre publicațiile sale se numără volumele „Arta publică în Timișoara după 1989” (Ed. UVT, 2025) și „Pentru o antropologie a patrimoniului și patrimonializării. Perspective asupra monumentelor istorice în România” (Ed. Lumen, 2012).
 
 Alături de activitatea didactică și de cercetare, Andreea Lazea desfășoară și o activitate curatorială și elaborează și implementează proiecte destinate publicului larg, așa cum este cazul proiectului „Patrimoniul de aproape” (Timișoara, 2023).',
