@@ -2135,9 +2135,32 @@
 }
 
 .wcm26-partner-marks .wcm26-partner-logo {
-    flex: 1 1 140px;
-    min-width: 120px;
-    max-width: 260px;
+    flex: 0 0 auto;
+    width: auto;
+    height: 112px;
+}
+
+.wcm26-partner-marks .wcm26-slot {
+    position: static;
+}
+
+.wcm26-partner-marks .wcm26-slot img {
+    position: static;
+    width: auto;
+    height: 112px;
+    max-width: none;
+}
+
+/* The organiser's own mark, a shade larger than the one beside it. */
+.wcm26-partner-marks-organisers .wcm26-partner-logo:first-child,
+.wcm26-partner-marks-organisers .wcm26-partner-logo:first-child .wcm26-slot img {
+    height: 128px;
+}
+
+/* A wide mark at this height would otherwise run the width of the column. */
+.wcm26-partner-marks .wcm26-slot img {
+    max-width: 300px;
+    object-fit: contain;
 }
 
 /* A partner whose logo has not arrived yet still belongs on the list. */
