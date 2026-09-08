@@ -117,7 +117,7 @@
     "7–10 October 2026": "7–10 octombrie 2026",
     "FABER · Timișoara, Romania": "FABER · Timișoara, România",
     "Entry": "Acces",
-    "Pay what you can, registration required": "Contribuție liberă, pe bază de înscriere",
+    "Pay what you can, registration required": "Intrare liberă · Pe bază de înscriere · Donațiile sunt binevenite",
     "About": "Despre",
     "Four days where research meets practice.": "Patru zile în care cercetarea se întâlnește cu practica.",
     "Photograph from a past edition": "Fotografie dintr-o ediție anterioară",
@@ -315,5 +315,8 @@
     "confirmed.email.calendar": "Datele sunt atașate ca fișier de calendar: deschide **why-culture-matters-2026.ics** și calendarul tău se ocupă de rest. Dacă îți ții agenda în browser:",
     "See the programme": "Vezi programul",
     "Add to Google Calendar": "Adaugă în Google Calendar",
-    "register.band.note": "Nu avem o taxă fixă de participare. Tu alegi dacă și cât vrei să contribui. <strong>Orice donație este binevenită și ne ajută să păstrăm Why Culture Matters accesibil tuturor, să aducem în continuare la Timișoara invitați, idei și experiențe relevante și să construim edițiile viitoare.</strong>"
+    "register.band.note": "Nu avem o taxă fixă de participare. Tu alegi dacă și cât vrei să contribui. <strong>Orice donație este binevenită și ne ajută să păstrăm Why Culture Matters accesibil tuturor, să aducem în continuare la Timișoara invitați, idei și experiențe relevante și să construim edițiile viitoare.</strong>",
+    "entry.free": "Intrare liberă",
+    "entry.registration": "Pe bază de înscriere",
+    "entry.donations": "Donațiile sunt binevenite"
 }

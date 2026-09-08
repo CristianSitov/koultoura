@@ -14,8 +14,9 @@ defineProps({
     <section id="register" class="wcm26-register">
         <div class="wcm26-register-inner">
             <h2>
-                <span>{{ $t('Pay what you can.') }}</span>
-                <span>{{ $t('Registration required.') }}</span>
+                <span>{{ $t('entry.free') }}</span>
+                <span>{{ $t('entry.registration') }}</span>
+                <span>{{ $t('entry.donations') }}</span>
             </h2>
 
             <div>
