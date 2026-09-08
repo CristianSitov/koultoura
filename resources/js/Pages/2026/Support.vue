@@ -52,6 +52,17 @@ const account = {
                         <p>{{ $t('support.donate.p1') }}</p>
                         <p>{{ $t('support.donate.p2') }}</p>
 
+                        <!-- The button belongs between the two halves of the
+                             offer: donate while registering — here is how — or
+                             else, below, straight to the account. -->
+                        <p class="wcm26-form-actions">
+                            <a :href="`${base}/register`" class="btn btn-secondary btn-flush" style="height: 44px">
+                                {{ $t('Register and donate') }}
+                            </a>
+                        </p>
+
+                        <p>{{ $t('support.donate.p3') }}</p>
+
                         <dl class="wcm26-account">
                             <dt>{{ $t('Beneficiary') }}</dt>
                             <dd>{{ account.beneficiary }}</dd>
@@ -73,12 +84,6 @@ const account = {
                         </dl>
 
                         <p class="wcm26-support-close">{{ $t('support.donate.close') }}</p>
-
-                        <p class="wcm26-form-actions">
-                            <a :href="`${base}/register`" class="btn btn-secondary btn-flush" style="height: 44px">
-                                {{ $t('Register and donate') }}
-                            </a>
-                        </p>
                     </div>
                 </article>
 
