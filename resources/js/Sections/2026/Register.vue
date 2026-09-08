@@ -20,8 +20,7 @@ defineProps({
 
             <div>
                 <p class="wcm26-register-heading">{{ $t('register.band.heading') }}</p>
-                <p class="wcm26-register-title">{{ $t('register.band.title') }}</p>
-                <p class="wcm26-register-note">{{ $t('register.band.note') }}</p>
+                <p class="wcm26-register-note" v-html="$t('register.band.note')"></p>
                 <p class="wcm26-register-note" v-html="$t('register.band.terms')"></p>
 
                 <p class="wcm26-register-actions">
