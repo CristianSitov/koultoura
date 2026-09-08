@@ -27,7 +27,14 @@ use Inertia\Response;
  */
 class RegistrationsController extends Controller
 {
+    /*
+     * All four days, because a registration made before the 10th became the
+     * workshop day may still carry it and has to render.
+     */
     private const DAYS = [1 => '07', 2 => '08', 3 => '09', 4 => '10'];
+
+    /** The three the form offers; the 10th is booked through its workshops. */
+    private const REGISTRATION_DAYS = [1, 2, 3];
 
     public function index(Request $request): Response
     {
@@ -69,7 +76,7 @@ class RegistrationsController extends Controller
 
         $perDay = [];
 
-        foreach (array_keys(self::DAYS) as $day) {
+        foreach (self::REGISTRATION_DAYS as $day) {
             $perDay[$day] = [
                 'date' => self::DAYS[$day],
                 'all' => Registration::whereJsonContains('days', $day)->count(),

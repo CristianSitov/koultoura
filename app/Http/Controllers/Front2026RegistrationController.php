@@ -28,7 +28,12 @@ use Inertia\Response;
  */
 class Front2026RegistrationController extends Controller
 {
-    private const DAYS = [1, 2, 3, 4];
+    /*
+     * 7–9 October. The 10th is the Heritage School's workshop day: those have
+     * their own forms and their own capacity, so registering for the symposium
+     * does not cover them.
+     */
+    private const DAYS = [1, 2, 3];
 
     /** The submitted page for this registration, in its own language. */
     private function submittedUrl(Registration $registration): string

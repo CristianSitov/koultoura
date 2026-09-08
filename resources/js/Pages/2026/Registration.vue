@@ -7,11 +7,12 @@ import SectionHead from '../../Sections/2026/SectionHead.vue';
 
 const props = defineProps({
     base: { type: String, default: '/2026' },
-    days: { type: Array, default: () => [1, 2, 3, 4] },
+    days: { type: Array, default: () => [1, 2, 3] },
 });
 
-const weekdays = ['wednesday', 'thursday', 'friday', 'saturday'];
-const dates = ['07', '08', '09', '10'];
+// 7–9 October; the 10th is the workshop day and is booked separately.
+const weekdays = ['wednesday', 'thursday', 'friday'];
+const dates = ['07', '08', '09'];
 
 const form = useForm({
     name: '',
@@ -104,6 +105,7 @@ function submit() {
                             </label>
                         </div>
                         <p v-if="form.errors.days" class="wcm26-error">{{ form.errors.days }}</p>
+                        <p class="wcm26-hint">{{ $t('days.workshops') }}</p>
                     </fieldset>
 
                     <label class="wcm26-check wcm26-check-row">
