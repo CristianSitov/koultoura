@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Throwable;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use Illuminate\Validation\Rule;
@@ -65,7 +66,6 @@ class Front2026RegistrationController extends Controller
             'phone' => ['nullable', 'string', 'max:40', 'regex:/^[0-9\s\-\+\(\)]+$/'],
             'days' => ['required', 'array', 'min:1'],
             'days.*' => [Rule::in(self::DAYS)],
-            'workshop_interest' => ['boolean'],
             'consent' => ['accepted'],
         ]);
 
@@ -86,7 +86,6 @@ class Front2026RegistrationController extends Controller
             // Cast: a form post gives strings, an Inertia post gives numbers,
             // and the stored JSON should not depend on which.
             'days' => array_map('intval', $input['days']),
-            'workshop_interest' => (bool) ($input['workshop_interest'] ?? false),
             'locale' => app()->getLocale(),
             'consented_at' => now(),
         ])->save();
@@ -131,7 +130,7 @@ class Front2026RegistrationController extends Controller
          * only fires for a link made before that.
          */
         if ($request->route('locale') === null && $registration->locale !== 'en') {
-            return redirect($this->confirmUrl($registration));
+            return redirect($registration->confirmUrl());
         }
 
         $alreadyConfirmed = $registration->isConfirmed();
@@ -163,13 +162,6 @@ class Front2026RegistrationController extends Controller
         // Always the same answer: whether an address is registered is not
         // something a stranger gets to probe for.
         return back();
-    }
-
-    private function confirmUrl(Registration $registration): string
-    {
-        $prefix = $registration->locale === 'ro' ? '/ro' : '';
-
-        return Front2026Controller::BASE.$prefix.'/confirm/'.$registration->token;
     }
 
     /**
@@ -211,12 +203,32 @@ class Front2026RegistrationController extends Controller
             : null;
     }
 
-    private function sendConfirmation(Registration $registration): void
+    /**
+     * Sends the confirmation, and does not take the registration down with it
+     * if the mailer is having a bad day.
+     *
+     * A rejected API key used to surface as a 500 on the form — the row was
+     * already saved, so the person was registered and told they had failed.
+     * The send is logged and the page carries a "send it again" button, which
+     * is the second chance this needs.
+     */
+    private function sendConfirmation(Registration $registration): bool
     {
-        $url = url($this->confirmUrl($registration));
+        try {
+            Mail::to($registration->email)->send(
+                new RegistrationConfirmation($registration, $registration->confirmUrl())
+            );
+        } catch (Throwable $e) {
+            Log::error('2026 confirmation email failed', [
+                'registration' => $registration->id,
+                'error' => $e->getMessage(),
+            ]);
 
-        Mail::to($registration->email)->send(new RegistrationConfirmation($registration, $url));
+            return false;
+        }
 
         $registration->markSent();
+
+        return true;
     }
 }

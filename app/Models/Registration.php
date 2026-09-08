@@ -67,4 +67,12 @@ class Registration extends Model
             'sent_count' => $this->sent_count + 1,
         ])->save();
     }
+
+    /** Where this registration is confirmed, in the language it was made in. */
+    public function confirmUrl(): string
+    {
+        $prefix = $this->locale === 'ro' ? '/ro' : '';
+
+        return url(\App\Http\Controllers\Front2026Controller::BASE.$prefix.'/confirm/'.$this->token);
+    }
 }

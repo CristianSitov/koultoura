@@ -21,7 +21,6 @@ const form = useForm({
     country: '',
     phone: '',
     days: [],
-    workshop_interest: false,
     consent: false,
     // Left empty by people, filled by bots.
     website: '',
@@ -85,7 +84,7 @@ function submit() {
                     <div class="wcm26-field">
                         <label class="wcm26-label" for="phone">{{ $t('Phone') }}</label>
                         <input id="phone" v-model="form.phone" class="input" type="tel" autocomplete="tel" />
-                        <p class="wcm26-hint">{{ $t('So we can reach you about workshop places. Optional.') }}</p>
+                        <p class="wcm26-hint">{{ $t('So we can reach you if anything changes. Optional.') }}</p>
                         <p v-if="form.errors.phone" class="wcm26-error">{{ form.errors.phone }}</p>
                     </div>
 
@@ -102,13 +101,6 @@ function submit() {
                         </div>
                         <p v-if="form.errors.days" class="wcm26-error">{{ form.errors.days }}</p>
                     </fieldset>
-
-                    <label class="wcm26-check wcm26-check-row">
-                        <input v-model="form.workshop_interest" type="checkbox" />
-                        <span>{{ $t('I would like a place in a Heritage School workshop.') }}
-                            <em class="wcm26-hint">{{ $t('Places are limited and allocated by hand — this is not a booking.') }}</em>
-                        </span>
-                    </label>
 
                     <label class="wcm26-check wcm26-check-row">
                         <input v-model="form.consent" type="checkbox" required />

@@ -10,10 +10,6 @@
 {{ __('If the button does not work, paste this into your browser:') }}
 [{{ $confirmUrl }}]({{ $confirmUrl }})
 
-@if ($registration->workshop_interest)
-{{ __('You said you would like a place in a Heritage School workshop. Places are limited and allocated by hand — we will write again about that separately.') }}
-@endif
-
 {{ __('If you did not register, ignore this email and nothing further will happen.') }}
 
 {{ __('See you in October,') }}

@@ -13,11 +13,34 @@ const props = defineProps({
     base: { type: String, default: '/2026' },
 });
 
-const locale = computed(() => usePage().props.value.locale || 'en');
+const page = usePage();
+const locale = computed(() => page.props.value.locale || 'en');
 const otherLocale = computed(() => (locale.value === 'ro' ? 'en' : 'ro'));
-const otherLocaleUrl = computed(() =>
-    otherLocale.value === 'en' ? `${props.base}/register` : `${props.base}/ro/register`
-);
+
+/*
+ * The switch swaps the locale segment of the page you are on, rather than
+ * pointing at the registration form from every page.
+ *
+ * It also names the language in both directions. Only the landing page's own
+ * addresses are authoritatively English; everywhere else an address without a
+ * locale keeps whatever you were last reading — so linking "EN" at
+ * /register from the Romanian page left you in Romanian.
+ */
+const otherLocaleUrl = computed(() => {
+    const [path, query] = (page.url.value || `${props.base}/register`).split('?');
+    const rest = path.startsWith(props.base) ? path.slice(props.base.length) : path;
+
+    return props.base
+        + '/' + otherLocale.value
+        + rest.replace(/^\/(en|ro)(?=\/|$)/, '')
+        + (query ? `?${query}` : '');
+});
+
+/*
+ * The contribution step has no address of its own per language — it reads the
+ * language of the registration it belongs to — so there is nothing to switch to.
+ */
+const canSwitchLocale = computed(() => ! (page.url.value || '').includes('/contribute/'));
 
 const theme = ref('light');
 const isDark = computed(() => theme.value === 'dark');
@@ -45,6 +68,7 @@ onMounted(() => {
                 </a>
 
                 <a
+                    v-if="canSwitchLocale"
                     :href="otherLocaleUrl"
                     class="btn btn-secondary btn-icon wcm26-lang"
                     style="width: 40px; height: 40px; margin-left: auto"
@@ -54,7 +78,7 @@ onMounted(() => {
                 <button
                     type="button"
                     class="btn btn-secondary btn-icon"
-                    style="width: 40px; height: 40px"
+                    :style="{ width: '40px', height: '40px', marginLeft: canSwitchLocale ? '' : 'auto' }"
                     :aria-label="isDark ? $t('Switch to light mode') : $t('Switch to dark mode')"
                     @click="toggleTheme"
                 >

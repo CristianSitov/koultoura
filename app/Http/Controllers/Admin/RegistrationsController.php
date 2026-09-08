@@ -11,7 +11,9 @@ use App\Models\Session;
 use App\Models\SessionBooking;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Throwable;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -99,7 +101,19 @@ class RegistrationsController extends Controller
             return back()->with('flash', 'Already confirmed — nothing sent.');
         }
 
-        Mail::to($registration->email)->send(new RegistrationConfirmation($registration));
+        try {
+            Mail::to($registration->email)->send(
+                new RegistrationConfirmation($registration, $registration->confirmUrl())
+            );
+        } catch (Throwable $e) {
+            Log::error('2026 confirmation resend failed', [
+                'registration' => $registration->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors(['resend' => 'The email did not go out: '.$e->getMessage()]);
+        }
+
         $registration->forceFill([
             'last_sent_at' => now(),
             'sent_count' => $registration->sent_count + 1,
