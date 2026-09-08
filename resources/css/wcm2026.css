@@ -1517,7 +1517,7 @@
  */
 .wcm26-partner-logo {
     position: relative;
-    height: 84px;
+    height: 104px;
 }
 
 .wcm26-supporters-label {
@@ -2126,9 +2126,9 @@
 }
 
 .wcm26-partner-marks .wcm26-partner-logo {
-    flex: 1 1 120px;
-    min-width: 100px;
-    max-width: 220px;
+    flex: 1 1 140px;
+    min-width: 120px;
+    max-width: 260px;
 }
 
 /* A partner whose logo has not arrived yet still belongs on the list. */
@@ -2139,4 +2139,10 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+/* Reversed on a solid ground: it is a plate, not a mark on the page. */
+.wcm26 .wcm26-partner-logo img[src*="centrul-de-proiecte"] {
+    filter: none;
+    mix-blend-mode: normal;
 }
