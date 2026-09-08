@@ -1541,9 +1541,9 @@
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    /* Right, so a short last row ends level with the block above it rather
-       than floating in the middle of the column. */
-    justify-content: flex-end;
+    /* Left: the cells fill from the same edge as everything else on the page,
+       and a short last row trails off rather than being pushed across. */
+    justify-content: flex-start;
     gap: 16px;
 }
 
