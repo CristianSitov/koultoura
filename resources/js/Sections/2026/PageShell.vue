@@ -1,13 +1,18 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { usePage } from '@inertiajs/inertia-vue3';
 import Logo from './Logo.vue';
 import Bottom from './Bottom.vue';
+import MenuOverlay from './MenuOverlay.vue';
 
 /*
- * The chrome the registration pages sit in: the landing page's bar without its
- * menu or CTA — those lead back into a page you are already halfway through
- * leaving — plus the same footer, theme and language switch.
+ * The chrome the secondary pages sit in: the landing page's bar and footer,
+ * with the same theme and language switch.
+ *
+ * The bar carries the menu but not the Register button the landing page has —
+ * the menu already offers it, and a CTA for the form you are looking at is
+ * noise. The menu's own entries point back at the landing page rather than at
+ * fragments of a page you are not on.
  */
 const props = defineProps({
     base: { type: String, default: '/2026' },
@@ -16,6 +21,14 @@ const props = defineProps({
 const page = usePage();
 const locale = computed(() => page.props.value.locale || 'en');
 const otherLocale = computed(() => (locale.value === 'ro' ? 'en' : 'ro'));
+
+const menuOpen = ref(false);
+
+// Shared from the server for every 2026 page — see HandleInertiaRequests.
+const programmeVisible = computed(() => page.props.value.programmeVisible === true);
+
+// The sections live on the landing page, in the language being read.
+const landing = computed(() => (locale.value === 'ro' ? `${props.base}/ro` : props.base));
 
 /*
  * The switch swaps the locale segment of the page you are on, rather than
@@ -41,6 +54,16 @@ const otherLocaleUrl = computed(() => {
  * language of the registration it belongs to — so there is nothing to switch to.
  */
 const canSwitchLocale = computed(() => ! (page.url.value || '').includes('/contribute/'));
+
+// The page behind the menu does not scroll, as on the landing page.
+watch(menuOpen, (open) => {
+    document.body.style.overflow = open ? 'hidden' : '';
+});
+
+// Leaving with the menu open would strand the lock on the next page.
+onBeforeUnmount(() => {
+    document.body.style.overflow = '';
+});
 
 const theme = ref('light');
 const isDark = computed(() => theme.value === 'dark');
@@ -90,8 +113,32 @@ onMounted(() => {
                         <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
                     </svg>
                 </button>
+
+                <button
+                    type="button"
+                    class="btn btn-secondary btn-flush"
+                    style="height: 40px; gap: 10px"
+                    :aria-label="$t('Open menu')"
+                    :aria-expanded="menuOpen"
+                    @click="menuOpen = true"
+                >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
+                        <path d="M3 6h18M3 12h18M3 18h18"></path>
+                    </svg>
+                    <span class="wcm26-btn-label">{{ $t('Menu') }}</span>
+                </button>
             </div>
         </header>
+
+        <MenuOverlay
+            v-if="menuOpen"
+            :base="base"
+            :landing="landing"
+            :programme-visible="programmeVisible"
+            :other-locale="otherLocale"
+            :other-locale-url="otherLocaleUrl"
+            @close="menuOpen = false"
+        />
 
         <div class="wcm26-shell wcm26-page">
             <!-- Only the content column is narrowed; the bar above and the

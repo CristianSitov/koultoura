@@ -295,6 +295,29 @@
     font-weight: 800;
 }
 
+/*
+ * The heading rises into place as the section is reached. Both halves are only
+ * ever hidden once SectionHead.vue has added the class, so nothing here can
+ * leave a heading invisible on its own — see the note in that component.
+ */
+.wcm26-head-anim .wcm26-head-n,
+.wcm26-head-anim .wcm26-head-t {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* The number follows the title in rather than racing it. */
+.wcm26-head-anim .wcm26-head-n {
+    transition-delay: 0.09s;
+}
+
+.wcm26-head-anim.is-in .wcm26-head-n,
+.wcm26-head-anim.is-in .wcm26-head-t {
+    opacity: 1;
+    transform: none;
+}
+
 /* ── header ──────────────────────────────────────────────────────────────── */
 
 .wcm26-header {
@@ -1571,6 +1594,31 @@
     height: 100%;
 }
 
+/*
+ * These are links, and every one of them opens in a new tab, so pointing at one
+ * has to do something: the faint cell border used to be that signal. The mark
+ * lifts and deepens instead — the greyscale stays, since these sit on the page
+ * as a set rather than as fourteen brands competing for colour.
+ */
+.wcm26-supporters a,
+a.wcm26-partner-logo {
+    transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.wcm26-supporters a:hover,
+.wcm26-supporters a:focus-visible,
+a.wcm26-partner-logo:hover,
+a.wcm26-partner-logo:focus-visible {
+    transform: translateY(-2px);
+}
+
+.wcm26 .wcm26-supporters a:hover img,
+.wcm26 .wcm26-supporters a:focus-visible img,
+.wcm26 a.wcm26-partner-logo:hover img,
+.wcm26 a.wcm26-partner-logo:focus-visible img {
+    filter: grayscale(1) contrast(1.28);
+}
+
 .wcm26-supporters img {
     display: block;
     max-width: 100%;
@@ -1596,6 +1644,18 @@
 .wcm26[data-theme='dark'] .wcm26-partner-logo img {
     filter: grayscale(1) invert(1) contrast(1.08);
     mix-blend-mode: screen;
+}
+
+/*
+ * The hover deepening has to be restated here with the inversion, or it wins on
+ * specificity and drops it — which in dark mode means the mark turns dark on
+ * dark and disappears under the cursor.
+ */
+.wcm26[data-theme='dark'] .wcm26-supporters a:hover img,
+.wcm26[data-theme='dark'] .wcm26-supporters a:focus-visible img,
+.wcm26[data-theme='dark'] a.wcm26-partner-logo:hover img,
+.wcm26[data-theme='dark'] a.wcm26-partner-logo:focus-visible img {
+    filter: grayscale(1) invert(1) contrast(1.28);
 }
 
 /* ── registration form ───────────────────────────────────────────────────── */
@@ -2097,6 +2157,19 @@
     /* Hold the first frame instead of cycling. */
     .wcm26-about-photo img {
         animation: none;
+    }
+
+    /* The lift goes; the mark still deepens, so the link stays answerable. */
+    .wcm26-supporters a,
+    a.wcm26-partner-logo {
+        transition: none;
+    }
+
+    .wcm26-supporters a:hover,
+    .wcm26-supporters a:focus-visible,
+    a.wcm26-partner-logo:hover,
+    a.wcm26-partner-logo:focus-visible {
+        transform: none;
     }
 
     .wcm26-about-photo img:first-child {

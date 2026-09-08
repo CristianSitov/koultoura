@@ -8,12 +8,21 @@ const props = defineProps({
     // worse than a shorter menu.
     programmeVisible: { type: Boolean, default: false },
     base: { type: String, default: '/2026' },
+    /*
+     * Where the sections live. Empty on the landing page, where the entries are
+     * bare fragments pointing at the page you are already on; the address of
+     * the landing page anywhere else, since `#about` on /register scrolls to
+     * nothing at all.
+     */
+    landing: { type: String, default: '' },
     otherLocale: { type: String, default: 'ro' },
     otherLocaleUrl: { type: String, default: '/2026/ro' },
 });
 
 const items = computed(() =>
-    menuItems.filter((item) => item.href !== '#programme' || props.programmeVisible)
+    menuItems
+        .filter((item) => item.href !== '#programme' || props.programmeVisible)
+        .map((item) => ({ ...item, url: props.landing + item.href }))
 );
 
 defineEmits(['close']);
@@ -42,7 +51,7 @@ defineEmits(['close']);
         <nav class="wcm26-menu-body">
             <ol class="wcm26-menu-list">
                 <li v-for="item in items" :key="item.n">
-                    <a :href="item.href" class="wcm26-menu-link" @click="$emit('close')">
+                    <a :href="item.url" class="wcm26-menu-link" @click="$emit('close')">
                         <span>{{ item.n }}</span>{{ $t(item.label) }}
                     </a>
                 </li>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
@@ -68,6 +69,16 @@ class HandleInertiaRequests extends Middleware
             // One-off notices from the backoffice ("Session saved."). A closure
             // so it is read at render time, after the action has flashed it.
             'flash' => fn () => Session::get('flash'),
+
+            /*
+             * The 2026 menu drops its Programme entry while the section is off
+             * the site. Every 2026 page carries the menu now, not just the
+             * landing page, so the answer is shared rather than passed through
+             * eight render calls — and the short-circuit keeps the lookup off
+             * every other page on the site, none of which has a menu that asks.
+             */
+            'programmeVisible' => fn () => $request->routeIs('2026.*')
+                && Setting::bool(Setting::PROGRAMME_VISIBLE),
         ]);
     }
 }
