@@ -28,7 +28,7 @@ defineProps({
                 </div>
 
                 <div class="wcm26-about-copy">
-                    <p>{{ $t('Thank you, :name. Your place at Why Culture Matters 2026 is confirmed — 7–10 October, FABER, Timișoara.', { name }) }}</p>
+                    <p v-html="$t('confirmed.body', { name })"></p>
                     <p>{{ $t('We will write again closer to the date with the full programme.') }}</p>
 
                     <p class="wcm26-form-actions">

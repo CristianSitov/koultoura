@@ -1,7 +1,7 @@
 @component('mail::message')
 # {{ __('Almost there, :name', ['name' => $registration->name]) }}
 
-{{ __('Thank you for registering for Why Culture Matters 2026, 7–10 October in Timișoara. One step is left: confirm this address so we know we can reach you.') }}
+{!! __('email.intro') !!}
 
 @component('mail::button', ['url' => $confirmUrl])
 {{ __('Confirm my registration') }}

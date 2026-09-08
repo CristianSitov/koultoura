@@ -111,7 +111,7 @@ function resend() {
                         has one job, and it is getting them into their inbox.
                     -->
                     <div v-else-if="contributeUrl" class="wcm26-contribute">
-                        <p class="wcm26-contribute-note">{{ $t('submitted.contribution.short') }}</p>
+                        <p class="wcm26-contribute-note" v-html="$t('submitted.contribution.short')"></p>
                         <p class="wcm26-form-actions">
                             <a :href="contributeUrl" class="btn btn-secondary btn-flush" style="height: 44px">
                                 {{ $t('Contribute') }}

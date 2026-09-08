@@ -46,7 +46,7 @@ function submit() {
                 <div>
                     <p class="wcm26-lead" style="max-width: 20ch">{{ $t('Free to attend, pay what you can.') }}</p>
                     <p class="wcm26-body" style="margin-top: 28px; max-width: 46ch">
-                        {{ $t('register.intro') }}
+                        <span v-html="$t('register.intro')"></span>
                     </p>
                 </div>
 

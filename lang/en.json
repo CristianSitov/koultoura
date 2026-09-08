@@ -234,7 +234,7 @@
     "Confirm your registration · Why Culture Matters 2026": "Confirm your registration · Why Culture Matters 2026",
     "Registration confirmed · Why Culture Matters 2026": "Registration confirmed · Why Culture Matters 2026",
     "Free to attend, pay what you can.": "Free to attend, pay what you can.",
-    "register.intro": "Fill in the form and we send a confirmation email straight away. Your registration counts from the moment you confirm the address.",
+    "register.intro": "Fill in the form and we send a confirmation email straight away. Your registration counts from the moment you <strong>confirm the address</strong>.",
     "register.consent": "I agree that Asociația Prin Banat may keep these details to organise the symposium and write to me about the 2026 edition. They are deleted 12 months after the event and passed to no one else.",
     "Full name": "Full name",
     "Repeat your email address": "Repeat your email address",
@@ -278,9 +278,9 @@
     "Contribute · Why Culture Matters 2026": "Contribute · Why Culture Matters 2026",
     "You are registered. This part is optional.": "You are registered. This part is optional.",
     "Skip this": "Skip this",
-    "contribute.intro": "Attending is free. If you would like to support the symposium, contribute any amount you choose — it changes nothing about your registration, and the next step is the same either way.",
+    "contribute.intro": "Attending <strong>Why Culture Matters 2026</strong> is free. If you would like to support the symposium, contribute any amount you choose — it changes nothing about your registration, and the next step is the same either way.",
     "contribute.fallback": "Payment opens on Stripe's secure page.",
-    "submitted.contribution.short": "Attending is free. If you would still like to support the symposium, you can contribute any amount.",
+    "submitted.contribution.short": "Attending is free. If you would still like to support the symposium, you can <strong>contribute any amount</strong>.",
     "Thank you — your contribution of :amount has gone through.": "Thank you — your contribution of :amount has gone through.",
     "Book a place": "Book a place",
     "Fully booked": "Fully booked",
@@ -305,5 +305,7 @@
     "We have written to": "We have written to",
     "Open it and confirm, and your registration is done.": "Open it and confirm, and your registration is done.",
     "You are coming on": "You are coming on",
-    "October 2026": "October 2026"
+    "October 2026": "October 2026",
+    "confirmed.body": "Thank you, <strong>:name</strong>. Your place at <strong>Why Culture Matters 2026</strong> is confirmed — <strong>7–10 October 2026</strong>, <strong>FABER</strong>, Timișoara.",
+    "email.intro": "Thank you for registering for **Why Culture Matters 2026**, **7–10 October 2026**, at **FABER** in Timișoara. One step is left: confirm this address so we know we can reach you."
 }

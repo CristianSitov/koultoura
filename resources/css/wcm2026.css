@@ -2221,11 +2221,17 @@
     min-height: 420px;
 }
 
-/* Quieter than the form it declines, and clear of it. */
+/* Clear of the form it declines, and big enough to be an answer to it. */
 .wcm26-contribute-skip {
     margin: 28px 0 0;
-    padding-top: 20px;
+    padding-top: 24px;
     border-top: 1px solid var(--color-divider);
+}
+
+.wcm26-skip {
+    width: 100%;
+    min-height: 56px;
+    font-size: 17px;
 }
 
 /* The address is the thing to go and look for, so it is not just more prose. */
