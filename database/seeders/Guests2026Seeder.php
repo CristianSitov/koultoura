@@ -45,7 +45,7 @@ class Guests2026Seeder extends Seeder
             'full_name' => 'András Mudra',
             'position' => 2,
             'avatar' => '/assets/2026/guests/mudra.jpg',
-            'institution_url' => null,
+            'institution_url' => 'https://www.kek.org.hu/',
             'en' => [
                 'role' => 'Architect',
                 'institution' => 'KÉK — Contemporary Architecture Centre',
@@ -66,7 +66,7 @@ KÉK – Contemporary Architecture Centre (Budapesta) este o organizație indepe
             'full_name' => 'Barbara Szij',
             'position' => 3,
             'avatar' => '/assets/2026/guests/szij.jpg',
-            'institution_url' => null,
+            'institution_url' => 'https://www.kek.org.hu/',
             'en' => [
                 'role' => 'Head of Research',
                 'institution' => 'KÉK — Contemporary Architecture Centre',
@@ -87,7 +87,7 @@ KÉK – Contemporary Architecture Centre (Budapesta) este o organizație indepe
             'full_name' => 'Raluca-Maria Trifa',
             'position' => 4,
             'avatar' => '/assets/2026/guests/trifa.jpg',
-            'institution_url' => null,
+            'institution_url' => 'https://www.uauim.ro/',
             'en' => [
                 'role' => 'Lecturer',
                 'institution' => '“Ion Mincu” University of Architecture and Urbanism',
@@ -108,7 +108,7 @@ A publicat studii și articole pe aceste teme și este autoarea volumului Arhite
             'full_name' => 'Gabriela Robeci',
             'position' => 5,
             'avatar' => '/assets/2026/guests/robeci.jpg',
-            'institution_url' => null,
+            'institution_url' => 'https://uvt.ro/',
             'en' => [
                 'role' => 'Research Assistant',
                 'institution' => 'West University of Timișoara',
@@ -131,7 +131,7 @@ Interesul de cercetare se concentrează pe artele vizuale și patrimoniul cultur
             'full_name' => 'Nicoleta Mușat',
             'position' => 6,
             'avatar' => '/assets/2026/guests/musat.jpg',
-            'institution_url' => null,
+            'institution_url' => 'https://uvt.ro/',
             'en' => [
                 'role' => 'Educator & field researcher',
                 'institution' => 'West University of Timișoara',
@@ -148,7 +148,7 @@ Interesul de cercetare se concentrează pe artele vizuale și patrimoniul cultur
             'full_name' => 'Iulia Iordan',
             'position' => 7,
             'avatar' => '/assets/2026/guests/iordan.jpg',
-            'institution_url' => null,
+            'institution_url' => 'https://asociatiadadece.ro/',
             'en' => [
                 'role' => 'Writer, museum educator and curator',
                 'institution' => 'Da’DeCe Association',
@@ -169,7 +169,7 @@ Nu în ultimul rând, este parte a echipei de Proiecte culturale a Ordinului Arh
             'full_name' => 'Anđela Petrović',
             'position' => 8,
             'avatar' => '/assets/2026/guests/petrovic.jpg',
-            'institution_url' => null,
+            'institution_url' => 'https://www.youth-heritage-europe.org/',
             'en' => [
                 'role' => 'Curator & researcher in museology and heritage studies',
                 'institution' => 'Youth.Heritage.Europe',
@@ -194,7 +194,7 @@ Anđela Petrović se alătură Why Culture Matters 2026 ca reprezentantă a Yout
             'full_name' => 'Andreea Lazea',
             'position' => 9,
             'avatar' => '/assets/2026/guests/lazea.jpg',
-            'institution_url' => null,
+            'institution_url' => 'https://uvt.ro/',
             'en' => [
                 'role' => 'Associate professor',
                 'institution' => 'West University of Timișoara',
