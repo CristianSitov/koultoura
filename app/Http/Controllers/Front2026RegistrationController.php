@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\RegistrationConfirmation;
+use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\Registration;
 use Illuminate\Http\RedirectResponse;
@@ -155,6 +156,15 @@ class Front2026RegistrationController extends Controller
         $alreadyConfirmed = $registration->isConfirmed();
         $registration->confirm();
 
+        /*
+         * The second email: the dates in writing, the way into the programme,
+         * and the event as a calendar entry. Only on the visit that actually
+         * confirms — clicking the link again is not a reason to send it twice.
+         */
+        if (! $alreadyConfirmed) {
+            $this->sendConfirmed($registration);
+        }
+
         return Inertia::render('2026/RegistrationConfirmed', [
             'base' => Front2026Controller::BASE,
             'name' => $registration->name,
@@ -231,6 +241,19 @@ class Front2026RegistrationController extends Controller
      * The send is logged and the page carries a "send it again" button, which
      * is the second chance this needs.
      */
+    /** The welcome that follows confirming; a failure here is not the visitor's problem. */
+    private function sendConfirmed(Registration $registration): void
+    {
+        try {
+            Mail::to($registration->email)->send(new RegistrationConfirmed($registration));
+        } catch (Throwable $e) {
+            Log::error('2026 confirmed email failed', [
+                'registration' => $registration->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
     private function sendConfirmation(Registration $registration): bool
     {
         try {

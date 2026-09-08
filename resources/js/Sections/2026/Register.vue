@@ -20,10 +20,11 @@ defineProps({
 
             <div>
                 <p class="wcm26-register-heading">{{ $t('register.band.heading') }}</p>
+                <p class="wcm26-register-note" v-html="$t('register.band.note')"></p>
                 <p class="wcm26-register-note" v-html="$t('register.band.terms')"></p>
 
                 <p class="wcm26-register-actions">
-                    <a :href="`${base}/register`" class="btn btn-primary btn-flush" style="height: 44px">
+                    <a :href="`${base}/register`" class="btn btn-primary btn-flush wcm26-register-cta">
                         {{ $t('register.submit') }}
                     </a>
                 </p>

@@ -2306,3 +2306,13 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
+
+/* The way in, and the largest thing in the band after the headline. Scoped to
+   the band so it outweighs the .wcm26-register .btn-primary sizing above. */
+.wcm26-register .wcm26-register-cta {
+    min-height: 60px;
+    padding-inline: 34px;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
