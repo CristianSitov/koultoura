@@ -69,7 +69,7 @@ onBeforeUnmount(() => checkout?.destroy());
             <!-- One column, one measure: the words and the payment form share
                  a left edge, and skipping sits under the thing being skipped. -->
             <div class="wcm26-contribute-col">
-                <p class="wcm26-lead">{{ $t('You are registered. This part is optional.') }}</p>
+                <p class="wcm26-lead">{{ $t('contribute.lead') }}</p>
                 <p class="wcm26-body wcm26-contribute-intro" v-html="$t('contribute.intro')"></p>
 
                 <div v-if="clientSecret && !failed" id="wcm-checkout" class="wcm26-checkout"></div>

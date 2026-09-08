@@ -278,7 +278,7 @@
     "Contribute · Why Culture Matters 2026": "Contribuie · Why Culture Matters 2026",
     "You are registered. This part is optional.": "Te-ai înscris. Partea aceasta este opțională.",
     "Skip this": "Sari peste",
-    "contribute.intro": "Participarea este gratuită. Dacă vrei să susții simpozionul, poți contribui cu orice sumă alegi — asta nu schimbă cu nimic înscrierea ta, iar pasul următor este același oricum.",
+    "contribute.intro": "Nu avem o taxă fixă de participare. Tu alegi dacă și cât vrei să contribui. <strong>Orice donație este binevenită și ne ajută să păstrăm Why Culture Matters accesibil tuturor, să aducem în continuare la Timișoara invitați, idei și experiențe relevante și să construim edițiile viitoare.</strong>",
     "contribute.fallback": "Plata se deschide pe pagina securizată a Stripe.",
     "submitted.contribution.short": "Participarea este gratuită. Dacă vrei totuși să susții simpozionul, poți <strong>contribui cu orice sumă</strong>.",
     "Thank you — your contribution of :amount has gone through.": "Îți mulțumim — contribuția ta de :amount a fost înregistrată.",
@@ -298,7 +298,6 @@
     "theme.2.body2": "Secțiunea explorează <strong>cum sunt construite, transmise și reinterpretate narațiunile patrimoniului cultural</strong>, cu atenție pentru istorii dificile, contestate sau uitate, pentru mediere culturală și pentru rolul comunităților în construirea unor noi relații cu propriul patrimoniu.",
     "theme.3.body2": "Ne interesează cum poate deveni patrimoniul <strong>accesibil, relevant și apropiat de experiența de zi cu zi</strong> și cum putem construi, de la o generație la alta, capacitatea de a-l recunoaște, înțelege și proteja.",
     "theme.3.more": "Ediția din 2026 introduce și <strong>Școala de patrimoniu cultural</strong>, o nouă inițiativă educațională care va fi pilotată în timpul simpozionului și dezvoltată începând din 2027.",
-    "register.band.note": "Nu avem o taxă fixă de participare. Tu alegi dacă și cât vrei să contribui. <strong>Orice donație este binevenită și ne ajută să păstrăm Why Culture Matters accesibil tuturor, să aducem în continuare la Timișoara invitați, idei și experiențe relevante și să construim edițiile viitoare.</strong>",
     "about.archive": "Vezi edițiile anterioare ale Why Culture Matters – :y2022 & :y2024.",
     "register.band.heading": "Participă la Why Culture Matters",
     "register.band.terms": "<strong>Participarea se face pe bază de înscriere, iar donația este opțională.</strong>",
@@ -307,5 +306,6 @@
     "You are coming on": "Vii în zilele",
     "October 2026": "octombrie 2026",
     "confirmed.body": "Îți mulțumim, <strong>:name</strong>. Locul tău la <strong>Why Culture Matters 2026</strong> este confirmat — <strong>7–10 octombrie 2026</strong>, <strong>FABER</strong>, Timișoara.",
-    "email.intro": "Îți mulțumim pentru înscrierea la **Why Culture Matters 2026**, **7–10 octombrie 2026**, la **FABER** în Timișoara. A mai rămas un pas: confirmă această adresă, ca să știm că te putem contacta."
+    "email.intro": "Îți mulțumim pentru înscrierea la **Why Culture Matters 2026**, **7–10 octombrie 2026**, la **FABER** în Timișoara. A mai rămas un pas: confirmă această adresă, ca să știm că te putem contacta.",
+    "contribute.lead": "Contribuie cât și dacă dorești."
 }

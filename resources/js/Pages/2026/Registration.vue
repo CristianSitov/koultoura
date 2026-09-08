@@ -47,9 +47,8 @@ function submit() {
                     <!-- The document's ÎNSCRIERE copy, the same words the
                          landing page invites people with — then the one
                          practical sentence about what happens next. -->
-                    <p class="wcm26-lead" style="max-width: 20ch">{{ $t('Pay what you can.') }}</p>
-                    <p class="wcm26-body" style="margin-top: 28px; max-width: 46ch" v-html="$t('register.band.note')"></p>
-                    <p class="wcm26-body" style="margin-top: 20px; max-width: 46ch" v-html="$t('register.band.terms')"></p>
+                    <p class="wcm26-lead" style="max-width: 22ch">{{ $t('register.band.heading') }}</p>
+                    <p class="wcm26-body" style="margin-top: 28px; max-width: 46ch" v-html="$t('register.band.terms')"></p>
                     <p class="wcm26-body" style="margin-top: 20px; max-width: 46ch">
                         <span v-html="$t('register.intro')"></span>
                     </p>

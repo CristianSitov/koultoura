@@ -2,6 +2,7 @@
 import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { computed, ref } from 'vue';
 import '../../../css/wcm2026.css';
+import { CalendarDays, Check, HeartHandshake, Mail } from 'lucide-vue-next';
 import PageShell from '../../Sections/2026/PageShell.vue';
 import SectionHead from '../../Sections/2026/SectionHead.vue';
 
@@ -69,10 +70,7 @@ function resend() {
                     <template v-if="! confirmed">
                         <div class="wcm26-cued">
                             <span class="wcm26-cue" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                                    <rect x="2.5" y="5" width="19" height="14" />
-                                    <path d="M2.5 6.5 12 13.5 21.5 6.5" />
-                                </svg>
+                                <Mail :size="50" :stroke-width="1.25" />
                             </span>
 
                             <div>
@@ -104,10 +102,7 @@ function resend() {
                          and it is not changed by asking twice. -->
                     <div v-if="days.length" class="wcm26-cued wcm26-booked">
                         <span class="wcm26-cue" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                                <rect x="3" y="5" width="18" height="16" />
-                                <path d="M3 9.5h18M8 3v4M16 3v4" />
-                            </svg>
+                            <CalendarDays :size="50" :stroke-width="1.25" />
                         </span>
 
                         <p class="wcm26-booked-days">
@@ -119,9 +114,7 @@ function resend() {
 
                     <div v-if="paid" class="wcm26-cued wcm26-contribute">
                         <span class="wcm26-cue" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                                <path d="M4 12.5 9.5 18 20 6.5" />
-                            </svg>
+                            <Check :size="50" :stroke-width="1.25" />
                         </span>
 
                         <div>
@@ -140,9 +133,7 @@ function resend() {
                     -->
                     <div v-else-if="contributeUrl" class="wcm26-cued wcm26-contribute">
                         <span class="wcm26-cue" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                                <path d="M12 20.5 4.5 13a4.6 4.6 0 0 1 7.5-5.2A4.6 4.6 0 0 1 19.5 13Z" />
-                            </svg>
+                            <HeartHandshake :size="50" :stroke-width="1.25" />
                         </span>
 
                         <div>

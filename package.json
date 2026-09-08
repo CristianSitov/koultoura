@@ -27,6 +27,7 @@
         "@headlessui/vue": "^1.7.3",
         "@heroicons/vue": "^1.0.6",
         "laravel-vue-i18n": "^2.7.7",
+        "lucide-vue-next": "^1.0.0",
         "mapbox-gl": "^2.9.2",
         "mitt": "^3.0.0",
         "vue-cookieconsent": "^0.0.11",
