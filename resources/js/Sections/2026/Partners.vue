@@ -20,7 +20,7 @@ const financers = [
 ];
 
 const supporters = [
-    { name: 'Institutul Național al Patrimoniului', logo: null },
+    { name: 'Institutul Național al Patrimoniului', logo: '/assets/2026/partners/inp.png' },
     { name: 'Direcția Județeană pentru Cultură Timiș', logo: '/assets/2026/partners/djc.svg' },
     { name: 'UVT — Facultatea de Arte și Design', logo: '/assets/2026/partners/uvt-arte.svg' },
     { name: 'CICASP', logo: '/assets/2026/partners/cicasp.svg' },
