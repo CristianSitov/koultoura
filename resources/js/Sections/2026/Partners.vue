@@ -21,18 +21,18 @@ const financers = [
 
 const supporters = [
     { name: 'Institutul Național al Patrimoniului', logo: '/assets/2026/partners/inp.png', url: 'https://patrimoniu.ro' },
-    { name: 'Direcția Județeană pentru Cultură Timiș', logo: '/assets/2026/partners/djc.svg' },
-    { name: 'UVT — Facultatea de Arte și Design', logo: '/assets/2026/partners/uvt-arte.svg', url: 'https://uvt.ro' },
+    { name: 'Direcția Județeană pentru Cultură Timiș', logo: '/assets/2026/partners/djc.svg', url: 'https://culturatimis.ro/' },
+    { name: 'UVT — Facultatea de Arte și Design', logo: '/assets/2026/partners/uvt-arte.svg', url: 'https://arte.uvt.ro/' },
     { name: 'CICASP', logo: '/assets/2026/partners/cicasp.svg', url: 'https://cicasp.uvt.ro' },
-    { name: 'OAR — Filiala Teritorială Timiș', logo: '/assets/2026/partners/oar-timis.svg' },
+    { name: 'OAR — Filiala Teritorială Timiș', logo: '/assets/2026/partners/oar-timis.svg', url: 'https://oartimis.ro/' },
     { name: 'KÉK — Contemporary Architecture Centre', logo: '/assets/2026/partners/kek.svg', url: 'https://www.kek.org.hu' },
-    { name: 'Oradea Heritage', logo: '/assets/2026/partners/oradea-heritage.png' },
-    { name: 'Imagine Heritage', logo: '/assets/2026/partners/imagine-heritage.png' },
+    { name: 'Oradea Heritage', logo: '/assets/2026/partners/oradea-heritage.png', url: 'https://www.oradeaheritage.ro/' },
+    { name: 'Imagine Heritage', logo: '/assets/2026/partners/imagine-heritage.png', url: 'https://imagineheritage.com/' },
     { name: 'Youth.Heritage.Europe', logo: '/assets/2026/partners/youth-heritage-europe.png', url: 'https://www.youth-heritage-europe.org' },
-    { name: 'FAINA', logo: '/assets/2026/partners/faina.png' },
-    { name: 'Institutul Polonez București', logo: '/assets/2026/partners/institutul-polonez.svg' },
-    { name: 'Visit Timișoara', logo: '/assets/2026/partners/visit-timisoara.jpg' },
-    { name: 'Librăriile Cărturești Timișoara', logo: '/assets/2026/partners/carturesti.svg' },
+    { name: 'FAINA', logo: '/assets/2026/partners/faina.png', url: 'https://www.facebook.com/faina.ua.community/' },
+    { name: 'Institutul Polonez București', logo: '/assets/2026/partners/institutul-polonez.svg', url: 'https://instytutpolski.pl/bucuresti/' },
+    { name: 'Visit Timișoara', logo: '/assets/2026/partners/visit-timisoara.jpg', url: 'https://visit-timisoara.com/' },
+    { name: 'Librăriile Cărturești Timișoara', logo: '/assets/2026/partners/carturesti.svg', url: 'http://carturesti.ro/' },
     { name: 'Fundația Culturală Jazz Banat', logo: '/assets/2026/partners/jazz-banat.png' },
 ];
 </script>
