@@ -1549,8 +1549,8 @@
 
 /* Flex, not grid: fourteen marks never divide evenly into columns, and a
    wrapped last row centres itself instead of trailing off to one lonely logo.
-   Each sits in a faint cell — enough to give the uneven set a common frame,
-   little enough that the frames do not become the pattern. */
+   The cell is spacing only — the even padding is what gives the uneven set a
+   common rhythm, without drawing a frame around each one. */
 .wcm26-supporters li {
     /* Flexible rather than fixed: at 170px exactly, two cells and their gap
        came to three pixels more than a phone's column and dropped to one. */
@@ -1561,12 +1561,6 @@
     justify-content: center;
     min-height: 108px;
     padding: 18px 20px;
-    border: 2px solid color-mix(in srgb, var(--color-text) 6%, transparent);
-    transition: border-color 0.25s;
-}
-
-.wcm26-supporters li:hover {
-    border-color: color-mix(in srgb, var(--color-text) 14%, transparent);
 }
 
 .wcm26-supporters a {
