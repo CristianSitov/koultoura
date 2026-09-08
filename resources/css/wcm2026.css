@@ -2244,14 +2244,49 @@
 }
 
 /* What this registration is down for — a statement, not a control. */
+/*
+ * A mark in the margin of each block, so the page reads as three things — the
+ * message sent, the days booked, the offer still open — rather than one column
+ * of prose with rules through it.
+ */
+.wcm26-cued {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.wcm26-cue {
+    display: block;
+    color: var(--color-accent);
+    margin-top: 3px;
+}
+
+.wcm26-cue svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+}
+
+.wcm26-cued > div > p:first-child,
+.wcm26-cued > p:first-child {
+    margin-top: 0;
+}
+
 .wcm26-booked {
+    margin: 32px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-divider);
+}
+
+.wcm26-booked-days {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 32px 0 0;
-    padding-top: 20px;
-    border-top: 1px solid var(--color-divider);
+    margin: 0;
 }
 
 .wcm26-booked-day {

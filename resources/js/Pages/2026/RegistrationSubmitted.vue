@@ -67,56 +67,92 @@ function resend() {
                     <!-- Confirmed: the heading says so, and repeating it here
                          only pushed the one thing still on offer further down. -->
                     <template v-if="! confirmed">
-                        <p>
-                            {{ $t('We have written to') }} <strong class="wcm26-email">{{ email }}</strong>{{ '.' }}
-                            {{ $t('Open it and confirm, and your registration is done.') }}
-                        </p>
+                        <div class="wcm26-cued">
+                            <span class="wcm26-cue" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                    <rect x="2.5" y="5" width="19" height="14" />
+                                    <path d="M2.5 6.5 12 13.5 21.5 6.5" />
+                                </svg>
+                            </span>
 
-                        <p>{{ $t('Nothing arrived? It may take a minute, and it may have landed in spam.') }}</p>
+                            <div>
+                                <p>
+                                    {{ $t('We have written to') }} <strong class="wcm26-email">{{ email }}</strong>{{ '.' }}
+                                    {{ $t('Open it and confirm, and your registration is done.') }}
+                                </p>
 
-                        <p v-if="resent" class="wcm26-note-sent">{{ $t('Sent again. Give it a minute.') }}</p>
-                        <p v-else class="wcm26-form-actions">
-                            <button
-                                type="button"
-                                class="btn btn-secondary btn-flush"
-                                style="height: 44px"
-                                :disabled="form.processing"
-                                @click="resend"
-                            >
-                                {{ $t('Send it again') }}
-                            </button>
-                        </p>
+                                <p class="wcm26-hint">{{ $t('Nothing arrived? It may take a minute, and it may have landed in spam.') }}</p>
+
+                                <p v-if="resent" class="wcm26-note-sent">{{ $t('Sent again. Give it a minute.') }}</p>
+                                <p v-else class="wcm26-form-actions">
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary btn-flush"
+                                        style="height: 44px"
+                                        :disabled="form.processing"
+                                        @click="resend"
+                                    >
+                                        {{ $t('Send it again') }}
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
                     </template>
 
                     <!-- Someone filling the form in again with the same
                          address lands here: this is what they are down for,
                          and it is not changed by asking twice. -->
-                    <p v-if="days.length" class="wcm26-booked">
-                        <span class="wcm26-label">{{ $t('You are coming on') }}</span>
-                        <span v-for="day in days" :key="day" class="wcm26-booked-day">{{ dayLabels[day] }}</span>
-                        <span class="wcm26-booked-month">{{ $t('October 2026') }}</span>
-                    </p>
+                    <div v-if="days.length" class="wcm26-cued wcm26-booked">
+                        <span class="wcm26-cue" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <rect x="3" y="5" width="18" height="16" />
+                                <path d="M3 9.5h18M8 3v4M16 3v4" />
+                            </svg>
+                        </span>
 
-                    <div v-if="paid" class="wcm26-contribute">
+                        <p class="wcm26-booked-days">
+                            <span class="wcm26-label">{{ $t('You are coming on') }}</span>
+                            <span v-for="day in days" :key="day" class="wcm26-booked-day">{{ dayLabels[day] }}</span>
+                            <span class="wcm26-booked-month">{{ $t('October 2026') }}</span>
+                        </p>
+                    </div>
+
+                    <div v-if="paid" class="wcm26-cued wcm26-contribute">
+                        <span class="wcm26-cue" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <path d="M4 12.5 9.5 18 20 6.5" />
+                            </svg>
+                        </span>
+
+                        <div>
                         <p class="wcm26-contribute-note">
                             {{ contributed
                                 ? $t('Thank you — your contribution of :amount has gone through.', { amount: contributed })
                                 : $t('Thank you for your contribution.') }}
                         </p>
                         <p class="wcm26-hint">{{ confirmed ? $t('Stripe will email you a receipt.') : $t('Stripe will email you a receipt. Your registration still needs confirming from the email above.') }}</p>
+                        </div>
                     </div>
                     <!--
                         A quiet second chance for anyone who skipped the
                         contribution step. Deliberately understated: this page
                         has one job, and it is getting them into their inbox.
                     -->
-                    <div v-else-if="contributeUrl" class="wcm26-contribute">
-                        <p class="wcm26-contribute-note" v-html="$t('submitted.contribution.short')"></p>
-                        <p class="wcm26-form-actions">
-                            <a :href="contributeUrl" class="btn btn-secondary btn-flush" style="height: 44px">
-                                {{ $t('Contribute') }}
-                            </a>
-                        </p>
+                    <div v-else-if="contributeUrl" class="wcm26-cued wcm26-contribute">
+                        <span class="wcm26-cue" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <path d="M12 20.5 4.5 13a4.6 4.6 0 0 1 7.5-5.2A4.6 4.6 0 0 1 19.5 13Z" />
+                            </svg>
+                        </span>
+
+                        <div>
+                            <p class="wcm26-contribute-note" v-html="$t('submitted.contribution.short')"></p>
+                            <p class="wcm26-form-actions">
+                                <a :href="contributeUrl" class="btn btn-secondary btn-flush" style="height: 44px">
+                                    {{ $t('Contribute') }}
+                                </a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
