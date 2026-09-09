@@ -166,8 +166,6 @@ function onPopState(event) {
             v-if="menuOpen"
             :base="base"
             :programme-visible="programmeVisible"
-            :other-locale="otherLocale"
-            :other-locale-url="otherLocaleUrl"
             @close="menuOpen = false"
         />
 

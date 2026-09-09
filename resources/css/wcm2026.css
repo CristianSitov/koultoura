@@ -424,25 +424,26 @@
     width: 100%;
     margin: 0 auto;
     padding: clamp(32px, 6vh, 72px) clamp(20px, 5vw, 120px);
-    display: grid;
-    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-    gap: 48px;
     flex: 1;
+    /*
+     * The list scrolls, the bar above it does not: with enough rows — and there
+     * are nine once the pages are in — the last of them used to sit below the
+     * fold with no way to reach it on a short screen, because the overlay is
+     * fixed to the viewport.
+     */
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
-/* Language switch: a text button the same size as the theme icon beside it. */
+/* Language switch: a text button the same size as the theme icon beside it.
+   In the bar only — the menu had one too, which was the same switch twice. */
 .wcm26-lang {
     font-family: var(--font-heading);
     font-weight: 700;
     font-size: 12px;
     letter-spacing: 0.06em;
     text-decoration: none;
-}
-
-.wcm26-menu-lang {
-    color: inherit;
-    text-decoration: none;
-    border-bottom: 2px solid var(--color-divider);
 }
 
 .wcm26-menu-list {
@@ -494,29 +495,6 @@
     color: var(--color-accent-700);
     font-feature-settings: 'tnum' 1;
     min-width: 2.5ch;
-}
-
-.wcm26-menu-aside {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    gap: 28px;
-    font-size: 16px;
-    line-height: 26px;
-}
-
-.wcm26-menu-aside p:first-child {
-    margin: 0;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent-700);
-}
-
-.wcm26-menu-aside p:last-child {
-    margin: 6px 0 0;
-    font-weight: 700;
-    font-size: 20px;
 }
 
 /* ── hero ────────────────────────────────────────────────────────────────── */
@@ -2142,12 +2120,6 @@ a.wcm26-partner-logo:focus-visible {
     }
 }
 
-@media (max-width: 860px) {
-    .wcm26-menu-body {
-        grid-template-columns: minmax(0, 1fr);
-    }
-}
-
 @media (max-width: 960px) {
     /*
      * Below four columns the spans cannot line up with the days they describe,
@@ -2704,9 +2676,4 @@ a.wcm26-partner-logo:focus-visible {
     }
 }
 
-.wcm26-menu-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-self: flex-start;
-}
+

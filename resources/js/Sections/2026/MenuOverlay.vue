@@ -1,7 +1,7 @@
 <script setup>
 import Logo from './Logo.vue';
 import { computed } from 'vue';
-import { menuItems, menuSupport } from './menu';
+import { menuItems, menuPages } from './menu';
 
 const props = defineProps({
     // Hidden sections are not offered: a menu entry that scrolls nowhere is
@@ -15,17 +15,15 @@ const props = defineProps({
      * nothing at all.
      */
     landing: { type: String, default: '' },
-    otherLocale: { type: String, default: 'ro' },
-    otherLocaleUrl: { type: String, default: '/2026/ro' },
 });
 
 const items = computed(() => [
     ...menuItems
         .filter((item) => item.href !== '#programme' || props.programmeVisible)
         .map((item) => ({ ...item, url: props.landing + item.href })),
-    // Last, and off the numbered sequence: it leaves the page rather than
-    // scrolling it, so it hangs off `base` and is marked as the odd one out.
-    { ...menuSupport, url: props.base + menuSupport.href, support: true },
+    // Last, and off the numbered sequence: these leave the page rather than
+    // scrolling it, so they hang off `base` and are marked as the odd ones out.
+    ...menuPages.map((page) => ({ ...page, url: props.base + page.href })),
 ]);
 
 defineEmits(['close']);
@@ -65,33 +63,6 @@ defineEmits(['close']);
                 </li>
                 <li></li>
             </ol>
-
-            <div class="wcm26-menu-aside">
-                <div>
-                    <p>{{ $t('Dates') }}</p>
-                    <p>{{ $t('7–10 October 2026') }}</p>
-                </div>
-                <div>
-                    <p>{{ $t('Venue') }}</p>
-                    <p>FABER, Timișoara</p>
-                </div>
-                <div>
-                    <p>{{ $t('Language') }}</p>
-                    <p><a class="wcm26-menu-lang" :href="otherLocaleUrl">{{ otherLocale === 'ro' ? 'Română' : 'English' }}</a></p>
-                </div>
-                <!-- Support us used to sit here too; it is a row of the menu
-                     itself now, and one way in is enough for one overlay. -->
-                <div class="wcm26-menu-actions">
-                    <a
-                        :href="`${base}/register`"
-                        class="btn btn-primary btn-flush"
-                        style="height: 48px; font-size: 16px"
-                        @click="$emit('close')"
-                    >
-                        {{ $t('register.submit') }}
-                    </a>
-                </div>
-            </div>
         </nav>
     </div>
 </template>

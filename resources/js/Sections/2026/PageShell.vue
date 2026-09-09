@@ -135,8 +135,6 @@ onMounted(() => {
             :base="base"
             :landing="landing"
             :programme-visible="programmeVisible"
-            :other-locale="otherLocale"
-            :other-locale-url="otherLocaleUrl"
             @close="menuOpen = false"
         />
 

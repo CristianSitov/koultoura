@@ -11,12 +11,14 @@ export const menuItems = [
 ];
 
 /*
- * Support us is not one of the sections: it is a page of its own, so its
- * address hangs off the edition's base rather than the landing page's, and it
- * carries the arrow the Support page gives its own heading rather than a
- * number it has no place in.
+ * The two pages of their own. Not sections, so their addresses hang off the
+ * edition's base rather than the landing page's, and they carry an arrow
+ * instead of a number they have no place in.
  *
- * It is in the menu because the bar drops it below 1100px — on a phone the
- * menu is the only place it exists.
+ * They are rows of the menu rather than buttons beside it: a menu is a list of
+ * places to go, and these are two more places.
  */
-export const menuSupport = { n: '→', label: 'Support us', href: '/support' };
+export const menuPages = [
+    { n: '→', label: 'register.submit', href: '/register' },
+    { n: '→', label: 'Support us', href: '/support', support: true },
+];
