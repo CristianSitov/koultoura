@@ -20,7 +20,7 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, app, props, plugin }) {
-        return createApp({ render: () => h(app, props) })
+        const vm = createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(i18nVue, {
                 resolve: async lang => {
@@ -40,6 +40,16 @@ createInertiaApp({
             })
             .use(CookieConsent, consentOptions)
             .mount(el);
+
+        /*
+         * The banner has to be started. Only the 2022 and 2024 pages ever did
+         * it, so on the 2026 pages nobody was ever asked — and analytics, which
+         * waits for that answer, could never be turned on. Started here so
+         * every page gets it, once, rather than in each layout.
+         */
+        vm.$cc.run(consentOptions);
+
+        return vm;
     },
 });
 

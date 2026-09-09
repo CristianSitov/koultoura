@@ -17,9 +17,6 @@ export default {
                 this.$cc.getUserPreferences())
         })
     },
-    created() {
-        this.$cc.run(consentOptions);
-    },
     mounted() {
         this.track()
     },

@@ -42,13 +42,7 @@ export default {
                 this.$cc.getUserPreferences())
         })
     },
-    created() {
-        this.$cc.run(consentOptions);
-        emitter.on("consentAccepted", function (consent) {
-            console.log(consent)
-            this.$gtag.optIn()
-        });
-    },
+
     mounted() {
         this.track()
     },
