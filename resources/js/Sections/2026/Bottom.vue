@@ -27,7 +27,7 @@ defineProps({
             <a href="https://facebook.com/PrinBanat" target="_blank" rel="noopener">Facebook</a>
             <a href="/2024">{{ $t(':year edition', { year: 2024 }) }}</a>
             <a href="/2022">{{ $t(':year edition', { year: 2022 }) }}</a>
-            <a :href="`${base}/support`">{{ $t('Support us') }}</a>
+            <a :href="`${base}/support`" class="wcm26-footer-support">{{ $t('Support us') }}</a>
             <a :href="`${base}/cookies`">{{ $t('Privacy & cookies') }}</a>
         </div>
     </footer>

@@ -2044,6 +2044,20 @@ a.wcm26-partner-logo:focus-visible {
     color: var(--color-accent);
 }
 
+/*
+ * The footer is muted and every link in it inherits that. This one does not:
+ * it is the same red as the bar's and the menu's, so asking for money looks
+ * the same in all three places it is asked.
+ *
+ * Both rules are scoped past `.wcm26-footer-links a` and its hover, which
+ * would otherwise put the muted ink — and, in the dark theme, the wrong red —
+ * straight back.
+ */
+.wcm26 .wcm26-footer-support,
+.wcm26 .wcm26-footer-support:hover {
+    color: var(--color-support-ink);
+}
+
 /* ── image slot ──────────────────────────────────────────────────────────── */
 
 .wcm26-slot {
