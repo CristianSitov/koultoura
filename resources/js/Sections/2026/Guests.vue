@@ -26,7 +26,7 @@ onBeforeUnmount(() => stopShift?.());
              and saying so is better than a visitor assuming it is complete. -->
         <div class="wcm26-head-split">
             <SectionHead n="04" :title="$t('Guests')" />
-            <p class="wcm26-label wcm26-label-13">{{ $t('Being updated') }}</p>
+            <p class="wcm26-label wcm26-label-13">{{ $t('Updates in progress') }}</p>
         </div>
 
         <div ref="grid" class="wcm26-guests">
