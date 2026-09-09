@@ -1,40 +1,60 @@
-# Why Culture Matters 2026 — going live
+# Why Culture Matters 2026 — live
 
-Everything the 2026 site is holding back, and what has to change when it stops
-being an unlisted preview and becomes the public site. Written 2026-09-08,
-reviewed the same evening against what is actually on the server; tick items off
-in the repo rather than in someone's head.
+**The edition went public on 2026-09-09.** `WCM_2026_PUBLIC=true`, the site is
+at `/2026`, Stripe is on live keys, and the first real registration arrived the
+same morning. What follows is what was checked on the way, what is still open,
+and how to go back if it comes to that.
 
-The site is deployed and working at an address nobody is given. Going live is
-mostly *removing* the things that keep it quiet, plus the Stripe switch, which
-is the only part that touches money.
-
-**Verified on the server as of this review:** `APP_ENV=production`,
-`APP_DEBUG=false`, `APP_URL=https://whyculturematters.eu/`, mail going out
-through Resend, Stripe in test mode, no registrations, no contributions, no
-bookings.
+Reviewed against the server on 2026-09-09.
 
 ---
 
-## 1. The switch — one recipe, on or off
+## 0. What is still open
 
-Going live is three environment variables on the server. No code change, no
-deploy: edit `.env`, clear the config cache, done. It flips back the same way.
+- [ ] **Registration #1 never got its confirmation email.** `sent_count` is 0:
+      the email is sent when someone reaches the "check your email" page, and
+      that only happens after they contribute or skip. Close the tab on the
+      contribute step and nothing is sent at all. Resend it from
+      `/dashboard/registrations`, and decide whether the flow should send on
+      registering instead — this will keep happening otherwise.
+- [ ] **The programme is public and empty.** The switch is on, so visitors see
+      four days each reading "coming soon". 0 of 20 sessions are published.
+- [ ] **No workshop is bookable** and nothing links to `/2026/sessions/{slug}`.
+      The 10th has no way in.
+- [ ] **Four supporter marks** — `djc`, `kek`, `cicasp`, `oar-timis` — are still
+      on their original canvases and sit at odds with the rest of the row. See
+      `docs/2026-partner-logos.md`.
+- [ ] **Two partners have no link**: Fundația Culturală Jazz Banat and Centrul
+      de Proiecte.
+- [ ] **`arhabito.png`** is in the assets folder, on no row, with no link.
+- [ ] **No `sitemap.xml`.** Worth adding now that the site is indexable.
+- [ ] **One backoffice account.** If anyone else needs one:
+      `php8.2 artisan admin:create <email> <password>`.
+
+## 1. The switch — now pointing at live
+
+Three environment variables decide it. No code change, no deploy: edit `.env`,
+clear the config cache, done. **They are currently set to live**, so the recipe
+below is mostly a rollback.
 
 Both sets of values are already written into the server's `.env`, one of them
 commented out. Flipping is a matter of swapping which — no value to look up, no
 line to type from memory.
 
-**Go live**
+**Roll back** — if something has to come down in a hurry:
 
     ssh -p 2221 root@heritageoftimisoara.ro
     cd /var/www/whyculturematters.eu
 
-    # in .env, under "The 2026 edition": comment the PREVIEW three,
-    # uncomment the LIVE three. Then:
+    # in .env, under "The 2026 edition": comment the LIVE three,
+    # uncomment the PREVIEW three. Then:
     php8.2 artisan config:clear
 
-**Go back** — the same swap the other way, then `config:clear` again.
+The site returns to its unlisted address and stops being indexed within a
+request. Stripe is a separate block in the same file and rolls back the same
+way, though a payment taken live stays taken.
+
+**Go live again** — the same swap the other way.
 
 The Stripe block above it is laid out the same way, with an empty LIVE set to
 fill in. That one is not just an uncomment: the four live values have to be
@@ -212,7 +232,23 @@ credential lookup, not just queries written by hand.
 - [ ] The account rows still live on the **2024** database whatever URL is being
       visited. Moving them is a schema decision for after the event.
 
-## 10. Analytics and cookies
+## 10. Notices to the office
+
+Slack carries what happens: a registration, an address confirmed, a
+contribution, a refund, a workshop place booked and a workshop filling up, a
+sign-in and a failed sign-in, and the failures worth interrupting someone for —
+a confirmation email that did not go out, Stripe refusing to open a payment
+page, a webhook refused for a bad signature, a payment the webhook missed, and
+any 500.
+
+- [x] `SLACK_WEBHOOK_URL` is set. `php8.2 artisan slack:test` proves it.
+- [ ] The webhook URL is a secret in the sense that anyone holding it can post
+      to the channel. Rotate it in the Slack app if it has been somewhere it
+      should not have been.
+- [ ] One channel carries both the good news and the alarms. Splitting them is
+      a second env var if the mix turns out to be wrong.
+
+## 11. Analytics and cookies
 
 - [ ] **Google Analytics is live** (`G-WYGPJKWNT1`), and fires only when the
       visitor accepts the analytics category. Confirm one real accept produces
@@ -223,7 +259,7 @@ credential lookup, not just queries written by hand.
 - [ ] The cookie policy lists `_ga` and says it is set only on consent. Keep
       that true.
 
-## 11. Deploying
+## 12. Deploying
 
     ssh -p 2221 root@heritageoftimisoara.ro
     cd /var/www/whyculturematters.eu && php8.2 vendor/bin/envoy run deploy --branch=main
@@ -238,11 +274,14 @@ not touch programme or settings data.
       several migrations whose tables already exist, so a bare `migrate` tries
       to re-create them. Production's ledger is consistent and migrates fine.
 
-## 12. Worth a look before announcing
+## 13. Done on the day
 
-- [ ] Register once with a real address, end to end, in both languages.
-- [ ] Confirm the email arrives from `why-culture-matters@prinbanat.ro` and
-      that its links point at the new address.
+- [x] Registered end to end in both languages, paid with a real card, refunded
+      it, and confirmed the webhook recorded the contribution on its own —
+      which is the only thing that proves the live signing secret.
+- [x] The confirmation email arrives from `why-culture-matters@prinbanat.ro`
+      and its links point at `/2026`.
+- [x] Old `/2026-mulberry/*` addresses redirect, tail and all.
+- [x] The announcement page is archived at `/announcement`, noindex.
 - [ ] Check the landing page at 393px as well as on a desktop.
-- [ ] Both languages: `/2026` and `/2026/ro`.
-- [ ] The menu, on every page — it is no longer landing-page only.
+- [ ] Watch `storage/logs/laravel.log` over the first days of real sign-ups.
