@@ -2363,12 +2363,12 @@ a.wcm26-partner-logo:focus-visible {
 /* What the day is about, under its date: a note on the choice, not a heading. */
 .wcm26-days-pick em {
     display: block;
-    margin-top: 4px;
+    margin-top: 5px;
     font-style: normal;
-    font-size: 11px;
+    font-size: 12.5px;
     line-height: 1.35;
     letter-spacing: 0.01em;
-    color: color-mix(in srgb, var(--color-text) 58%, transparent);
+    color: color-mix(in srgb, var(--color-text) 66%, transparent);
 }
 
 /* A partner whose logo has not arrived yet still belongs on the list. */
