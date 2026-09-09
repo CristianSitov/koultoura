@@ -136,8 +136,12 @@ return [
         // Features::registration(),
         // Features::resetPasswords(),
         Features::emailVerification(),
+        // Left off on purpose: Jetstream's action writes `name` and `email`,
+        // and the accounts here also carry first_name/last_name/slug that it
+        // knows nothing about (see App\Console\Commands\CreateAdmin) — so the
+        // form would quietly leave the row inconsistent.
         // Features::updateProfileInformation(),
-        // Features::updatePasswords(),
+        Features::updatePasswords(),
         // Features::twoFactorAuthentication([
             // 'confirm' => true,
             // 'confirmPassword' => true,

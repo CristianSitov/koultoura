@@ -261,6 +261,13 @@ Route::prefix('dashboard')
         // /dashboard itself: the edition being run is the one you land on.
         Route::get('/', Overview2026Controller::class)->name('overview');
 
+        // Your own account. No controller: the page renders Fortify's password
+        // form and reads the user Jetstream already shares — there is nothing
+        // for one to do.
+        Route::get('/account', fn () => inertia('Admin/2026/Account', [
+            'publicBase' => Front2026Controller::base(),
+        ]))->name('account');
+
         Route::controller(SpeakerController::class)->group(function () {
             Route::get('/speakers', 'index')->name('speakers');
             Route::get('/speakers/new', 'create')->name('speakers.create');

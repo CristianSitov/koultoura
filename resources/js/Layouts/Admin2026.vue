@@ -13,6 +13,7 @@ defineProps({
 
 const page = usePage();
 const flash = computed(() => page.props.value.flash);
+const user = computed(() => page.props.value.auth?.user);
 const current = computed(() => page.url.value);
 
 const nav = [
@@ -56,6 +57,11 @@ const isCurrent = (href) => (href === '/dashboard' ? current.value === href : cu
                     <div class="flex items-center gap-4 text-sm text-gray-500">
                         <a v-if="publicBase" :href="publicBase" target="_blank" class="hover:text-gray-900">View site ↗</a>
                         <Link href="/dashboard/2024" class="hover:text-gray-900">2024</Link>
+                        <Link
+                            v-if="user"
+                            href="/dashboard/account"
+                            :class="isCurrent('/dashboard/account') ? 'text-gray-900 font-semibold' : 'hover:text-gray-900'"
+                        >{{ user.email }}</Link>
                         <Link href="/logout" method="post" as="button" type="button" class="hover:text-gray-900">Log out</Link>
                     </div>
                 </div>
