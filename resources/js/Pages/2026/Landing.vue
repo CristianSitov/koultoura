@@ -140,7 +140,14 @@ function onPopState(event) {
             name="robots"
             :content="isPublic ? 'index, follow' : 'noindex, nofollow'"
         />
-        <link v-if="isPublic" head-key="canonical" rel="canonical" :href="canonical" />
+        <!--
+            Always rendered, never behind v-if: this Inertia's <Head> compares
+            node types against Vue 3.2's names for them, so a v-if that is false
+            hands it a comment node it does not recognise and it throws while
+            building the tag. Harmless to point at an unlisted page — it is
+            noindex until the switch says otherwise.
+        -->
+        <link head-key="canonical" rel="canonical" :href="canonical" />
     </Head>
 
     <div class="wcm26" :data-theme="theme" :lang="locale">

@@ -2,8 +2,7 @@
 import Logo from './Logo.vue';
 
 /*
- * Social handles are still open items from the handoff — swap the two
- * placeholder hrefs for the symposium's real Instagram and Facebook pages.
+ * The association's accounts: the symposium does not have its own.
  */
 defineProps({
     // The cookie policy lives under the edition's own path.
@@ -24,8 +23,8 @@ defineProps({
         </div>
 
         <div class="wcm26-footer-links">
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
-            <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://instagram.com/PrinBanat" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://facebook.com/PrinBanat" target="_blank" rel="noopener">Facebook</a>
             <a href="/2024">{{ $t(':year edition', { year: 2024 }) }}</a>
             <a href="/2022">{{ $t(':year edition', { year: 2022 }) }}</a>
             <a :href="`${base}/support`">{{ $t('Support us') }}</a>
