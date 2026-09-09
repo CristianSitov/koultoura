@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\RegistrationConfirmation;
 use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
+use App\Models\ProgrammeDay;
 use App\Models\Registration;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,7 +49,34 @@ class Front2026RegistrationController extends Controller
         return Inertia::render('2026/Registration', [
             'base' => Front2026Controller::base(),
             'days' => self::DAYS,
+            'themes' => $this->dayThemes(),
         ]);
+    }
+
+    /*
+     * What each day is about, so the checkbox says what you are choosing
+     * rather than only which date it falls on. Read straight from the
+     * programme, keyed by the same day numbers the form posts, and left out
+     * for any day that has no theme set yet — a checkbox with a blank line
+     * under it is worse than one without.
+     */
+    private function dayThemes(): array
+    {
+        $locale = app()->getLocale() === 'ro' ? 'ro' : 'en';
+
+        return ProgrammeDay::with('theme.translations')
+            ->orderBy('position')
+            ->orderBy('date')
+            ->get()
+            ->values()
+            ->mapWithKeys(function (ProgrammeDay $day, int $i) use ($locale) {
+                $title = $day->theme?->translate($locale)?->title
+                    ?: $day->theme?->translate('en')?->title;
+
+                return [$i + 1 => $title ? $day->theme->numeral.' · '.$title : null];
+            })
+            ->filter()
+            ->all();
     }
 
     public function store(Request $request): RedirectResponse

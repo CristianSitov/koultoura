@@ -186,8 +186,6 @@
     "Switch language": "Switch language",
     "Switch to light mode": "Switch to light mode",
     "Switch to dark mode": "Switch to dark mode",
-    "Draft · subject to change": "Draft · subject to change",
-    "Three themes, one umbrella": "Three themes, one umbrella",
     "Heritage School": "Cultural Heritage School",
     "Theme of the day": "Theme of the day",
     "Heritage School session": "Cultural Heritage School session",
@@ -340,9 +338,10 @@
     "Payment details": "Payment details",
     "Donation Why Culture Matters": "Donation Why Culture Matters",
     "Register and donate": "Register and donate",
-    "days.workshops": "The workshops on 10 October are booked separately — each has its own form and a limited number of places.",
+    "days.workshops": "The Heritage School workshops on 10 October are not part of this registration. Booking for them opens separately, and we will write to you when it does.",
     "Coming soon": "Coming soon",
     "Draft": "Draft",
     "Heritage School — eight pilot workshops, :days October": "Heritage School — eight pilot workshops, :days October",
-    "and": "and"
+    "and": "and",
+    "Soon": "Soon"
 }

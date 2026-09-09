@@ -74,10 +74,8 @@ const schoolSpans = computed(() => {
     <section id="programme" class="wcm26-section">
         <div class="wcm26-head-split">
             <SectionHead n="05" :title="$t('Programme')" />
-            <p class="wcm26-label wcm26-label-13">{{ $t('Draft · subject to change') }}</p>
+            <p class="wcm26-label wcm26-label-13">{{ $t('Soon') }}</p>
         </div>
-
-        <p class="wcm26-label wcm26-spans-label">{{ $t('Three themes, one umbrella') }}</p>
 
         <div class="wcm26-spans">
             <p v-for="bar in themeBars" :key="bar.numeral" class="wcm26-span">

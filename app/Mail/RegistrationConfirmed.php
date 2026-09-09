@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Http\Controllers\Front2026Controller;
 use App\Models\Registration;
 use App\Support\SymposiumCalendar;
 use Illuminate\Bus\Queueable;
@@ -14,8 +13,12 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
 
 /**
- * Sent once the address has been confirmed: the dates in writing, a way into
- * the programme, and the event as a calendar entry.
+ * Sent once the address has been confirmed: the dates in writing and the event
+ * as a calendar entry.
+ *
+ * No link to the programme: there is nothing there yet but four days reading
+ * "coming soon", and sending someone to look at that is worse than not asking
+ * them to look at all. Put it back when there is a schedule.
  *
  * The first email asks for something. This one gives something back, and is
  * the last they hear from us until the programme is settled.
@@ -45,7 +48,6 @@ class RegistrationConfirmed extends Mailable
         return new Content(
             markdown: 'emails.registration-confirmed',
             with: [
-                'programmeUrl' => url(Front2026Controller::base().($locale === 'ro' ? '/ro' : '').'#programme'),
                 'googleCalendarUrl' => SymposiumCalendar::googleUrl($locale),
             ],
         );

@@ -186,8 +186,6 @@
     "Switch language": "Schimbă limba",
     "Switch to light mode": "Comută pe modul luminos",
     "Switch to dark mode": "Comută pe modul întunecat",
-    "Draft · subject to change": "Schiță · se poate modifica",
-    "Three themes, one umbrella": "Trei teme, o umbrelă",
     "Heritage School": "Școala de patrimoniu cultural",
     "Theme of the day": "Tema zilei",
     "Heritage School session": "Sesiune a Școlii de patrimoniu cultural",
@@ -340,9 +338,10 @@
     "Payment details": "Detalii plată",
     "Donation Why Culture Matters": "Donație Why Culture Matters",
     "Register and donate": "Înscrie-te și donează",
-    "days.workshops": "Atelierele din 10 octombrie se rezervă separat — fiecare are formularul lui și un număr limitat de locuri.",
+    "days.workshops": "Atelierele Școlii de patrimoniu din 10 octombrie nu sunt incluse în această înscriere. Rezervarea lor se face separat și te anunțăm când se deschide.",
     "Coming soon": "În curând",
     "Draft": "Ciornă",
     "Heritage School — eight pilot workshops, :days October": "Școala de patrimoniu — opt ateliere-pilot, :days octombrie",
-    "and": "și"
+    "and": "și",
+    "Soon": "În curând"
 }

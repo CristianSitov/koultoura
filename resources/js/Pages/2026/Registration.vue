@@ -8,6 +8,8 @@ import SectionHead from '../../Sections/2026/SectionHead.vue';
 const props = defineProps({
     base: { type: String, default: '/2026' },
     days: { type: Array, default: () => [1, 2, 3] },
+    // Day number -> the theme that day carries, when the programme has one.
+    themes: { type: Object, default: () => ({}) },
 });
 
 // 7–9 October; the 10th is the workshop day and is booked separately.
@@ -101,6 +103,7 @@ function submit() {
                                 <span>
                                     <strong>{{ dates[i] }}</strong>
                                     {{ $t(`weekday.${weekdays[i]}`) }}
+                                    <em v-if="themes[day]">{{ themes[day] }}</em>
                                 </span>
                             </label>
                         </div>

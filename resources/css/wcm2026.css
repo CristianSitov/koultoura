@@ -1261,10 +1261,6 @@
 /* Theme spans: three per-day bars, then one bar carrying the umbrella across
    the days it covers. Same four columns as the day grid below, so the bars line
    up with the days they describe. */
-.wcm26-spans-label {
-    margin-bottom: 14px;
-}
-
 .wcm26-spans {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2362,6 +2358,17 @@ a.wcm26-partner-logo:focus-visible {
 .wcm26-partner-marks:not(.wcm26-partner-marks-organisers) .wcm26-slot img {
     height: 76px;
     max-width: 230px;
+}
+
+/* What the day is about, under its date: a note on the choice, not a heading. */
+.wcm26-days-pick em {
+    display: block;
+    margin-top: 4px;
+    font-style: normal;
+    font-size: 11px;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    color: color-mix(in srgb, var(--color-text) 58%, transparent);
 }
 
 /* A partner whose logo has not arrived yet still belongs on the list. */

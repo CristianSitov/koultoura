@@ -3,10 +3,6 @@
 
 {!! __('confirmed.email.intro') !!}
 
-@component('mail::button', ['url' => $programmeUrl])
-{{ __('See the programme') }}
-@endcomponent
-
 {!! __('confirmed.email.calendar') !!}
 
 [{{ __('Add to Google Calendar') }}]({{ $googleCalendarUrl }})
