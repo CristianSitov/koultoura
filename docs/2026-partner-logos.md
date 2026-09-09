@@ -121,5 +121,6 @@ The three role marks at the top — Prin Banat, Heritage of Timișoara, Centrul 
 Proiecte — are sized by their own CSS and are deliberately larger, with Prin
 Banat larger again as the organiser. Normalising those is a separate decision.
 
-Unused files, safe to delete whenever: `arhabito.svg`, `cjt.svg`, `mnab.svg`,
-`scart.svg`, `temporar.png`.
+Unused files, safe to delete whenever: `cjt.svg`, `mnab.svg`, `scart.svg`,
+`temporar.png`. The two `arhabito` files are gone: Arhabito is not a partner of
+this edition, so the marks had no reason to be in the folder.

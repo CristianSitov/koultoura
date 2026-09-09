@@ -26,7 +26,6 @@ Reviewed against the server on 2026-09-09.
       `docs/2026-partner-logos.md`.
 - [ ] **Two partners have no link**: Fundația Culturală Jazz Banat and Centrul
       de Proiecte.
-- [ ] **`arhabito.png`** is in the assets folder, on no row, with no link.
 - [ ] **No `sitemap.xml`.** Worth adding now that the site is indexable.
 - [ ] **One backoffice account.** If anyone else needs one:
       `php8.2 artisan admin:create <email> <password>`.
@@ -196,8 +195,6 @@ workshop day, and those are booked one at a time through their own forms.
 - [ ] **Partner marks**: `djc`, `kek`, `cicasp` and `oar-timis` are still on
       their original canvases and sit at odds with the rest of the row. See
       `docs/2026-partner-logos.md` for the sizes.
-- [ ] **`arhabito.png`** is in the assets folder but on no row and with no link.
-      It is not in the partner list in the source document.
 - [ ] **Fundația Culturală Jazz Banat** is the one mark with no link; 15 of the
       16 are linked.
 - [ ] **Social links in the footer** are still `instagram.com` and
