@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Contribution;
+use App\Models\Registration;
 use Illuminate\Console\Command;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
@@ -15,12 +16,20 @@ use Stripe\StripeClient;
  *
  * So: ask Stripe what it has, write in anything we are missing. Keyed on the
  * session id, so running this twice changes nothing.
+ *
+ * Only this event's payments, though. The Stripe account is the association's,
+ * not the symposium's, and it carries donations from other campaigns that have
+ * nothing to do with a registration here. A session is ours when its
+ * client_reference_id is a registration token — that is what the contribution
+ * step puts there, and nothing else on the account sets it. Adopting the rest
+ * once overstated this event's income by 470 RON.
  */
 class ReconcileContributions extends Command
 {
     protected $signature = 'contributions:reconcile
                             {--days=90 : How far back to ask Stripe}
-                            {--dry-run : Report what is missing without writing it}';
+                            {--dry-run : Report what is missing without writing it}
+                            {--all : Every paid session on the account, not just this event\'s}';
 
     protected $description = 'Check every paid Stripe checkout session against the contributions table';
 
@@ -36,7 +45,9 @@ class ReconcileContributions extends Command
 
         $stripe = new StripeClient($secret);
         $since = now()->subDays((int) $this->option('days'))->getTimestamp();
+        $ours = $this->option('all') ? null : Registration::pluck('token')->flip();
         $seen = 0;
+        $skipped = 0;
         $missing = [];
 
         try {
@@ -49,6 +60,13 @@ class ReconcileContributions extends Command
 
             foreach ($sessions as $session) {
                 if ($session->payment_status !== 'paid') {
+                    continue;
+                }
+
+                // Somebody else's campaign, on the same account.
+                if ($ours !== null && ! $ours->has((string) $session->client_reference_id)) {
+                    $skipped++;
+
                     continue;
                 }
 
@@ -66,7 +84,14 @@ class ReconcileContributions extends Command
             return self::FAILURE;
         }
 
-        $this->line(sprintf('%d paid session(s) at Stripe, %d already recorded.', $seen, $seen - count($missing)));
+        $this->line(sprintf('%d paid session(s) for this event, %d already recorded.', $seen, $seen - count($missing)));
+
+        if ($skipped > 0) {
+            $this->line(sprintf(
+                '%d paid session(s) on the account belong to something else and were left alone (--all to include them).',
+                $skipped
+            ));
+        }
 
         foreach ($missing as $session) {
             $line = sprintf(
