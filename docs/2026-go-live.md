@@ -104,9 +104,16 @@ swap of all four, not a first configuration.
       `checkout.session.completed`. The signing secret it gives you is
       `STRIPE_WEBHOOK_SECRET`; without it the endpoint answers 500 and Stripe
       retries into nothing.
-- [ ] Set **branding** (logo, colours) in the live dashboard. Test-mode
-      branding does not carry over.
-- [ ] Turn on **emailed receipts** for successful payments, in live mode.
+- [x] **Branding** is set in live mode: logo, and the primary colour is the
+      site's own accent, `#bf1a2c`.
+- [x] **Emailed receipts** are on in live mode, for successful payments and for
+      refunds. Note these come from Stripe, not from Resend.
+- [x] **Customer-facing name** reads "Asociația Prin Banat", and the statement
+      descriptor "ASOCIAȚIA PRIN BANAT". (`settings.dashboard.display_name`
+      still says prinbanat.ngo, but that is the label on your own dashboard, not
+      anything a payer sees.)
+- [ ] **No support email is set** on the account. Stripe puts one on the
+      receipt; without it people have only the phone number.
 - [ ] Make one **real payment of a few lei**, refund it, and check that
       `make contributions` shows the row. Then run
       `php artisan contributions:reconcile` — it should say nothing is missing.
