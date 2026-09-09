@@ -18,7 +18,13 @@ class SymposiumCalendar
 
     public const END = '20261011';
 
-    public const VENUE = 'FABER, Str. Anton Seiler 2, Timișoara, Romania';
+    /*
+     * As the venue writes it, and as a map will find it. This goes into the
+     * .ics people save and into the Google Calendar link, so it is the address
+     * a phone will navigate to on the morning — it was wrong, naming a street
+     * FABER is not on.
+     */
+    public const VENUE = 'FABER, Splaiul Peneș Curcanul 4-5, 300124 Timișoara, Romania';
 
     /** The .ics body, for attaching to an email. */
     public static function ics(string $locale = 'en'): string
@@ -27,11 +33,16 @@ class SymposiumCalendar
             ? 'Why Culture Matters 2026 · Simpozion internațional'
             : 'Why Culture Matters 2026 · International Symposium';
 
+        /*
+         * The event's own page, not the programme anchor: there is nothing
+         * under it yet, and a calendar entry is read months later, when a link
+         * that went nowhere is the only thing left to go on.
+         */
         $description = $locale === 'ro'
-            ? 'A treia ediție a simpozionului Why Culture Matters, organizat de Asociația Prin Banat. Programul complet: '
-            : 'The third edition of the Why Culture Matters symposium, organised by Asociația Prin Banat. Full programme: ';
+            ? 'A treia ediție a simpozionului Why Culture Matters, organizat de Asociația Prin Banat. Detalii: '
+            : 'The third edition of the Why Culture Matters symposium, organised by Asociația Prin Banat. Details: ';
 
-        $url = url(Front2026Controller::base().($locale === 'ro' ? '/ro' : '').'#programme');
+        $url = url(Front2026Controller::base().($locale === 'ro' ? '/ro' : ''));
 
         $lines = [
             'BEGIN:VCALENDAR',
@@ -70,7 +81,7 @@ class SymposiumCalendar
             'text' => $summary,
             'dates' => self::START.'/'.self::END,
             'location' => self::VENUE,
-            'details' => url(Front2026Controller::base().($locale === 'ro' ? '/ro' : '').'#programme'),
+            'details' => url(Front2026Controller::base().($locale === 'ro' ? '/ro' : '')),
         ]);
     }
 
