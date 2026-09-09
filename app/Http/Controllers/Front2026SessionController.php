@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Registration;
 use App\Models\Session;
 use App\Models\SessionBooking;
+use App\Support\Slack;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -87,6 +88,24 @@ class Front2026SessionController extends Controller
 
         if ($outcome['status'] === 'full') {
             return back()->withErrors(['name' => __('The last place went while you were filling this in.')]);
+        }
+
+        if ($outcome['status'] === 'booked') {
+            $left = $session->fresh()->places_left;
+
+            Slack::good('Workshop place booked', [
+                'Workshop' => $session->translate('en')?->title ?? $session->slug,
+                'Name' => $outcome['booking']->name,
+                'Email' => $outcome['booking']->email,
+                'Places left' => $left === null ? 'uncapped' : (string) $left,
+            ]);
+
+            // The last place is worth knowing about the moment it goes.
+            if ($left === 0) {
+                Slack::warn('Workshop is now full', [
+                    'Workshop' => $session->translate('en')?->title ?? $session->slug,
+                ]);
+            }
         }
 
         return redirect($this->url($session, $outcome['booking']->token));

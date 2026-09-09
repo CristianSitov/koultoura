@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Registration;
+use App\Support\Slack;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -66,6 +67,12 @@ class ContributionController extends Controller
             ]);
         } catch (ApiErrorException $e) {
             Log::error('Stripe checkout session failed', ['error' => $e->getMessage()]);
+
+            Slack::throttled('stripe-session-failed', 'Stripe would not open a payment page', [
+                'Error' => $e->getMessage(),
+                'Effect' => 'Contributing is broken; registering still works.',
+            ]);
+
             $session = null;
         }
 

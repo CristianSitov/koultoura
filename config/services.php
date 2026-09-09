@@ -46,6 +46,14 @@ return [
      * — only the secret needed to verify that a webhook really came from
      * Stripe, and the links themselves.
      */
+    /*
+     * An incoming-webhook URL for the channel the office watches. Leave it
+     * empty and nothing is sent — which is how a laptop stays quiet.
+     */
+    'slack' => [
+        'webhook' => env('SLACK_WEBHOOK_URL'),
+    ],
+
     'stripe' => [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
         // Checkout sessions: one product, the page's language, a real cancel

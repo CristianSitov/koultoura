@@ -7,6 +7,7 @@ use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\ProgrammeDay;
 use App\Models\Registration;
+use App\Support\Slack;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -128,6 +129,15 @@ class Front2026RegistrationController extends Controller
             'consented_at' => now(),
         ])->save();
 
+        Slack::good('New registration', [
+            'Name' => $registration->name,
+            'Email' => $registration->email,
+            'Days' => self::dayList($registration),
+            'Organisation' => $registration->organisation,
+            'Country' => $registration->country,
+            'Language' => strtoupper($registration->locale),
+        ]);
+
         /*
          * No email yet. It is sent when they reach the "check your email" page
          * — after contributing or after skipping — so that one message arrives
@@ -196,6 +206,12 @@ class Front2026RegistrationController extends Controller
          */
         if (! $alreadyConfirmed) {
             $this->sendConfirmed($registration);
+
+            Slack::info('Address confirmed', [
+                'Name' => $registration->name,
+                'Email' => $registration->email,
+                'Days' => self::dayList($registration),
+            ]);
         }
 
         return Inertia::render('2026/RegistrationConfirmed', [
@@ -284,7 +300,27 @@ class Front2026RegistrationController extends Controller
                 'registration' => $registration->id,
                 'error' => $e->getMessage(),
             ]);
+
+            Slack::alert('Registration details email did NOT go out', [
+                'Email' => $registration->email,
+                'Registration' => '#'.$registration->id,
+                'Error' => $e->getMessage(),
+            ]);
         }
+    }
+
+    /** "7, 8 & 9 October", for a line in a Slack message. */
+    private static function dayList(Registration $registration): string
+    {
+        $dates = [1 => '7', 2 => '8', 3 => '9', 4 => '10'];
+        $days = array_values(array_filter(array_map(
+            fn ($d) => $dates[$d] ?? null,
+            $registration->days ?? []
+        )));
+
+        sort($days);
+
+        return $days === [] ? '—' : implode(', ', $days).' October';
     }
 
     private function sendConfirmation(Registration $registration): bool
@@ -297,6 +333,18 @@ class Front2026RegistrationController extends Controller
             Log::error('2026 confirmation email failed', [
                 'registration' => $registration->id,
                 'error' => $e->getMessage(),
+            ]);
+
+            /*
+             * The registration is saved either way, so this failure is silent
+             * to everyone except this notice: the person is waiting for an
+             * email that is not coming, and only the office can rescue them.
+             */
+            Slack::alert('Confirmation email did NOT go out', [
+                'Email' => $registration->email,
+                'Registration' => '#'.$registration->id,
+                'Error' => $e->getMessage(),
+                'Fix' => 'Resend from /dashboard/registrations',
             ]);
 
             return false;

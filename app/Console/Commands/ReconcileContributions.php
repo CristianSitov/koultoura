@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Contribution;
 use App\Models\Registration;
+use App\Support\Slack;
 use Illuminate\Console\Command;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
@@ -110,6 +111,17 @@ class ReconcileContributions extends Command
 
             Contribution::recordSession($session);
             $this->info('recorded'.$line);
+
+            /*
+             * A payment the webhook should have recorded and did not. Worth
+             * saying so: it means an event was missed, and the next one may be
+             * missed too.
+             */
+            Slack::warn('Payment recorded late — the webhook missed it', [
+                'Amount' => number_format($session->amount_total / 100, 2).' '.strtoupper($session->currency),
+                'From' => $session->customer_details->email ?? '(no email)',
+                'Session' => $session->id,
+            ]);
         }
 
         if ($missing === []) {
