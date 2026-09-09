@@ -35,6 +35,35 @@ class Contribution extends Model
      * public URL, and a token can have been deleted since. Money that arrived
      * gets recorded either way.
      */
+    /**
+     * A refund, matched back to the payment it undoes.
+     *
+     * Status rather than deletion: the money did arrive, and then it went
+     * back, and both halves are true. Every total in the backoffice already
+     * counts only `paid`, so flipping this takes the row out of the figures
+     * without taking it out of the record.
+     *
+     * ponytail: a partial refund leaves the row `paid` at its original amount,
+     * so the total overstates by whatever came back. Net it here if partial
+     * refunds ever stop being hypothetical.
+     */
+    public static function recordRefund(object $charge): ?self
+    {
+        $contribution = static::where('payment_intent_id', $charge->payment_intent ?? null)->first();
+
+        if (! $contribution) {
+            return null;
+        }
+
+        $full = ($charge->amount_refunded ?? 0) >= ($charge->amount ?? 0);
+
+        if ($full) {
+            $contribution->forceFill(['status' => 'refunded'])->save();
+        }
+
+        return $contribution;
+    }
+
     public static function recordSession(object $session): ?self
     {
         if (($session->payment_status ?? null) !== 'paid') {

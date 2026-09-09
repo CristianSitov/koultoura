@@ -74,6 +74,21 @@ class StripeWebhookController extends Controller
             ]);
         }
 
+        if ($event->type === 'charge.refunded') {
+            $charge = $event->data->object;
+            $contribution = Contribution::recordRefund($charge);
+            $full = ($charge->amount_refunded ?? 0) >= ($charge->amount ?? 0);
+
+            Slack::warn($full ? 'Contribution refunded' : 'Contribution partly refunded', [
+                'Amount' => number_format(($charge->amount_refunded ?? 0) / 100, 2).' '.strtoupper($charge->currency ?? ''),
+                'Of' => number_format(($charge->amount ?? 0) / 100, 2).' '.strtoupper($charge->currency ?? ''),
+                'To' => $charge->billing_details->email ?? $charge->receipt_email ?? '(no email)',
+                'Our record' => $contribution
+                    ? ($full ? 'marked refunded, out of the totals' : 'left as paid — the total still counts the full amount')
+                    : 'no matching contribution — a payment from somewhere else',
+            ]);
+        }
+
         // Anything else is acknowledged so Stripe stops retrying it.
         return response('', 200);
     }

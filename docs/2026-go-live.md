@@ -100,8 +100,8 @@ swap of all four, not a first configuration.
 - [ ] Replace all four values in the server's `.env`:
       `STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET`.
 - [ ] Register the **webhook endpoint in live mode**:
-      `https://whyculturematters.eu/stripe/webhook`, event
-      `checkout.session.completed`. The signing secret it gives you is
+      `https://whyculturematters.eu/stripe/webhook`, events
+      `checkout.session.completed` and `charge.refunded`. The signing secret it gives you is
       `STRIPE_WEBHOOK_SECRET`; without it the endpoint answers 500 and Stripe
       retries into nothing.
 - [x] **Branding** is set in live mode: logo, and the primary colour is the
