@@ -26,6 +26,10 @@ assets: ## Regenerate ziggy.js (gitignored, app.js imports it) and build the fro
 	$(APP) php artisan ziggy:generate
 	$(NODE) sh -lc "npm ci && npm run build"
 
+.PHONY: og
+og: ## Re-render the sharing cards from resources/og
+	node resources/og/render.mjs
+
 .PHONY: up
 up: ## Start the stack
 	$(DC) up -d

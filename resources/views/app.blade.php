@@ -15,11 +15,32 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <meta property="og:url" content="{{ env('APP_URL') }}">
+        {{--
+            The sharing card.
+
+            Everything here is escaped and plain: a scraper strips the markup
+            out of a meta attribute, which is how the old description reached
+            Facebook with the words inside its <span>s missing — "The second
+            edition of the addresses two main topics".
+
+            The addresses are built by the helpers rather than glued to
+            APP_URL. That concatenation needed a trailing slash nobody
+            guarantees, and produced ".euassets/images/..." without one — an
+            address no scraper can fetch, so there was no thumbnail at all.
+            env() is gone with it: it reads nothing once the config is cached.
+        --}}
+        <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="{!! __('Why Culture Matters International Symposium') !!}">
-        <meta property="og:image" content="{{ env('APP_URL') }}assets/images/event_banner_2024.jpg">
-        <meta property="og:description" content="{!! __('Event') !!}">
+        <meta property="og:title" content="{{ __('Why Culture Matters International Symposium') }}">
+        <meta property="og:description" content="{{ __('og.description') }}">
+        <meta property="og:image" content="{{ asset('assets/images/og/wcm-2026.png') }}">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:alt" content="{{ __('og.image_alt') }}">
+
+        {{-- Without this X shows a small square crop instead of the card. --}}
+        <meta name="twitter:card" content="summary_large_image">
 
         <title inertia>{{ config('app.name', '?') }}</title>
 

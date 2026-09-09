@@ -197,6 +197,10 @@ workshop day, and those are booked one at a time through their own forms.
       `docs/2026-partner-logos.md` for the sizes.
 - [ ] **Fundația Culturală Jazz Banat** is the one mark with no link; 15 of the
       16 are linked.
+- [x] **The sharing card** is `public/assets/images/og/wcm-2026.png`, and the
+      description no longer describes the 2024 edition. See
+      `docs/2026-og-image.md` — including the two caches to prod after
+      deploying, since the address has not changed.
 - [ ] **Social links in the footer** are still `instagram.com` and
       `facebook.com` — placeholders from the handoff.
 - [ ] **Guests** are applied from `Database\Seeders\Guests2026Seeder` with
