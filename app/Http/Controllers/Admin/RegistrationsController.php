@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Front2026Controller;
 use App\Mail\RegistrationConfirmation;
+use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\Registration;
 use App\Models\Session;
@@ -127,6 +128,40 @@ class RegistrationsController extends Controller
         ])->save();
 
         return back()->with('flash', 'Confirmation resent to '.$registration->email);
+    }
+
+    /*
+     * Sends the "you are registered" email again — the one with the venue and
+     * the calendar file, which the resend above does not cover: that one asks
+     * for a confirmation this person has already given.
+     *
+     * Wanted the day FABER's address turned out to be wrong in it. Anything of
+     * that kind changes what people already have in their inbox and in their
+     * calendar, and there was no way to put it right from here.
+     */
+    public function resendConfirmed(Registration $registration): RedirectResponse
+    {
+        if (! $registration->isConfirmed()) {
+            return back()->with('flash', 'Not confirmed yet — send the confirmation instead.');
+        }
+
+        try {
+            Mail::to($registration->email)->send(new RegistrationConfirmed($registration));
+        } catch (Throwable $e) {
+            Log::error('2026 confirmed email resend failed', [
+                'registration' => $registration->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors(['resend' => 'The email did not go out: '.$e->getMessage()]);
+        }
+
+        $registration->forceFill([
+            'last_sent_at' => now(),
+            'sent_count' => $registration->sent_count + 1,
+        ])->save();
+
+        return back()->with('flash', 'Details resent to '.$registration->email);
     }
 
     /** Marks an address confirmed by hand, for the ones that never will be. */

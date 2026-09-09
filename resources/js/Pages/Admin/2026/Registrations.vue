@@ -26,6 +26,17 @@ function resend(registration) {
     action.post(`/dashboard/registrations/${registration.id}/resend`, { preserveScroll: true });
 }
 
+/*
+ * The other email: the one carrying the venue and the calendar file. Worth
+ * sending again when something in it turns out to be wrong, which is not the
+ * same situation as an email that never arrived.
+ */
+function resendDetails(registration) {
+    if (confirm(`Send ${registration.name} the registration details again?`)) {
+        action.post(`/dashboard/registrations/${registration.id}/resend-details`, { preserveScroll: true });
+    }
+}
+
 function confirmByHand(registration) {
     if (confirm(`Mark ${registration.name} as confirmed without them clicking the email?`)) {
         action.post(`/dashboard/registrations/${registration.id}/confirm`, { preserveScroll: true });
@@ -125,7 +136,15 @@ function confirmByHand(registration) {
                                 </button>
                                 <button type="button" class="ml-3 text-gray-500 hover:text-green-700" @click="confirmByHand(row)">Confirm</button>
                             </template>
-                            <span v-else class="text-gray-300">—</span>
+                            <button
+                                v-else
+                                type="button"
+                                class="text-gray-500 hover:text-gray-900"
+                                title="Send the venue, dates and calendar file again"
+                                @click="resendDetails(row)"
+                            >
+                                Resend details<span v-if="row.sent_count > 1" class="text-gray-400"> ({{ row.sent_count }})</span>
+                            </button>
                         </td>
                     </tr>
                     <tr v-if="!registrations.length">

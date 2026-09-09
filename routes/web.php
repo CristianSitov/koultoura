@@ -295,6 +295,7 @@ Route::prefix('dashboard')
             Route::get('/registrations', 'index')->name('registrations');
             Route::get('/registrations.csv', 'export')->name('registrations.export');
             Route::post('/registrations/{registration}/resend', 'resendConfirmation')->name('registrations.resend');
+            Route::post('/registrations/{registration}/resend-details', 'resendConfirmed')->name('registrations.resend-details');
             Route::post('/registrations/{registration}/confirm', 'confirm')->name('registrations.confirm');
 
             Route::get('/bookings', 'bookings')->name('bookings');
