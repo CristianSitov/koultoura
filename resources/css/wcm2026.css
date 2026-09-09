@@ -31,6 +31,15 @@
     /* every rule on the page is red */
     --color-divider: var(--color-accent);
 
+    /*
+     * Asking for money is the one link that is red before you point at it, in
+     * the bar and in the menu. It is a token because "red" is the wrong ink in
+     * the dark theme: there the ramp is inverted, and the accent itself is
+     * darker than the links it has to stand out from. Either way this is one
+     * step brighter than a link at rest.
+     */
+    --color-support-ink: var(--color-accent);
+
     --font-heading: 'Manrope', system-ui, sans-serif;
     --font-body: 'Manrope', system-ui, sans-serif;
 
@@ -56,6 +65,7 @@
     --color-accent-100: #2c1518;
     --color-accent-700: #e88a95;
     --color-accent-800: #f2bcc2;
+    --color-support-ink: var(--color-accent-800);
     --lines-opacity: 1;
 }
 
@@ -463,6 +473,18 @@
 
 .wcm26-menu-link:hover {
     color: var(--color-accent);
+}
+
+/*
+ * The one row that leaves the page rather than scrolling it, so it is the one
+ * row that is red before you point at it. The others sit at accent-700 and
+ * arrive at the accent on hover; this one is already there.
+ *
+ * Scoped, or `.wcm26 a` outranks it on specificity and the row comes out the
+ * same maroon as everything above it.
+ */
+.wcm26 .wcm26-menu-link-support {
+    color: var(--color-support-ink);
 }
 
 .wcm26-menu-link span {
@@ -2643,7 +2665,23 @@ a.wcm26-partner-logo:focus-visible {
     }
 }
 
-/* Beside the way in, and the first thing to go when the bar runs out of room. */
+/*
+ * Red ink in a red-bordered box: the secondary button already carries the
+ * accent on its border, so asking is the only thing in the bar that is neither
+ * a plain control nor the filled way in. It stays hollow — two solid red
+ * buttons side by side would leave neither of them looking like the way in.
+ *
+ * The hover has to be restated: .btn-secondary:hover puts the text colour back,
+ * and it matches this rule's specificity, so only being further down the file
+ * keeps the label red under the pointer.
+ */
+.wcm26 .wcm26-nav-support,
+.wcm26 .wcm26-nav-support:hover {
+    color: var(--color-support-ink);
+}
+
+/* Beside the way in, and the first thing to go when the bar runs out of room —
+   it is a row of the menu below that width, not a thing that disappears. */
 @media (max-width: 1100px) {
     /* Scoped, or .wcm26 .btn's own display wins on specificity and the link
        stays in a bar that has no room for it. */

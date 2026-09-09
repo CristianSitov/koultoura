@@ -1,7 +1,7 @@
 <script setup>
 import Logo from './Logo.vue';
 import { computed } from 'vue';
-import { menuItems } from './menu';
+import { menuItems, menuSupport } from './menu';
 
 const props = defineProps({
     // Hidden sections are not offered: a menu entry that scrolls nowhere is
@@ -19,11 +19,14 @@ const props = defineProps({
     otherLocaleUrl: { type: String, default: '/2026/ro' },
 });
 
-const items = computed(() =>
-    menuItems
+const items = computed(() => [
+    ...menuItems
         .filter((item) => item.href !== '#programme' || props.programmeVisible)
-        .map((item) => ({ ...item, url: props.landing + item.href }))
-);
+        .map((item) => ({ ...item, url: props.landing + item.href })),
+    // Last, and off the numbered sequence: it leaves the page rather than
+    // scrolling it, so it hangs off `base` and is marked as the odd one out.
+    { ...menuSupport, url: props.base + menuSupport.href, support: true },
+]);
 
 defineEmits(['close']);
 </script>
@@ -51,7 +54,12 @@ defineEmits(['close']);
         <nav class="wcm26-menu-body">
             <ol class="wcm26-menu-list">
                 <li v-for="item in items" :key="item.n">
-                    <a :href="item.url" class="wcm26-menu-link" @click="$emit('close')">
+                    <a
+                        :href="item.url"
+                        class="wcm26-menu-link"
+                        :class="{ 'wcm26-menu-link-support': item.support }"
+                        @click="$emit('close')"
+                    >
                         <span>{{ item.n }}</span>{{ $t(item.label) }}
                     </a>
                 </li>
@@ -71,6 +79,8 @@ defineEmits(['close']);
                     <p>{{ $t('Language') }}</p>
                     <p><a class="wcm26-menu-lang" :href="otherLocaleUrl">{{ otherLocale === 'ro' ? 'Română' : 'English' }}</a></p>
                 </div>
+                <!-- Support us used to sit here too; it is a row of the menu
+                     itself now, and one way in is enough for one overlay. -->
                 <div class="wcm26-menu-actions">
                     <a
                         :href="`${base}/register`"
@@ -79,15 +89,6 @@ defineEmits(['close']);
                         @click="$emit('close')"
                     >
                         {{ $t('register.submit') }}
-                    </a>
-
-                    <a
-                        :href="`${base}/support`"
-                        class="btn btn-secondary btn-flush"
-                        style="height: 48px; font-size: 16px"
-                        @click="$emit('close')"
-                    >
-                        {{ $t('Support us') }}
                     </a>
                 </div>
             </div>
