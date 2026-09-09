@@ -112,8 +112,10 @@ swap of all four, not a first configuration.
       descriptor "ASOCIAȚIA PRIN BANAT". (`settings.dashboard.display_name`
       still says prinbanat.ngo, but that is the label on your own dashboard, not
       anything a payer sees.)
-- [ ] **No support email is set** on the account. Stripe puts one on the
-      receipt; without it people have only the phone number.
+- [x] **Support email** `contact@prinbanat.ro` and phone are on the account, so
+      the receipt carries a way to reach the association.
+- [x] The **statement descriptor** is plain ASCII — card networks do not carry
+      diacritics, and a mangled name on a statement invites chargebacks.
 - [ ] Make one **real payment of a few lei**, refund it, and check that
       `make contributions` shows the row. Then run
       `php artisan contributions:reconcile` — it should say nothing is missing.
