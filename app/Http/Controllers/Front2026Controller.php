@@ -39,17 +39,29 @@ class Front2026Controller extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('2026/Home');
+        return $this->announcement();
     }
 
     public function en(): Response
     {
-        return Inertia::render('2026/Home');
+        return $this->announcement();
     }
 
     public function ro(): Response
     {
-        return Inertia::render('2026/Home');
+        return $this->announcement();
+    }
+
+    /*
+     * Once the edition is public this page is history: the landing page is the
+     * site, and this stays reachable at /announcement without competing with it
+     * in a search result.
+     */
+    private function announcement(): Response
+    {
+        return Inertia::render('2026/Home', [
+            'isPublic' => config('wcm.public'),
+        ]);
     }
 
     /**

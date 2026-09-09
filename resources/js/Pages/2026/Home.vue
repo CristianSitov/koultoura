@@ -2,6 +2,11 @@
 import { Head, usePage } from '@inertiajs/inertia-vue3';
 import { computed, onMounted, ref } from 'vue';
 
+defineProps({
+    // True once the landing page is the site — see config/wcm.php.
+    isPublic: { type: Boolean, default: false },
+});
+
 const locale = computed(() => usePage().props.value.locale);
 
 /*
@@ -26,10 +31,23 @@ onMounted(() => {
 </script>
 
 <template>
+    <!--
+        Nothing here may be conditional: this Inertia's <Head> chokes on the
+        comment node a false v-if leaves behind. Bound attributes are fine.
+
+        The hreflangs point at this page's own archived addresses rather than
+        at `/`, which stops being this page the moment the edition goes public.
+    -->
     <Head title="Coming Soon">
-        <link rel="alternate" hreflang="en" :href="route('home')">
-        <link rel="alternate" hreflang="ro" :href="route('home.ro')">
-        <link rel="alternate" hreflang="x-default" :href="route('home')">
+        <meta
+            head-key="robots"
+            name="robots"
+            :content="isPublic ? 'noindex, nofollow' : 'index, follow'"
+        />
+        <link head-key="canonical" rel="canonical" :href="route('announcement.en')">
+        <link rel="alternate" hreflang="en" :href="route('announcement.en')">
+        <link rel="alternate" hreflang="ro" :href="route('announcement.ro')">
+        <link rel="alternate" hreflang="x-default" :href="route('announcement.en')">
     </Head>
 
     <div

@@ -24,7 +24,7 @@ class Resolve2026Locale
 {
     public function handle(Request $request, Closure $next)
     {
-        if (! $request->routeIs('home', 'home.en', 'home.ro', '2026.*')) {
+        if (! $request->routeIs('home', 'home.en', 'home.ro', 'announcement*', '2026.*')) {
             return $next($request);
         }
 
@@ -36,8 +36,8 @@ class Resolve2026Locale
          * open on the next route added, rendering English at a /ro address.
          */
         $locale = $request->route('locale') ?? match ($name) {
-            'home.en' => 'en',
-            'home.ro' => 'ro',
+            'home.en', 'announcement.en' => 'en',
+            'home.ro', 'announcement.ro' => 'ro',
             default => null,
         };
 

@@ -33,6 +33,20 @@ if (config('wcm.public')) {
 }
 
 /*
+ * The announcement page, which stood at `/` until the edition went public.
+ * Archived at an address of its own rather than deleted — it is the first
+ * thing this edition put on the web, and the earlier editions are all still
+ * reachable. Registered whether or not the site is live, so the address does
+ * not appear and disappear with the switch.
+ */
+Route::controller(Front2026Controller::class)
+    ->group(function () {
+        Route::get('/announcement', 'index')->name('announcement');
+        Route::get('/announcement/en', 'en')->name('announcement.en');
+        Route::get('/announcement/ro', 'ro')->name('announcement.ro');
+    });
+
+/*
  * Addresses the edition used to answer on. A confirmation email sent under the
  * old segment carries that segment for good, so the prefix keeps answering and
  * forwards whatever follows it.
