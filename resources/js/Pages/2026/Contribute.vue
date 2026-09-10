@@ -77,7 +77,12 @@ onBeforeUnmount(() => checkout?.destroy());
                  than scroll that far. -->
             <div class="wcm26-contribute-col">
                 <p class="wcm26-contribute-done">
-                    {{ $t('contribute.registered') }}<span v-if="email" class="wcm26-contribute-done-at"> {{ email }}</span>
+                    <svg class="wcm26-contribute-done-mark" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true">
+                        <path d="M4 12.5L9.5 18L20 6.5"></path>
+                    </svg>
+                    <span>
+                        {{ $t('contribute.registered') }}<span v-if="email" class="wcm26-contribute-done-at">{{ email }}</span>
+                    </span>
                 </p>
 
                 <p class="wcm26-lead">{{ $t('contribute.lead') }}</p>

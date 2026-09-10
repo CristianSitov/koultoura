@@ -2473,15 +2473,26 @@ a.wcm26-partner-logo:focus-visible {
 
 /*
  * The first thing the page has to say, because it is the first thing anyone
- * arriving here wonders: the form worked. The red rule is the site's own
- * structural mark rather than a green tick, which this palette has no ink for.
+ * arriving here wonders: the form worked.
+ *
+ * The tick is red rather than green — this palette has one colour and a tick
+ * in a colour the site never uses elsewhere would read as another site's
+ * component. Drawn like the bar's own icons: 24px box, no fill, square caps.
  */
 .wcm26-contribute-done {
-    margin: 0 0 24px;
-    padding: 2px 0 2px 16px;
-    border-left: 2px solid var(--color-divider);
-    font-size: 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 0 0 28px;
+    font-size: clamp(16px, 1.3vw, 18px);
     line-height: 1.5;
+}
+
+.wcm26-contribute-done-mark {
+    flex: none;
+    /* Optical, not geometric: sits on the first line rather than above it. */
+    margin-top: 2px;
+    color: var(--color-support-ink);
 }
 
 .wcm26-contribute-done-at {
