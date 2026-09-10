@@ -2,7 +2,7 @@
 import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
 import { computed, ref } from 'vue';
 import '../../../css/wcm2026.css';
-import { CalendarDays, Check, HeartHandshake, Mail } from 'lucide-vue-next';
+import { CalendarDays, Check, HeartHandshake, Mail, MailX } from 'lucide-vue-next';
 import PageShell from '../../Sections/2026/PageShell.vue';
 import SectionHead from '../../Sections/2026/SectionHead.vue';
 
@@ -16,6 +16,9 @@ const props = defineProps({
     // what was actually paid arrives on the webhook.
     paid: { type: Boolean, default: false },
     confirmed: { type: Boolean, default: false },
+    // False when the mailer refused. The heading and the copy both promise an
+    // inbox, and neither should when nothing was sent.
+    sent: { type: Boolean, default: true },
     // { amount: minor units, currency } — for the thank-you only.
     contribution: { type: Object, default: null },
 });
@@ -55,12 +58,12 @@ function resend() {
 
     <PageShell :base="base">
         <section class="wcm26-section">
-            <SectionHead n="→" :title="confirmed ? $t('You are registered') : $t('Check your email')" />
+            <SectionHead n="→" :title="confirmed ? $t('You are registered') : (sent ? $t('Check your email') : $t('send.failed.heading'))" />
 
             <div class="wcm26-split">
                 <div>
                     <p class="wcm26-lead" style="max-width: 22ch">
-                        {{ confirmed ? $t('Nothing left to do.') : $t('One step left.') }}
+                        {{ confirmed ? $t('Nothing left to do.') : (sent ? $t('One step left.') : $t('send.failed.submitted')) }}
                     </p>
                 </div>
 
@@ -70,16 +73,22 @@ function resend() {
                     <template v-if="! confirmed">
                         <div class="wcm26-cued">
                             <span class="wcm26-cue" aria-hidden="true">
-                                <Mail :size="50" :stroke-width="1.25" />
+                                <component :is="sent ? Mail : MailX" :size="50" :stroke-width="1.25" />
                             </span>
 
                             <div>
-                                <p>
+                                <p v-if="sent">
                                     {{ $t('We have written to') }} <strong class="wcm26-email">{{ email }}</strong>{{ '.' }}
                                     {{ $t('Open it and confirm, and your registration is done.') }}
                                 </p>
 
-                                <p class="wcm26-hint">{{ $t('Nothing arrived? It may take a minute, and it may have landed in spam.') }}</p>
+                                <!-- Nothing left, so nothing to go and look for.
+                                     The button below is the whole answer. -->
+                                <p v-else>
+                                    {{ $t('send.failed') }} <strong class="wcm26-email">{{ email }}</strong>{{ '.' }}
+                                </p>
+
+                                <p v-if="sent" class="wcm26-hint">{{ $t('Nothing arrived? It may take a minute, and it may have landed in spam.') }}</p>
 
                                 <p v-if="resent" class="wcm26-note-sent">{{ $t('Sent again. Give it a minute.') }}</p>
                                 <p v-else class="wcm26-form-actions">

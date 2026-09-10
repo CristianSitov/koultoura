@@ -173,6 +173,8 @@ class Front2026RegistrationController extends Controller
         return Inertia::render('2026/RegistrationSubmitted', [
             'base' => Front2026Controller::base(),
             'email' => $registration->email,
+            // Re-read: the send above may have just changed it.
+            'sent' => $registration->fresh()->sent_count > 0,
             // Shown, not editable: what this address is down for.
             'days' => $registration->days,
             // Our own route, which decides how to reach Stripe. Offered

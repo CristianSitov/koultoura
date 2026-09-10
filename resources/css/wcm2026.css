@@ -2494,6 +2494,10 @@ a.wcm26-partner-logo:focus-visible {
     flex: none;
     /* Optical, not geometric: sits on the first line rather than above it. */
     margin-top: 2px;
+    /* Wrapper, not the icon: line-height 0 keeps the span from adding a
+       descender the icon does not have. */
+    display: block;
+    line-height: 0;
     color: var(--color-support-ink);
 }
 

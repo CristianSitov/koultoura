@@ -1,5 +1,6 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
+import { Mail, MailX } from 'lucide-vue-next';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import '../../../css/wcm2026.css';
 import PageShell from '../../Sections/2026/PageShell.vue';
@@ -8,6 +9,9 @@ import SectionHead from '../../Sections/2026/SectionHead.vue';
 const props = defineProps({
     base: { type: String, default: '/2026' },
     email: { type: String, default: '' },
+    // False when the mailer refused. The registration is saved either way, so
+    // this page is where someone finds out no email is coming.
+    sent: { type: Boolean, default: true },
     skipUrl: { type: String, required: true },
     publishableKey: { type: String, default: null },
     clientSecret: { type: String, default: null },
@@ -78,15 +82,20 @@ onBeforeUnmount(() => checkout?.destroy());
             <div class="wcm26-contribute-col">
                 <!-- An envelope, not a tick: nothing is done yet. The place
                      counts once the address is confirmed (see register.intro),
-                     and "You are registered" is the other email's heading. -->
+                     and "You are registered" is the other email's heading.
+
+                     A crossed envelope when the send failed — telling someone
+                     to go and open a message that never left is worse than
+                     saying nothing, and they are still registered. -->
                 <p class="wcm26-contribute-done">
-                    <svg class="wcm26-contribute-done-mark" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M3 6h18v12H3z"></path>
-                        <path d="M3 7l9 6 9-6"></path>
-                    </svg>
+                    <span class="wcm26-contribute-done-mark" aria-hidden="true">
+                        <component :is="sent ? Mail : MailX" :size="24" :stroke-width="2" />
+                    </span>
                     <span>
-                        {{ $t('contribute.registered') }}<span v-if="email" class="wcm26-contribute-done-at">{{ email }}</span>
-                        <span class="wcm26-contribute-done-next">{{ $t('Open it and confirm, and your registration is done.') }}</span>
+                        {{ sent ? $t('contribute.registered') : $t('send.failed') }}<span v-if="email" class="wcm26-contribute-done-at">{{ email }}</span>
+                        <span class="wcm26-contribute-done-next">
+                            {{ sent ? $t('Open it and confirm, and your registration is done.') : $t('send.failed.contribute') }}
+                        </span>
                     </span>
                 </p>
 

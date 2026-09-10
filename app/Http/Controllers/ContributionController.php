@@ -45,6 +45,11 @@ class ContributionController extends Controller
             // the form, and the first thing it has to answer is whether the
             // form worked. Their own address is the proof.
             'email' => $registration->email,
+            // Whether the confirmation actually left. `store` sends it before
+            // redirecting here, and swallows a mailer failure so the person is
+            // still registered — which leaves this page the only thing that
+            // can tell them the message is not coming.
+            'sent' => $registration->sent_count > 0,
             'skipUrl' => $this->submittedUrl($registration),
             'publishableKey' => config('services.stripe.key'),
             // Present only when the form can be embedded; otherwise the page
