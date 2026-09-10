@@ -139,10 +139,20 @@ class Front2026RegistrationController extends Controller
         ]);
 
         /*
-         * No email yet. It is sent when they reach the "check your email" page
-         * — after contributing or after skipping — so that one message arrives
-         * at the end of the whole thing rather than mid-way through it.
+         * Sent here, not at the end of the flow.
+         *
+         * It used to wait for the "check your email" page, so that one message
+         * arrived after the whole thing rather than mid-way through it. That
+         * page is past the contribution step, and on 10 September two of the
+         * day's four registrations never reached it: both arrived from the
+         * Instagram bio link, both stopped on the page that asks for a card,
+         * and neither was ever emailed. Nothing failed — nothing was sent.
+         *
+         * Confirming an address has nothing to do with donating, so it no
+         * longer waits behind it.
          */
+        $this->sendConfirmation($registration);
+
         return redirect(Front2026Controller::base().'/contribute/'.$registration->token);
     }
 
@@ -151,10 +161,10 @@ class Front2026RegistrationController extends Controller
         $registration = Registration::where('token', $request->route('token'))->firstOrFail();
 
         /*
-         * The end of the flow, and where the confirmation is sent from: whether
-         * they contributed or skipped, this is the page that tells them to go
-         * and look for it. Only the first time — a reload is not a reason to
-         * send another.
+         * The second chance. `store` has already sent this; the only way to
+         * arrive here unsent is a mailer that was down a moment ago, and this
+         * is the next request that can try again. A reload is not a reason to
+         * send another, and neither is an address already confirmed.
          */
         if ($registration->sent_count === 0 && ! $registration->isConfirmed()) {
             $this->sendConfirmation($registration);
