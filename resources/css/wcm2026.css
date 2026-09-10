@@ -2700,3 +2700,31 @@ a.wcm26-partner-logo:focus-visible {
 }
 
 
+
+/*
+ * The contribution step, on a phone.
+ *
+ * The page shell's rhythm — 88px above the content, 60px of section padding,
+ * 48px under the heading — is right for a page you arrive at to read. This is
+ * a page you arrive at mid-task, under a 70px sticky bar, with a question to
+ * answer, and 196px of air before the first word pushed the way out of the
+ * step to the very edge of the fold in Instagram's in-app browser.
+ *
+ * Scoped by :has() rather than a prop threaded through PageShell: the shell
+ * wraps the slot, so nothing inside it can reach the padding otherwise. Where
+ * :has() is not supported the rule is skipped and the roomier layout stands,
+ * which is the old behaviour rather than a broken one.
+ */
+@media (max-width: 600px) {
+    .wcm26-page:has(.wcm26-contribute-col) {
+        padding-top: 24px;
+    }
+
+    .wcm26-page:has(.wcm26-contribute-col) .wcm26-section {
+        padding-top: 28px;
+    }
+
+    .wcm26-page:has(.wcm26-contribute-col) .wcm26-head {
+        margin-bottom: 24px;
+    }
+}
