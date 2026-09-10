@@ -2475,9 +2475,11 @@ a.wcm26-partner-logo:focus-visible {
  * The first thing the page has to say, because it is the first thing anyone
  * arriving here wonders: the form worked.
  *
- * The tick is red rather than green — this palette has one colour and a tick
- * in a colour the site never uses elsewhere would read as another site's
- * component. Drawn like the bar's own icons: 24px box, no fill, square caps.
+ * An envelope rather than a tick: at this point the email has been sent and
+ * nothing has been confirmed, and a tick would claim the state that only
+ * exists after they follow the link. Red rather than green — this palette has
+ * one colour, and an ink the site never uses elsewhere would read as another
+ * site's component. Drawn like the bar's own icons: 24px box, no fill.
  */
 .wcm26-contribute-done {
     display: flex;
@@ -2499,6 +2501,13 @@ a.wcm26-partner-logo:focus-visible {
     display: block;
     font-weight: 700;
     word-break: break-word;
+}
+
+/* The instruction, quieter than the address it follows. */
+.wcm26-contribute-done-next {
+    display: block;
+    margin-top: 4px;
+    color: color-mix(in srgb, var(--color-text) 72%, transparent);
 }
 
 .wcm26-skip {
@@ -2737,5 +2746,15 @@ a.wcm26-partner-logo:focus-visible {
 
     .wcm26-page:has(.wcm26-contribute-col) .wcm26-head {
         margin-bottom: 24px;
+    }
+
+    /* The confirm instruction wraps to two lines in Romanian; these buy back
+       the room it costs, so skipping stays where it was. */
+    .wcm26-page:has(.wcm26-contribute-col) .wcm26-contribute-done {
+        margin-bottom: 20px;
+    }
+
+    .wcm26-page:has(.wcm26-contribute-col) .wcm26-contribute-intro {
+        margin: 20px 0 24px;
     }
 }

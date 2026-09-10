@@ -76,12 +76,17 @@ onBeforeUnmount(() => checkout?.destroy());
                  10 September two people out of four left from here rather
                  than scroll that far. -->
             <div class="wcm26-contribute-col">
+                <!-- An envelope, not a tick: nothing is done yet. The place
+                     counts once the address is confirmed (see register.intro),
+                     and "You are registered" is the other email's heading. -->
                 <p class="wcm26-contribute-done">
-                    <svg class="wcm26-contribute-done-mark" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" aria-hidden="true">
-                        <path d="M4 12.5L9.5 18L20 6.5"></path>
+                    <svg class="wcm26-contribute-done-mark" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M3 6h18v12H3z"></path>
+                        <path d="M3 7l9 6 9-6"></path>
                     </svg>
                     <span>
                         {{ $t('contribute.registered') }}<span v-if="email" class="wcm26-contribute-done-at">{{ email }}</span>
+                        <span class="wcm26-contribute-done-next">{{ $t('Open it and confirm, and your registration is done.') }}</span>
                     </span>
                 </p>
 
