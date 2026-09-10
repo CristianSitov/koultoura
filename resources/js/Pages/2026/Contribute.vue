@@ -7,6 +7,7 @@ import SectionHead from '../../Sections/2026/SectionHead.vue';
 
 const props = defineProps({
     base: { type: String, default: '/2026' },
+    email: { type: String, default: '' },
     skipUrl: { type: String, required: true },
     publishableKey: { type: String, default: null },
     clientSecret: { type: String, default: null },
@@ -67,10 +68,24 @@ onBeforeUnmount(() => checkout?.destroy());
             <SectionHead n="→" :title="$t('Contribute')" />
 
             <!-- One column, one measure: the words and the payment form share
-                 a left edge, and skipping sits under the thing being skipped. -->
+                 a left edge.
+
+                 Skipping sits above the form rather than below it. On a phone
+                 the embedded checkout is around 880px tall, which put the way
+                 out two screens down, behind the thing it declines — and on
+                 10 September two people out of four left from here rather
+                 than scroll that far. -->
             <div class="wcm26-contribute-col">
+                <p class="wcm26-contribute-done">
+                    {{ $t('contribute.registered') }}<span v-if="email" class="wcm26-contribute-done-at"> {{ email }}</span>
+                </p>
+
                 <p class="wcm26-lead">{{ $t('contribute.lead') }}</p>
                 <p class="wcm26-body wcm26-contribute-intro" v-html="$t('contribute.intro')"></p>
+
+                <p class="wcm26-contribute-skip">
+                    <a :href="skipUrl" class="btn btn-secondary wcm26-skip">{{ $t('Skip this step') }}</a>
+                </p>
 
                 <div v-if="clientSecret && !failed" id="wcm-checkout" class="wcm26-checkout"></div>
 
@@ -82,10 +97,6 @@ onBeforeUnmount(() => checkout?.destroy());
                         </a>
                     </p>
                 </div>
-
-                <p class="wcm26-contribute-skip">
-                    <a :href="skipUrl" class="btn btn-secondary wcm26-skip">{{ $t('Skip this step') }}</a>
-                </p>
             </div>
         </section>
     </PageShell>

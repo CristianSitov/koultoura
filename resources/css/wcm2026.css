@@ -2460,11 +2460,34 @@ a.wcm26-partner-logo:focus-visible {
     min-height: 420px;
 }
 
-/* Clear of the form it declines, and big enough to be an answer to it. */
+/*
+ * Offered before the form, not after it. Big enough to be an answer to the
+ * question the page asks, and above the 880px of embedded checkout that used
+ * to bury it two screens down on a phone.
+ */
 .wcm26-contribute-skip {
-    margin: 28px 0 0;
-    padding-top: 24px;
-    border-top: 1px solid var(--color-divider);
+    margin: 0 0 32px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--color-divider);
+}
+
+/*
+ * The first thing the page has to say, because it is the first thing anyone
+ * arriving here wonders: the form worked. The red rule is the site's own
+ * structural mark rather than a green tick, which this palette has no ink for.
+ */
+.wcm26-contribute-done {
+    margin: 0 0 24px;
+    padding: 2px 0 2px 16px;
+    border-left: 2px solid var(--color-divider);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.wcm26-contribute-done-at {
+    display: block;
+    font-weight: 700;
+    word-break: break-word;
 }
 
 .wcm26-skip {

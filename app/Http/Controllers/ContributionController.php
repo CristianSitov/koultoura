@@ -41,6 +41,10 @@ class ContributionController extends Controller
 
         return Inertia::render('2026/Contribute', [
             'base' => Front2026Controller::base(),
+            // Said back to them at the top of the page: this is the step after
+            // the form, and the first thing it has to answer is whether the
+            // form worked. Their own address is the proof.
+            'email' => $registration->email,
             'skipUrl' => $this->submittedUrl($registration),
             'publishableKey' => config('services.stripe.key'),
             // Present only when the form can be embedded; otherwise the page
