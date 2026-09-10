@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\Front2026Controller;
+use App\Models\Registration;
 use Closure;
 use GeoIp2\Database\Reader;
 use Illuminate\Http\Request;
@@ -40,6 +41,25 @@ class Resolve2026Locale
             'home.ro', 'announcement.ro' => 'ro',
             default => null,
         };
+
+        /*
+         * The contribution step has no address of its own per language: it
+         * belongs to a registration, and that row records the language the
+         * form was actually filled in. The session is only a proxy for the
+         * same thing, and a weaker one — lose it (another device, a cleared
+         * browser, a link opened later) and someone who registered in
+         * Romanian got an English page with a Romanian card form beside it,
+         * because Stripe was already being told the registration's language.
+         *
+         * One query on one route, on the row the controller reads next.
+         */
+        if ($locale === null && $request->routeIs('2026.contribute', '2026.contribute.redirect')) {
+            $registered = Registration::where('token', $request->route('token'))->value('locale');
+
+            if (in_array($registered, config('translatable.locales'), true)) {
+                $locale = $registered;
+            }
+        }
 
         if ($locale === null) {
             /*
