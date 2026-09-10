@@ -13,6 +13,28 @@ const action = useForm({});
 
 const dayLabels = { 1: '07', 2: '08', 3: '09', 4: '10' };
 
+/*
+ * Three states, not two. "Pending" used to cover both the person who is
+ * thinking it over and the person nobody ever wrote to — and on 10 September
+ * two registrations sat in the second kind for a whole day looking exactly
+ * like the first. The one that needs someone to act says so.
+ */
+function state(row) {
+    if (row.confirmed) {
+        return { label: 'confirmed', note: row.confirmed_ago, class: 'bg-green-100 text-green-800' };
+    }
+
+    if (row.sent_count === 0) {
+        return { label: 'never emailed', note: 'nothing sent yet', class: 'bg-red-100 text-red-800' };
+    }
+
+    return {
+        label: 'awaiting reply',
+        note: row.sent_count > 1 ? `sent ${row.sent_count}×, last ${row.sent_ago}` : `sent ${row.sent_ago}`,
+        class: 'bg-amber-100 text-amber-800',
+    };
+}
+
 function filterUrl(day, status) {
     const params = new URLSearchParams();
     if (day) params.set('day', day);
@@ -58,6 +80,7 @@ function confirmByHand(registration) {
                 <p class="text-xs uppercase tracking-wide text-gray-500">Registered</p>
                 <p class="text-2xl font-bold">{{ counts.total }}</p>
                 <p class="text-sm text-gray-500">{{ counts.confirmed }} confirmed</p>
+                <p v-if="counts.unsent" class="text-sm font-semibold text-red-700">{{ counts.unsent }} never emailed</p>
             </div>
             <div v-for="(row, day) in counts.perDay" :key="day" class="bg-white rounded border border-gray-200 p-4">
                 <p class="text-xs uppercase tracking-wide text-gray-500">{{ row.date }} October</p>
@@ -80,7 +103,7 @@ function confirmByHand(registration) {
             <span class="mx-2 text-gray-300">|</span>
 
             <Link
-                v-for="status in ['all', 'confirmed', 'pending']"
+                v-for="status in ['all', 'confirmed', 'waiting', 'unsent']"
                 :key="status"
                 :href="filterUrl(filters.day, status)"
                 :class="[
@@ -121,12 +144,8 @@ function confirmByHand(registration) {
                             <span v-if="row.country" class="text-gray-400">· {{ row.country }}</span>
                         </td>
                         <td class="px-4 py-3">
-                            <span
-                                :class="[
-                                    'rounded px-2 py-0.5 text-xs',
-                                    row.confirmed ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800',
-                                ]"
-                            >{{ row.confirmed ? 'confirmed' : 'pending' }}</span>
+                            <span :class="['rounded px-2 py-0.5 text-xs', state(row).class]">{{ state(row).label }}</span>
+                            <p v-if="state(row).note" class="mt-1 text-xs text-gray-500">{{ state(row).note }}</p>
                         </td>
                         <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ row.created.slice(0, 16) }}</td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">

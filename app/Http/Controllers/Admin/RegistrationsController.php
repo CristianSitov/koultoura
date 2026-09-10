@@ -45,7 +45,9 @@ class RegistrationsController extends Controller
         $registrations = Registration::query()
             ->when($day, fn ($q) => $q->whereJsonContains('days', $day))
             ->when($status === 'confirmed', fn ($q) => $q->whereNotNull('confirmed_at'))
-            ->when($status === 'pending', fn ($q) => $q->whereNull('confirmed_at'))
+            ->when($status === 'waiting', fn ($q) => $q->whereNull('confirmed_at')->where('sent_count', '>', 0))
+            // The state worth being able to list: registered, never written to.
+            ->when($status === 'unsent', fn ($q) => $q->whereNull('confirmed_at')->where('sent_count', 0))
             ->orderByDesc('id')
             ->get();
 
@@ -63,6 +65,11 @@ class RegistrationsController extends Controller
                 'confirmed' => $r->confirmed_at !== null,
                 'created' => $r->created_at->toDateTimeString(),
                 'sent_count' => $r->sent_count,
+                // Said in words rather than dates: the question this page
+                // answers is "how long have they been waiting", and Carbon
+                // knows the server's timezone where the browser does not.
+                'sent_ago' => $r->last_sent_at?->diffForHumans(),
+                'confirmed_ago' => $r->confirmed_at?->diffForHumans(),
             ]),
             'filters' => ['day' => $day, 'status' => $status ?: 'all'],
             'counts' => $this->counts(),
@@ -88,6 +95,7 @@ class RegistrationsController extends Controller
         return [
             'total' => Registration::count(),
             'confirmed' => Registration::whereNotNull('confirmed_at')->count(),
+            'unsent' => Registration::whereNull('confirmed_at')->where('sent_count', 0)->count(),
             'workshopInterest' => Registration::where('workshop_interest', true)->count(),
             'perDay' => $perDay,
             'contributions' => [
