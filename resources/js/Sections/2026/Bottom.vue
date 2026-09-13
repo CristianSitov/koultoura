@@ -30,5 +30,8 @@ defineProps({
             <a :href="`${base}/support`" class="wcm26-footer-support">{{ $t('Support us') }}</a>
             <a :href="`${base}/cookies`">{{ $t('Privacy & cookies') }}</a>
         </div>
+
+        <!-- Who made what: the words are the association's, the code is not. -->
+        <p class="wcm26-colophon">{{ $t('footer.colophon') }}</p>
     </footer>
 </template>

@@ -2018,6 +2018,14 @@ a.wcm26-partner-logo:focus-visible {
     text-decoration: none;
 }
 
+/* A line of its own under the mark and the links, and quieter than both. */
+.wcm26-footer .wcm26-colophon {
+    flex-basis: 100%;
+    font-size: 12px;
+    line-height: 18px;
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
 .wcm26-footer-links a:hover {
     color: var(--color-accent);
 }
