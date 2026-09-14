@@ -40,6 +40,7 @@ class SpeakerController extends Controller
                     'slug' => $p->slug,
                     'avatar' => $p->avatar,
                     'position' => $p->position,
+                    'published' => (bool) $p->published,
                     'role' => $p->translate('en')?->role ?? '',
                     'institution' => $p->translate('en')?->institution ?? '',
                     'sessions' => $p->sessions_count,
@@ -92,6 +93,15 @@ class SpeakerController extends Controller
         return redirect()
             ->route('admin.2026.speakers')
             ->with('flash', $name.' removed.');
+    }
+
+    /** Show or hide a guest on the site. Mirrors the programme's session toggle. */
+    public function toggle(Person $speaker): RedirectResponse
+    {
+        $speaker->published = ! $speaker->published;
+        $speaker->save();
+
+        return back()->with('flash', $speaker->full_name.($speaker->published ? ' is shown.' : ' is hidden.'));
     }
 
     private function form(Person $person): Response

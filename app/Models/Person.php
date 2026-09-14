@@ -24,12 +24,14 @@ class Person extends Model implements TranslatableContract
         'avatar',
         'institution_url',
         'position',
+        'published',
         'drive_folder_id',
         'drive_photo_id',
         'synced_at',
     ];
 
     protected $casts = [
+        'published' => 'boolean',
         'synced_at' => 'datetime',
     ];
 
@@ -55,5 +57,11 @@ class Person extends Model implements TranslatableContract
     public function sessions(): BelongsToMany
     {
         return $this->belongsToMany(Session::class)->withPivot('position');
+    }
+
+    /** Shown on the site. The same gate the programme's sessions use. */
+    public function scopePublished($query)
+    {
+        return $query->where('published', true);
     }
 }

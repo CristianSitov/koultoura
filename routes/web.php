@@ -276,6 +276,7 @@ Route::prefix('dashboard')
             // POST, not PUT: the form carries a photo, and PHP only parses
             // multipart bodies on POST.
             Route::post('/speakers/{speaker}', 'update')->name('speakers.update');
+            Route::put('/speakers/{speaker}/published', 'toggle')->name('speakers.toggle');
             Route::delete('/speakers/{speaker}', 'destroy')->name('speakers.destroy');
         });
 

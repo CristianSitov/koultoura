@@ -1,0 +1,239 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "WCM 2026 · How registration works",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Page the visitor sees"
+        },
+        "backend": {
+          "label": "Server step"
+        },
+        "database": {
+          "label": "Record state"
+        },
+        "messagebus": {
+          "label": "Email sent"
+        },
+        "security": {
+          "label": "Failure"
+        },
+        "external": {
+          "label": "Stripe"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "stripe",
+      "label": "Stripe · optional"
+    },
+    {
+      "id": "visitor",
+      "label": "Visitor"
+    },
+    {
+      "id": "site",
+      "label": "Site"
+    },
+    {
+      "id": "email",
+      "label": "Resend email"
+    }
+  ],
+  "mainPath": [
+    "form",
+    "store",
+    "confirm_mail",
+    "confirm_click",
+    "confirmed",
+    "details_mail"
+  ],
+  "nodes": [
+    {
+      "id": "form",
+      "lane": "visitor",
+      "col": 0,
+      "type": "frontend",
+      "label": "Register form",
+      "sublabel": "days 7–9 · consent",
+      "width": 188
+    },
+    {
+      "id": "contribute",
+      "lane": "visitor",
+      "col": 2,
+      "type": "frontend",
+      "label": "Contribute step",
+      "sublabel": "pay what you can",
+      "tag": "optional",
+      "width": 188
+    },
+    {
+      "id": "submitted",
+      "lane": "visitor",
+      "col": 3,
+      "type": "frontend",
+      "label": "Check your email",
+      "sublabel": "resend button",
+      "width": 188
+    },
+    {
+      "id": "checkout",
+      "lane": "stripe",
+      "col": 2,
+      "type": "external",
+      "label": "Embedded checkout",
+      "sublabel": "webhook records it",
+      "width": 188
+    },
+    {
+      "id": "store",
+      "lane": "site",
+      "col": 1,
+      "type": "backend",
+      "label": "Save registration",
+      "sublabel": "one per address",
+      "tag": "pending",
+      "width": 188
+    },
+    {
+      "id": "confirmed",
+      "lane": "site",
+      "col": 5,
+      "type": "database",
+      "label": "Confirmed",
+      "sublabel": "confirmed_at set",
+      "tag": "counts",
+      "width": 188
+    },
+    {
+      "id": "confirm_mail",
+      "lane": "email",
+      "col": 1,
+      "type": "messagebus",
+      "label": "Confirmation email",
+      "sublabel": "sent on submit",
+      "width": 188
+    },
+    {
+      "id": "confirm_click",
+      "lane": "email",
+      "col": 4,
+      "type": "frontend",
+      "label": "Confirm link",
+      "sublabel": "clicked in inbox",
+      "width": 188
+    },
+    {
+      "id": "details_mail",
+      "lane": "email",
+      "col": 5,
+      "type": "messagebus",
+      "label": "Details email",
+      "sublabel": "venue + .ics",
+      "width": 188
+    },
+    {
+      "id": "send_failed",
+      "lane": "email",
+      "col": 0,
+      "type": "security",
+      "label": "Mailer threw",
+      "sublabel": "Slack alert · page says so",
+      "width": 188
+    }
+  ],
+  "edges": [
+    {
+      "from": "form",
+      "to": "store",
+      "label": "submit"
+    },
+    {
+      "from": "store",
+      "to": "confirm_mail",
+      "label": "at once"
+    },
+    {
+      "from": "confirm_mail",
+      "to": "confirm_click",
+      "label": "inbox"
+    },
+    {
+      "from": "confirm_click",
+      "to": "confirmed"
+    },
+    {
+      "from": "confirmed",
+      "to": "details_mail"
+    },
+    {
+      "from": "store",
+      "to": "contribute",
+      "label": "redirect",
+      "role": "branch",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "from": "contribute",
+      "to": "checkout",
+      "label": "pay",
+      "role": "branch"
+    },
+    {
+      "from": "contribute",
+      "to": "submitted",
+      "label": "skip",
+      "role": "branch"
+    },
+    {
+      "from": "checkout",
+      "to": "submitted",
+      "label": "return",
+      "role": "branch"
+    },
+    {
+      "from": "confirm_mail",
+      "to": "send_failed",
+      "label": "throws",
+      "role": "error",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "What makes a place count",
+      "items": [
+        "The form saves a pending row, one per email address",
+        "The confirmation email leaves before any payment step",
+        "The place counts once the confirm link is clicked"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Contributing is a side trip",
+      "items": [
+        "Pay or skip — both land on Check your email",
+        "Stripe's webhook records what was actually paid",
+        "Page and Stripe follow the registration's language"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "When the mailer fails",
+      "items": [
+        "The registration is still saved",
+        "Slack alerts the office; the dashboard shows never emailed",
+        "Both pages say so and offer Send it again"
+      ]
+    }
+  ]
+}

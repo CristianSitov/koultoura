@@ -92,7 +92,7 @@ class Front2026Controller extends Controller
     {
         // Read by name: the localised route is /2026/{locale}/guests/{slug},
         // so a positional argument would pick up the locale instead.
-        $guest = Person::where('slug', $request->route('slug'))->firstOrFail();
+        $guest = Person::published()->where('slug', $request->route('slug'))->firstOrFail();
 
         return Inertia::render('2026/Landing', [
             'guests' => $this->guests(),
@@ -119,7 +119,8 @@ class Front2026Controller extends Controller
          * position is left alone — it is what the backoffice sorts by, and the
          * order the office thinks in.
          */
-        return Person::with('translations')
+        return Person::published()
+            ->with('translations')
             ->orderBy('position')
             ->orderBy('id')
             ->get()

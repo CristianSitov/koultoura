@@ -33,6 +33,7 @@ function remove(speaker) {
                         <th class="px-4 py-3 font-medium">Text</th>
                         <th class="px-4 py-3 font-medium">Sessions</th>
                         <th class="px-4 py-3 font-medium">Order</th>
+                        <th class="px-4 py-3 font-medium">Shown</th>
                         <th class="px-4 py-3"></th>
                     </tr>
                 </thead>
@@ -63,13 +64,28 @@ function remove(speaker) {
                         </td>
                         <td class="px-4 py-3 text-gray-600">{{ speaker.sessions || '—' }}</td>
                         <td class="px-4 py-3 text-gray-600">{{ speaker.position }}</td>
+                        <td class="px-4 py-3">
+                            <!-- One click, the same control the programme uses
+                                 for a session. Hidden means off the guests grid
+                                 and the profile page unreachable. -->
+                            <Link
+                                :href="`/dashboard/speakers/${speaker.id}/published`"
+                                method="put"
+                                as="button"
+                                type="button"
+                                :class="[
+                                    'rounded px-2 py-0.5 text-xs',
+                                    speaker.published ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800',
+                                ]"
+                            >{{ speaker.published ? 'shown' : 'hidden' }}</Link>
+                        </td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
                             <a :href="`${publicBase}/guests/${speaker.slug}`" target="_blank" class="text-gray-500 hover:text-gray-900">View ↗</a>
                             <button type="button" class="ml-3 text-gray-500 hover:text-red-600" @click="remove(speaker)">Remove</button>
                         </td>
                     </tr>
                     <tr v-if="!speakers.length">
-                        <td colspan="6" class="px-4 py-8 text-center text-gray-500">No speakers yet.</td>
+                        <td colspan="7" class="px-4 py-8 text-center text-gray-500">No speakers yet.</td>
                     </tr>
                 </tbody>
             </table>
