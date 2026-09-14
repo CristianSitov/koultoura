@@ -4,11 +4,32 @@ import ImageSlot from './ImageSlot.vue';
 import SectionHead from './SectionHead.vue';
 import { rgbShift } from './rgbShift';
 
-defineProps({
+const props = defineProps({
     guests: { type: Array, required: true },
+    // The guest profile lives at its own address; the card is a real link to
+    // it, and localised, so the base carries the locale segment.
+    base: { type: String, default: '/2026' },
 });
 
-defineEmits(['open']);
+const emit = defineEmits(['open']);
+
+const href = (guest) => `${props.base}/guests/${guest.id}`;
+
+/*
+ * A real link that still opens the overlay in place. A plain click is caught
+ * and turned into the overlay; a modified click — new tab, new window, or the
+ * middle button — is left alone, so the profile can be opened for real the way
+ * any link can. Same reason the address is a real one: it can be copied and
+ * shared, and a crawler can follow it.
+ */
+function openProfile(event, guest) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+        return;
+    }
+
+    event.preventDefault();
+    emit('open', guest.id);
+}
 
 const grid = ref(null);
 let stopShift = null;
@@ -31,14 +52,14 @@ onBeforeUnmount(() => stopShift?.());
 
         <div ref="grid" class="wcm26-guests">
             <article v-for="guest in guests" :key="guest.id" class="wcm26-guest">
-                <button
-                    type="button"
+                <a
+                    :href="href(guest)"
                     class="wcm26-guest-photo"
                     :aria-label="$t('Open profile: :name', { name: guest.name })"
-                    @click="$emit('open', guest.id)"
+                    @click="openProfile($event, guest)"
                 >
                     <ImageSlot :src="guest.portrait" :alt="guest.name" :placeholder="$t('Portrait')" />
-                </button>
+                </a>
 
                 <!-- What they do sits above the name; where they are from sits
                      under it, as a link out to the institution. -->
@@ -46,8 +67,10 @@ onBeforeUnmount(() => stopShift?.());
                 <!-- Given name over family name: two short lines read better
                      in this column than one that has to shrink to fit. -->
                 <h3 class="wcm26-guest-name">
-                    <span>{{ guest.name.split(' ')[0] }}</span>
-                    <span>{{ guest.name.split(' ').slice(1).join(' ') }}</span>
+                    <a :href="href(guest)" @click="openProfile($event, guest)">
+                        <span>{{ guest.name.split(' ')[0] }}</span>
+                        <span>{{ guest.name.split(' ').slice(1).join(' ') }}</span>
+                    </a>
                 </h3>
                 <p v-if="guest.org" class="wcm26-guest-org">
                     <a v-if="guest.orgUrl" :href="guest.orgUrl" target="_blank" rel="noopener">{{ guest.org }}</a>

@@ -976,6 +976,19 @@
     gap: 14px;
 }
 
+/* The name is a link to the same profile as the photo, but it is a heading
+   first: it takes the column's ink, not a link's, and only underlines on
+   hover. */
+.wcm26-guest-name a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.wcm26-guest-name a:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 .wcm26-guest-photo {
     position: relative;
     overflow: hidden;

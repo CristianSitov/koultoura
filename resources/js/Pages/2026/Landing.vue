@@ -181,7 +181,7 @@ function onPopState(event) {
             <Themes />
             <hr class="wcm26-rule" />
 
-            <Guests :guests="guests" @open="openGuest = $event" />
+            <Guests :guests="guests" :base="localeBase(locale)" @open="openGuest = $event" />
 
             <template v-if="programmeVisible">
                 <hr class="wcm26-rule" />
