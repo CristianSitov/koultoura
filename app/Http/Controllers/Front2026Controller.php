@@ -71,7 +71,7 @@ class Front2026Controller extends Controller
      * When it replaces the announcement page, redirect '/' here (see the note
      * in routes/web.php) and drop the noindex from Landing.vue.
      */
-    public function landing(): Response
+    public function landing(Request $request): Response
     {
         return Inertia::render('2026/Landing', [
             'guests' => $this->guests(),
@@ -80,6 +80,9 @@ class Front2026Controller extends Controller
             'isPublic' => config('wcm.public'),
             'schoolDays' => $this->schoolDays(),
             'programmeVisible' => $this->programmeVisible(),
+            // A section address (/2026/themes) lands on this same page, scrolled
+            // to that section. The route constrains it to the known ids.
+            'section' => $request->route('section'),
             'base' => self::base(),
         ]);
     }

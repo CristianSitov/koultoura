@@ -9,24 +9,56 @@ const props = defineProps({
     programmeVisible: { type: Boolean, default: false },
     base: { type: String, default: '/2026' },
     /*
-     * Where the sections live. Empty on the landing page, where the entries are
-     * bare fragments pointing at the page you are already on; the address of
-     * the landing page anywhere else, since `#about` on /register scrolls to
-     * nothing at all.
+     * The landing page's own address, carrying the locale segment. The section
+     * links hang off it — `/2026/themes`, `/2026/ro/themes` — rather than being
+     * bare `#themes` fragments, so each section has a real, shareable address.
      */
-    landing: { type: String, default: '' },
+    landing: { type: String, default: '/2026' },
 });
+
+const emit = defineEmits(['close']);
 
 const items = computed(() => [
     ...menuItems
-        .filter((item) => item.href !== '#programme' || props.programmeVisible)
-        .map((item) => ({ ...item, url: props.landing + item.href })),
-    // Last, and off the numbered sequence: these leave the page rather than
-    // scrolling it, so they hang off `base` and are marked as the odd ones out.
+        .filter((item) => item.anchor !== 'programme' || props.programmeVisible)
+        .map((item) => ({ ...item, url: props.landing + '/' + item.anchor })),
+    // Last, and off the numbered sequence: these are pages of their own, so
+    // they hang off `base` and are marked as the odd ones out.
     ...menuPages.map((page) => ({ ...page, url: props.base + page.href })),
 ]);
 
-defineEmits(['close']);
+/*
+ * A section link is a real link: it can be opened in a new tab, copied, or
+ * followed by a crawler, and typing it loads the landing page already scrolled
+ * to that section. But when the section is on the page you are already reading,
+ * a plain click should glide to it rather than reload — so the plain click is
+ * caught and turned into a smooth scroll, and a modified or middle click is
+ * left alone. On any page that does not hold the section (Register, Support),
+ * there is nothing to catch, so the link simply navigates.
+ */
+function go(event, item) {
+    if (! item.anchor) {
+        return;
+    }
+
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+        return;
+    }
+
+    const target = document.getElementById(item.anchor);
+
+    if (! target) {
+        return;
+    }
+
+    event.preventDefault();
+    window.history.replaceState(window.history.state, '', item.url);
+    emit('close');
+    // A task, not a frame: the overlay has to unmount and give the body its
+    // scroll back first, and a frame callback is starved while the tab is in
+    // the background — a timeout is not.
+    setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
+}
 </script>
 
 <template>
@@ -39,7 +71,7 @@ defineEmits(['close']);
                 type="button"
                 class="btn btn-secondary btn-flush"
                 style="height: 40px; gap: 10px"
-:aria-label="$t('Close menu')"
+                :aria-label="$t('Close menu')"
                 @click="$emit('close')"
             >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square">
@@ -56,7 +88,7 @@ defineEmits(['close']);
                         :href="item.url"
                         class="wcm26-menu-link"
                         :class="{ 'wcm26-menu-link-support': item.support }"
-                        @click="$emit('close')"
+                        @click="item.anchor ? go($event, item) : $emit('close')"
                     >
                         <span>{{ item.n }}</span>{{ $t(item.label) }}
                     </a>

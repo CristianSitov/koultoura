@@ -26,6 +26,9 @@ const props = defineProps({
     programmeVisible: { type: Boolean, default: false },
     // Set when the page was entered at a guest profile.
     guest: { type: String, default: '' },
+    // Set when the page was entered at a section address (/2026/themes): the
+    // id to scroll to once the page is up.
+    section: { type: String, default: '' },
     // The page's own address, which carries a secret segment while unlisted.
     base: { type: String, default: '/2026' },
     // Whether the edition is public — WCM_2026_PUBLIC, via config/wcm.php.
@@ -84,7 +87,51 @@ onMounted(() => {
     window.addEventListener('keydown', onKeydown);
     window.addEventListener('popstate', onPopState);
     window.history.replaceState({ guest: openGuest.value }, '', window.location.pathname);
+
+    // Entered at a section address (/2026/themes): land already scrolled there.
+    // The section's own scroll-margin clears the sticky bar. A profile overlay
+    // wins — the two never arrive together, but if they did the profile is what
+    // the address asked for last.
+    //
+    // Twice: once now, and again on `load`. The first pass runs before the
+    // images above have their height, so the target sits higher than it will;
+    // the images then push it down. The `load` pass, after they have settled,
+    // lands on the real position.
+    if (props.section && ! openGuest.value) {
+        scrollToSectionOnLoad(props.section);
+    }
 });
+
+/*
+ * Land on the section the address named. The images above it have no height
+ * until they load, so a single scroll runs while the target is still too high
+ * and the images then shove it down. So it is re-pinned across the short window
+ * they take to arrive — and it gives way the moment the visitor scrolls, so it
+ * never fights a hand on the wheel.
+ */
+function scrollToSectionOnLoad(id) {
+    // The page scrolls smoothly by default, but the arrival is a jump, not a
+    // journey: a smooth scroll of several thousand pixels races the images
+    // still loading above and never settles. Instant while it is landing, then
+    // smooth is handed back for everything the visitor does afterwards.
+    const html = document.documentElement;
+    const smooth = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'auto';
+
+    let cancelled = false;
+    const stop = () => {
+        cancelled = true;
+        html.style.scrollBehavior = smooth;
+    };
+    const settle = () => cancelled || document.getElementById(id)?.scrollIntoView();
+
+    window.addEventListener('wheel', stop, { once: true, passive: true });
+    window.addEventListener('touchstart', stop, { once: true, passive: true });
+
+    [0, 120, 300, 600].forEach((ms) => setTimeout(settle, ms));
+    window.addEventListener('load', settle, { once: true });
+    setTimeout(() => cancelled || (html.style.scrollBehavior = smooth), 800);
+}
 
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', onScroll);
@@ -165,6 +212,7 @@ function onPopState(event) {
         <MenuOverlay
             v-if="menuOpen"
             :base="base"
+            :landing="localeBase(locale)"
             :programme-visible="programmeVisible"
             @close="menuOpen = false"
         />

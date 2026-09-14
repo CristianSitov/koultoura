@@ -80,6 +80,21 @@ Route::prefix(Front2026Controller::path())
                 Route::get('/{locale}/guests/{slug}', 'guest')
                     ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+'])
                     ->name('locale.guest');
+
+                /*
+                 * A landing-page section at its own address: /2026/themes loads
+                 * the landing page scrolled to #themes, which the menu links to
+                 * so each section can be shared and opened directly. The id is
+                 * whitelisted, so this never shadows /support, /register or the
+                 * rest — those words are not in the list.
+                 */
+                $sections = 'about|format|themes|speakers|programme|location|partners';
+                Route::get('/{section}', 'landing')
+                    ->where('section', $sections)
+                    ->name('section');
+                Route::get('/{locale}/{section}', 'landing')
+                    ->where(['locale' => 'en|ro', 'section' => $sections])
+                    ->name('locale.section');
                 Route::get('/support', 'support')->name('support');
                 Route::get('/{locale}/support', 'support')
                     ->where('locale', 'en|ro')

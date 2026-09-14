@@ -15,7 +15,7 @@ return [
      * the guest pages, the registration links and the ones already posted
      * inside confirmation emails.
      */
-    'path' => env('WCM_2026_PATH', '2026-mulberry'),
+    'path' => env('WCM_2026_PATH', '2026'),
 
     /*
      * Whether the edition is public. Off: the landing page tells search engines
