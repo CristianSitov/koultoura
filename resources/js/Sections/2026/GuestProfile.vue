@@ -149,7 +149,7 @@ onBeforeUnmount(() => clearInterval(reveal));
                         <a v-if="guest.orgUrl" :href="guest.orgUrl" target="_blank" rel="noopener">{{ guest.org }}</a>
                         <template v-else>{{ guest.org }}</template>
                     </p>
-                    <p class="wcm26-profile-bio">{{ guest.bio }}</p>
+                    <div class="wcm26-profile-bio" v-html="guest.bio"></div>
                 </div>
             </div>
 

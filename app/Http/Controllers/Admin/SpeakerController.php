@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Front2026Controller;
 use App\Models\Person;
 use App\Support\GuestPhoto;
+use App\Support\HtmlBio;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -131,7 +132,9 @@ class SpeakerController extends Controller
         return [
             'role' => $t->role ?? '',
             'institution' => $t->institution ?? '',
-            'description' => $t->description ?? '',
+            // Cleaned on the way into the editor too, so a legacy plain-text bio
+            // opens as paragraphs rather than one collapsed line.
+            'description' => HtmlBio::clean($t->description ?? null) ?? '',
         ];
     }
 
@@ -165,7 +168,9 @@ class SpeakerController extends Controller
             $t = $person->translateOrNew($locale);
             $t->role = $data[$locale]['role'] ?? '';
             $t->institution = $data[$locale]['institution'] ?? '';
-            $t->description = $data[$locale]['description'] ?? null;
+            // The bio arrives as HTML from the editor; it is stored as the tiny,
+            // attribute-free subset HtmlBio allows, never the raw markup.
+            $t->description = HtmlBio::clean($data[$locale]['description'] ?? null);
         }
 
         $person->save();

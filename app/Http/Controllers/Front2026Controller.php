@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Person;
+use App\Support\HtmlBio;
 use Illuminate\Support\Str;
 use App\Models\ProgrammeDay;
 use App\Models\Session;
@@ -140,7 +141,9 @@ class Front2026Controller extends Controller
                     'orgUrl' => $person->institution_url,
                     'role' => $text->role ?? '',
                     'portrait' => $person->avatar,
-                    'bio' => $text->description ?? '',
+                    // Cleaned again at render: the seeder's plain text becomes
+                    // paragraphs, and the store is never trusted to be safe HTML.
+                    'bio' => HtmlBio::clean($text->description ?? null),
                 ];
             })
             ->all();

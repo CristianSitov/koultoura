@@ -1269,6 +1269,29 @@
     padding-top: 28px;
 }
 
+/* The bio is the small formatted set HtmlBio allows: paragraphs, and
+   bold / italic / underline. Nothing else can reach this. */
+.wcm26-profile-bio p {
+    margin: 0 0 0.9em;
+}
+
+.wcm26-profile-bio p:last-child {
+    margin-bottom: 0;
+}
+
+.wcm26-profile-bio strong {
+    font-weight: 700;
+}
+
+.wcm26-profile-bio em {
+    font-style: italic;
+}
+
+.wcm26-profile-bio u {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 /* ── programme ───────────────────────────────────────────────────────────── */
 
 /* Theme spans: three per-day bars, then one bar carrying the umbrella across

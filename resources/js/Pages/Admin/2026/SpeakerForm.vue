@@ -2,6 +2,7 @@
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
+import RichText from './RichText.vue';
 
 const props = defineProps({
     speaker: { type: Object, required: true },
@@ -97,7 +98,8 @@ function submit() {
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Biography</label>
-                        <textarea v-model="form[locale].description" rows="7" class="w-full rounded border-gray-300 text-sm"></textarea>
+                        <RichText v-model="form[locale].description" />
+                        <p class="mt-1 text-xs text-gray-500">Paragraphs, and <strong>bold</strong> · <em>italic</em> · <u>underline</u>.</p>
                     </div>
                 </div>
             </div>
