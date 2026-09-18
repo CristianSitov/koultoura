@@ -1,11 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/inertia-vue3';
+import { Link, useForm } from '@inertiajs/inertia-vue3';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 
 defineProps({
     sessions: { type: Array, default: () => [] },
-    people: { type: Array, default: () => [] },
     publicBase: { type: String, default: '' },
 });
 
@@ -14,42 +13,6 @@ const open = ref({}); // session id -> attendee list expanded
 
 function toggleList(id) {
     open.value = { ...open.value, [id]: !open.value[id] };
-}
-
-// ── Edit the workshop's identity (title, subtitle, image, trainer) ──────────
-const editingWorkshop = ref(null);
-const workshopForm = useForm({
-    en: { title: '', subtitle: '' },
-    ro: { title: '', subtitle: '' },
-    trainers: [],
-    new_person: { first: '', last: '' },
-    image: null,
-});
-const imagePreview = ref(null);
-
-function openWorkshop(session) {
-    editingWorkshop.value = session;
-    workshopForm.clearErrors();
-    workshopForm.en = { ...session.en };
-    workshopForm.ro = { ...session.ro };
-    workshopForm.trainers = [...session.trainers];
-    workshopForm.new_person = { first: '', last: '' };
-    workshopForm.image = null;
-    imagePreview.value = session.image;
-}
-
-function pickImage(event) {
-    const file = event.target.files[0];
-    workshopForm.image = file ?? null;
-    imagePreview.value = file ? URL.createObjectURL(file) : editingWorkshop.value.image;
-}
-
-function saveWorkshop() {
-    workshopForm.post(`/dashboard/bookings/workshop/${editingWorkshop.value.id}`, {
-        forceFormData: true,
-        preserveScroll: true,
-        onSuccess: () => (editingWorkshop.value = null),
-    });
 }
 
 // ── Attendees CRUD ──────────────────────────────────────────────────────────
@@ -121,7 +84,7 @@ function removeBooking(booking) {
                     <p class="text-2xl font-bold" :class="session.taken >= session.capacity ? 'text-red-600' : ''">
                         {{ session.taken }}<span class="text-base font-normal text-gray-500">/{{ session.capacity }}</span>
                     </p>
-                    <button type="button" class="text-sm text-gray-500 hover:text-gray-900" @click="openWorkshop(session)">Edit workshop</button>
+                    <Link :href="`/dashboard/bookings/workshop/${session.id}/edit`" class="text-sm text-gray-500 hover:text-gray-900">Edit workshop</Link>
                 </div>
             </header>
 
@@ -154,55 +117,6 @@ function removeBooking(booking) {
             </table>
             <p v-else-if="open[session.id]" class="border-t border-gray-100 px-5 py-6 text-center text-sm text-gray-500">Nobody has booked yet.</p>
         </section>
-
-        <!-- Edit workshop identity -->
-        <div v-if="editingWorkshop" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4 overflow-auto" @click.self="editingWorkshop = null">
-            <form class="bg-white rounded p-5 w-full max-w-lg space-y-4 my-8" @submit.prevent="saveWorkshop">
-                <h2 class="font-bold text-lg">Edit {{ editingWorkshop.type }}</h2>
-
-                <div v-for="locale in ['en', 'ro']" :key="locale" class="space-y-3">
-                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">{{ locale === 'en' ? 'English' : 'Romanian' }}</p>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Title</label>
-                        <input v-model="workshopForm[locale].title" type="text" class="w-full rounded border-gray-300 text-sm" />
-                        <p v-if="workshopForm.errors[`${locale}.title`]" class="mt-1 text-sm text-red-600">{{ workshopForm.errors[`${locale}.title`] }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Subtitle</label>
-                        <input v-model="workshopForm[locale].subtitle" type="text" class="w-full rounded border-gray-300 text-sm" />
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-2">Picture</label>
-                    <img v-if="imagePreview" :src="imagePreview" alt="" class="w-full rounded bg-gray-100 object-cover aspect-[3/2]" />
-                    <div v-else class="w-full rounded bg-gray-100 aspect-[3/2]"></div>
-                    <input type="file" accept="image/*" class="mt-2 w-full text-sm" @change="pickImage" />
-                    <p v-if="workshopForm.errors.image" class="mt-1 text-sm text-red-600">{{ workshopForm.errors.image }}</p>
-                </div>
-
-                <div>
-                    <p class="text-sm font-medium mb-1">Trainer / guide</p>
-                    <div class="max-h-40 overflow-y-auto rounded border border-gray-200 p-2 space-y-1">
-                        <label v-for="person in people" :key="person.id" class="flex items-center gap-2 text-sm">
-                            <input v-model="workshopForm.trainers" type="checkbox" :value="person.id" class="rounded border-gray-300 text-red-600" />
-                            {{ person.name }}
-                            <span v-if="!person.onGrid" class="rounded bg-gray-100 px-1.5 text-xs text-gray-500">not on grid</span>
-                        </label>
-                    </div>
-                    <div class="mt-2 grid grid-cols-2 gap-2">
-                        <input v-model="workshopForm.new_person.first" type="text" placeholder="New — first name" class="rounded border-gray-300 text-sm" />
-                        <input v-model="workshopForm.new_person.last" type="text" placeholder="Last name" class="rounded border-gray-300 text-sm" />
-                    </div>
-                    <p class="mt-1 text-xs text-gray-500">A new person here stays off the public speakers grid.</p>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-1">
-                    <button type="button" class="text-sm text-gray-500" @click="editingWorkshop = null">Cancel</button>
-                    <button type="submit" :disabled="workshopForm.processing" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50">Save</button>
-                </div>
-            </form>
-        </div>
 
         <!-- Add / edit an attendee -->
         <div v-if="editingBooking" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" @click.self="editingBooking = null">

@@ -249,11 +249,38 @@ class RegistrationsController extends Controller
                         'created' => $b->created_at->toDateTimeString(),
                     ]),
                 ]),
-            // For the trainer/guide picker — hidden people are eligible too.
-            'people' => Person::orderBy('full_name')->get(['id', 'full_name', 'published'])
-                ->map(fn ($p) => ['id' => $p->id, 'name' => $p->full_name, 'onGrid' => (bool) $p->published]),
             'publicBase' => Front2026Controller::base(),
         ]);
+    }
+
+    /**
+     * The edit-workshop screen: a page of its own, not a panel over the list.
+     * Only the identity a booking cares about — scheduling and capacity stay in
+     * the programme's session form.
+     */
+    public function editWorkshop(Session $session): Response
+    {
+        return Inertia::render('Admin/2026/WorkshopForm', [
+            'session' => [
+                'id' => $session->id,
+                'type' => $session->type,
+                'title' => $session->translate('en')?->title ?? '',
+                'image' => $session->image,
+                'en' => ['title' => $session->translate('en')?->title ?? '', 'subtitle' => $session->translate('en')?->subtitle ?? ''],
+                'ro' => ['title' => $session->translate('ro')?->title ?? '', 'subtitle' => $session->translate('ro')?->subtitle ?? ''],
+                'trainers' => $session->speakers->pluck('id')->all(),
+            ],
+            'people' => $this->trainerPeople(),
+            'publicBase' => Front2026Controller::base(),
+        ]);
+    }
+
+    /** The trainer/guide picker list — hidden people are eligible too. */
+    private function trainerPeople(): array
+    {
+        return Person::orderBy('full_name')->get(['id', 'full_name', 'published'])
+            ->map(fn ($p) => ['id' => $p->id, 'name' => $p->full_name, 'onGrid' => (bool) $p->published])
+            ->all();
     }
 
     /**
@@ -304,7 +331,8 @@ class RegistrationsController extends Controller
             $trainers->values()->mapWithKeys(fn ($id, $i) => [$id => ['position' => $i + 1]])->all()
         );
 
-        return back()->with('flash', ($session->translate('en')?->title ?? 'Workshop').' updated.');
+        return redirect()->route('admin.2026.bookings')
+            ->with('flash', ($session->translate('en')?->title ?? 'Workshop').' updated.');
     }
 
     /** Frees the place without losing the evidence that it was wanted. */
