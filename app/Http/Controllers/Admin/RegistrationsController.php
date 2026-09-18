@@ -9,13 +9,10 @@ use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\Registration;
 use App\Models\Session;
-use App\Models\Person;
 use App\Models\SessionBooking;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Str;
-use App\Support\SessionImage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
@@ -254,102 +251,8 @@ class RegistrationsController extends Controller
     }
 
     /**
-     * The edit-workshop screen: a page of its own, not a panel over the list.
-     * Only the identity a booking cares about — scheduling and capacity stay in
-     * the programme's session form.
+     * Frees the place without losing the evidence that it was wanted.
      */
-    public function editWorkshop(Session $session): Response
-    {
-        $session->load(['bookings', 'speakers']);
-
-        return Inertia::render('Admin/2026/WorkshopForm', [
-            'session' => [
-                'id' => $session->id,
-                'type' => $session->type,
-                'title' => $session->translate('en')?->title ?? '',
-                'image' => $session->image,
-                'capacity' => $session->capacity,
-                'taken' => $session->taken(),
-                'en' => ['title' => $session->translate('en')?->title ?? '', 'subtitle' => $session->translate('en')?->subtitle ?? ''],
-                'ro' => ['title' => $session->translate('ro')?->title ?? '', 'subtitle' => $session->translate('ro')?->subtitle ?? ''],
-                'trainers' => $session->speakers->pluck('id')->all(),
-                'bookings' => $session->bookings->sortBy('id')->values()->map(fn (SessionBooking $b) => [
-                    'id' => $b->id,
-                    'name' => $b->name,
-                    'first_name' => $b->first_name,
-                    'last_name' => $b->last_name,
-                    'email' => $b->email,
-                    'phone' => $b->phone,
-                    'cancelled' => $b->isCancelled(),
-                    'created' => $b->created_at->toDateTimeString(),
-                ]),
-            ],
-            'people' => $this->trainerPeople(),
-            'publicBase' => Front2026Controller::base(),
-        ]);
-    }
-
-    /** The trainer/guide picker list — hidden people are eligible too. */
-    private function trainerPeople(): array
-    {
-        return Person::orderBy('full_name')->get(['id', 'full_name', 'published'])
-            ->map(fn ($p) => ['id' => $p->id, 'name' => $p->full_name, 'onGrid' => (bool) $p->published])
-            ->all();
-    }
-
-    /**
-     * Edit a workshop's identity from the bookings view: title, subtitle,
-     * picture and who leads it. Scheduling, capacity and the rest stay in the
-     * programme's own session form.
-     */
-    public function updateWorkshop(Request $request, Session $session): RedirectResponse
-    {
-        $data = $request->validate([
-            'en.title' => ['required', 'string', 'max:255'],
-            'en.subtitle' => ['nullable', 'string', 'max:255'],
-            'ro.title' => ['nullable', 'string', 'max:255'],
-            'ro.subtitle' => ['nullable', 'string', 'max:255'],
-            'image' => ['nullable', 'image', 'max:8192'],
-            'trainers' => ['array'],
-            'trainers.*' => [Rule::exists('wcm_2026.people', 'id')],
-            'new_person.first' => ['nullable', 'required_with:new_person.last', 'string', 'max:255'],
-            'new_person.last' => ['nullable', 'required_with:new_person.first', 'string', 'max:255'],
-        ]);
-
-        foreach (['en', 'ro'] as $locale) {
-            $t = $session->translateOrNew($locale);
-            $t->title = $data[$locale]['title'] ?? '';
-            $t->subtitle = $data[$locale]['subtitle'] ?? null;
-        }
-        $session->save();
-
-        if ($request->hasFile('image') && filled($session->slug)) {
-            $session->image = SessionImage::store(
-                $session->slug,
-                file_get_contents($request->file('image')->getRealPath())
-            );
-            $session->save();
-        }
-
-        $trainers = collect($data['trainers'] ?? []);
-
-        if (filled($data['new_person']['first'] ?? null)) {
-            $name = trim($data['new_person']['first'].' '.$data['new_person']['last']);
-            $person = new Person(['full_name' => $name, 'published' => false]);
-            $person->slug = Str::slug($name);
-            $person->save();
-            $trainers->push($person->id);
-        }
-
-        $session->speakers()->sync(
-            $trainers->values()->mapWithKeys(fn ($id, $i) => [$id => ['position' => $i + 1]])->all()
-        );
-
-        return redirect()->route('admin.2026.bookings')
-            ->with('flash', ($session->translate('en')?->title ?? 'Workshop').' updated.');
-    }
-
-    /** Frees the place without losing the evidence that it was wanted. */
     public function cancelBooking(SessionBooking $booking): RedirectResponse
     {
         $booking->cancelled_at = $booking->isCancelled() ? null : now();
