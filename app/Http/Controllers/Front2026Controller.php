@@ -214,13 +214,18 @@ class Front2026Controller extends Controller
                     'time' => substr($session->starts_at, 0, 5),
                     'kind' => $session->kind,
                     'title' => $this->text($session)->title ?? '',
-                    // Who is speaking — "Name · Organisation" where the
-                    // organisation is known — or who it is for when nobody is named.
-                    'who' => $session->speakers->map(function (Person $person) {
-                        $org = ($person->translate(app()->getLocale()) ?? $person->translate('en'))?->institution;
+                    // Who is speaking — a name and, dimmed on the page, the
+                    // organisation where it is known — or who it is for when
+                    // nobody is named.
+                    'who' => $session->speakers->isNotEmpty()
+                        ? $session->speakers->map(function (Person $person) {
+                            $org = ($person->translate(app()->getLocale()) ?? $person->translate('en'))?->institution;
 
-                        return filled($org) ? $person->full_name.' · '.$org : $person->full_name;
-                    })->implode(', ') ?: ($this->text($session)->audience ?? ''),
+                            return ['name' => $person->full_name, 'org' => filled($org) ? $org : null];
+                        })->all()
+                        : (filled($this->text($session)->audience ?? null)
+                            ? [['name' => $this->text($session)->audience, 'org' => null]]
+                            : []),
                     'school' => $session->school,
                     'draft' => ! $session->published,
                     'booking' => $session->bookable && $session->slug

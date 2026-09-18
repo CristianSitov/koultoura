@@ -178,7 +178,9 @@ const schoolSpans = computed(() => {
                             <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
                                 <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
                             </p>
-                            <p v-if="session.who" class="wcm26-session-who">{{ session.who }}</p>
+                            <p v-if="session.who && session.who.length" class="wcm26-session-who">
+                                <template v-for="(person, i) in session.who" :key="i"><template v-if="i">, </template>{{ person.name }}<span v-if="person.org" class="wcm26-session-org"> · {{ person.org }}</span></template>
+                            </p>
 
                             <!-- Places are limited on this one, so it has a form of
                                  its own rather than being covered by the day. -->

@@ -1406,6 +1406,11 @@
     color: color-mix(in srgb, var(--color-text) 78%, transparent);
 }
 
+/* The organisation trails the name, a shade quieter than it. */
+.wcm26-session-org {
+    color: color-mix(in srgb, var(--color-text) 52%, transparent);
+}
+
 .wcm26-legend {
     margin-top: 22px;
     display: flex;
