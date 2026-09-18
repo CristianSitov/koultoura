@@ -9,6 +9,8 @@ use App\Models\ProgrammeDay;
 use App\Models\Session;
 use App\Models\Setting;
 use App\Models\Theme;
+use App\Support\HtmlBio;
+use App\Support\SessionImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -226,18 +228,24 @@ class ProgrammeController extends Controller
                 'school' => (bool) $session->school,
                 'published' => (bool) $session->published,
                 'position' => $session->position ?? 0,
+                'type' => $session->type ?? 'slot',
                 'bookable' => (bool) $session->bookable,
                 'capacity' => $session->capacity,
                 'slug' => $session->slug ?? '',
+                'image' => $session->image,
                 'speakers' => $session->exists ? $session->speakers->pluck('id')->all() : [],
+                // For the inline "add someone not on the speakers list".
+                'new_person' => ['first' => '', 'last' => ''],
                 'en' => $this->sessionText($session, 'en'),
                 'ro' => $this->sessionText($session, 'ro'),
                 'taken' => $session->exists && $session->bookable ? $session->taken() : 0,
             ],
             'days' => ProgrammeDay::with('translations')->orderBy('position')->get()
                 ->map(fn ($d) => ['id' => $d->id, 'label' => $d->date->format('D d M').' — '.($d->translate('en')?->name ?? '')]),
-            'people' => Person::orderBy('full_name')->get(['id', 'full_name'])
-                ->map(fn ($p) => ['id' => $p->id, 'name' => $p->full_name]),
+            // Hidden people (guides kept off the speakers grid) can be linked too,
+            // so the list carries whether each is shown publicly.
+            'people' => Person::orderBy('full_name')->get(['id', 'full_name', 'published'])
+                ->map(fn ($p) => ['id' => $p->id, 'name' => $p->full_name, 'onGrid' => (bool) $p->published]),
             'publicBase' => Front2026Controller::base(),
         ]);
     }
@@ -250,17 +258,21 @@ class ProgrammeController extends Controller
             'title' => $t->title ?? '',
             'subtitle' => $t->subtitle ?? '',
             'audience' => $t->audience ?? '',
-            'description' => $t->description ?? '',
+            'description' => HtmlBio::clean($t->description ?? null) ?? '',
         ];
     }
 
     private function saveSession(Session $session, Request $request): void
     {
+        $exception = in_array($request->input('type'), Session::EXCEPTIONS, true);
+
         $data = $request->validate([
             'programme_day_id' => ['required', Rule::exists('wcm_2026.programme_days', 'id')],
             'starts_at' => ['required', 'date_format:H:i'],
             'ends_at' => ['nullable', 'date_format:H:i'],
             'kind' => ['nullable', 'string', 'max:255'],
+            // slot by default; a workshop or a tour is the clickable, bookable one.
+            'type' => ['required', Rule::in(array_merge(['slot'], Session::EXCEPTIONS))],
             'school' => [
                 'boolean',
                 /*
@@ -284,42 +296,49 @@ class ProgrammeController extends Controller
             ],
             'published' => ['boolean'],
             'position' => ['nullable', 'integer', 'min:0', 'max:99'],
-            'bookable' => ['boolean'],
-            // Capacity is what makes a booking form finite; required with one.
-            'capacity' => ['nullable', 'required_if:bookable,true', 'integer', 'min:1', 'max:1000'],
+            // Capacity — the most places a workshop or tour can hold — is what
+            // makes its form finite, so an exception must carry one.
+            'capacity' => ['nullable', Rule::requiredIf($exception), 'integer', 'min:1', 'max:1000'],
+            // Optional: blank on an exception is derived from the title below.
             'slug' => [
-                'nullable', 'required_if:bookable,true', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/',
+                'nullable', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/',
                 Rule::unique('wcm_2026.sessions', 'slug')->ignore($session->id),
             ],
+            'image' => ['nullable', 'image', 'max:8192'],
             'speakers' => ['array'],
             'speakers.*' => [Rule::exists('wcm_2026.people', 'id')],
+            // One person added here rather than on the speakers grid: both names
+            // together or neither.
+            'new_person.first' => ['nullable', 'required_with:new_person.last', 'string', 'max:255'],
+            'new_person.last' => ['nullable', 'required_with:new_person.first', 'string', 'max:255'],
             'en.title' => ['required', 'string', 'max:255'],
             'en.subtitle' => ['nullable', 'string', 'max:255'],
             'en.audience' => ['nullable', 'string', 'max:255'],
-            'en.description' => ['nullable', 'string'],
+            'en.description' => ['nullable', 'string'],  // cleaned below via HtmlBio.
             'ro.title' => ['nullable', 'string', 'max:255'],
             'ro.subtitle' => ['nullable', 'string', 'max:255'],
             'ro.audience' => ['nullable', 'string', 'max:255'],
             'ro.description' => ['nullable', 'string'],
         ]);
 
-        $bookable = $data['bookable'] ?? false;
-
+        // Booking is not a separate switch any more: a workshop or a tour has a
+        // form, a plain slot does not.
         $session->fill([
             'programme_day_id' => $data['programme_day_id'],
             'starts_at' => $data['starts_at'].':00',
             'ends_at' => filled($data['ends_at'] ?? null) ? $data['ends_at'].':00' : null,
             'kind' => $data['kind'] ?? '',
+            'type' => $data['type'],
             'school' => $data['school'] ?? false,
             'published' => $data['published'] ?? false,
             'position' => $data['position'] ?? 0,
-            'bookable' => $bookable,
-            'capacity' => $bookable ? $data['capacity'] : null,
-            // A slug that has been handed out in a link is kept even if booking
-            // is switched off, so the address does not rot.
+            'bookable' => $exception,
+            'capacity' => $exception ? $data['capacity'] : null,
+            // A slug that has been handed out in a link is kept even after a
+            // change of type, so the address does not rot.
             'slug' => filled($data['slug'] ?? null)
                 ? $data['slug']
-                : ($bookable ? Str::slug($data['en']['title']) : $session->slug),
+                : ($exception ? Str::slug($data['en']['title']) : $session->slug),
         ])->save();
 
         foreach (['en', 'ro'] as $locale) {
@@ -327,14 +346,36 @@ class ProgrammeController extends Controller
             $t->title = $data[$locale]['title'] ?? '';
             $t->subtitle = $data[$locale]['subtitle'] ?? null;
             $t->audience = $data[$locale]['audience'] ?? null;
-            $t->description = $data[$locale]['description'] ?? null;
+            // The description carries formatting; store the safe subset only.
+            $t->description = HtmlBio::clean($data[$locale]['description'] ?? null);
         }
 
         $session->save();
 
+        // A picture belongs to an exception; it is named for the slug the
+        // session already has by this point.
+        if ($request->hasFile('image') && filled($session->slug)) {
+            $session->image = SessionImage::store(
+                $session->slug,
+                file_get_contents($request->file('image')->getRealPath())
+            );
+            $session->save();
+        }
+
+        // A guide or trainer who is not on the speakers grid: made here as a
+        // hidden person, and attached like any other.
+        $speakers = collect($data['speakers'] ?? []);
+
+        if (filled($data['new_person']['first'] ?? null)) {
+            $name = trim($data['new_person']['first'].' '.$data['new_person']['last']);
+            $person = new Person(['full_name' => $name, 'published' => false]);
+            $person->slug = Str::slug($name);
+            $person->save();
+            $speakers->push($person->id);
+        }
+
         $session->speakers()->sync(
-            collect($data['speakers'] ?? [])
-                ->values()
+            $speakers->values()
                 ->mapWithKeys(fn ($id, $i) => [$id => ['position' => $i + 1]])
                 ->all()
         );

@@ -45,11 +45,16 @@ class Front2026SessionController extends Controller
         }
 
         $input = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email:rfc', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:40', 'regex:/^[0-9\s\-\+\(\)]+$/'],
+            // Required now: a workshop that moves has to be able to reach people.
+            'phone' => ['required', 'string', 'max:40', 'regex:/^[0-9\s\-\+\(\)]+$/'],
             'consent' => ['accepted'],
         ]);
+
+        // Kept as one line too, for everything downstream that prints a name.
+        $input['name'] = trim($input['first_name'].' '.$input['last_name']);
 
         $outcome = DB::connection('wcm_2026')->transaction(function () use ($session, $input) {
             $existing = SessionBooking::where('session_id', $session->id)

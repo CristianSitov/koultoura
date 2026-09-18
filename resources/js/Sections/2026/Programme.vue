@@ -1,8 +1,9 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { trans } from 'laravel-vue-i18n';
 import SectionHead from './SectionHead.vue';
 import { translateKind } from './kinds';
+import SessionModal from './SessionModal.vue';
 
 /*
  * Four days, three themes, and the Heritage School as an umbrella over three of
@@ -21,7 +22,11 @@ const props = defineProps({
     days: { type: Array, default: () => [] },
     themeBars: { type: Array, default: () => [] },
     schoolDays: { type: Array, default: () => [] },
+    base: { type: String, default: '/2026' },
 });
+
+// A workshop or a tour opens a panel; a plain slot does not.
+const openSession = ref(null);
 
 // "7, 8 and 10" — the last separator is a word, and not the same word in both
 // languages, so it is joined here rather than on the server.
@@ -172,24 +177,28 @@ const schoolSpans = computed(() => {
                             <span v-if="session.school" class="tag tag-accent wcm26-session-tag">
                                 <span class="wcm26-square-open"></span>{{ $t('Heritage School') }}
                             </span>
-                            <p class="wcm26-session-time">
-                                {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
-                            </p>
-                            <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
-                                <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
-                            </p>
-                            <p v-if="session.who && session.who.length" class="wcm26-session-who">
-                                <template v-for="(person, i) in session.who" :key="i"><template v-if="i">, </template>{{ person.name }}<span v-if="person.org" class="wcm26-session-org"> · {{ person.org }}</span></template>
-                            </p>
 
-                            <!-- Places are limited on this one, so it has a form of
-                                 its own rather than being covered by the day. -->
-                            <p v-if="session.booking" class="wcm26-session-book">
-                                <a v-if="!session.booking.full" :href="session.booking.url" class="btn btn-secondary btn-flush">
-                                    {{ $t('Book a place') }}
-                                </a>
-                                <span v-else class="wcm26-hint">{{ $t('Fully booked') }}</span>
-                            </p>
+                            <!-- A workshop or a tour is the whole card a button: it
+                                 opens the panel with the picture, the trainer and
+                                 the sign-up. A plain slot is just read. -->
+                            <component
+                                :is="session.detail ? 'button' : 'div'"
+                                :type="session.detail ? 'button' : null"
+                                :class="['wcm26-session-item', { 'wcm26-session-open': session.detail }]"
+                                @click="session.detail ? (openSession = session) : null"
+                            >
+                                <p class="wcm26-session-time">
+                                    {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
+                                </p>
+                                <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
+                                    <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
+                                    <span v-if="session.detail" class="wcm26-session-more">{{ $t('Details') }} →</span>
+                                </p>
+                                <p v-if="session.who && session.who.length" class="wcm26-session-who">
+                                    <template v-for="(person, i) in session.who" :key="i"><template v-if="i">, </template>{{ person.name }}<span v-if="person.org" class="wcm26-session-org"> · {{ person.org }}</span></template>
+                                </p>
+                                <p v-if="session.booking && session.booking.full" class="wcm26-session-full">{{ $t('Fully booked') }}</p>
+                            </component>
                         </template>
                     </li>
                 </ol>
@@ -200,5 +209,7 @@ const schoolSpans = computed(() => {
             <span class="wcm26-square"></span>{{ $t('Theme of the day') }}
             <span class="wcm26-square-open"></span>{{ $t('Heritage School session') }}
         </p>
+
+        <SessionModal v-if="openSession" :session="openSession" :base="base" @close="openSession = null" />
     </section>
 </template>

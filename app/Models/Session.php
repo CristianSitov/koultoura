@@ -23,9 +23,12 @@ class Session extends Model implements TranslatableContract
     protected $connection = 'wcm_2026';
 
     protected $fillable = [
-        'programme_day_id', 'starts_at', 'ends_at', 'kind',
+        'programme_day_id', 'starts_at', 'ends_at', 'kind', 'type', 'image',
         'school', 'published', 'position', 'slug', 'bookable', 'capacity',
     ];
+
+    /** The two exceptions to a plain slot — clickable, bookable, with a panel. */
+    public const EXCEPTIONS = ['workshop', 'tour'];
 
     protected $casts = [
         'school' => 'boolean',
@@ -73,5 +76,11 @@ class Session extends Model implements TranslatableContract
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('published', true);
+    }
+
+    /** A workshop or a tour: the kind with a details panel and its own form. */
+    public function isException(): bool
+    {
+        return in_array($this->type, self::EXCEPTIONS, true);
     }
 }

@@ -13,7 +13,8 @@ defineProps({
 });
 
 const form = useForm({
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phone: '',
     consent: false,
@@ -58,10 +59,17 @@ const form = useForm({
                             {{ $t('booking.places_left', { n: session.placesLeft }) }}
                         </p>
 
-                        <div class="wcm26-field">
-                            <label class="wcm26-label" for="b-name">{{ $t('Full name') }}</label>
-                            <input id="b-name" v-model="form.name" type="text" required />
-                            <p v-if="form.errors.name" class="wcm26-error">{{ form.errors.name }}</p>
+                        <div class="wcm26-fields-2">
+                            <div class="wcm26-field">
+                                <label class="wcm26-label" for="b-first">{{ $t('First name') }}</label>
+                                <input id="b-first" v-model="form.first_name" type="text" required />
+                                <p v-if="form.errors.first_name" class="wcm26-error">{{ form.errors.first_name }}</p>
+                            </div>
+                            <div class="wcm26-field">
+                                <label class="wcm26-label" for="b-last">{{ $t('Last name') }}</label>
+                                <input id="b-last" v-model="form.last_name" type="text" required />
+                                <p v-if="form.errors.last_name" class="wcm26-error">{{ form.errors.last_name }}</p>
+                            </div>
                         </div>
 
                         <div class="wcm26-field">
@@ -72,8 +80,9 @@ const form = useForm({
 
                         <div class="wcm26-field">
                             <label class="wcm26-label" for="b-phone">{{ $t('Phone') }}</label>
-                            <input id="b-phone" v-model="form.phone" type="tel" />
-                            <p class="wcm26-hint">{{ $t('So we can reach you if the workshop moves. Optional.') }}</p>
+                            <input id="b-phone" v-model="form.phone" type="tel" required />
+                            <p class="wcm26-hint">{{ $t('So we can reach you if the workshop moves.') }}</p>
+                            <p v-if="form.errors.phone" class="wcm26-error">{{ form.errors.phone }}</p>
                         </div>
 
                         <label class="wcm26-check wcm26-check-row">

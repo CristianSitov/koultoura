@@ -234,7 +234,7 @@ function onPopState(event) {
             <template v-if="programmeVisible">
                 <hr class="wcm26-rule" />
 
-                <Programme :days="programme" :theme-bars="themeBars" :school-days="schoolDays" />
+                <Programme :days="programme" :theme-bars="themeBars" :school-days="schoolDays" :base="localeBase(locale)" />
             </template>
         </div>
 
