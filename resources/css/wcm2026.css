@@ -3075,3 +3075,10 @@ a.wcm26-partner-logo:focus-visible {
         grid-template-columns: 1fr;
     }
 }
+
+/* Rendered rich text on a page (booking page description). Same small set. */
+.wcm26-rte p { margin: 0 0 0.9em; }
+.wcm26-rte p:last-child { margin-bottom: 0; }
+.wcm26-rte strong { font-weight: 700; }
+.wcm26-rte em { font-style: italic; }
+.wcm26-rte u { text-decoration: underline; text-underline-offset: 2px; }

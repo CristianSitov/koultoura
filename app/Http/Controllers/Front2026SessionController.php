@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Registration;
 use App\Models\Session;
 use App\Models\SessionBooking;
+use App\Support\HtmlBio;
 use App\Support\Slack;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -153,7 +154,9 @@ class Front2026SessionController extends Controller
         return [
             'title' => $text->title ?? '',
             'subtitle' => $text->subtitle ?? '',
-            'description' => $text->description ?? '',
+            // The booking page renders this as HTML; clean it the same way
+            // the modal and the bios do.
+            'description' => HtmlBio::clean($text->description ?? null),
             'audience' => $text->audience ?? '',
             'kind' => $session->kind,
             'time' => substr($session->starts_at, 0, 5),

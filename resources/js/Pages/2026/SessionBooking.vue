@@ -42,7 +42,7 @@ const form = useForm({
                 </div>
 
                 <div class="wcm26-about-copy">
-                    <p v-if="session.description">{{ session.description }}</p>
+                    <div v-if="session.description" class="wcm26-rte" v-html="session.description"></div>
 
                     <template v-if="booked">
                         <p>{{ $t('booking.held', { name: booked.name }) }}</p>
