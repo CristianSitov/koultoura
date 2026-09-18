@@ -44,6 +44,8 @@ class RegistrationsController extends Controller
         $status = $request->string('status')->toString();
 
         $registrations = Registration::query()
+            // How many workshop/tour places each conference registrant holds.
+            ->withCount(['sessionBookings as workshops' => fn ($q) => $q->whereNull('cancelled_at')])
             ->when($day, fn ($q) => $q->whereJsonContains('days', $day))
             ->when($status === 'confirmed', fn ($q) => $q->whereNotNull('confirmed_at'))
             ->when($status === 'waiting', fn ($q) => $q->whereNull('confirmed_at')->where('sent_count', '>', 0))
@@ -62,6 +64,8 @@ class RegistrationsController extends Controller
                 'phone' => $r->phone,
                 'days' => $r->days,
                 'workshop_interest' => (bool) $r->workshop_interest,
+                // Actual workshop/tour sign-ups, not just the interest tick.
+                'workshops' => $r->workshops,
                 'locale' => $r->locale,
                 'confirmed' => $r->confirmed_at !== null,
                 'created' => $r->created_at->toDateTimeString(),
@@ -98,6 +102,7 @@ class RegistrationsController extends Controller
             'confirmed' => Registration::whereNotNull('confirmed_at')->count(),
             'unsent' => Registration::whereNull('confirmed_at')->where('sent_count', 0)->count(),
             'workshopInterest' => Registration::where('workshop_interest', true)->count(),
+            'inWorkshops' => Registration::whereHas('sessionBookings', fn ($q) => $q->whereNull('cancelled_at'))->count(),
             'perDay' => $perDay,
             'contributions' => [
                 'count' => Contribution::where('status', 'paid')->count(),
@@ -231,6 +236,8 @@ class RegistrationsController extends Controller
                         'last_name' => $b->last_name,
                         'email' => $b->email,
                         'phone' => $b->phone,
+                        // Linked to a day registration, or here only for this.
+                        'conference' => $b->registration_id !== null,
                         'locale' => $b->locale,
                         'cancelled' => $b->isCancelled(),
                         'created' => $b->created_at->toDateTimeString(),

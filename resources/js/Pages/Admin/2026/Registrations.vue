@@ -112,7 +112,7 @@ function confirmByHand(registration) {
                 ]"
             >{{ status }}</Link>
 
-            <span class="ml-auto text-gray-500">{{ registrations.length }} shown · {{ counts.workshopInterest }} interested in a workshop</span>
+            <span class="ml-auto text-gray-500">{{ registrations.length }} shown · <strong class="font-semibold text-gray-700">{{ counts.inWorkshops }}</strong> also in a workshop · {{ counts.workshopInterest }} ticked interest</span>
         </div>
 
         <div class="bg-white rounded border border-gray-200 overflow-x-auto">
@@ -121,6 +121,7 @@ function confirmByHand(registration) {
                     <tr>
                         <th class="px-4 py-3 font-medium">Name</th>
                         <th class="px-4 py-3 font-medium">Days</th>
+                        <th class="px-4 py-3 font-medium">Workshops</th>
                         <th class="px-4 py-3 font-medium">Organisation</th>
                         <th class="px-4 py-3 font-medium">Status</th>
                         <th class="px-4 py-3 font-medium">Registered</th>
@@ -132,12 +133,19 @@ function confirmByHand(registration) {
                         <td class="px-4 py-3">
                             <p class="font-medium">
                                 {{ row.name }}
-                                <span v-if="row.workshop_interest" class="ml-2 rounded bg-red-50 px-1.5 py-0.5 text-xs text-red-700">workshop</span>
+                                <span v-if="row.workshop_interest" class="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500" title="Ticked the interest box on the form — not a booking">interested</span>
                             </p>
                             <p class="text-xs text-gray-500">{{ row.email }} · {{ row.locale.toUpperCase() }}</p>
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap">
                             <span v-for="day in row.days" :key="day" class="mr-1 rounded bg-gray-100 px-1.5 py-0.5 text-xs">{{ dayLabels[day] }}</span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span
+                                v-if="row.workshops"
+                                class="rounded bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-800"
+                            >{{ row.workshops }} {{ row.workshops === 1 ? 'workshop' : 'workshops' }}</span>
+                            <span v-else class="text-xs text-gray-300">—</span>
                         </td>
                         <td class="px-4 py-3 text-gray-600">
                             {{ row.organisation || '—' }}
