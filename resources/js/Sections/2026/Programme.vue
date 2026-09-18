@@ -142,17 +142,18 @@ const schoolSpans = computed(() => {
                         <!-- A break is not a session to read: it sits on the hour
                              line, where the kind would be, and carries nothing else. -->
                         <p v-if="['coffee', 'lunch'].includes(titleKind(session.title))" class="wcm26-session-time wcm26-session-break-line">
-                            {{ session.time }} · <svg
+                            <span class="wcm26-break-time">{{ session.time }}</span>
+                            <span class="wcm26-break-label"><svg
                                 v-if="titleKind(session.title) === 'coffee'"
                                 class="wcm26-break-icon"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
                             ><path d="M17 8h1a4 4 0 1 1 0 8h-1" /><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" /><line x1="6" y1="2" x2="6" y2="4" /><line x1="10" y1="2" x2="10" y2="4" /><line x1="14" y1="2" x2="14" y2="4" /></svg><svg
                                 v-else
                                 class="wcm26-break-icon"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                            ><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg>{{ session.title }}
+                            ><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg>{{ session.title }}</span>
                         </p>
 
                         <template v-else>

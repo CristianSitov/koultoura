@@ -2831,17 +2831,35 @@ a.wcm26-partner-logo:focus-visible {
     margin: 0 -10px;
 }
 
-/* A break shows on the hour line, in warm brown, with a cup or fork. */
+/* A break shows on the hour line, in warm brown, with a cup or fork.
+   Time and label are two flex items: the icon stays glued to the words, and
+   in a narrow column the label wraps whole rather than orphaning the icon. */
 .wcm26-session-break-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px 8px;
     color: var(--color-coffee) !important;
-    font-weight: 600;
     text-transform: none;
     letter-spacing: 0.02em;
 }
 
+.wcm26-break-time {
+    opacity: 0.7;
+}
+
+.wcm26-break-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0;
+}
+
 .wcm26-break-icon {
-    width: 1.15em;
-    height: 1.15em;
-    margin-right: 4px;
-    vertical-align: -0.24em;
+    width: 15px;
+    height: 15px;
+    flex: none;
 }
