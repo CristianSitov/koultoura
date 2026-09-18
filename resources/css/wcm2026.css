@@ -1366,7 +1366,36 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 0;
+}
+
+/* A double red rule between one session and the next — the ruled-paper
+   motif from the poster. Two hairlines with a gap, in a softened brand red.
+   Nested inside the <li>, so on a slot with a background (a TBA) the rule
+   sits within that background rather than floating above it. */
+.wcm26-sessions li + li::before {
+    content: "";
+    display: block;
+    height: 4px;
+    margin: 14px 0;
+    background: linear-gradient(
+        color-mix(in srgb, var(--color-accent) 52%, #fff) 0 1px,
+        transparent 1px 3px,
+        color-mix(in srgb, var(--color-accent) 52%, #fff) 3px 4px
+    );
+}
+
+/* A backgrounded slot (a TBA) paints its grey over a rule nested inside it,
+   so the line would sit within the box. Lift it out into the gap above the
+   box with absolute positioning: it lands at the box's top edge — at the
+   border — not inside. Left/right pull it back to the column width the box
+   bleeds past. */
+.wcm26-sessions li + li.is-tba::before {
+    position: absolute;
+    top: -17px;
+    left: 10px;
+    right: 10px;
+    margin: 0;
 }
 
 .wcm26-session-tag {
@@ -2830,10 +2859,17 @@ a.wcm26-partner-logo:focus-visible {
 
 /* And the whole slot dimmed a few percent, so a gap is visible at a glance. */
 .wcm26-sessions li.is-tba {
+    position: relative;
     background: color-mix(in srgb, var(--color-text) 5%, transparent);
     border-radius: 6px;
     padding: 8px 10px;
-    margin: 0 -10px;
+    /* Top margin is the gap the lifted-out separator lives in. */
+    margin: 32px -10px 0;
+}
+
+/* First slot of a day has no separator above it, so it needs its own gap. */
+.wcm26-sessions li.is-tba:first-child {
+    margin-top: 0;
 }
 
 /* A break shows on the hour line, in warm brown, with a cup or fork.
