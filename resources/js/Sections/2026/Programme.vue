@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { trans } from 'laravel-vue-i18n';
 import SectionHead from './SectionHead.vue';
+import { translateKind } from './kinds';
 
 /*
  * Four days, three themes, and the Heritage School as an umbrella over three of
@@ -133,7 +134,7 @@ const schoolSpans = computed(() => {
                             <span class="wcm26-square-open"></span>{{ $t('Heritage School') }}
                         </span>
                         <p class="wcm26-session-time">
-                            {{ session.time }}<template v-if="session.kind"> · {{ $t(session.kind) }}</template>
+                            {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
                         </p>
                         <p
                             class="wcm26-session-title"

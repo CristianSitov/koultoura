@@ -3,6 +3,7 @@ import { Head, useForm } from '@inertiajs/inertia-vue3';
 import '../../../css/wcm2026.css';
 import PageShell from '../../Sections/2026/PageShell.vue';
 import SectionHead from '../../Sections/2026/SectionHead.vue';
+import { translateKind } from '../../Sections/2026/kinds';
 
 defineProps({
     base: { type: String, default: '/2026' },
@@ -33,7 +34,7 @@ const form = useForm({
                 <div>
                     <p class="wcm26-lead">{{ session.title }}</p>
                     <p class="wcm26-label" style="margin-top: 12px">
-                        {{ session.date }} · {{ session.time }}<template v-if="session.kind"> · {{ $t(session.kind) }}</template>
+                        {{ session.date }} · {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
                     </p>
                     <p v-if="session.speakers" class="wcm26-label">{{ session.speakers }}</p>
                     <p v-else-if="session.audience" class="wcm26-label">{{ session.audience }}</p>

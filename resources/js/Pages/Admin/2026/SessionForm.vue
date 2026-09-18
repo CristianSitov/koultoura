@@ -2,6 +2,7 @@
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import { computed } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
+import { knownKinds } from '../../../Sections/2026/kinds';
 
 const props = defineProps({
     session: { type: Object, required: true },
@@ -14,7 +15,6 @@ const editing = !!props.session.id;
 
 // The kinds that carry a Romanian translation (see lang files). Free text still
 // works — this just steers new entries toward one that is translated.
-const knownKinds = ['Opening', 'Presentation / Case study', 'Workshop', 'Conversation', 'Closing Conversation', 'Why Culture Matters+'];
 
 const form = useForm({
     programme_day_id: props.session.programme_day_id,
