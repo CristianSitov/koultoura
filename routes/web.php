@@ -324,6 +324,8 @@ Route::prefix('dashboard')
             Route::post('/registrations/{registration}/confirm', 'confirm')->name('registrations.confirm');
 
             Route::get('/bookings', 'bookings')->name('bookings');
+            // Multipart for the picture, so POST.
+            Route::post('/bookings/workshop/{session}', 'updateWorkshop')->name('bookings.workshop');
             Route::post('/bookings', 'addBooking')->name('bookings.store');
             Route::put('/bookings/{booking}', 'updateBooking')->name('bookings.update');
             Route::delete('/bookings/{booking}', 'deleteBooking')->name('bookings.delete');
