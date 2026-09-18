@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
- * Notices to the office — Slack, and WhatsApp for the ones that matter most.
+ * Notices to the office, in Slack.
  *
  * Three rules, all of them the same rule: a notification must never be able to
  * hurt the thing it is reporting on.
@@ -28,24 +28,22 @@ class Slack
 
     public static function good(string $title, array $fields = []): void
     {
-        self::send('✅', $title, $fields, whatsapp: true);
+        self::send('✅', $title, $fields);
     }
 
-    // Slack only: the low-signal ones (a sign-in, an address confirmed). A
-    // phone should not buzz for these.
     public static function info(string $title, array $fields = []): void
     {
-        self::send('•', $title, $fields, whatsapp: false);
+        self::send('•', $title, $fields);
     }
 
     public static function warn(string $title, array $fields = []): void
     {
-        self::send('⚠️', $title, $fields, whatsapp: true);
+        self::send('⚠️', $title, $fields);
     }
 
     public static function alert(string $title, array $fields = []): void
     {
-        self::send('🚨', $title, $fields, whatsapp: true);
+        self::send('🚨', $title, $fields);
     }
 
     /**
@@ -57,7 +55,7 @@ class Slack
      */
     public static function throttled(string $key, string $title, array $fields = []): void
     {
-        if (! self::configured() && ! WhatsApp::configured()) {
+        if (! self::configured()) {
             return;
         }
 
@@ -65,7 +63,7 @@ class Slack
             return;
         }
 
-        self::send('🚨', $title, $fields, whatsapp: true);
+        self::send('🚨', $title, $fields);
     }
 
     private static function configured(): bool
@@ -73,16 +71,12 @@ class Slack
         return filled(config('services.slack.webhook'));
     }
 
-    private static function send(string $icon, string $title, array $fields, bool $whatsapp = false): void
+    private static function send(string $icon, string $title, array $fields): void
     {
-        $toWhatsApp = $whatsapp && WhatsApp::configured();
-
-        if (! self::configured() && ! $toWhatsApp) {
+        if (! self::configured()) {
             return;
         }
 
-        // Slack's own bold (*x*) reads as bold on WhatsApp too, so one text
-        // serves both. Recipients see the same line the channel does.
         $lines = [$icon.' *'.$title.'*'];
 
         foreach ($fields as $label => $value) {
@@ -95,19 +89,13 @@ class Slack
 
         $text = implode("\n", $lines);
 
-        if (self::configured()) {
-            // After the response: the visitor is already gone by the time this runs.
-            app()->terminating(function () use ($text) {
-                try {
-                    Http::timeout(4)->post(config('services.slack.webhook'), ['text' => $text]);
-                } catch (Throwable $e) {
-                    Log::warning('Slack notification failed', ['error' => $e->getMessage()]);
-                }
-            });
-        }
-
-        if ($toWhatsApp) {
-            WhatsApp::send($text);
-        }
+        // After the response: the visitor is already gone by the time this runs.
+        app()->terminating(function () use ($text) {
+            try {
+                Http::timeout(4)->post(config('services.slack.webhook'), ['text' => $text]);
+            } catch (Throwable $e) {
+                Log::warning('Slack notification failed', ['error' => $e->getMessage()]);
+            }
+        });
     }
 }

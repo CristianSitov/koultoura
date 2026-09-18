@@ -54,12 +54,6 @@ return [
         'webhook' => env('SLACK_WEBHOOK_URL'),
     ],
 
-    // The office's WhatsApp recipients, via CallMeBot: "phone:apikey" pairs,
-    // comma-separated. Empty means WhatsApp is off — Slack is unaffected.
-    'whatsapp' => [
-        'callmebot' => env('WHATSAPP_CALLMEBOT', ''),
-    ],
-
     'stripe' => [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
         // Checkout sessions: one product, the page's language, a real cancel
