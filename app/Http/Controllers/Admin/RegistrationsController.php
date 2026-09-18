@@ -9,10 +9,13 @@ use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\Registration;
 use App\Models\Session;
+use App\Models\Person;
 use App\Models\SessionBooking;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use App\Support\SessionImage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
@@ -44,8 +47,6 @@ class RegistrationsController extends Controller
         $status = $request->string('status')->toString();
 
         $registrations = Registration::query()
-            // How many workshop/tour places each conference registrant holds.
-            ->withCount(['sessionBookings as workshops' => fn ($q) => $q->whereNull('cancelled_at')])
             ->when($day, fn ($q) => $q->whereJsonContains('days', $day))
             ->when($status === 'confirmed', fn ($q) => $q->whereNotNull('confirmed_at'))
             ->when($status === 'waiting', fn ($q) => $q->whereNull('confirmed_at')->where('sent_count', '>', 0))
@@ -64,8 +65,6 @@ class RegistrationsController extends Controller
                 'phone' => $r->phone,
                 'days' => $r->days,
                 'workshop_interest' => (bool) $r->workshop_interest,
-                // Actual workshop/tour sign-ups, not just the interest tick.
-                'workshops' => $r->workshops,
                 'locale' => $r->locale,
                 'confirmed' => $r->confirmed_at !== null,
                 'created' => $r->created_at->toDateTimeString(),
@@ -102,7 +101,6 @@ class RegistrationsController extends Controller
             'confirmed' => Registration::whereNotNull('confirmed_at')->count(),
             'unsent' => Registration::whereNull('confirmed_at')->where('sent_count', 0)->count(),
             'workshopInterest' => Registration::where('workshop_interest', true)->count(),
-            'inWorkshops' => Registration::whereHas('sessionBookings', fn ($q) => $q->whereNull('cancelled_at'))->count(),
             'perDay' => $perDay,
             'contributions' => [
                 'count' => Contribution::where('status', 'paid')->count(),
@@ -217,18 +215,28 @@ class RegistrationsController extends Controller
     public function bookings(): Response
     {
         return Inertia::render('Admin/2026/Bookings', [
-            'sessions' => Session::with(['translations', 'day.translations', 'bookings'])
+            'sessions' => Session::with(['translations', 'day.translations', 'bookings', 'speakers'])
                 ->where('bookable', true)
+                ->orderBy('programme_day_id')
+                ->orderBy('starts_at')
                 ->get()
                 ->map(fn (Session $s) => [
                     'id' => $s->id,
+                    'type' => $s->type,
                     'title' => $s->translate('en')?->title ?? '',
                     'day' => $s->day?->date->format('D d M'),
                     'time' => substr($s->starts_at, 0, 5),
                     'capacity' => $s->capacity,
                     'taken' => $s->taken(),
                     'slug' => $s->slug,
+                    'image' => $s->image,
                     'published' => $s->published,
+                    // Editable identity, both languages.
+                    'en' => ['title' => $s->translate('en')?->title ?? '', 'subtitle' => $s->translate('en')?->subtitle ?? ''],
+                    'ro' => ['title' => $s->translate('ro')?->title ?? '', 'subtitle' => $s->translate('ro')?->subtitle ?? ''],
+                    'trainers' => $s->speakers->pluck('id')->all(),
+                    'trainerNames' => $s->speakers->pluck('full_name')->implode(', '),
+                    'new_person' => ['first' => '', 'last' => ''],
                     'bookings' => $s->bookings->sortBy('id')->values()->map(fn (SessionBooking $b) => [
                         'id' => $b->id,
                         'name' => $b->name,
@@ -236,15 +244,67 @@ class RegistrationsController extends Controller
                         'last_name' => $b->last_name,
                         'email' => $b->email,
                         'phone' => $b->phone,
-                        // Linked to a day registration, or here only for this.
-                        'conference' => $b->registration_id !== null,
                         'locale' => $b->locale,
                         'cancelled' => $b->isCancelled(),
                         'created' => $b->created_at->toDateTimeString(),
                     ]),
                 ]),
+            // For the trainer/guide picker — hidden people are eligible too.
+            'people' => Person::orderBy('full_name')->get(['id', 'full_name', 'published'])
+                ->map(fn ($p) => ['id' => $p->id, 'name' => $p->full_name, 'onGrid' => (bool) $p->published]),
             'publicBase' => Front2026Controller::base(),
         ]);
+    }
+
+    /**
+     * Edit a workshop's identity from the bookings view: title, subtitle,
+     * picture and who leads it. Scheduling, capacity and the rest stay in the
+     * programme's own session form.
+     */
+    public function updateWorkshop(Request $request, Session $session): RedirectResponse
+    {
+        $data = $request->validate([
+            'en.title' => ['required', 'string', 'max:255'],
+            'en.subtitle' => ['nullable', 'string', 'max:255'],
+            'ro.title' => ['nullable', 'string', 'max:255'],
+            'ro.subtitle' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'max:8192'],
+            'trainers' => ['array'],
+            'trainers.*' => [Rule::exists('wcm_2026.people', 'id')],
+            'new_person.first' => ['nullable', 'required_with:new_person.last', 'string', 'max:255'],
+            'new_person.last' => ['nullable', 'required_with:new_person.first', 'string', 'max:255'],
+        ]);
+
+        foreach (['en', 'ro'] as $locale) {
+            $t = $session->translateOrNew($locale);
+            $t->title = $data[$locale]['title'] ?? '';
+            $t->subtitle = $data[$locale]['subtitle'] ?? null;
+        }
+        $session->save();
+
+        if ($request->hasFile('image') && filled($session->slug)) {
+            $session->image = SessionImage::store(
+                $session->slug,
+                file_get_contents($request->file('image')->getRealPath())
+            );
+            $session->save();
+        }
+
+        $trainers = collect($data['trainers'] ?? []);
+
+        if (filled($data['new_person']['first'] ?? null)) {
+            $name = trim($data['new_person']['first'].' '.$data['new_person']['last']);
+            $person = new Person(['full_name' => $name, 'published' => false]);
+            $person->slug = Str::slug($name);
+            $person->save();
+            $trainers->push($person->id);
+        }
+
+        $session->speakers()->sync(
+            $trainers->values()->mapWithKeys(fn ($id, $i) => [$id => ['position' => $i + 1]])->all()
+        );
+
+        return back()->with('flash', ($session->translate('en')?->title ?? 'Workshop').' updated.');
     }
 
     /** Frees the place without losing the evidence that it was wanted. */
