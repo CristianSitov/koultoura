@@ -21,7 +21,7 @@ const nav = [
     { label: 'Speakers', href: '/dashboard/speakers' },
     { label: 'Programme', href: '/dashboard/programme' },
     { label: 'Registrations', href: '/dashboard/registrations' },
-    { label: 'Bookings', href: '/dashboard/bookings' },
+    { label: 'Workshops', href: '/dashboard/bookings' },
 ];
 
 // The overview matches only itself; the rest match their whole subtree.
