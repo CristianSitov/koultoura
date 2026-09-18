@@ -35,7 +35,7 @@ const LUNCH_BREAKS = ['Lunch Break', 'Pauză de prânz'];
 
 function titleKind(title) {
     const t = (title || '').trim();
-    if (t === 'TBA') return 'tba';        // a slot still to be announced
+    if (t.toUpperCase() === 'TBA') return 'tba'; // a slot still to be announced
     if (COFFEE_BREAKS.includes(t)) return 'coffee';
     if (LUNCH_BREAKS.includes(t)) return 'lunch';
     return null;
@@ -128,41 +128,54 @@ const schoolSpans = computed(() => {
                 <p v-if="!day.sessions.length" class="wcm26-day-soon">{{ $t('Coming soon') }}</p>
 
                 <ol v-else class="wcm26-sessions">
-                    <li v-for="session in day.sessions" :key="session.id" :class="{ 'is-draft': session.draft }">
+                    <li
+                        v-for="session in day.sessions"
+                        :key="session.id"
+                        :class="{
+                            'is-draft': session.draft,
+                            'is-tba': titleKind(session.title) === 'tba',
+                            'is-break': ['coffee', 'lunch'].includes(titleKind(session.title)),
+                        }"
+                    >
                         <span v-if="session.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
-                        <span v-if="session.school" class="tag tag-accent wcm26-session-tag">
-                            <span class="wcm26-square-open"></span>{{ $t('Heritage School') }}
-                        </span>
-                        <p class="wcm26-session-time">
-                            {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
-                        </p>
-                        <p
-                            class="wcm26-session-title"
-                            :class="{
-                                'wcm26-session-tba': titleKind(session.title) === 'tba',
-                                'wcm26-session-break': ['coffee', 'lunch'].includes(titleKind(session.title)),
-                            }"
-                        ><svg
-                            v-if="titleKind(session.title) === 'coffee'"
-                            class="wcm26-break-icon"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                        ><path d="M17 8h1a4 4 0 1 1 0 8h-1" /><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" /><line x1="6" y1="2" x2="6" y2="4" /><line x1="10" y1="2" x2="10" y2="4" /><line x1="14" y1="2" x2="14" y2="4" /></svg><svg
-                            v-else-if="titleKind(session.title) === 'lunch'"
-                            class="wcm26-break-icon"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                        ><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg>{{ session.title }}</p>
-                        <p class="wcm26-session-who">{{ session.who }}</p>
 
-                        <!-- Places are limited on this one, so it has a form of
-                             its own rather than being covered by the day. -->
-                        <p v-if="session.booking" class="wcm26-session-book">
-                            <a v-if="!session.booking.full" :href="session.booking.url" class="btn btn-secondary btn-flush">
-                                {{ $t('Book a place') }}
-                            </a>
-                            <span v-else class="wcm26-hint">{{ $t('Fully booked') }}</span>
+                        <!-- A break is not a session to read: it sits on the hour
+                             line, where the kind would be, and carries nothing else. -->
+                        <p v-if="['coffee', 'lunch'].includes(titleKind(session.title))" class="wcm26-session-time wcm26-session-break-line">
+                            {{ session.time }} · <svg
+                                v-if="titleKind(session.title) === 'coffee'"
+                                class="wcm26-break-icon"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                            ><path d="M17 8h1a4 4 0 1 1 0 8h-1" /><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" /><line x1="6" y1="2" x2="6" y2="4" /><line x1="10" y1="2" x2="10" y2="4" /><line x1="14" y1="2" x2="14" y2="4" /></svg><svg
+                                v-else
+                                class="wcm26-break-icon"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                            ><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg>{{ session.title }}
                         </p>
+
+                        <template v-else>
+                            <span v-if="session.school" class="tag tag-accent wcm26-session-tag">
+                                <span class="wcm26-square-open"></span>{{ $t('Heritage School') }}
+                            </span>
+                            <p class="wcm26-session-time">
+                                {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
+                            </p>
+                            <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
+                                <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
+                            </p>
+                            <p v-if="session.who" class="wcm26-session-who">{{ session.who }}</p>
+
+                            <!-- Places are limited on this one, so it has a form of
+                                 its own rather than being covered by the day. -->
+                            <p v-if="session.booking" class="wcm26-session-book">
+                                <a v-if="!session.booking.full" :href="session.booking.url" class="btn btn-secondary btn-flush">
+                                    {{ $t('Book a place') }}
+                                </a>
+                                <span v-else class="wcm26-hint">{{ $t('Fully booked') }}</span>
+                            </p>
+                        </template>
                     </li>
                 </ol>
             </div>

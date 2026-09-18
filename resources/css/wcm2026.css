@@ -1381,25 +1381,29 @@
 
 .wcm26-session-time {
     margin: 0;
-    font-size: 12px;
+    font-size: 11px;
     line-height: 16px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--color-accent-700);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    /* Quieter than the title now — the time and kind are context, not the point. */
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
     font-feature-settings: 'tnum' 1;
 }
 
 .wcm26-session-title {
-    margin: 4px 0 0;
-    font-size: 14px;
-    line-height: 1.35;
+    margin: 5px 0 0;
+    font-size: clamp(15px, 1.15vw, 17px);
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: -0.01em;
 }
 
 .wcm26-session-who {
-    margin: 3px 0 0;
-    font-size: 12px;
-    line-height: 1.35;
-    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
 }
 
 .wcm26-legend {
@@ -2819,18 +2823,25 @@ a.wcm26-partner-logo:focus-visible {
     font-weight: 700;
 }
 
-/* Coffee and lunch breaks — warm brown, with a cup or fork before the text. */
-.wcm26-break-icon {
-    width: 1em;
-    height: 1em;
-    margin-right: 6px;
-    vertical-align: -0.16em;
-    flex: none;
+/* And the whole slot dimmed a few percent, so a gap is visible at a glance. */
+.wcm26-sessions li.is-tba {
+    background: color-mix(in srgb, var(--color-text) 5%, transparent);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin: 0 -10px;
 }
 
-/* Keep the icon on the title's first line rather than dropping beneath it. */
-.wcm26-session-title.wcm26-session-break {
-    color: var(--color-coffee);
-    display: inline-flex;
-    align-items: center;
+/* A break shows on the hour line, in warm brown, with a cup or fork. */
+.wcm26-session-break-line {
+    color: var(--color-coffee) !important;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.02em;
+}
+
+.wcm26-break-icon {
+    width: 1.15em;
+    height: 1.15em;
+    margin-right: 4px;
+    vertical-align: -0.24em;
 }
