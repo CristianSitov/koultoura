@@ -269,8 +269,8 @@ class Front2026Controller extends Controller
                 'name' => $p->full_name,
                 'url' => $p->published ? self::base().'/guests/'.$p->slug : null,
             ])->all(),
-            'capacity' => $session->capacity,
-            'placesLeft' => $session->places_left,
+            // The count itself is private — the office sees it in the
+            // dashboard; the public only learns when a thing is full.
             'full' => $session->isFull(),
         ];
     }

@@ -23,7 +23,7 @@ function toggleBooking(booking) {
 <template>
     <Admin2026 title="Bookings" :public-base="publicBase">
         <p v-if="!sessions.length" class="bg-white rounded border border-gray-200 p-8 text-center text-gray-500">
-            No session has limited places yet. Open one in the programme and tick “Places are limited”.
+            No session takes bookings yet. Open one in the programme and set its type to Workshop or Guided tour.
         </p>
 
         <section v-for="session in sessions" :key="session.id" class="bg-white rounded border border-gray-200 mb-6">

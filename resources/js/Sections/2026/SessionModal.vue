@@ -67,10 +67,7 @@ onBeforeUnmount(() => {
                 <div v-if="detail.description" class="wcm26-sheet-desc" v-html="detail.description"></div>
 
                 <div class="wcm26-sheet-foot">
-                    <p v-if="detail.capacity" class="wcm26-sheet-places">
-                        <template v-if="detail.full">{{ $t('Fully booked') }}</template>
-                        <template v-else-if="detail.placesLeft !== null">{{ $t(':n places left', { n: detail.placesLeft }) }}</template>
-                    </p>
+                    <p v-if="detail.full" class="wcm26-sheet-places">{{ $t('Fully booked') }}</p>
 
                     <a
                         v-if="booking && !detail.full"

@@ -162,7 +162,6 @@ class Front2026SessionController extends Controller
             'time' => substr($session->starts_at, 0, 5),
             'date' => $session->day?->date->format('j F Y'),
             'speakers' => $session->speakers->pluck('full_name')->implode(', '),
-            'placesLeft' => $session->places_left,
             'full' => $session->isFull(),
             // Where the form posts, in the language being read.
             'bookUrl' => Front2026Controller::base()

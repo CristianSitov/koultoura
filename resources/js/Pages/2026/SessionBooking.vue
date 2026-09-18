@@ -55,9 +55,7 @@ const form = useForm({
                     </template>
 
                     <form v-else class="wcm26-form" novalidate @submit.prevent="form.post(session.bookUrl)">
-                        <p class="wcm26-contribute-note">
-                            {{ $t('booking.places_left', { n: session.placesLeft }) }}
-                        </p>
+                        <p class="wcm26-contribute-note">{{ $t('Places are limited.') }}</p>
 
                         <div class="wcm26-fields-2">
                             <div class="wcm26-field">
