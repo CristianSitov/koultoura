@@ -12,6 +12,7 @@ use App\Models\Session;
 use App\Models\SessionBooking;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
@@ -226,6 +227,8 @@ class RegistrationsController extends Controller
                     'bookings' => $s->bookings->sortBy('id')->values()->map(fn (SessionBooking $b) => [
                         'id' => $b->id,
                         'name' => $b->name,
+                        'first_name' => $b->first_name,
+                        'last_name' => $b->last_name,
                         'email' => $b->email,
                         'phone' => $b->phone,
                         'locale' => $b->locale,
@@ -246,5 +249,64 @@ class RegistrationsController extends Controller
         return back()->with('flash', $booking->isCancelled()
             ? $booking->name.'’s place released.'
             : $booking->name.'’s place restored.');
+    }
+
+    /** The office books someone in by hand, or brings a cancelled seat back. */
+    public function addBooking(Request $request): RedirectResponse
+    {
+        $data = $this->bookingData($request, null, (int) $request->input('session_id'));
+        $session = Session::where('bookable', true)->findOrFail($data['session_id']);
+
+        // Reuse the row for this address if there is one — cancelled or not —
+        // so the (session, email) unique key never collides.
+        $session->bookings()->updateOrCreate(
+            ['email' => $data['email']],
+            $data + [
+                'cancelled_at' => null,
+                'locale' => 'ro',
+                'registration_id' => Registration::where('email', $data['email'])->value('id'),
+            ]
+        );
+
+        return back()->with('flash', $data['name'].' booked.');
+    }
+
+    public function updateBooking(Request $request, SessionBooking $booking): RedirectResponse
+    {
+        $booking->update($this->bookingData($request, $booking, $booking->session_id));
+
+        return back()->with('flash', $booking->name.'’s booking updated.');
+    }
+
+    /** A hard delete, for a row entered by mistake — Release is the soft one. */
+    public function deleteBooking(SessionBooking $booking): RedirectResponse
+    {
+        $name = $booking->name;
+        $booking->delete();
+
+        return back()->with('flash', $name.'’s booking deleted.');
+    }
+
+    /** The shared, validated booking fields, with `name` composed from the two. */
+    private function bookingData(Request $request, ?SessionBooking $booking, int $sessionId): array
+    {
+        $data = $request->validate([
+            'session_id' => ['sometimes', Rule::exists('wcm_2026.sessions', 'id')],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required', 'email:rfc', 'max:255',
+                // One place per address per session — ignoring this same row.
+                Rule::unique('wcm_2026.session_bookings', 'email')
+                    ->where('session_id', $sessionId)
+                    ->ignore($booking?->id),
+            ],
+            'phone' => ['required', 'string', 'max:40', 'regex:/^[0-9\s\-\+\(\)]+$/'],
+        ]);
+
+        $data['name'] = trim($data['first_name'].' '.$data['last_name']);
+        $data['session_id'] = $sessionId;
+
+        return $data;
     }
 }
