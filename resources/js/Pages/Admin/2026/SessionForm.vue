@@ -12,6 +12,10 @@ const props = defineProps({
 
 const editing = !!props.session.id;
 
+// The kinds that carry a Romanian translation (see lang files). Free text still
+// works — this just steers new entries toward one that is translated.
+const knownKinds = ['Opening', 'Presentation / Case study', 'Workshop', 'Conversation', 'Closing Conversation', 'Why Culture Matters+'];
+
 const form = useForm({
     programme_day_id: props.session.programme_day_id,
     starts_at: props.session.starts_at,
@@ -67,7 +71,11 @@ function submit() {
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Kind</label>
-                        <input v-model="form.kind" type="text" placeholder="Talk, Conversation, Workshop 3…" class="w-full rounded border-gray-300 text-sm" />
+                        <input v-model="form.kind" list="session-kinds" type="text" placeholder="Talk, Conversation, Workshop 3…" class="w-full rounded border-gray-300 text-sm" />
+                        <datalist id="session-kinds">
+                            <option v-for="k in knownKinds" :key="k" :value="k" />
+                        </datalist>
+                        <p class="mt-1 text-xs text-gray-500">Pick a known one so it shows in Romanian too; a new one falls back to English.</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Order within the day</label>
