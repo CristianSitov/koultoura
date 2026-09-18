@@ -324,6 +324,9 @@ Route::prefix('dashboard')
             Route::post('/registrations/{registration}/confirm', 'confirm')->name('registrations.confirm');
 
             Route::get('/bookings', 'bookings')->name('bookings');
+            Route::post('/bookings', 'addBooking')->name('bookings.store');
+            Route::put('/bookings/{booking}', 'updateBooking')->name('bookings.update');
+            Route::delete('/bookings/{booking}', 'deleteBooking')->name('bookings.delete');
             Route::post('/bookings/{booking}/cancel', 'cancelBooking')->name('bookings.cancel');
         });
     });
