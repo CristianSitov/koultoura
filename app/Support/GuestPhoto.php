@@ -15,38 +15,14 @@ class GuestPhoto
     /** Portraits arrive at camera resolution; nobody is watching page weight. */
     public const MAX_EDGE = 1000;
 
-    /** Writes the bytes as {slug}.jpg and returns the public path. */
+    /**
+     * Writes the bytes as {slug}.jpg and returns the public path.
+     *
+     * The name is the slug, so it stays stable across re-uploads — the profile
+     * URL derives from the same slug, and cache-busting is the browser's problem.
+     */
     public static function store(string $slug, string $bytes): string
     {
-        $path = public_path(self::DIR."/{$slug}.jpg");
-
-        if (! is_dir(dirname($path))) {
-            mkdir(dirname($path), 0755, true);
-        }
-
-        $image = @imagecreatefromstring($bytes);
-
-        if ($image === false) {
-            // Not something GD reads; keep the original bytes rather than lose it.
-            file_put_contents($path, $bytes);
-
-            return '/'.self::DIR."/{$slug}.jpg";
-        }
-
-        $edge = max(imagesx($image), imagesy($image));
-        $scaled = $edge > self::MAX_EDGE
-            ? imagescale($image, (int) round(imagesx($image) * self::MAX_EDGE / $edge))
-            : $image;
-
-        imagejpeg($scaled, $path, 82);
-        imagedestroy($scaled);
-
-        if ($scaled !== $image) {
-            imagedestroy($image);
-        }
-
-        // Cache-busting is the browser's problem; the name has to stay stable
-        // because it is derived from the slug the profile URL uses.
-        return '/'.self::DIR."/{$slug}.jpg";
+        return ImageFile::store(self::DIR, $slug, $bytes, self::MAX_EDGE);
     }
 }

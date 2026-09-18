@@ -309,7 +309,9 @@ Route::prefix('dashboard')
             Route::get('/programme/sessions/new', 'createSession')->name('sessions.create');
             Route::post('/programme/sessions', 'storeSession')->name('sessions.store');
             Route::get('/programme/sessions/{session}', 'editSession')->name('sessions.edit');
-            Route::put('/programme/sessions/{session}', 'updateSession')->name('sessions.update');
+            // POST, not PUT: the form carries an image, and PHP only parses
+            // multipart bodies on POST.
+            Route::post('/programme/sessions/{session}', 'updateSession')->name('sessions.update');
             Route::put('/programme/sessions/{session}/published', 'toggleSession')->name('sessions.toggle');
             Route::delete('/programme/sessions/{session}', 'destroySession')->name('sessions.destroy');
         });

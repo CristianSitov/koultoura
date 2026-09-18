@@ -213,6 +213,7 @@ class Front2026Controller extends Controller
                     // 10:00, not 10:00:00 — the page prints this as it comes.
                     'time' => substr($session->starts_at, 0, 5),
                     'kind' => $session->kind,
+                    'type' => $session->type,
                     'title' => $this->text($session)->title ?? '',
                     // Who is speaking — a name and, dimmed on the page, the
                     // organisation where it is known — or who it is for when
@@ -231,6 +232,9 @@ class Front2026Controller extends Controller
                     'booking' => $session->bookable && $session->slug
                         ? ['url' => self::base().'/sessions/'.$session->slug, 'full' => $session->isFull()]
                         : null,
+                    // A workshop or a tour carries a panel of its own: tagline,
+                    // picture, who leads it, and the formatted description.
+                    'detail' => $session->isException() ? $this->sessionDetail($session) : null,
                 ])->all(),
             ])
             ->all();
@@ -248,6 +252,29 @@ class Front2026Controller extends Controller
     }
 
     /** The three theme bars above the grid, in their own order. */
+    /**
+     * The panel behind a workshop or a tour: everything the card cannot show.
+     * The people who lead it link to their profile only when they are a guest
+     * on the grid — a trainer added just for this is named, not linked.
+     */
+    private function sessionDetail(Session $session): array
+    {
+        $text = $this->text($session);
+
+        return [
+            'subtitle' => $text->subtitle ?? '',
+            'image' => $session->image,
+            'description' => HtmlBio::clean($text->description ?? null),
+            'people' => $session->speakers->map(fn (Person $p) => [
+                'name' => $p->full_name,
+                'url' => $p->published ? self::base().'/guests/'.$p->slug : null,
+            ])->all(),
+            'capacity' => $session->capacity,
+            'placesLeft' => $session->places_left,
+            'full' => $session->isFull(),
+        ];
+    }
+
     private function themeBars(): array
     {
         return Theme::with('translations')

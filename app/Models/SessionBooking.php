@@ -12,8 +12,8 @@ class SessionBooking extends Model
     protected $connection = 'wcm_2026';
 
     protected $fillable = [
-        'session_id', 'registration_id', 'token', 'name', 'email',
-        'phone', 'locale', 'confirmed_at', 'cancelled_at',
+        'session_id', 'registration_id', 'token', 'name', 'first_name', 'last_name',
+        'email', 'phone', 'locale', 'confirmed_at', 'cancelled_at',
     ];
 
     protected $casts = [
