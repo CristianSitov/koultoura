@@ -40,6 +40,9 @@
      */
     --color-support-ink: var(--color-accent);
 
+    /* Coffee breaks read in a warm brown, off the red palette on purpose. */
+    --color-coffee: #6f4e37;
+
     --font-heading: 'Manrope', system-ui, sans-serif;
     --font-body: 'Manrope', system-ui, sans-serif;
 
@@ -2805,4 +2808,25 @@ a.wcm26-partner-logo:focus-visible {
     .wcm26-page:has(.wcm26-contribute-col) .wcm26-contribute-intro {
         margin: 20px 0 24px;
     }
+}
+
+/* A lighter brown for coffee breaks on the dark ground. */
+.wcm26[data-theme='dark'] { --color-coffee: #c8a27a; }
+
+/* TBA — a slot still to be announced: red and bold, so it reads as a gap. */
+.wcm26-session-title.wcm26-session-tba {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+/* Coffee break — warm brown, with a cup at the end of the line. */
+.wcm26-session-title.wcm26-session-coffee {
+    color: var(--color-coffee);
+}
+
+.wcm26-coffee-cup {
+    width: 1em;
+    height: 1em;
+    margin-left: 6px;
+    vertical-align: -0.16em;
 }
