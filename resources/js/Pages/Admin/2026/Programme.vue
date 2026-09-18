@@ -115,17 +115,16 @@ function saveTheme() {
             </div>
 
             <div class="grid gap-3 sm:grid-cols-3">
-                <button
+                <div
                     v-for="theme in themes"
                     :key="theme.id"
-                    type="button"
-                    class="text-left bg-white rounded border border-gray-200 p-4 hover:border-red-300"
-                    @click="openTheme(theme)"
+                    class="bg-white rounded border border-gray-200 p-4"
                 >
                     <p class="text-xs font-bold text-red-600">{{ theme.numeral }}</p>
                     <p class="font-semibold text-sm mt-1">{{ theme.title }}</p>
                     <p class="text-xs text-gray-500 mt-1">{{ theme.title_ro || 'no Romanian title' }}</p>
-                </button>
+                    <button type="button" class="mt-2 text-xs text-gray-500 hover:text-red-600" @click="openTheme(theme)">Edit</button>
+                </div>
             </div>
         </section>
 
@@ -162,16 +161,15 @@ function saveTheme() {
                             <td class="px-5 py-3 w-20 font-mono text-gray-600">{{ session.time }}</td>
                             <td class="px-2 py-3 w-32 text-gray-500">{{ session.kind || '—' }}</td>
                             <td class="px-2 py-3">
-                                <Link :href="`/dashboard/programme/sessions/${session.id}`" class="font-medium hover:text-red-600">
-                                    {{ session.title }}
-                                </Link>
+                                <span class="font-medium">{{ session.title }}</span>
                                 <span v-if="session.school" class="ml-2 rounded bg-red-50 px-1.5 py-0.5 text-xs text-red-700">School</span>
                                 <span v-if="session.bookable" class="ml-2 rounded bg-blue-50 px-1.5 py-0.5 text-xs text-blue-700">
                                     {{ session.taken }}/{{ session.capacity }} booked
                                 </span>
                                 <p class="text-xs text-gray-500">{{ session.who }}</p>
                             </td>
-                            <td class="px-2 py-3 w-28 text-right">
+                            <td class="px-2 py-3 w-36 text-right whitespace-nowrap">
+                                <Link :href="`/dashboard/programme/sessions/${session.id}`" class="mr-3 text-xs text-gray-500 hover:text-red-600">Edit</Link>
                                 <!-- One click, because publishing is the thing
                                      done most often and least worth a form. -->
                                 <Link

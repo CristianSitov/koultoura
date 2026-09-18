@@ -2819,14 +2819,18 @@ a.wcm26-partner-logo:focus-visible {
     font-weight: 700;
 }
 
-/* Coffee break — warm brown, with a cup at the end of the line. */
-.wcm26-session-title.wcm26-session-coffee {
-    color: var(--color-coffee);
-}
-
-.wcm26-coffee-cup {
+/* Coffee and lunch breaks — warm brown, with a cup or fork before the text. */
+.wcm26-break-icon {
     width: 1em;
     height: 1em;
-    margin-left: 6px;
+    margin-right: 6px;
     vertical-align: -0.16em;
+    flex: none;
+}
+
+/* Keep the icon on the title's first line rather than dropping beneath it. */
+.wcm26-session-title.wcm26-session-break {
+    color: var(--color-coffee);
+    display: inline-flex;
+    align-items: center;
 }

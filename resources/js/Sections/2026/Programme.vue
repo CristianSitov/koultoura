@@ -30,11 +30,13 @@ const props = defineProps({
  * in the database has to change.
  */
 const COFFEE_BREAKS = ['Coffee Break', 'Pauză de cafea'];
+const LUNCH_BREAKS = ['Lunch Break', 'Pauză de prânz'];
 
 function titleKind(title) {
     const t = (title || '').trim();
     if (t === 'TBA') return 'tba';        // a slot still to be announced
     if (COFFEE_BREAKS.includes(t)) return 'coffee';
+    if (LUNCH_BREAKS.includes(t)) return 'lunch';
     return null;
 }
 
@@ -137,14 +139,19 @@ const schoolSpans = computed(() => {
                             class="wcm26-session-title"
                             :class="{
                                 'wcm26-session-tba': titleKind(session.title) === 'tba',
-                                'wcm26-session-coffee': titleKind(session.title) === 'coffee',
+                                'wcm26-session-break': ['coffee', 'lunch'].includes(titleKind(session.title)),
                             }"
-                        >{{ session.title }}<svg
+                        ><svg
                             v-if="titleKind(session.title) === 'coffee'"
-                            class="wcm26-coffee-cup"
+                            class="wcm26-break-icon"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                        ><path d="M17 8h1a4 4 0 1 1 0 8h-1" /><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" /><line x1="6" y1="2" x2="6" y2="4" /><line x1="10" y1="2" x2="10" y2="4" /><line x1="14" y1="2" x2="14" y2="4" /></svg></p>
+                        ><path d="M17 8h1a4 4 0 1 1 0 8h-1" /><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" /><line x1="6" y1="2" x2="6" y2="4" /><line x1="10" y1="2" x2="10" y2="4" /><line x1="14" y1="2" x2="14" y2="4" /></svg><svg
+                            v-else-if="titleKind(session.title) === 'lunch'"
+                            class="wcm26-break-icon"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                        ><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg>{{ session.title }}</p>
                         <p class="wcm26-session-who">{{ session.who }}</p>
 
                         <!-- Places are limited on this one, so it has a form of

@@ -44,7 +44,7 @@ function remove(speaker) {
                                 <img v-if="speaker.avatar" :src="speaker.avatar" alt="" class="h-9 w-9 rounded object-cover bg-gray-100" />
                                 <span v-else class="h-9 w-9 rounded bg-gray-100"></span>
                                 <div>
-                                    <Link :href="`/dashboard/speakers/${speaker.id}`" class="font-semibold hover:text-red-600">{{ speaker.name }}</Link>
+                                    <span class="font-semibold">{{ speaker.name }}</span>
                                     <p class="text-xs text-gray-500">{{ speaker.institution }}</p>
                                 </div>
                             </div>
@@ -80,7 +80,8 @@ function remove(speaker) {
                             >{{ speaker.published ? 'shown' : 'hidden' }}</Link>
                         </td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
-                            <a :href="`${publicBase}/guests/${speaker.slug}`" target="_blank" class="text-gray-500 hover:text-gray-900">View ↗</a>
+                            <Link :href="`/dashboard/speakers/${speaker.id}`" class="text-gray-500 hover:text-red-600">Edit</Link>
+                            <a :href="`${publicBase}/guests/${speaker.slug}`" target="_blank" class="ml-3 text-gray-500 hover:text-gray-900">View ↗</a>
                             <button type="button" class="ml-3 text-gray-500 hover:text-red-600" @click="remove(speaker)">Remove</button>
                         </td>
                     </tr>
