@@ -188,7 +188,7 @@ class Front2026Controller extends Controller
             'theme.translations',
             'sessions' => fn ($q) => $preview ? $q : $q->published(),
             'sessions.translations',
-            'sessions.speakers',
+            'sessions.speakers.translations',
         ])
             ->when(! $preview, fn ($q) => $q->where('published', true))
             ->orderBy('position')
@@ -214,9 +214,13 @@ class Front2026Controller extends Controller
                     'time' => substr($session->starts_at, 0, 5),
                     'kind' => $session->kind,
                     'title' => $this->text($session)->title ?? '',
-                    // Who is speaking, or who it is for when nobody is named.
-                    'who' => $session->speakers->pluck('full_name')->implode(', ')
-                        ?: ($this->text($session)->audience ?? ''),
+                    // Who is speaking — "Name · Organisation" where the
+                    // organisation is known — or who it is for when nobody is named.
+                    'who' => $session->speakers->map(function (Person $person) {
+                        $org = ($person->translate(app()->getLocale()) ?? $person->translate('en'))?->institution;
+
+                        return filled($org) ? $person->full_name.' · '.$org : $person->full_name;
+                    })->implode(', ') ?: ($this->text($session)->audience ?? ''),
                     'school' => $session->school,
                     'draft' => ! $session->published,
                     'booking' => $session->bookable && $session->slug
