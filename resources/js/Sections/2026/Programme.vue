@@ -23,7 +23,7 @@ const props = defineProps({
     schoolDays: { type: Array, default: () => [] },
 });
 
-// "7, 9 and 10" — the last separator is a word, and not the same word in both
+// "7, 8 and 10" — the last separator is a word, and not the same word in both
 // languages, so it is joined here rather than on the server.
 /*
  * Two title states get their own look, from the text itself — no flag, so the
@@ -55,7 +55,7 @@ const schoolDayList = computed(() => {
 
 /*
  * The umbrella is drawn as one bar per unbroken run of School days, because
- * they are no longer unbroken: the 8th sits between the 7th and the 9th, and a
+ * they are no longer unbroken: the 9th sits between the 8th and the 10th, and a
  * single bar stretched across all three would claim a day the School does not
  * run on.
  *

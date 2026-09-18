@@ -19,11 +19,11 @@ class ProgrammeDay extends Model implements TranslatableContract
     protected $connection = 'wcm_2026';
 
     /*
-     * The Heritage School runs on the 7th, the 9th and the 10th only. The 8th
+     * The Heritage School runs on the 7th, the 8th and the 10th only. The 9th
      * is given over to the symposium's own sessions, so a workshop cannot be
      * put there — see saveSession() in the backoffice, which enforces it.
      */
-    public const SCHOOL_DAYS = [7, 9, 10];
+    public const SCHOOL_DAYS = [7, 8, 10];
 
     protected $fillable = ['date', 'theme_id', 'position', 'published'];
 

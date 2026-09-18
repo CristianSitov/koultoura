@@ -169,7 +169,7 @@ live, not hidden.
       and a day with nothing published says "coming soon".
 - [ ] Decide about the **"Draft · subject to change"** marker in
       `Programme.vue` — it should probably go once the schedule is settled.
-- [ ] The **Heritage School** runs on the 7th, 9th and 10th
+- [ ] The **Heritage School** runs on the 7th, 8th and 10th
       (`ProgrammeDay::SCHOOL_DAYS`). The backoffice refuses a School session on
       the 8th.
 
