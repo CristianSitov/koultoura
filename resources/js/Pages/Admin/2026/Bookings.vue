@@ -94,6 +94,16 @@ function removeBooking(booking) {
                     <tr v-for="booking in session.bookings" :key="booking.id" :class="booking.cancelled ? 'text-gray-400' : ''">
                         <td class="px-5 py-3">
                             <span :class="booking.cancelled ? 'line-through' : 'font-medium'">{{ booking.name }}</span>
+                            <span
+                                v-if="booking.conference"
+                                class="ml-2 rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-800"
+                                title="Also registered for the conference days"
+                            >conference</span>
+                            <span
+                                v-else
+                                class="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500"
+                                title="Here only for this workshop or tour"
+                            >workshop-only</span>
                             <p class="text-xs text-gray-500">{{ booking.email }}<span v-if="booking.phone"> · {{ booking.phone }}</span></p>
                         </td>
                         <td class="px-2 py-3 text-gray-500 whitespace-nowrap">{{ booking.created.slice(0, 16) }}</td>

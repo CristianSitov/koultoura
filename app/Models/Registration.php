@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 /**
@@ -36,6 +37,12 @@ class Registration extends Model
         static::creating(function (self $registration) {
             $registration->token ??= Str::random(48);
         });
+    }
+
+    /** Workshop and tour places this person holds — the only bookable things. */
+    public function sessionBookings(): HasMany
+    {
+        return $this->hasMany(SessionBooking::class);
     }
 
     public function isConfirmed(): bool
