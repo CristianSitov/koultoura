@@ -260,15 +260,29 @@ class RegistrationsController extends Controller
      */
     public function editWorkshop(Session $session): Response
     {
+        $session->load(['bookings', 'speakers']);
+
         return Inertia::render('Admin/2026/WorkshopForm', [
             'session' => [
                 'id' => $session->id,
                 'type' => $session->type,
                 'title' => $session->translate('en')?->title ?? '',
                 'image' => $session->image,
+                'capacity' => $session->capacity,
+                'taken' => $session->taken(),
                 'en' => ['title' => $session->translate('en')?->title ?? '', 'subtitle' => $session->translate('en')?->subtitle ?? ''],
                 'ro' => ['title' => $session->translate('ro')?->title ?? '', 'subtitle' => $session->translate('ro')?->subtitle ?? ''],
                 'trainers' => $session->speakers->pluck('id')->all(),
+                'bookings' => $session->bookings->sortBy('id')->values()->map(fn (SessionBooking $b) => [
+                    'id' => $b->id,
+                    'name' => $b->name,
+                    'first_name' => $b->first_name,
+                    'last_name' => $b->last_name,
+                    'email' => $b->email,
+                    'phone' => $b->phone,
+                    'cancelled' => $b->isCancelled(),
+                    'created' => $b->created_at->toDateTimeString(),
+                ]),
             ],
             'people' => $this->trainerPeople(),
             'publicBase' => Front2026Controller::base(),
