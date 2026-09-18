@@ -30,7 +30,7 @@ const form = useForm({
     slug: props.session.slug,
     image: null,
     speakers: [...props.session.speakers],
-    new_person: { ...props.session.new_person },
+    new_person: { first: '', last: '', image: null },
     en: { ...props.session.en },
     ro: { ...props.session.ro },
 });
@@ -46,6 +46,15 @@ function pickImage(event) {
     const file = event.target.files[0];
     form.image = file ?? null;
     preview.value = file ? URL.createObjectURL(file) : props.session.image;
+}
+
+// A trainer added by name is a person of their own, so they can carry a photo.
+const trainerPreview = ref(null);
+
+function pickTrainerImage(event) {
+    const file = event.target.files[0];
+    form.new_person.image = file ?? null;
+    trainerPreview.value = file ? URL.createObjectURL(file) : null;
 }
 
 function submit() {
@@ -224,6 +233,19 @@ function submit() {
                         <p v-if="form.errors['new_person.first'] || form.errors['new_person.last']" class="mt-1 text-sm text-red-600">
                             Both names are needed.
                         </p>
+
+                        <!-- The picture the details panel shows for them, since a
+                             person added here has no profile of their own. -->
+                        <div v-if="form.new_person.first" class="mt-2 flex items-center gap-3">
+                            <img v-if="trainerPreview" :src="trainerPreview" alt="" class="h-12 w-12 rounded object-cover bg-gray-100" />
+                            <span v-else class="h-12 w-12 rounded bg-gray-100"></span>
+                            <label class="text-sm text-gray-600">
+                                <span class="cursor-pointer underline">{{ trainerPreview ? 'Change photo' : 'Add a photo' }}</span>
+                                <input type="file" accept="image/*" class="sr-only" @change="pickTrainerImage" />
+                            </label>
+                        </div>
+                        <p v-if="form.errors['new_person.image']" class="mt-1 text-sm text-red-600">{{ form.errors['new_person.image'] }}</p>
+
                         <p class="mt-1 text-xs text-gray-500">They will not appear on the public speakers grid.</p>
                     </div>
                 </div>

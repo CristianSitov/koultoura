@@ -9,6 +9,7 @@ use App\Models\ProgrammeDay;
 use App\Models\Session;
 use App\Models\Setting;
 use App\Models\Theme;
+use App\Support\GuestPhoto;
 use App\Support\HtmlBio;
 use App\Support\SessionImage;
 use Illuminate\Http\RedirectResponse;
@@ -311,6 +312,8 @@ class ProgrammeController extends Controller
             // together or neither.
             'new_person.first' => ['nullable', 'required_with:new_person.last', 'string', 'max:255'],
             'new_person.last' => ['nullable', 'required_with:new_person.first', 'string', 'max:255'],
+            // The added trainer has no profile page, so they carry their photo here.
+            'new_person.image' => ['nullable', 'image', 'max:8192'],
             'en.title' => ['required', 'string', 'max:255'],
             'en.subtitle' => ['nullable', 'string', 'max:255'],
             'en.audience' => ['nullable', 'string', 'max:255'],
@@ -371,6 +374,15 @@ class ProgrammeController extends Controller
             $person = new Person(['full_name' => $name, 'published' => false]);
             $person->slug = Str::slug($name);
             $person->save();
+
+            if ($request->hasFile('new_person.image')) {
+                $person->avatar = GuestPhoto::store(
+                    $person->slug,
+                    file_get_contents($request->file('new_person.image')->getRealPath())
+                );
+                $person->save();
+            }
+
             $speakers->push($person->id);
         }
 
