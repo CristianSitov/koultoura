@@ -33,9 +33,21 @@ const props = defineProps({
 const COFFEE_BREAKS = ['Coffee Break', 'Pauză de cafea'];
 const LUNCH_BREAKS = ['Lunch Break', 'Pauză de prânz'];
 
+// A slot still to be announced, however it was typed: "TBA", "În curând",
+// "In curand", a stray full stop. Diacritics and trailing punctuation are
+// stripped before matching, so every spelling is one placeholder.
+const PLACEHOLDERS = new Set(['tba', 'in curand']);
+const bare = (s) =>
+    (s || '')
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[.\s]+$/, '');
+
 function titleKind(title) {
     const t = (title || '').trim();
-    if (t.toUpperCase() === 'TBA') return 'tba'; // a slot still to be announced
+    if (PLACEHOLDERS.has(bare(t))) return 'tba';
     if (COFFEE_BREAKS.includes(t)) return 'coffee';
     if (LUNCH_BREAKS.includes(t)) return 'lunch';
     return null;
