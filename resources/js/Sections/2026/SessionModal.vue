@@ -45,11 +45,9 @@ onBeforeUnmount(() => {
                 <span class="wcm26-btn-label">{{ $t('Close') }}</span>
             </button>
 
-            <div v-if="detail.image" class="wcm26-sheet-photo">
-                <ImageSlot :src="detail.image" :alt="session.title" :placeholder="$t(label)" />
-            </div>
-
-            <div class="wcm26-sheet-body">
+            <!-- Title first, so the close control sits over the header, not the
+                 picture where it disappears against a dark image. -->
+            <div class="wcm26-sheet-head">
                 <p class="wcm26-label wcm26-label-13">
                     {{ session.time }} · {{ $t(label) }}<template v-if="session.school"> · {{ $t('Heritage School') }}</template>
                 </p>
@@ -57,13 +55,21 @@ onBeforeUnmount(() => {
                 <h2 class="wcm26-sheet-title">{{ session.title }}</h2>
                 <p v-if="detail.subtitle" class="wcm26-sheet-subtitle">{{ detail.subtitle }}</p>
 
-                <p v-if="detail.people && detail.people.length" class="wcm26-sheet-people">
-                    <template v-for="(person, i) in detail.people" :key="i">
+                <ul v-if="detail.people && detail.people.length" class="wcm26-sheet-people">
+                    <li v-for="(person, i) in detail.people" :key="i" class="wcm26-sheet-person">
+                        <img v-if="person.photo" :src="person.photo" alt="" class="wcm26-sheet-avatar" />
+                        <span v-else class="wcm26-sheet-avatar wcm26-sheet-avatar-empty"></span>
                         <a v-if="person.url" :href="person.url">{{ person.name }}</a>
-                        <span v-else>{{ person.name }}</span><template v-if="i < detail.people.length - 1">, </template>
-                    </template>
-                </p>
+                        <span v-else>{{ person.name }}</span>
+                    </li>
+                </ul>
+            </div>
 
+            <div v-if="detail.image" class="wcm26-sheet-photo">
+                <ImageSlot :src="detail.image" :alt="session.title" :placeholder="$t(label)" />
+            </div>
+
+            <div class="wcm26-sheet-body">
                 <div v-if="detail.description" class="wcm26-sheet-desc" v-html="detail.description"></div>
 
                 <div class="wcm26-sheet-foot">

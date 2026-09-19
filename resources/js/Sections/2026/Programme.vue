@@ -192,7 +192,7 @@ const schoolSpans = computed(() => {
                                 </p>
                                 <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
                                     <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
-                                    <span v-if="session.detail" class="wcm26-session-more">{{ $t('Details') }} →</span>
+                                    <span v-if="session.detail" class="wcm26-session-more">{{ $t('Details & subscribe') }} →</span>
                                 </p>
                                 <p v-if="session.who && session.who.length" class="wcm26-session-who">
                                     <template v-for="(person, i) in session.who" :key="i"><template v-if="i">, </template>{{ person.name }}<span v-if="person.org" class="wcm26-session-org"> · {{ person.org }}</span></template>

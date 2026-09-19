@@ -2973,6 +2973,13 @@ a.wcm26-partner-logo:focus-visible {
     z-index: 1;
 }
 
+/* The header sits above the picture; the right padding keeps the title
+   clear of the close button in the corner. */
+.wcm26-sheet-head {
+    padding: clamp(20px, 4vw, 32px) clamp(24px, 4vw, 40px) 18px;
+    padding-right: 104px;
+}
+
 .wcm26-sheet-photo {
     aspect-ratio: 3 / 2;
     overflow: hidden;
@@ -3006,9 +3013,34 @@ a.wcm26-partner-logo:focus-visible {
 }
 
 .wcm26-sheet-people {
-    margin: 14px 0 0;
+    list-style: none;
+    margin: 16px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
     font-size: 15px;
     color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+/* Each trainer/guide with a small photo, so a face reads before a name. */
+.wcm26-sheet-person {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.wcm26-sheet-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--color-surface);
+    flex: none;
+}
+
+.wcm26-sheet-avatar-empty {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
 }
 
 .wcm26-sheet-people a {
@@ -3022,7 +3054,7 @@ a.wcm26-partner-logo:focus-visible {
 }
 
 .wcm26-sheet-desc {
-    margin: 20px 0 0;
+    margin: 0;
     font-size: clamp(16px, 1.2vw, 18px);
     line-height: 1.6;
     border-top: 2px solid var(--color-divider);
