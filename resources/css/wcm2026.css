@@ -457,22 +457,33 @@
     flex-direction: column;
 }
 
-.wcm26-menu-list li {
-    border-top: 2px solid var(--color-divider);
+/* The double red rule — the ruled-paper motif carried into the menu, one
+   between each row and closing the list. */
+.wcm26-menu-list li::before {
+    content: "";
+    display: block;
+    height: 4px;
+    background: linear-gradient(
+        color-mix(in srgb, var(--color-accent) 52%, #fff) 0 1px,
+        transparent 1px 3px,
+        color-mix(in srgb, var(--color-accent) 52%, #fff) 3px 4px
+    );
 }
 
 .wcm26-menu-link {
     display: flex;
     align-items: baseline;
     gap: clamp(16px, 3vw, 40px);
-    padding: clamp(10px, 1.6vh, 18px) 0;
+    /* Smaller type and more air between rows, so the whole list is reachable
+       without scrolling on a short screen. */
+    padding: clamp(14px, 2.4vh, 26px) 0;
     text-decoration: none;
     color: inherit;
     font-family: var(--font-heading);
     font-weight: 800;
-    font-size: clamp(30px, 5.6vw, 68px);
+    font-size: clamp(22px, 4vw, 44px);
     line-height: 1;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.03em;
 }
 
 .wcm26-menu-link:hover {

@@ -2,6 +2,7 @@
 import Logo from './Logo.vue';
 import { computed } from 'vue';
 import { menuItems, menuPages } from './menu';
+import { sectionSlug } from './sections.js';
 
 const props = defineProps({
     // Hidden sections are not offered: a menu entry that scrolls nowhere is
@@ -18,10 +19,14 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+// The address is in the language being read — /2026/ro/program, not the
+// English anchor the page scrolls by.
+const locale = computed(() => (props.landing.endsWith('/ro') ? 'ro' : 'en'));
+
 const items = computed(() => [
     ...menuItems
         .filter((item) => item.anchor !== 'programme' || props.programmeVisible)
-        .map((item) => ({ ...item, url: props.landing + '/' + item.anchor })),
+        .map((item) => ({ ...item, url: props.landing + '/' + sectionSlug(item.anchor, locale.value) })),
     // Last, and off the numbered sequence: these are pages of their own, so
     // they hang off `base` and are marked as the odd ones out.
     ...menuPages.map((page) => ({ ...page, url: props.base + page.href })),
