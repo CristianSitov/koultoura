@@ -267,6 +267,7 @@ class Front2026Controller extends Controller
             'description' => HtmlBio::clean($text->description ?? null),
             'people' => $session->speakers->map(fn (Person $p) => [
                 'name' => $p->full_name,
+                'photo' => $p->avatar,
                 'url' => $p->published ? self::base().'/guests/'.$p->slug : null,
             ])->all(),
             // The count itself is private — the office sees it in the
