@@ -70,7 +70,7 @@ class Resolve2026Locale
              * reading in; forcing English there sent a Romanian visitor an
              * English email.
              */
-            $canonical = in_array($name, ['home', '2026.home', '2026.guest'], true);
+            $canonical = in_array($name, ['home', '2026.home', '2026.guest', '2026.section'], true);
 
             if (! $canonical) {
                 $locale = Session::get('locale', 'en');
