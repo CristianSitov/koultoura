@@ -88,7 +88,7 @@ Route::prefix(Front2026Controller::path())
                  * whitelisted, so this never shadows /support, /register or the
                  * rest — those words are not in the list.
                  */
-                $sections = 'about|format|themes|speakers|programme|location|partners';
+                $sections = Front2026Controller::sectionsPattern();
                 Route::get('/{section}', 'landing')
                     ->where('section', $sections)
                     ->name('section');

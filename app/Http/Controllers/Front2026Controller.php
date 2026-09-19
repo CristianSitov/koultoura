@@ -34,6 +34,39 @@ class Front2026Controller extends Controller
         return '/'.self::path();
     }
 
+    /*
+     * The landing-page sections and their localised slug. The key is the
+     * English DOM anchor the page scrolls to; the values are the slugs that may
+     * appear in the URL. Mirrored on the client — see Sections/2026/sections.js.
+     */
+    private const SECTIONS = [
+        'about' => ['about', 'despre'],
+        'format' => ['format'],
+        'themes' => ['themes', 'teme'],
+        'speakers' => ['speakers', 'invitati'],
+        'programme' => ['programme', 'program'],
+        'location' => ['location', 'locatie'],
+        'partners' => ['partners', 'parteneri'],
+    ];
+
+    /** The route pattern that matches any section slug, either language. */
+    public static function sectionsPattern(): string
+    {
+        return implode('|', array_merge(...array_values(self::SECTIONS)));
+    }
+
+    /** The English anchor a section slug points at, in either language. */
+    public static function sectionAnchor(?string $slug): ?string
+    {
+        foreach (self::SECTIONS as $anchor => $slugs) {
+            if (in_array($slug, $slugs, true)) {
+                return $anchor;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Locale (redirect/session) is resolved by Resolve2026Locale middleware
      * before this runs — index/en/ro all just render the same page.
@@ -81,9 +114,10 @@ class Front2026Controller extends Controller
             'isPublic' => config('wcm.public'),
             'schoolDays' => $this->schoolDays(),
             'programmeVisible' => $this->programmeVisible(),
-            // A section address (/2026/themes) lands on this same page, scrolled
-            // to that section. The route constrains it to the known ids.
-            'section' => $request->route('section'),
+            // A section address (/2026/themes, /2026/ro/program) lands on this
+            // same page, scrolled to that section. The slug is localised; the
+            // page scrolls by the English anchor id, so map it back here.
+            'section' => self::sectionAnchor($request->route('section')),
             'base' => self::base(),
         ]);
     }

@@ -16,6 +16,7 @@ import Register from '../../Sections/2026/Register.vue';
 import Location from '../../Sections/2026/Location.vue';
 import Partners from '../../Sections/2026/Partners.vue';
 import Bottom from '../../Sections/2026/Bottom.vue';
+import { SECTIONS, sectionSlug } from '../../Sections/2026/sections.js';
 
 const props = defineProps({
     guests: { type: Array, default: () => [] },
@@ -44,14 +45,25 @@ const localeBase = (which) => (which === 'en' ? props.base : `${props.base}/ro`)
 // Once the page is indexable it should say which of its two addresses is the
 // one to keep; before that there is nothing to be canonical about.
 const canonical = computed(() => localeBase(locale.value));
-const otherLocaleUrl = computed(() =>
-    openGuest.value ? `${localeBase(otherLocale.value)}/guests/${openGuest.value}` : localeBase(otherLocale.value)
-);
+// The other language, holding the reader's place: the open profile, or the
+// section they have scrolled to, in that language's slug.
+const otherLocaleUrl = computed(() => {
+    const b = localeBase(otherLocale.value);
+
+    if (openGuest.value) {
+        return `${b}/guests/${openGuest.value}`;
+    }
+
+    return activeSection.value ? `${b}/${sectionSlug(activeSection.value, otherLocale.value)}` : b;
+});
 
 const theme = ref('light');
 const menuOpen = ref(false);
 const navHidden = ref(false);
 const openGuest = ref(props.guests.some((g) => g.id === props.guest) ? props.guest : null);
+// The section under the header right now — '' at the very top. Drives both the
+// address in the bar and which section the language switch keeps.
+const activeSection = ref(props.section || '');
 
 const isDark = computed(() => theme.value === 'dark');
 const overlayOpen = computed(() => menuOpen.value || openGuest.value !== null);
@@ -62,6 +74,28 @@ function onScroll() {
     const y = window.scrollY;
     navHidden.value = y > lastY && y > 120;
     lastY = y;
+    activeSection.value = sectionUnderHeader();
+}
+
+/*
+ * The last section whose top has passed under the sticky header is the one
+ * being read; nothing has passed at the very top, which reads as the bare
+ * address. Sections not on the page (the programme before there is one) have no
+ * element and are skipped.
+ */
+function sectionUnderHeader() {
+    const marker = 90;
+    let current = '';
+
+    for (const { id } of SECTIONS) {
+        const el = document.getElementById(id);
+
+        if (el && el.getBoundingClientRect().top <= marker) {
+            current = id;
+        }
+    }
+
+    return current;
 }
 
 function onKeydown(event) {
@@ -170,6 +204,25 @@ function onPopState(event) {
     const id = event.state?.guest ?? null;
     openGuest.value = props.guests.some((g) => g.id === id) ? id : null;
 }
+
+/*
+ * The address follows the reader down the page — in the language being read and
+ * that language's slug. Replaced, not pushed, so the back button still leaves
+ * the site rather than walking back up the sections one at a time. An open
+ * profile owns the address while it is up, so the spy stands aside for it.
+ */
+watch(activeSection, (id) => {
+    if (openGuest.value) {
+        return;
+    }
+
+    const b = localeBase(locale.value);
+    const url = id ? `${b}/${sectionSlug(id, locale.value)}` : b;
+
+    if (window.location.pathname !== url) {
+        window.history.replaceState({ ...window.history.state, guest: null }, '', url);
+    }
+});
 </script>
 
 <template>
