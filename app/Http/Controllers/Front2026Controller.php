@@ -250,17 +250,14 @@ class Front2026Controller extends Controller
                     'type' => $session->type,
                     'title' => $this->text($session)->title ?? '',
                     // Who is speaking — a name and, dimmed on the page, the
-                    // organisation where it is known — or who it is for when
-                    // nobody is named.
-                    'who' => $session->speakers->isNotEmpty()
-                        ? $session->speakers->map(function (Person $person) {
-                            $org = ($person->translate(app()->getLocale()) ?? $person->translate('en'))?->institution;
+                    // organisation where it is known.
+                    'who' => $session->speakers->map(function (Person $person) {
+                        $org = ($person->translate(app()->getLocale()) ?? $person->translate('en'))?->institution;
 
-                            return ['name' => $person->full_name, 'org' => filled($org) ? $org : null];
-                        })->all()
-                        : (filled($this->text($session)->audience ?? null)
-                            ? [['name' => $this->text($session)->audience, 'org' => null]]
-                            : []),
+                        return ['name' => $person->full_name, 'org' => filled($org) ? $org : null];
+                    })->all(),
+                    // Who it is for — shown on its own, whether or not anyone is named.
+                    'audience' => $this->text($session)->audience ?? '',
                     'school' => $session->school,
                     'draft' => ! $session->published,
                     'booking' => $session->bookable && $session->slug
@@ -297,6 +294,7 @@ class Front2026Controller extends Controller
 
         return [
             'subtitle' => $text->subtitle ?? '',
+            'audience' => $text->audience ?? '',
             'image' => $session->image,
             'description' => HtmlBio::clean($text->description ?? null),
             'people' => $session->speakers->map(fn (Person $p) => [

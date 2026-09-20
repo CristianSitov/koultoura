@@ -197,6 +197,7 @@ const schoolSpans = computed(() => {
                                 <p v-if="session.who && session.who.length" class="wcm26-session-who">
                                     <template v-for="(person, i) in session.who" :key="i"><template v-if="i">, </template>{{ person.name }}<span v-if="person.org" class="wcm26-session-org"> · {{ person.org }}</span></template>
                                 </p>
+                                <p v-if="session.audience" class="wcm26-session-who wcm26-session-audience">{{ session.audience }}</p>
                                 <p v-if="session.booking && session.booking.full" class="wcm26-session-full">{{ $t('Fully booked') }}</p>
                             </component>
                         </template>

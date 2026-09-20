@@ -58,7 +58,7 @@ const minor = computed(() => props.session.youth && form.age !== '' && Number(fo
                         <span class="wcm26-booking-person-name">{{ person.name }}</span>
                     </li>
                 </ul>
-                <p v-else-if="session.audience" class="wcm26-label wcm26-booking-meta">{{ session.audience }}</p>
+                <p v-if="session.audience" class="wcm26-label wcm26-booking-meta">{{ session.audience }}</p>
 
                 <div v-if="session.description" class="wcm26-rte wcm26-booking-desc" v-html="session.description"></div>
 

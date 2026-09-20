@@ -54,6 +54,7 @@ onBeforeUnmount(() => {
 
                 <h2 class="wcm26-sheet-title">{{ session.title }}</h2>
                 <p v-if="detail.subtitle" class="wcm26-sheet-subtitle">{{ detail.subtitle }}</p>
+                <p v-if="detail.audience" class="wcm26-sheet-audience">{{ detail.audience }}</p>
 
                 <ul v-if="detail.people && detail.people.length" class="wcm26-sheet-people">
                     <li v-for="(person, i) in detail.people" :key="i" class="wcm26-sheet-person">

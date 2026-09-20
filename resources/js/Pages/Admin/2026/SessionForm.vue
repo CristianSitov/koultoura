@@ -39,7 +39,6 @@ const form = useForm({
 // A workshop or a tour is the exception: clickable, with a picture and a form.
 const isException = computed(() => form.type === 'workshop' || form.type === 'tour');
 const trainerWord = computed(() => (form.type === 'tour' ? 'Guide' : 'Trainer'));
-const noSpeakers = computed(() => form.speakers.length === 0 && !form.new_person.first);
 
 const preview = ref(props.session.image);
 
@@ -161,15 +160,14 @@ function submit() {
                             <input v-model="form[locale].subtitle" type="text" class="w-full rounded border-gray-300 text-sm" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-1">Audience</label>
+                            <label class="block text-sm font-medium mb-1">Audience <span class="text-gray-400">who it is for</span></label>
                             <input
                                 v-model="form[locale].audience"
                                 type="text"
                                 placeholder="Children, 8–12"
-                                :disabled="!noSpeakers"
-                                class="w-full rounded border-gray-300 text-sm disabled:bg-gray-100 disabled:text-gray-400"
+                                class="w-full rounded border-gray-300 text-sm"
                             />
-                            <p class="mt-1 text-xs text-gray-500">Shown only when nobody is attached.</p>
+                            <p class="mt-1 text-xs text-gray-500">Shown alongside the trainer, when set.</p>
                         </div>
                     </div>
 

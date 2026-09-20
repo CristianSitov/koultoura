@@ -1451,6 +1451,19 @@
     color: color-mix(in srgb, var(--color-text) 52%, transparent);
 }
 
+/* Who a session is for, set apart from who leads it. */
+.wcm26-session-audience {
+    margin-top: 2px;
+    font-style: italic;
+}
+
+.wcm26-sheet-audience {
+    margin: 6px 0 0;
+    font-size: 15px;
+    font-style: italic;
+    color: color-mix(in srgb, var(--color-text) 65%, transparent);
+}
+
 .wcm26-legend {
     margin-top: 22px;
     display: flex;
