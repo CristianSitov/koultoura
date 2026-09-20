@@ -2899,27 +2899,32 @@ a.wcm26-partner-logo:focus-visible {
 }
 
 /*
- * The read part of a session — title, who, audience. A TBA tints just this
- * block (a gap at a glance) and a draft tints it amber (a note to the office),
- * so neither runs under the hour, the kind, or the Heritage School label above.
- * The bleed pulls the box to the column edge while the text stays aligned.
+ * The read part of a session — title, who, note. Every session's body has the
+ * same box (the bleed pulls it to the column edge while the text stays put), so
+ * they all read alike; only the tint under it changes with the session's state.
+ * Four combinations of TBA and Heritage School — white, grey, pink, greyed pink
+ * — plus amber for a draft, which wins over them as a note to the office.
  */
 .wcm26-session-body {
+    padding: 8px 10px;
+    margin: 4px -10px 0;
     border-radius: 6px;
 }
 
-.wcm26-session-body.is-tba {
+.wcm26-session-body.tint-tba {
     background: color-mix(in srgb, var(--color-text) 5%, transparent);
-    padding: 8px 10px;
-    margin: 4px -10px 0;
 }
 
-/* Draft wins over TBA when a slot is both — the office note is the point. */
-.wcm26-session-body.is-draft {
+.wcm26-session-body.tint-school {
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+}
+
+.wcm26-session-body.tint-school-tba {
+    background: color-mix(in srgb, var(--color-accent) 5%, color-mix(in srgb, var(--color-text) 5%, transparent));
+}
+
+.wcm26-session-body.tint-draft {
     background: color-mix(in srgb, #e8b400 14%, transparent);
-    border-left: 3px solid color-mix(in srgb, #e8b400 70%, transparent);
-    padding: 8px 10px 8px 11px;
-    margin: 4px -10px 0;
 }
 
 /* A break shows on the hour line, in warm brown, with a cup or fork.

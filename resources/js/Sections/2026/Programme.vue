@@ -58,6 +58,26 @@ function titleKind(title) {
     return null;
 }
 
+/*
+ * The tint under a session's body — title, who, note. One axis is whether it is
+ * still to be announced, the other whether it belongs to the Heritage School;
+ * their four combinations read white / grey / pink / greyed-pink. A draft wins
+ * over all of them, in amber, because it is a note to the office first.
+ */
+function bodyTint(session) {
+    if (session.draft) {
+        return 'tint-draft';
+    }
+
+    const tba = titleKind(session.title) === 'tba';
+
+    if (session.school && tba) return 'tint-school-tba';
+    if (session.school) return 'tint-school';
+    if (tba) return 'tint-tba';
+
+    return '';
+}
+
 const schoolDayList = computed(() => {
     const days = [...props.schoolDays];
 
@@ -169,18 +189,11 @@ const schoolSpans = computed(() => {
                         </p>
 
                         <template v-else>
-                            <!-- The labels share a line: Cultural Heritage School
-                                 and, when it is one, Draft. -->
-                            <div v-if="session.school || session.draft" class="wcm26-session-tags">
-                                <span v-if="session.school" class="wcm26-session-tag">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z" /><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" /></svg>{{ $t('Cultural Heritage School') }}
-                                </span>
-                                <span v-if="session.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
-                            </div>
-
                             <!-- A workshop or a tour is the whole card a button: it
                                  opens the panel with the picture, the trainer and
-                                 the sign-up. A plain slot is just read. -->
+                                 the sign-up. A plain slot is just read. Every
+                                 session reads the same way: hour, labels, then the
+                                 body — title, who, note — which alone takes a tint. -->
                             <component
                                 :is="session.detail ? 'button' : 'div'"
                                 :type="session.detail ? 'button' : null"
@@ -191,8 +204,14 @@ const schoolSpans = computed(() => {
                                     {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
                                 </p>
 
-                                <!-- Only the read part takes the TBA/draft tint. -->
-                                <div class="wcm26-session-body" :class="{ 'is-tba': titleKind(session.title) === 'tba', 'is-draft': session.draft }">
+                                <div v-if="session.school || session.draft" class="wcm26-session-tags">
+                                    <span v-if="session.school" class="wcm26-session-tag">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z" /><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" /></svg>{{ $t('Cultural Heritage School') }}
+                                    </span>
+                                    <span v-if="session.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
+                                </div>
+
+                                <div class="wcm26-session-body" :class="bodyTint(session)">
                                     <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
                                         <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
                                         <span v-if="session.detail" class="wcm26-session-more">{{ $t('Details & subscribe') }} →</span>
