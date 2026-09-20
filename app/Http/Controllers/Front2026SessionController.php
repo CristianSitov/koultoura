@@ -10,6 +10,7 @@ use App\Support\Slack;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -45,13 +46,38 @@ class Front2026SessionController extends Controller
             return redirect(Front2026Controller::base());
         }
 
-        $input = $request->validate([
+        // A workshop for young people asks the attendee's age; under 18 a parent
+        // or guardian books for the child and gives a written consent.
+        $phone = ['string', 'max:40', 'regex:/^[0-9\s\-\+\(\)]+$/'];
+        $minor = $session->youth && (int) $request->input('age') > 0 && (int) $request->input('age') < 18;
+
+        $rules = [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email:rfc', 'max:255'],
-            // Required now: a workshop that moves has to be able to reach people.
-            'phone' => ['required', 'string', 'max:40', 'regex:/^[0-9\s\-\+\(\)]+$/'],
             'consent' => ['accepted'],
+        ];
+
+        if ($session->youth) {
+            $rules['age'] = ['required', 'integer', 'min:1', 'max:120'];
+        }
+
+        if ($minor) {
+            // The child stays the beneficiary (the name above); the guardian's
+            // name, phone and written consent are recorded against the booking.
+            $request->merge(['guardian_consent' => trim((string) $request->input('guardian_consent'))]);
+            $rules['guardian_name'] = ['required', 'string', 'max:255'];
+            $rules['guardian_phone'] = array_merge(['required'], $phone);
+            $rules['guardian_consent'] = ['required', 'string', Rule::in(['De acord'])];
+            // The parent's number is the one that reaches them; the child's is not asked.
+            $rules['phone'] = array_merge(['nullable'], $phone);
+        } else {
+            // A workshop that moves has to be able to reach people.
+            $rules['phone'] = array_merge(['required'], $phone);
+        }
+
+        $input = $request->validate($rules, [
+            'guardian_consent.in' => __('Please type “De acord” to give your consent.'),
         ]);
 
         // Kept as one line too, for everything downstream that prints a name.
@@ -164,6 +190,8 @@ class Front2026SessionController extends Controller
             'kind' => $session->kind,
             'time' => substr($session->starts_at, 0, 5),
             'date' => $session->day?->date->format('j F Y'),
+            // For young people: the form asks an age and, under 18, a guardian.
+            'youth' => (bool) $session->youth,
             'speakers' => $session->speakers->pluck('full_name')->implode(', '),
             // The picture and who leads it, for the column beside the form.
             'image' => $session->image,

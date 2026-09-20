@@ -227,6 +227,7 @@ class ProgrammeController extends Controller
                 'ends_at' => $session->ends_at ? substr($session->ends_at, 0, 5) : '',
                 'kind' => $session->kind ?? '',
                 'school' => (bool) $session->school,
+                'youth' => (bool) $session->youth,
                 'published' => (bool) $session->published,
                 'position' => $session->position ?? 0,
                 'type' => $session->type ?? 'slot',
@@ -295,6 +296,7 @@ class ProgrammeController extends Controller
                     }
                 },
             ],
+            'youth' => ['boolean'],
             'published' => ['boolean'],
             'position' => ['nullable', 'integer', 'min:0', 'max:99'],
             // Capacity — the most places a workshop or tour can hold — is what
@@ -333,6 +335,9 @@ class ProgrammeController extends Controller
             'kind' => $data['kind'] ?? '',
             'type' => $data['type'],
             'school' => $data['school'] ?? false,
+            // Youth means an age question on the sign-up, which only an exception
+            // has — a plain slot cannot be one.
+            'youth' => $exception && ($data['youth'] ?? false),
             'published' => $data['published'] ?? false,
             'position' => $data['position'] ?? 0,
             'bookable' => $exception,

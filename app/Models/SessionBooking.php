@@ -13,7 +13,8 @@ class SessionBooking extends Model
 
     protected $fillable = [
         'session_id', 'registration_id', 'token', 'name', 'first_name', 'last_name',
-        'email', 'phone', 'locale', 'confirmed_at', 'cancelled_at',
+        'email', 'phone', 'age', 'guardian_name', 'guardian_phone', 'guardian_consent',
+        'locale', 'confirmed_at', 'cancelled_at',
     ];
 
     protected $casts = [

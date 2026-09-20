@@ -3182,6 +3182,22 @@ a.wcm26-partner-logo:focus-visible {
     font-weight: 600;
 }
 
+/* The parent/guardian block, set off from the rest of the sign-up. */
+.wcm26-guardian {
+    border: 0;
+    border-top: 2px solid var(--color-divider);
+    margin: 0;
+    padding: 24px 0 0;
+}
+
+.wcm26-guardian legend {
+    padding: 0;
+}
+
+.wcm26-guardian > * + * {
+    margin-top: 16px;
+}
+
 /* Rendered rich text on a page (booking page description). Same small set. */
 .wcm26-rte p { margin: 0 0 0.9em; }
 .wcm26-rte p:last-child { margin-bottom: 0; }

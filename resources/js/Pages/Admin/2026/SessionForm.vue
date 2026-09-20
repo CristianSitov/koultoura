@@ -24,6 +24,7 @@ const form = useForm({
     kind: props.session.kind,
     type: props.session.type || 'slot',
     school: props.session.school,
+    youth: props.session.youth,
     published: props.session.published,
     position: props.session.position,
     capacity: props.session.capacity,
@@ -210,6 +211,14 @@ function submit() {
                         <p v-if="form.slug" class="mt-1 text-xs text-gray-500 break-all">{{ publicBase }}/sessions/{{ form.slug }}</p>
                         <p v-if="form.errors.slug" class="mt-1 text-sm text-red-600">{{ form.errors.slug }}</p>
                     </div>
+
+                    <label class="flex items-start gap-2 text-sm">
+                        <input v-model="form.youth" type="checkbox" class="mt-0.5 rounded border-gray-300 text-red-600" />
+                        <span>
+                            For young people (under 18)
+                            <span class="block text-xs text-gray-500">The sign-up asks the attendee's age; under 18, a parent books and gives written consent.</span>
+                        </span>
+                    </label>
                 </div>
 
                 <div class="bg-white rounded border border-gray-200 p-5">

@@ -24,7 +24,7 @@ class Session extends Model implements TranslatableContract
 
     protected $fillable = [
         'programme_day_id', 'starts_at', 'ends_at', 'kind', 'type', 'image',
-        'school', 'published', 'position', 'slug', 'bookable', 'capacity',
+        'school', 'youth', 'published', 'position', 'slug', 'bookable', 'capacity',
     ];
 
     /** The two exceptions to a plain slot — clickable, bookable, with a panel. */
@@ -32,6 +32,7 @@ class Session extends Model implements TranslatableContract
 
     protected $casts = [
         'school' => 'boolean',
+        'youth' => 'boolean',
         'published' => 'boolean',
         'bookable' => 'boolean',
         'capacity' => 'integer',

@@ -1,11 +1,12 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/inertia-vue3';
+import { computed } from 'vue';
 import '../../../css/wcm2026.css';
 import PageShell from '../../Sections/2026/PageShell.vue';
 import SectionHead from '../../Sections/2026/SectionHead.vue';
 import { translateKind } from '../../Sections/2026/kinds';
 
-defineProps({
+const props = defineProps({
     base: { type: String, default: '/2026' },
     session: { type: Object, required: true },
     // Set once a place is held, so a reload does not re-offer the form.
@@ -17,9 +18,17 @@ const form = useForm({
     last_name: '',
     email: '',
     phone: '',
+    age: '',
+    guardian_name: '',
+    guardian_phone: '',
+    guardian_consent: '',
     consent: false,
     website: '',
 });
+
+// The ages a youth workshop offers, and whether the one picked needs a parent.
+const ages = Array.from({ length: 95 }, (_, i) => i + 5);
+const minor = computed(() => props.session.youth && form.age !== '' && Number(form.age) < 18);
 </script>
 
 <template>
@@ -79,18 +88,54 @@ const form = useForm({
                             </div>
                         </div>
 
+                        <div v-if="session.youth" class="wcm26-field">
+                            <label class="wcm26-label" for="b-age">{{ $t('Age of the participant') }}</label>
+                            <select id="b-age" v-model="form.age" class="wcm26-select" required>
+                                <option value="" disabled>—</option>
+                                <option v-for="a in ages" :key="a" :value="a">{{ a }}</option>
+                            </select>
+                            <p v-if="form.errors.age" class="wcm26-error">{{ form.errors.age }}</p>
+                        </div>
+
                         <div class="wcm26-field">
                             <label class="wcm26-label" for="b-email">{{ $t('Your email address') }}</label>
                             <input id="b-email" v-model="form.email" type="email" required />
                             <p v-if="form.errors.email" class="wcm26-error">{{ form.errors.email }}</p>
                         </div>
 
-                        <div class="wcm26-field">
+                        <div v-if="!minor" class="wcm26-field">
                             <label class="wcm26-label" for="b-phone">{{ $t('Phone') }}</label>
                             <input id="b-phone" v-model="form.phone" type="tel" required />
                             <p class="wcm26-hint">{{ $t('So we can reach you if the workshop moves.') }}</p>
                             <p v-if="form.errors.phone" class="wcm26-error">{{ form.errors.phone }}</p>
                         </div>
+
+                        <!-- Under 18: a parent or guardian books. The child above
+                             stays the participant; the parent gives their details
+                             and a written consent. -->
+                        <fieldset v-if="minor" class="wcm26-guardian">
+                            <legend class="wcm26-label">{{ $t('Parent or guardian') }}</legend>
+                            <p class="wcm26-hint">{{ $t('The young person above is the participant; a parent or guardian signs them up.') }}</p>
+
+                            <div class="wcm26-field">
+                                <label class="wcm26-label" for="b-gname">{{ $t("Parent or guardian's full name") }}</label>
+                                <input id="b-gname" v-model="form.guardian_name" type="text" required />
+                                <p v-if="form.errors.guardian_name" class="wcm26-error">{{ form.errors.guardian_name }}</p>
+                            </div>
+
+                            <div class="wcm26-field">
+                                <label class="wcm26-label" for="b-gphone">{{ $t("Parent or guardian's phone") }}</label>
+                                <input id="b-gphone" v-model="form.guardian_phone" type="tel" required />
+                                <p class="wcm26-hint">{{ $t('So we can reach you if the workshop moves.') }}</p>
+                                <p v-if="form.errors.guardian_phone" class="wcm26-error">{{ form.errors.guardian_phone }}</p>
+                            </div>
+
+                            <div class="wcm26-field">
+                                <label class="wcm26-label" for="b-gconsent">{{ $t('Written consent — type “De acord”') }}</label>
+                                <input id="b-gconsent" v-model="form.guardian_consent" type="text" placeholder="De acord" required />
+                                <p v-if="form.errors.guardian_consent" class="wcm26-error">{{ form.errors.guardian_consent }}</p>
+                            </div>
+                        </fieldset>
 
                         <label class="wcm26-check wcm26-check-row">
                             <input v-model="form.consent" type="checkbox" required />
