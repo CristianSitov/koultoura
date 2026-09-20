@@ -17,3 +17,7 @@ resources/js/ziggy.js
 /.idea
 /.vscode
 docker/mysql/dump.sql
+
+# Session images are uploaded through the dashboard at runtime — never commit them.
+/public/assets/2026/sessions/*
+!/public/assets/2026/sessions/.gitkeep
