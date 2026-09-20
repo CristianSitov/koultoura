@@ -140,10 +140,13 @@ class Front2026SessionController extends Controller
     /** Bookable and published, or it is not offered at all. */
     private function session(Request $request): Session
     {
+        // Signed in is the preview: the office can open a draft workshop's page
+        // and its form before it is public, the same way the programme shows
+        // drafts only to them. Everyone else sees published ones only.
         return Session::with(['translations', 'day.translations', 'speakers'])
             ->where('slug', $request->route('slug'))
             ->where('bookable', true)
-            ->where('published', true)
+            ->when(! auth()->check(), fn ($q) => $q->where('published', true))
             ->firstOrFail();
     }
 
