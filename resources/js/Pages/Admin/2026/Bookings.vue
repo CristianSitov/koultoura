@@ -104,7 +104,13 @@ function removeBooking(booking) {
                     <tr v-for="booking in session.bookings" :key="booking.id" :class="booking.cancelled ? 'text-gray-400' : ''">
                         <td class="px-5 py-3">
                             <span :class="booking.cancelled ? 'line-through' : 'font-medium'">{{ booking.name }}</span>
+                            <span v-if="booking.age != null" class="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">age {{ booking.age }}</span>
                             <p class="text-xs text-gray-500">{{ booking.email }}<span v-if="booking.phone"> · {{ booking.phone }}</span></p>
+                            <!-- Under 18: the parent who booked, and their written consent. -->
+                            <p v-if="booking.guardian_name" class="text-xs text-gray-500">
+                                Guardian: {{ booking.guardian_name }}<span v-if="booking.guardian_phone"> · {{ booking.guardian_phone }}</span>
+                                <span v-if="booking.guardian_consent" class="ml-1 rounded bg-green-100 px-1.5 py-0.5 text-green-800">“{{ booking.guardian_consent }}”</span>
+                            </p>
                         </td>
                         <td class="px-2 py-3 text-gray-500 whitespace-nowrap">{{ booking.created.slice(0, 16) }}</td>
                         <td class="px-5 py-3 text-right whitespace-nowrap">

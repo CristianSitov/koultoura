@@ -10,7 +10,6 @@ use App\Support\Slack;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -68,7 +67,12 @@ class Front2026SessionController extends Controller
             $request->merge(['guardian_consent' => trim((string) $request->input('guardian_consent'))]);
             $rules['guardian_name'] = ['required', 'string', 'max:255'];
             $rules['guardian_phone'] = array_merge(['required'], $phone);
-            $rules['guardian_consent'] = ['required', 'string', Rule::in(['De acord'])];
+            // The consent phrase, however it is cased.
+            $rules['guardian_consent'] = ['required', 'string', function ($attribute, $value, $fail) {
+                if (mb_strtolower((string) $value) !== 'de acord') {
+                    $fail(__('Please type “De acord” to give your consent.'));
+                }
+            }];
             // The parent's number is the one that reaches them; the child's is not asked.
             $rules['phone'] = array_merge(['nullable'], $phone);
         } else {
@@ -76,9 +80,7 @@ class Front2026SessionController extends Controller
             $rules['phone'] = array_merge(['required'], $phone);
         }
 
-        $input = $request->validate($rules, [
-            'guardian_consent.in' => __('Please type “De acord” to give your consent.'),
-        ]);
+        $input = $request->validate($rules);
 
         // Kept as one line too, for everything downstream that prints a name.
         $input['name'] = trim($input['first_name'].' '.$input['last_name']);
