@@ -205,10 +205,10 @@ const schoolSpans = computed(() => {
                                 </p>
 
                                 <div v-if="session.school || session.draft" class="wcm26-session-tags">
+                                    <span v-if="session.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
                                     <span v-if="session.school" class="wcm26-session-tag">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z" /><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" /></svg>{{ $t('Cultural Heritage School') }}
                                     </span>
-                                    <span v-if="session.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
                                 </div>
 
                                 <div class="wcm26-session-body" :class="bodyTint(session)">
