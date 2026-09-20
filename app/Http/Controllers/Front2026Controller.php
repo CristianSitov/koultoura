@@ -266,7 +266,9 @@ class Front2026Controller extends Controller
                     'audience' => $this->text($session)->audience ?? '',
                     'school' => $session->school,
                     'draft' => ! $session->published,
-                    'booking' => $session->bookable && $session->slug
+                    // Internal: shown under a lock, with no public sign-up.
+                    'internal' => (bool) $session->internal,
+                    'booking' => $session->bookable && $session->slug && ! $session->internal
                         ? ['url' => self::base().'/sessions/'.$session->slug, 'full' => $session->isFull()]
                         : null,
                     // A workshop or a tour carries a panel of its own: tagline,

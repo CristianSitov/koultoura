@@ -1484,6 +1484,16 @@
     font-style: italic;
 }
 
+/* A lock before an internal workshop's title — private, not for public sign-up. */
+.wcm26-session-lock {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    vertical-align: -2px;
+    margin-right: 5px;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
 .wcm26-sheet-audience {
     margin: 6px 0 0;
     font-size: 15px;

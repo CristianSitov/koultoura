@@ -8,8 +8,10 @@ use App\Mail\RegistrationConfirmation;
 use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\Registration;
+use App\Mail\PlaceInvite;
 use App\Models\Session;
 use App\Models\SessionBooking;
+use App\Models\SessionPlace;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -212,7 +214,7 @@ class RegistrationsController extends Controller
     public function bookings(): Response
     {
         return Inertia::render('Admin/2026/Bookings', [
-            'sessions' => Session::with(['translations', 'day.translations', 'bookings', 'speakers'])
+            'sessions' => Session::with(['translations', 'day.translations', 'bookings', 'places', 'speakers'])
                 ->where('bookable', true)
                 ->orderBy('programme_day_id')
                 ->orderBy('starts_at')
@@ -228,6 +230,15 @@ class RegistrationsController extends Controller
                     'slug' => $s->slug,
                     'image' => $s->image,
                     'published' => $s->published,
+                    'internal' => (bool) $s->internal,
+                    // An internal workshop hands out places rather than taking sign-ups.
+                    'places' => $s->places->map(fn (SessionPlace $p) => [
+                        'id' => $p->id,
+                        'code' => $p->code,
+                        'email' => $p->email,
+                        'status' => $p->status,
+                        'confirmed' => $p->isConfirmed(),
+                    ]),
                     // Editable identity, both languages.
                     'en' => ['title' => $s->translate('en')?->title ?? '', 'subtitle' => $s->translate('en')?->subtitle ?? ''],
                     'ro' => ['title' => $s->translate('ro')?->title ?? '', 'subtitle' => $s->translate('ro')?->subtitle ?? ''],
@@ -252,6 +263,45 @@ class RegistrationsController extends Controller
                 ]),
             'publicBase' => Front2026Controller::base(),
         ]);
+    }
+
+    /** Assign (or clear) the person invited to hold an internal place. */
+    public function updatePlace(Request $request, SessionPlace $place): RedirectResponse
+    {
+        $data = $request->validate(['email' => ['nullable', 'email:rfc', 'max:255']]);
+        $email = $data['email'] ?? null;
+
+        // A change of address undoes an invitation meant for someone else.
+        if ($email !== $place->email) {
+            $place->fill([
+                'email' => $email,
+                'status' => 'open',
+                'invited_at' => null,
+                'confirmed_at' => null,
+            ]);
+        }
+
+        $place->save();
+
+        return back()->with('flash', 'Place saved.');
+    }
+
+    /** Send the invitation for a place, so its holder can confirm from email. */
+    public function invitePlace(SessionPlace $place): RedirectResponse
+    {
+        if (blank($place->email)) {
+            return back()->withErrors(['place' => 'Add an email before sending the invitation.']);
+        }
+
+        $url = url(Front2026Controller::base().'/places/confirm/'.$place->token);
+        Mail::to($place->email)->send(new PlaceInvite(
+            $place->load('session.day.translations', 'session.translations'),
+            $url,
+        ));
+
+        $place->update(['status' => 'invited', 'invited_at' => now()]);
+
+        return back()->with('flash', 'Invitation sent to '.$place->email.'.');
     }
 
     /**

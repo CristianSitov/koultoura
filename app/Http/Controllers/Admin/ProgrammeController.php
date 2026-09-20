@@ -265,6 +265,7 @@ class ProgrammeController extends Controller
                 'position' => $session->position ?? 0,
                 'type' => $session->type ?? 'slot',
                 'bookable' => (bool) $session->bookable,
+                'internal' => (bool) $session->internal,
                 'capacity' => $session->capacity,
                 'slug' => $session->slug ?? '',
                 'image' => $session->image,
@@ -330,6 +331,7 @@ class ProgrammeController extends Controller
                 },
             ],
             'youth' => ['boolean'],
+            'internal' => ['boolean'],
             'published' => ['boolean'],
             'position' => ['nullable', 'integer', 'min:0', 'max:99'],
             // Capacity — the most places a workshop or tour can hold — is what
@@ -371,6 +373,8 @@ class ProgrammeController extends Controller
             // Youth means an age question on the sign-up, which only an exception
             // has — a plain slot cannot be one.
             'youth' => $exception && ($data['youth'] ?? false),
+            // Internal is the same: an exception handed out by invitation only.
+            'internal' => $exception && ($data['internal'] ?? false),
             'published' => $data['published'] ?? false,
             'position' => $data['position'] ?? 0,
             'bookable' => $exception,
@@ -429,5 +433,10 @@ class ProgrammeController extends Controller
                 ->mapWithKeys(fn ($id, $i) => [$id => ['position' => $i + 1]])
                 ->all()
         );
+
+        // An internal workshop keeps one place per seat; a plain one has none.
+        if ($session->internal) {
+            $session->syncPlaces();
+        }
     }
 }

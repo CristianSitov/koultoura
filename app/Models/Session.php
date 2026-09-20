@@ -24,7 +24,7 @@ class Session extends Model implements TranslatableContract
 
     protected $fillable = [
         'programme_day_id', 'starts_at', 'ends_at', 'kind', 'type', 'image',
-        'school', 'youth', 'published', 'position', 'slug', 'bookable', 'capacity',
+        'school', 'youth', 'published', 'position', 'slug', 'bookable', 'capacity', 'internal',
     ];
 
     /** The two exceptions to a plain slot — clickable, bookable, with a panel. */
@@ -35,6 +35,7 @@ class Session extends Model implements TranslatableContract
         'youth' => 'boolean',
         'published' => 'boolean',
         'bookable' => 'boolean',
+        'internal' => 'boolean',
         'capacity' => 'integer',
     ];
 
@@ -55,6 +56,36 @@ class Session extends Model implements TranslatableContract
     public function bookings(): HasMany
     {
         return $this->hasMany(SessionBooking::class);
+    }
+
+    public function places(): HasMany
+    {
+        return $this->hasMany(SessionPlace::class)->orderBy('id');
+    }
+
+    /*
+     * An internal workshop hands out one place per seat. Bring the count of
+     * places in line with the capacity: make the missing ones (each gets its
+     * own code), and drop only the still-empty extras if the capacity shrinks —
+     * a place someone was invited to is never silently removed.
+     */
+    public function syncPlaces(): void
+    {
+        $target = (int) ($this->capacity ?? 0);
+        $current = $this->places()->count();
+
+        if ($current < $target) {
+            foreach (range($current + 1, $target) as $ignored) {
+                $this->places()->create([]);
+            }
+        } elseif ($current > $target) {
+            $remove = $this->places()->where('status', 'open')->whereNull('email')
+                ->orderByDesc('id')
+                ->take($current - $target)
+                ->pluck('id');
+
+            $this->places()->whereIn('id', $remove)->delete();
+        }
     }
 
     /** Places taken. A cancelled booking frees its place. */

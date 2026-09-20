@@ -26,6 +26,7 @@ const form = useForm({
     type: props.session.type || 'slot',
     school: props.session.school,
     youth: props.session.youth,
+    internal: props.session.internal,
     published: props.session.published,
     position: props.session.position,
     capacity: props.session.capacity,
@@ -228,6 +229,14 @@ function submit() {
                         <span>
                             For young people (under 18)
                             <span class="block text-xs text-gray-500">The sign-up asks the attendee's age; under 18, a parent books and gives written consent.</span>
+                        </span>
+                    </label>
+
+                    <label class="flex items-start gap-2 text-sm">
+                        <input v-model="form.internal" type="checkbox" class="mt-0.5 rounded border-gray-300 text-red-600" />
+                        <span>
+                            Internal — by invitation only
+                            <span class="block text-xs text-gray-500">Shown on the programme under a lock, with no public sign-up. Places (one per capacity) are handed out from Workshops.</span>
                         </span>
                     </label>
                 </div>

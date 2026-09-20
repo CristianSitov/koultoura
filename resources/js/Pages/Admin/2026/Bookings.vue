@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 
-defineProps({
+const props = defineProps({
     sessions: { type: Array, default: () => [] },
     publicBase: { type: String, default: '' },
 });
@@ -13,6 +13,31 @@ const open = ref({}); // session id -> attendee list expanded
 
 function toggleList(id) {
     open.value = { ...open.value, [id]: !open.value[id] };
+}
+
+// ── Internal-workshop places ────────────────────────────────────────────────
+// The email being edited per place, seeded from what is saved.
+const emails = ref({});
+props.sessions.forEach((s) => (s.places || []).forEach((p) => { emails.value[p.id] = p.email || ''; }));
+const placeAction = useForm({ email: '' });
+
+// Persist the email as it is typed, so the Send button always has it.
+function savePlace(place) {
+    placeAction.email = emails.value[place.id] ?? '';
+    placeAction.put(`/dashboard/places/${place.id}`, { preserveScroll: true });
+}
+
+function invitePlace(place) {
+    const email = emails.value[place.id];
+    if (!email) {
+        return;
+    }
+    // Save the current email first, so the invitation always goes to it.
+    placeAction.email = email;
+    placeAction.put(`/dashboard/places/${place.id}`, {
+        preserveScroll: true,
+        onSuccess: () => action.post(`/dashboard/places/${place.id}/invite`, { preserveScroll: true }),
+    });
 }
 
 // ── Attendees CRUD ──────────────────────────────────────────────────────────
@@ -72,6 +97,7 @@ function removeBooking(booking) {
                     <p class="font-bold">
                         {{ session.title }}
                         <span class="ml-1 rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500 capitalize">{{ session.type }}</span>
+                        <span v-if="session.internal" class="ml-1 rounded bg-gray-800 px-1.5 py-0.5 text-xs text-white">🔒 internal</span>
                         <span v-if="!session.published" class="ml-1 rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-800">draft</span>
                     </p>
                     <p v-if="session.en.subtitle" class="text-sm text-gray-500">{{ session.en.subtitle }}</p>
@@ -91,6 +117,7 @@ function removeBooking(booking) {
             </header>
 
             <!-- Attendees, folded away until asked for. -->
+            <template v-if="!session.internal">
             <div class="px-5 py-3 flex items-center justify-between">
                 <button type="button" class="text-sm font-medium text-gray-700 hover:text-red-600" @click="toggleList(session.id)">
                     <span class="inline-block w-3">{{ open[session.id] ? '▾' : '▸' }}</span>
@@ -124,6 +151,48 @@ function removeBooking(booking) {
                 </tbody>
             </table>
             <p v-else-if="open[session.id]" class="border-t border-gray-100 px-5 py-6 text-center text-sm text-gray-500">Nobody has booked yet.</p>
+            </template>
+
+            <!-- Internal: places with codes, an email to invite, and Send. -->
+            <template v-else>
+                <table class="min-w-full text-sm">
+                    <tbody class="divide-y divide-gray-100">
+                        <tr v-for="place in session.places" :key="place.id">
+                            <td class="px-5 py-3 w-28">
+                                <span class="font-mono font-semibold tracking-wider">{{ place.code }}</span>
+                            </td>
+                            <td class="px-2 py-3">
+                                <input
+                                    v-model="emails[place.id]"
+                                    type="email"
+                                    placeholder="email to invite"
+                                    class="w-full max-w-xs rounded border-gray-300 text-sm"
+                                    @change="savePlace(place)"
+                                />
+                            </td>
+                            <td class="px-2 py-3 whitespace-nowrap">
+                                <span
+                                    :class="[
+                                        'rounded px-2 py-0.5 text-xs',
+                                        place.confirmed ? 'bg-green-100 text-green-800' : place.status === 'invited' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-500',
+                                    ]"
+                                >{{ place.confirmed ? 'confirmed' : place.status }}</span>
+                            </td>
+                            <td class="px-5 py-3 text-right whitespace-nowrap">
+                                <button
+                                    type="button"
+                                    class="text-gray-500 hover:text-gray-900 disabled:opacity-40 disabled:cursor-not-allowed"
+                                    :disabled="!emails[place.id]"
+                                    @click="invitePlace(place)"
+                                >{{ place.status === 'open' ? 'Send invite' : 'Resend' }}</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p v-if="!session.places.length" class="border-t border-gray-100 px-5 py-6 text-center text-sm text-gray-500">
+                    Set a capacity on this workshop to generate places.
+                </p>
+            </template>
         </section>
 
         <!-- Add / edit an attendee -->

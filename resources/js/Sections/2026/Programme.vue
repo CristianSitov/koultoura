@@ -232,8 +232,8 @@ const workshops = computed(() => {
 
                                 <div class="wcm26-session-body" :class="bodyTint(session)">
                                     <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
-                                        <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
-                                        <span v-if="session.detail" class="wcm26-session-more">{{ $t('Details & subscribe') }} →</span>
+                                        <svg v-if="session.internal" class="wcm26-session-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2" /><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" /></svg><template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
+                                        <span v-if="session.detail" class="wcm26-session-more">{{ session.internal ? $t('Details') : $t('Details & subscribe') }} →</span>
                                     </p>
                                     <p v-if="session.who && session.who.length" class="wcm26-session-who">
                                         <template v-for="(person, i) in session.who" :key="i"><template v-if="i">, </template>{{ person.name }}<span v-if="person.org" class="wcm26-session-org"> · {{ person.org }}</span></template>

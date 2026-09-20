@@ -10,6 +10,7 @@ use App\Http\Controllers\Front2024Controller;
 use App\Http\Controllers\Front2026Controller;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\Front2026RegistrationController;
+use App\Http\Controllers\Front2026PlaceController;
 use App\Http\Controllers\Front2026SessionController;
 use App\Http\Controllers\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -166,6 +167,18 @@ Route::prefix(Front2026Controller::path())
                 Route::get('/{locale}/sessions/{slug}/booked/{token}', 'booked')
                     ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+', 'token' => '[A-Za-z0-9]+'])
                     ->name('locale.session.booked');
+            });
+
+        // Internal-workshop places: the holder confirms from their invitation
+        // email, then can add the workshop to their calendar.
+        Route::controller(Front2026PlaceController::class)
+            ->group(function () {
+                Route::get('/places/confirm/{token}', 'confirm')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('place.confirm');
+                Route::get('/places/{token}/calendar.ics', 'calendar')
+                    ->where('token', '[A-Za-z0-9]+')
+                    ->name('place.calendar');
             });
 
         // The contribution step. The language comes from the registration, so
@@ -330,5 +343,9 @@ Route::prefix('dashboard')
             Route::put('/bookings/{booking}', 'updateBooking')->name('bookings.update');
             Route::delete('/bookings/{booking}', 'deleteBooking')->name('bookings.delete');
             Route::post('/bookings/{booking}/cancel', 'cancelBooking')->name('bookings.cancel');
+
+            // Internal-workshop places.
+            Route::put('/places/{place}', 'updatePlace')->name('places.update');
+            Route::post('/places/{place}/invite', 'invitePlace')->name('places.invite');
         });
     });
