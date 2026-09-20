@@ -272,7 +272,6 @@ const workshops = computed(() => {
                         </p>
 
                         <h4 class="wcm26-workshop-title">{{ w.title }}</h4>
-                        <p v-if="w.detail.subtitle" class="wcm26-workshop-subtitle">{{ w.detail.subtitle }}</p>
 
                         <ul v-if="w.detail.people && w.detail.people.length" class="wcm26-workshop-people">
                             <li v-for="(person, i) in w.detail.people" :key="i" class="wcm26-workshop-person">
@@ -281,10 +280,6 @@ const workshops = computed(() => {
                                 <span>{{ person.name }}</span>
                             </li>
                         </ul>
-
-                        <div v-if="w.detail.description" class="wcm26-workshop-desc" v-html="w.detail.description"></div>
-
-                        <p v-if="w.detail.audience" class="wcm26-workshop-audience">{{ w.detail.audience }}</p>
 
                         <div class="wcm26-workshop-foot">
                             <button type="button" class="wcm26-workshop-link" @click="openSession = w">{{ $t('Details & subscribe') }} →</button>

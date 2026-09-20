@@ -3341,11 +3341,6 @@ a.wcm26-partner-logo:focus-visible {
     line-height: 1.15;
 }
 
-.wcm26-workshop-subtitle {
-    margin: 6px 0 0;
-    font-size: 15px;
-    color: color-mix(in srgb, var(--color-text) 70%, transparent);
-}
 
 .wcm26-workshop-people {
     list-style: none;
@@ -3377,27 +3372,9 @@ a.wcm26-partner-logo:focus-visible {
     background: color-mix(in srgb, var(--color-text) 10%, transparent);
 }
 
-.wcm26-workshop-desc {
-    margin: 14px 0 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: color-mix(in srgb, var(--color-text) 82%, transparent);
-}
 
-.wcm26-workshop-desc p {
-    margin: 0 0 0.7em;
-}
 
-.wcm26-workshop-desc p:last-child {
-    margin-bottom: 0;
-}
 
-.wcm26-workshop-audience {
-    margin: 12px 0 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: color-mix(in srgb, var(--color-text) 55%, transparent);
-}
 
 .wcm26-workshop-foot {
     display: flex;
