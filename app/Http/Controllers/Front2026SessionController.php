@@ -165,6 +165,12 @@ class Front2026SessionController extends Controller
             'time' => substr($session->starts_at, 0, 5),
             'date' => $session->day?->date->format('j F Y'),
             'speakers' => $session->speakers->pluck('full_name')->implode(', '),
+            // The picture and who leads it, for the column beside the form.
+            'image' => $session->image,
+            'people' => $session->speakers->map(fn ($p) => [
+                'name' => $p->full_name,
+                'photo' => $p->avatar,
+            ])->all(),
             'full' => $session->isFull(),
             // Where the form posts, in the language being read.
             'bookUrl' => Front2026Controller::base()

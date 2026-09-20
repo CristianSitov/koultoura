@@ -3119,6 +3119,71 @@ a.wcm26-partner-logo:focus-visible {
     }
 }
 
+/* ── booking page: form on the left, picture + who leads it on the right ───── */
+.wcm26-booking-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+    gap: 48px clamp(32px, 6vw, 96px);
+    align-items: start;
+}
+
+.wcm26-booking-photo {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.wcm26-booking-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.wcm26-booking-people {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.wcm26-booking-person {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wcm26-booking-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--color-surface);
+    flex: none;
+}
+
+.wcm26-booking-avatar-empty {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.wcm26-booking-person-name {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+@media (max-width: 860px) {
+    .wcm26-booking-layout {
+        grid-template-columns: 1fr;
+    }
+
+    /* Picture above the form on a narrow screen. */
+    .wcm26-booking-aside {
+        order: -1;
+    }
+}
+
 /* Rendered rich text on a page (booking page description). Same small set. */
 .wcm26-rte p { margin: 0 0 0.9em; }
 .wcm26-rte p:last-child { margin-bottom: 0; }

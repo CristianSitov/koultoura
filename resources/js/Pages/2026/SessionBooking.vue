@@ -31,18 +31,15 @@ const form = useForm({
         <section class="wcm26-section">
             <SectionHead n="→" :title="booked ? $t('Your place is held') : $t('Book a place')" />
 
-            <div class="wcm26-split">
-                <div>
+            <div class="wcm26-booking-layout">
+                <div class="wcm26-booking-main">
                     <p class="wcm26-lead">{{ session.title }}</p>
                     <p class="wcm26-label" style="margin-top: 12px">
                         {{ session.date }} · {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
                     </p>
-                    <p v-if="session.speakers" class="wcm26-label">{{ session.speakers }}</p>
-                    <p v-else-if="session.audience" class="wcm26-label">{{ session.audience }}</p>
-                </div>
+                    <p v-if="(!session.people || !session.people.length) && session.audience" class="wcm26-label">{{ session.audience }}</p>
 
-                <div class="wcm26-about-copy">
-                    <div v-if="session.description" class="wcm26-rte" v-html="session.description"></div>
+                    <div v-if="session.description" class="wcm26-rte" style="margin-top: 24px" v-html="session.description"></div>
 
                     <template v-if="booked">
                         <p>{{ $t('booking.held', { name: booked.name }) }}</p>
@@ -102,6 +99,21 @@ const form = useForm({
                         </div>
                     </form>
                 </div>
+
+                <!-- The picture, and who leads it underneath. -->
+                <aside v-if="session.image || (session.people && session.people.length)" class="wcm26-booking-aside">
+                    <div v-if="session.image" class="wcm26-booking-photo">
+                        <img :src="session.image" :alt="session.title" />
+                    </div>
+
+                    <ul v-if="session.people && session.people.length" class="wcm26-booking-people">
+                        <li v-for="(person, i) in session.people" :key="i" class="wcm26-booking-person">
+                            <img v-if="person.photo" :src="person.photo" alt="" class="wcm26-booking-avatar" />
+                            <span v-else class="wcm26-booking-avatar wcm26-booking-avatar-empty"></span>
+                            <span class="wcm26-booking-person-name">{{ person.name }}</span>
+                        </li>
+                    </ul>
+                </aside>
             </div>
         </section>
     </PageShell>
