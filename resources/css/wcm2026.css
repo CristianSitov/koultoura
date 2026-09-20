@@ -2911,8 +2911,18 @@ a.wcm26-partner-logo:focus-visible {
        with the hour and the labels; the padding is even on every side. The 8px
        gap above every group (hour → labels → body) is the box's own top padding,
        so the rhythm is the same whether a session is tinted or not. */
-    padding: 8px 10px;
+    padding: 8px 0;
     margin: 0;
+}
+
+/* Only a tinted body gets side padding, so its background stands off the text;
+   an untinted (plain, non-TBA) title sits flush at the card edge with the hour
+   and the labels. Top padding is the group's rhythm gap, kept either way. */
+.wcm26-session-body.tint-tba,
+.wcm26-session-body.tint-school,
+.wcm26-session-body.tint-school-tba,
+.wcm26-session-body.tint-draft {
+    padding: 8px 10px;
 }
 
 /* The title's own top margin would double the box's padding — the padding is
