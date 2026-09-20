@@ -3,6 +3,7 @@ import { Link, useForm } from '@inertiajs/inertia-vue3';
 import { computed, ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 import { knownKinds } from '../../../Sections/2026/kinds';
+import { tooLarge, tooLargeMessage } from '../../../imageGuard';
 import RichText from './RichText.vue';
 
 const props = defineProps({
@@ -44,6 +45,12 @@ const preview = ref(props.session.image);
 
 function pickImage(event) {
     const file = event.target.files[0];
+    if (tooLarge(file)) {
+        form.setError('image', tooLargeMessage);
+        event.target.value = '';
+        return;
+    }
+    form.clearErrors('image');
     form.image = file ?? null;
     preview.value = file ? URL.createObjectURL(file) : props.session.image;
 }
@@ -53,6 +60,12 @@ const trainerPreview = ref(null);
 
 function pickTrainerImage(event) {
     const file = event.target.files[0];
+    if (tooLarge(file)) {
+        form.setError('new_person.image', tooLargeMessage);
+        event.target.value = '';
+        return;
+    }
+    form.clearErrors('new_person.image');
     form.new_person.image = file ?? null;
     trainerPreview.value = file ? URL.createObjectURL(file) : null;
 }

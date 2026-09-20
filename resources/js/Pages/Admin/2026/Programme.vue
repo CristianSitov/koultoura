@@ -2,6 +2,7 @@
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
+import { tooLarge, tooLargeMessage } from '../../../imageGuard';
 
 const props = defineProps({
     days: { type: Array, default: () => [] },
@@ -38,7 +39,14 @@ function openDay(day) {
 }
 
 function pickModeratorImage(event) {
-    dayForm.new_moderator.image = event.target.files[0] ?? null;
+    const file = event.target.files[0];
+    if (tooLarge(file)) {
+        dayForm.setError('new_moderator.image', tooLargeMessage);
+        event.target.value = '';
+        return;
+    }
+    dayForm.clearErrors('new_moderator.image');
+    dayForm.new_moderator.image = file ?? null;
 }
 
 function saveDay() {

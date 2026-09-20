@@ -6,6 +6,7 @@ use App\Support\Slack;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\ValidationException;
@@ -62,6 +63,22 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        /*
+         * An upload past the server's post limit arrives here rather than in a
+         * form's own validation — the body was rejected before any rule ran.
+         * Turn it back into a message on the form instead of a bare 413, on
+         * whichever image field the request carried. The browser guards this
+         * first (see imageGuard.js); this is the net for when it cannot.
+         */
+        $this->renderable(function (PostTooLargeException $e, $request) {
+            $message = 'That upload is too large. Please choose an image under 8 MB.';
+
+            return back()->withErrors(array_fill_keys(
+                ['image', 'photo', 'new_person.image', 'new_moderator.image'],
+                $message,
+            ));
+        });
+
         $this->reportable(function (Throwable $e) {
             if ($this->isQuiet($e)) {
                 return;

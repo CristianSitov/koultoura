@@ -2,6 +2,7 @@
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
+import { tooLarge, tooLargeMessage } from '../../../imageGuard';
 import RichText from './RichText.vue';
 
 const props = defineProps({
@@ -25,6 +26,12 @@ const preview = ref(props.speaker.avatar);
 
 function pickPhoto(event) {
     const file = event.target.files[0];
+    if (tooLarge(file)) {
+        form.setError('photo', tooLargeMessage);
+        event.target.value = '';
+        return;
+    }
+    form.clearErrors('photo');
     form.photo = file ?? null;
     preview.value = file ? URL.createObjectURL(file) : props.speaker.avatar;
 }
