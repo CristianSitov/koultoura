@@ -138,16 +138,9 @@ const schoolSpans = computed(() => {
                     <p class="wcm26-day-label">{{ $t('Day :n', { n: day.day }) }}</p>
                 </div>
 
-                <p v-if="day.theme" class="wcm26-day-theme">
-                    <span class="wcm26-square"></span>{{ day.theme.numeral }} · {{ day.theme.title }}
-                </p>
-
-                <p v-if="day.moderator" class="wcm26-day-moderator">
-                    <img v-if="day.moderator.photo" :src="day.moderator.photo" alt="" class="wcm26-day-moderator-photo" />
-                    <span>
-                        <span class="wcm26-day-moderator-label">{{ $t('Moderator of the day') }}</span>
-                        {{ day.moderator.name }}
-                    </span>
+                <p v-if="day.theme || day.moderator" class="wcm26-day-theme">
+                    <span v-if="day.theme" class="wcm26-square"></span>
+                    <span><template v-if="day.theme">{{ day.theme.numeral }} · {{ day.theme.title }}</template><span v-if="day.moderator" class="wcm26-day-moderated"><template v-if="day.theme">, </template>{{ $t('moderated by :name', { name: day.moderator.name }) }}</span></span>
                 </p>
 
                 <p v-if="!day.sessions.length" class="wcm26-day-soon">{{ $t('Coming soon') }}</p>

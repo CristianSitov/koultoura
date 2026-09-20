@@ -1362,7 +1362,7 @@
     padding-top: 16px;
     border-top: 2px solid var(--color-divider);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     font-family: var(--font-heading);
     font-weight: 700;
@@ -1373,33 +1373,14 @@
     color: var(--color-accent);
 }
 
-/* Who moderates the day, with their photo. */
-.wcm26-day-moderator {
-    margin: 12px 0 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    line-height: 1.3;
-    font-weight: 600;
+/* The square sits on the first line, not the middle of a wrapped title. */
+.wcm26-day-theme .wcm26-square {
+    margin-top: 5px;
 }
 
-.wcm26-day-moderator-photo {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    object-fit: cover;
-    background: var(--color-surface);
-    flex: none;
-}
-
-.wcm26-day-moderator-label {
-    display: block;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+/* "…, moderated by X" trails the theme as a lighter clause. */
+.wcm26-day-moderated {
+    font-weight: 400;
 }
 
 .wcm26-sessions {
