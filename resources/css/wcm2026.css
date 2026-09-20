@@ -3119,12 +3119,21 @@ a.wcm26-partner-logo:focus-visible {
     }
 }
 
-/* ── booking page: form on the left, picture + who leads it on the right ───── */
-.wcm26-booking-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
-    gap: 48px clamp(32px, 6vw, 96px);
-    align-items: start;
+/* ── booking page: a single stacked column — picture, then the session ─────── */
+.wcm26-booking {
+    max-width: 640px;
+}
+
+.wcm26-booking-title {
+    margin-top: 28px;
+}
+
+.wcm26-booking-meta {
+    margin-top: 10px;
+}
+
+.wcm26-booking-desc {
+    margin-top: 24px;
 }
 
 .wcm26-booking-photo {
@@ -3171,17 +3180,6 @@ a.wcm26-partner-logo:focus-visible {
 .wcm26-booking-person-name {
     font-size: 15px;
     font-weight: 600;
-}
-
-@media (max-width: 860px) {
-    .wcm26-booking-layout {
-        grid-template-columns: 1fr;
-    }
-
-    /* Picture above the form on a narrow screen. */
-    .wcm26-booking-aside {
-        order: -1;
-    }
 }
 
 /* Rendered rich text on a page (booking page description). Same small set. */
