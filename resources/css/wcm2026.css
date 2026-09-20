@@ -3268,3 +3268,174 @@ a.wcm26-partner-logo:focus-visible {
 .wcm26-rte strong { font-weight: 700; }
 .wcm26-rte em { font-style: italic; }
 .wcm26-rte u { text-decoration: underline; text-underline-offset: 2px; }
+
+/* ------------------------------------------------------------------ *
+ * Workshops & guided tours — the two bookable exceptions gathered out
+ * of the day columns into one chronological list below the grid, each
+ * shown in full: picture, when, who leads it, and the description.
+ * ------------------------------------------------------------------ */
+.wcm26-workshops {
+    margin-top: clamp(48px, 6vw, 96px);
+}
+
+.wcm26-workshops-head {
+    margin: 0 0 clamp(20px, 2.5vw, 32px);
+    font-family: var(--font-heading);
+    font-size: clamp(20px, 2vw, 28px);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.wcm26-workshops-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(24px, 3vw, 40px);
+}
+
+.wcm26-workshop {
+    display: grid;
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    gap: clamp(20px, 2.5vw, 36px);
+    align-items: start;
+    padding-bottom: clamp(24px, 3vw, 40px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+}
+
+.wcm26-workshop:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.wcm26-workshop-photo {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.wcm26-workshop-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wcm26-workshop-body {
+    min-width: 0;
+}
+
+.wcm26-workshop-when {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: var(--color-accent);
+}
+
+.wcm26-workshop-title {
+    margin: 8px 0 0;
+    font-family: var(--font-heading);
+    font-size: clamp(18px, 1.8vw, 24px);
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.wcm26-workshop-subtitle {
+    margin: 6px 0 0;
+    font-size: 15px;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.wcm26-workshop-people {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+}
+
+.wcm26-workshop-person {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.wcm26-workshop-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--color-surface);
+    flex: none;
+}
+
+.wcm26-workshop-avatar-empty {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.wcm26-workshop-desc {
+    margin: 14px 0 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-text) 82%, transparent);
+}
+
+.wcm26-workshop-desc p {
+    margin: 0 0 0.7em;
+}
+
+.wcm26-workshop-desc p:last-child {
+    margin-bottom: 0;
+}
+
+.wcm26-workshop-audience {
+    margin: 12px 0 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.wcm26-workshop-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    margin-top: 16px;
+}
+
+.wcm26-workshop-link {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+}
+
+.wcm26-workshop-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.wcm26-workshop-full {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+@media (max-width: 640px) {
+    .wcm26-workshop {
+        grid-template-columns: 1fr;
+    }
+}

@@ -4,6 +4,7 @@ import { trans } from 'laravel-vue-i18n';
 import SectionHead from './SectionHead.vue';
 import { translateKind } from './kinds';
 import SessionModal from './SessionModal.vue';
+import ImageSlot from './ImageSlot.vue';
 
 /*
  * Four days, three themes, and the Heritage School as an umbrella over three of
@@ -122,6 +123,24 @@ const schoolSpans = computed(() => {
 
     return runs.map((run) => ({ ...run, primary: run === widest }));
 });
+
+/*
+ * Every workshop and guided tour, pulled out of the day columns into one list
+ * below the grid — the two kinds that carry a picture, a trainer and a sign-up
+ * (a plain slot has no `detail`). Days are already in order; within a day they
+ * sort by the clock, and "HH:MM" sorts as text.
+ */
+const workshops = computed(() => {
+    const out = [];
+
+    props.days.forEach((day, di) => {
+        day.sessions
+            .filter((s) => s.detail)
+            .forEach((s) => out.push({ ...s, di, dayName: day.name, date: `${day.num} ${day.month}` }));
+    });
+
+    return out.sort((a, b) => a.di - b.di || a.time.localeCompare(b.time));
+});
 </script>
 
 <template>
@@ -234,6 +253,47 @@ const schoolSpans = computed(() => {
             <span class="wcm26-square"></span>{{ $t('Theme of the day') }}
             <span class="wcm26-square-open"></span>{{ $t('Heritage School session') }}
         </p>
+
+        <!-- The workshops and tours again, laid out in full below the grid: the
+             picture, who leads it, when, the description and a way in. -->
+        <div v-if="workshops.length" class="wcm26-workshops">
+            <h3 class="wcm26-workshops-head">{{ $t('Workshops & guided tours') }}</h3>
+
+            <ol class="wcm26-workshops-list">
+                <li v-for="w in workshops" :key="w.id" class="wcm26-workshop">
+                    <div class="wcm26-workshop-photo">
+                        <ImageSlot :src="w.detail.image" :alt="w.title" :placeholder="$t(w.type === 'tour' ? 'Guided tour' : 'Workshop')" />
+                    </div>
+
+                    <div class="wcm26-workshop-body">
+                        <p class="wcm26-label wcm26-workshop-when">
+                            {{ w.date }} · {{ w.time }} · {{ $t(w.type === 'tour' ? 'Guided tour' : 'Workshop') }}<template v-if="w.school"> · {{ $t('Heritage School') }}</template>
+                            <span v-if="w.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
+                        </p>
+
+                        <h4 class="wcm26-workshop-title">{{ w.title }}</h4>
+                        <p v-if="w.detail.subtitle" class="wcm26-workshop-subtitle">{{ w.detail.subtitle }}</p>
+
+                        <ul v-if="w.detail.people && w.detail.people.length" class="wcm26-workshop-people">
+                            <li v-for="(person, i) in w.detail.people" :key="i" class="wcm26-workshop-person">
+                                <img v-if="person.photo" :src="person.photo" alt="" class="wcm26-workshop-avatar" />
+                                <span v-else class="wcm26-workshop-avatar wcm26-workshop-avatar-empty"></span>
+                                <span>{{ person.name }}</span>
+                            </li>
+                        </ul>
+
+                        <div v-if="w.detail.description" class="wcm26-workshop-desc" v-html="w.detail.description"></div>
+
+                        <p v-if="w.detail.audience" class="wcm26-workshop-audience">{{ w.detail.audience }}</p>
+
+                        <div class="wcm26-workshop-foot">
+                            <button type="button" class="wcm26-workshop-link" @click="openSession = w">{{ $t('Details & subscribe') }} →</button>
+                            <span v-if="w.detail.full" class="wcm26-workshop-full">{{ $t('Fully booked') }}</span>
+                        </div>
+                    </div>
+                </li>
+            </ol>
+        </div>
 
         <SessionModal v-if="openSession" :session="openSession" :base="base" @close="openSession = null" />
     </section>
