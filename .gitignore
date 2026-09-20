@@ -18,6 +18,13 @@ resources/js/ziggy.js
 /.vscode
 docker/mysql/dump.sql
 
-# Session images are uploaded through the dashboard at runtime — never commit them.
+# Runtime uploads — guest photos and session images are stored under public/ by
+# the dashboard (GuestPhoto / SessionImage), so a stray `git add` must never
+# sweep them into the repo. about/ and partners/ are static content and stay
+# tracked. The already-committed guest photos remain tracked deliberately: they
+# are how the live site's images reach production, and untracking them would
+# delete them there on the next deploy.
 /public/assets/2026/sessions/*
 !/public/assets/2026/sessions/.gitkeep
+/public/assets/2026/guests/*
+!/public/assets/2026/guests/.gitkeep
