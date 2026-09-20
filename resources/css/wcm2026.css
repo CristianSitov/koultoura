@@ -1408,27 +1408,44 @@
     );
 }
 
-/* A backgrounded slot (a TBA) paints its grey over a rule nested inside it,
-   so the line would sit within the box. Lift it out into the gap above the
-   box with absolute positioning: it lands at the box's top edge — at the
-   border — not inside. Left/right pull it back to the column width the box
-   bleeds past. */
-.wcm26-sessions li + li.is-tba::before {
-    position: absolute;
-    top: -17px;
-    left: 10px;
-    right: 10px;
+/* The label row above a session: the school chip and, when one, the draft flag,
+   sharing a line. */
+.wcm26-session-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    margin-bottom: 8px;
+}
+
+.wcm26-session-tags .wcm26-session-tag,
+.wcm26-session-tags .wcm26-draft-flag {
     margin: 0;
 }
 
+/* The Heritage School label on a session: a pink chip with red text and a
+   school cap, so it reads as its own thing above the session. */
 .wcm26-session-tag {
-    gap: 7px;
-    margin-bottom: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--color-accent-100);
+    color: var(--color-accent);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.2;
 }
 
-.wcm26-session-tag .wcm26-square-open {
-    width: 8px;
-    height: 8px;
+.wcm26-session-tag svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
 }
 
 .wcm26-session-time {
@@ -1534,18 +1551,6 @@
     font-size: 15px;
     font-style: italic;
     color: color-mix(in srgb, var(--color-text) 42%, transparent);
-}
-
-/*
- * Drafts are only ever sent to a signed-in reader, so this band is a note to
- * the office: this is on the page for you and for nobody else yet.
- */
-.wcm26-sessions li.is-draft {
-    position: relative;
-    padding: 12px 14px;
-    margin-left: -14px;
-    background: color-mix(in srgb, #e8b400 14%, transparent);
-    border-left: 3px solid color-mix(in srgb, #e8b400 70%, transparent);
 }
 
 .wcm26-draft-flag {
@@ -2893,19 +2898,28 @@ a.wcm26-partner-logo:focus-visible {
     font-weight: 700;
 }
 
-/* And the whole slot dimmed a few percent, so a gap is visible at a glance. */
-.wcm26-sessions li.is-tba {
-    position: relative;
-    background: color-mix(in srgb, var(--color-text) 5%, transparent);
+/*
+ * The read part of a session — title, who, audience. A TBA tints just this
+ * block (a gap at a glance) and a draft tints it amber (a note to the office),
+ * so neither runs under the hour, the kind, or the Heritage School label above.
+ * The bleed pulls the box to the column edge while the text stays aligned.
+ */
+.wcm26-session-body {
     border-radius: 6px;
-    padding: 8px 10px;
-    /* Top margin is the gap the lifted-out separator lives in. */
-    margin: 32px -10px 0;
 }
 
-/* First slot of a day has no separator above it, so it needs its own gap. */
-.wcm26-sessions li.is-tba:first-child {
-    margin-top: 0;
+.wcm26-session-body.is-tba {
+    background: color-mix(in srgb, var(--color-text) 5%, transparent);
+    padding: 8px 10px;
+    margin: 4px -10px 0;
+}
+
+/* Draft wins over TBA when a slot is both — the office note is the point. */
+.wcm26-session-body.is-draft {
+    background: color-mix(in srgb, #e8b400 14%, transparent);
+    border-left: 3px solid color-mix(in srgb, #e8b400 70%, transparent);
+    padding: 8px 10px 8px 11px;
+    margin: 4px -10px 0;
 }
 
 /* A break shows on the hour line, in warm brown, with a cup or fork.

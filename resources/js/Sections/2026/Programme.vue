@@ -149,14 +149,8 @@ const schoolSpans = computed(() => {
                     <li
                         v-for="session in day.sessions"
                         :key="session.id"
-                        :class="{
-                            'is-draft': session.draft,
-                            'is-tba': titleKind(session.title) === 'tba',
-                            'is-break': ['coffee', 'lunch'].includes(titleKind(session.title)),
-                        }"
+                        :class="{ 'is-break': ['coffee', 'lunch'].includes(titleKind(session.title)) }"
                     >
-                        <span v-if="session.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
-
                         <!-- A break is not a session to read: it sits on the hour
                              line, where the kind would be, and carries nothing else. -->
                         <p v-if="['coffee', 'lunch'].includes(titleKind(session.title))" class="wcm26-session-time wcm26-session-break-line">
@@ -175,9 +169,14 @@ const schoolSpans = computed(() => {
                         </p>
 
                         <template v-else>
-                            <span v-if="session.school" class="tag tag-accent wcm26-session-tag">
-                                <span class="wcm26-square-open"></span>{{ $t('Heritage School') }}
-                            </span>
+                            <!-- The labels share a line: Cultural Heritage School
+                                 and, when it is one, Draft. -->
+                            <div v-if="session.school || session.draft" class="wcm26-session-tags">
+                                <span v-if="session.school" class="wcm26-session-tag">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5Z" /><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" /></svg>{{ $t('Cultural Heritage School') }}
+                                </span>
+                                <span v-if="session.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
+                            </div>
 
                             <!-- A workshop or a tour is the whole card a button: it
                                  opens the panel with the picture, the trainer and
@@ -191,14 +190,19 @@ const schoolSpans = computed(() => {
                                 <p class="wcm26-session-time">
                                     {{ session.time }}<template v-if="session.kind"> · {{ translateKind(session.kind) }}</template>
                                 </p>
-                                <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
-                                    <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
-                                    <span v-if="session.detail" class="wcm26-session-more">{{ $t('Details & subscribe') }} →</span>
-                                </p>
-                                <p v-if="session.who && session.who.length" class="wcm26-session-who">
-                                    <template v-for="(person, i) in session.who" :key="i"><template v-if="i">, </template>{{ person.name }}<span v-if="person.org" class="wcm26-session-org"> · {{ person.org }}</span></template>
-                                </p>
-                                <p v-if="session.audience" class="wcm26-session-who wcm26-session-audience">{{ session.audience }}</p>
+
+                                <!-- Only the read part takes the TBA/draft tint. -->
+                                <div class="wcm26-session-body" :class="{ 'is-tba': titleKind(session.title) === 'tba', 'is-draft': session.draft }">
+                                    <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
+                                        <template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
+                                        <span v-if="session.detail" class="wcm26-session-more">{{ $t('Details & subscribe') }} →</span>
+                                    </p>
+                                    <p v-if="session.who && session.who.length" class="wcm26-session-who">
+                                        <template v-for="(person, i) in session.who" :key="i"><template v-if="i">, </template>{{ person.name }}<span v-if="person.org" class="wcm26-session-org"> · {{ person.org }}</span></template>
+                                    </p>
+                                    <p v-if="session.audience" class="wcm26-session-who wcm26-session-audience">{{ session.audience }}</p>
+                                </div>
+
                                 <p v-if="session.booking && session.booking.full" class="wcm26-session-full">{{ $t('Fully booked') }}</p>
                             </component>
                         </template>
