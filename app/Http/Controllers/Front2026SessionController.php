@@ -170,10 +170,12 @@ class Front2026SessionController extends Controller
     {
         // Signed in is the preview: the office can open a draft workshop's page
         // and its form before it is public, the same way the programme shows
-        // drafts only to them. Everyone else sees published ones only.
+        // drafts only to them. Everyone else sees published ones only. An
+        // internal workshop has no public sign-up at all — it is invite-only.
         return Session::with(['translations', 'day.translations', 'speakers'])
             ->where('slug', $request->route('slug'))
             ->where('bookable', true)
+            ->where('internal', false)
             ->when(! auth()->check(), fn ($q) => $q->where('published', true))
             ->firstOrFail();
     }
