@@ -1414,9 +1414,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px 8px;
     margin: 8px 0 0;
-    padding-left: 10px;
 }
 
 .wcm26-session-tags .wcm26-session-tag,
@@ -1450,9 +1448,6 @@
 
 .wcm26-session-time {
     margin: 0;
-    /* Inset to the same 10px as the labels and the body text below, so the whole
-       session lines up on one edge. */
-    padding-left: 10px;
     font-size: 11px;
     line-height: 16px;
     font-weight: 600;
