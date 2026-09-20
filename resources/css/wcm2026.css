@@ -1415,7 +1415,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 6px 8px;
-    margin-bottom: 8px;
+    margin: 8px 0 0;
 }
 
 .wcm26-session-tags .wcm26-session-tag,
@@ -2906,9 +2906,19 @@ a.wcm26-partner-logo:focus-visible {
  * — plus amber for a draft, which wins over them as a note to the office.
  */
 .wcm26-session-body {
+    /* No horizontal bleed: the box's left edge sits at the column edge, in line
+       with the hour and the labels; the padding is even on every side. The 8px
+       gap above every group (hour → labels → body) is the box's own top padding,
+       so the rhythm is the same whether a session is tinted or not. */
     padding: 8px 10px;
-    margin: 4px -10px 0;
+    margin: 0;
     border-radius: 6px;
+}
+
+/* The title's own top margin would double the box's padding — the padding is
+   the whole gap. */
+.wcm26-session-body > :first-child {
+    margin-top: 0;
 }
 
 .wcm26-session-body.tint-tba {
