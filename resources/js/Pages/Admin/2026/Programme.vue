@@ -6,6 +6,7 @@ import Admin2026 from '../../../Layouts/Admin2026.vue';
 const props = defineProps({
     days: { type: Array, default: () => [] },
     themes: { type: Array, default: () => [] },
+    people: { type: Array, default: () => [] },
     // Whether the section is on the public page at all.
     visible: { type: Boolean, default: false },
     publicBase: { type: String, default: '' },
@@ -14,7 +15,10 @@ const props = defineProps({
 const editingDay = ref(null);
 const editingTheme = ref(null);
 
-const dayForm = useForm({ date: '', theme_id: null, position: 0, published: false, name: '', name_ro: '' });
+const dayForm = useForm({
+    date: '', theme_id: null, moderator_id: null, position: 0, published: false, name: '', name_ro: '',
+    new_moderator: { first: '', last: '', image: null },
+});
 const themeForm = useForm({ numeral: '', position: 0, title: '', title_ro: '', description: '', description_ro: '' });
 const toggle = useForm({});
 
@@ -23,20 +27,26 @@ function openDay(day) {
     dayForm.defaults({
         date: day?.date ?? '',
         theme_id: day?.theme_id ?? null,
+        moderator_id: day?.moderator_id ?? null,
         position: day?.position ?? props.days.length + 1,
         published: day?.published ?? false,
         name: day?.name ?? '',
         name_ro: day?.name_ro ?? '',
     });
     dayForm.reset();
+    dayForm.new_moderator = { first: '', last: '', image: null };
+}
+
+function pickModeratorImage(event) {
+    dayForm.new_moderator.image = event.target.files[0] ?? null;
 }
 
 function saveDay() {
-    const done = { onSuccess: () => (editingDay.value = null) };
+    const done = { forceFormData: true, onSuccess: () => (editingDay.value = null) };
 
     editingDay.value === 'new'
         ? dayForm.post('/dashboard/programme/days', done)
-        : dayForm.put(`/dashboard/programme/days/${editingDay.value}`, done);
+        : dayForm.post(`/dashboard/programme/days/${editingDay.value}`, done);
 }
 
 function removeDay(day) {
@@ -226,6 +236,36 @@ function saveTheme() {
                         <input v-model="dayForm.published" type="checkbox" class="rounded border-gray-300 text-red-600" />
                         Published
                     </label>
+                </div>
+
+                <div class="border-t border-gray-100 pt-4">
+                    <label class="block text-sm font-medium mb-1">Moderator of the day</label>
+                    <select v-model="dayForm.moderator_id" class="w-full rounded border-gray-300 text-sm">
+                        <option :value="null">— none —</option>
+                        <option v-for="person in people" :key="person.id" :value="person.id">
+                            {{ person.name }}<template v-if="!person.onGrid"> (not on grid)</template>
+                        </option>
+                    </select>
+
+                    <!-- Or a moderator who is not a listed speaker: a hidden
+                         person, made here, with a photo of their own. -->
+                    <div class="mt-3 border-t border-gray-100 pt-3">
+                        <p class="text-xs font-medium text-gray-600 mb-1">Or add someone not on the list</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input v-model="dayForm.new_moderator.first" type="text" placeholder="First name" class="rounded border-gray-300 text-sm" />
+                            <input v-model="dayForm.new_moderator.last" type="text" placeholder="Last name" class="rounded border-gray-300 text-sm" />
+                        </div>
+                        <p v-if="dayForm.errors['new_moderator.first'] || dayForm.errors['new_moderator.last']" class="mt-1 text-sm text-red-600">Both names are needed.</p>
+                        <div v-if="dayForm.new_moderator.first" class="mt-2 flex items-center gap-3">
+                            <label class="text-sm text-gray-600">
+                                <span class="cursor-pointer underline">{{ dayForm.new_moderator.image ? 'Change photo' : 'Add a photo' }}</span>
+                                <input type="file" accept="image/*" class="sr-only" @change="pickModeratorImage" />
+                            </label>
+                            <span v-if="dayForm.new_moderator.image" class="text-xs text-gray-500">{{ dayForm.new_moderator.image.name }}</span>
+                        </div>
+                        <p v-if="dayForm.errors['new_moderator.image']" class="mt-1 text-sm text-red-600">{{ dayForm.errors['new_moderator.image'] }}</p>
+                        <p class="mt-1 text-xs text-gray-500">Adding a name here overrides the choice above. They stay off the public speakers grid.</p>
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-2">

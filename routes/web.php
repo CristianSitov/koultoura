@@ -300,7 +300,9 @@ Route::prefix('dashboard')
             Route::put('/programme/visibility', 'toggleVisibility')->name('programme.visibility');
 
             Route::post('/programme/days', 'storeDay')->name('days.store');
-            Route::put('/programme/days/{day}', 'updateDay')->name('days.update');
+            // POST, not PUT: the day form can carry a moderator's photo, and PHP
+            // only parses a multipart body on POST.
+            Route::post('/programme/days/{day}', 'updateDay')->name('days.update');
             Route::delete('/programme/days/{day}', 'destroyDay')->name('days.destroy');
 
             Route::post('/programme/themes', 'saveTheme')->name('themes.store');

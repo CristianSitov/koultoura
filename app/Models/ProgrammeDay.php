@@ -25,7 +25,7 @@ class ProgrammeDay extends Model implements TranslatableContract
      */
     public const SCHOOL_DAYS = [7, 8, 10];
 
-    protected $fillable = ['date', 'theme_id', 'position', 'published'];
+    protected $fillable = ['date', 'theme_id', 'moderator_id', 'position', 'published'];
 
     protected $casts = [
         'date' => 'date',
@@ -43,6 +43,11 @@ class ProgrammeDay extends Model implements TranslatableContract
     public function theme(): BelongsTo
     {
         return $this->belongsTo(Theme::class);
+    }
+
+    public function moderator(): BelongsTo
+    {
+        return $this->belongsTo(Person::class, 'moderator_id');
     }
 
     public function sessions(): HasMany

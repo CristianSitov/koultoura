@@ -220,6 +220,7 @@ class Front2026Controller extends Controller
 
         return ProgrammeDay::with([
             'theme.translations',
+            'moderator',
             'sessions' => fn ($q) => $preview ? $q : $q->published(),
             'sessions.translations',
             'sessions.speakers.translations',
@@ -241,6 +242,11 @@ class Front2026Controller extends Controller
                 'theme' => $day->theme ? [
                     'numeral' => $day->theme->numeral,
                     'title' => $this->text($day->theme)->title ?? '',
+                ] : null,
+                // Who holds the room across the day, with their photo.
+                'moderator' => $day->moderator ? [
+                    'name' => $day->moderator->full_name,
+                    'photo' => $day->moderator->avatar,
                 ] : null,
                 'sessions' => $day->sessions->map(fn (Session $session) => [
                     'id' => $session->id,

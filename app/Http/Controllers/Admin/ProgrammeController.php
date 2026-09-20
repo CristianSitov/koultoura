@@ -31,7 +31,7 @@ class ProgrammeController extends Controller
     public function index(): Response
     {
         return Inertia::render('Admin/2026/Programme', [
-            'days' => ProgrammeDay::with(['translations', 'theme.translations', 'sessions.translations', 'sessions.speakers'])
+            'days' => ProgrammeDay::with(['translations', 'theme.translations', 'moderator', 'sessions.translations', 'sessions.speakers'])
                 ->orderBy('position')
                 ->orderBy('date')
                 ->get()
@@ -44,6 +44,8 @@ class ProgrammeController extends Controller
                     'published' => $day->published,
                     'theme_id' => $day->theme_id,
                     'theme' => $day->theme ? $day->theme->numeral.' · '.($day->theme->translate('en')?->title ?? '') : null,
+                    'moderator_id' => $day->moderator_id,
+                    'moderator' => $day->moderator?->full_name,
                     'sessions' => $day->sessions->map(fn (Session $s) => [
                         'id' => $s->id,
                         'time' => substr($s->starts_at, 0, 5),
@@ -68,6 +70,9 @@ class ProgrammeController extends Controller
                     'description_ro' => $t->translate('ro')?->description ?? '',
                     'position' => $t->position,
                 ]),
+            // For the moderator picker — hidden people are eligible too.
+            'people' => Person::orderBy('full_name')->get(['id', 'full_name', 'published'])
+                ->map(fn ($p) => ['id' => $p->id, 'name' => $p->full_name, 'onGrid' => (bool) $p->published]),
             'visible' => Setting::bool(Setting::PROGRAMME_VISIBLE),
             'publicBase' => Front2026Controller::base(),
         ]);
@@ -123,11 +128,39 @@ class ProgrammeController extends Controller
             'published' => ['boolean'],
             'name' => ['nullable', 'string', 'max:255'],
             'name_ro' => ['nullable', 'string', 'max:255'],
+            // The moderator: someone already on the grid, or one added by name
+            // here — both names together, with a photo of their own.
+            'moderator_id' => ['nullable', Rule::exists('wcm_2026.people', 'id')],
+            'new_moderator.first' => ['nullable', 'required_with:new_moderator.last', 'string', 'max:255'],
+            'new_moderator.last' => ['nullable', 'required_with:new_moderator.first', 'string', 'max:255'],
+            'new_moderator.image' => ['nullable', 'image', 'max:8192'],
         ]);
+
+        $moderatorId = $data['moderator_id'] ?? null;
+
+        // A moderator added by name is a hidden person of their own, carrying
+        // their photo — the same as a trainer added on a session.
+        if (filled($data['new_moderator']['first'] ?? null)) {
+            $name = trim($data['new_moderator']['first'].' '.$data['new_moderator']['last']);
+            $person = new Person(['full_name' => $name, 'published' => false]);
+            $person->slug = Str::slug($name);
+            $person->save();
+
+            if ($request->hasFile('new_moderator.image')) {
+                $person->avatar = GuestPhoto::store(
+                    $person->slug,
+                    file_get_contents($request->file('new_moderator.image')->getRealPath())
+                );
+                $person->save();
+            }
+
+            $moderatorId = $person->id;
+        }
 
         $day->fill([
             'date' => $data['date'],
             'theme_id' => $data['theme_id'] ?? null,
+            'moderator_id' => $moderatorId,
             'position' => $data['position'] ?? 0,
             'published' => $data['published'] ?? false,
         ])->save();
