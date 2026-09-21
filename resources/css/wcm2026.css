@@ -3351,6 +3351,15 @@ a.wcm26-partner-logo:focus-visible {
     line-height: 1.15;
 }
 
+/* By-invitation lock, sitting just before the title. */
+.wcm26-workshop-lock {
+    width: 0.9em;
+    height: 0.9em;
+    margin-right: 0.3em;
+    vertical-align: -0.06em;
+    color: var(--color-accent);
+}
+
 
 .wcm26-workshop-people {
     list-style: none;

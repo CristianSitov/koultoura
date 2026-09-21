@@ -271,7 +271,9 @@ const workshops = computed(() => {
                             <span v-if="w.draft" class="wcm26-draft-flag">{{ $t('Draft') }}</span>
                         </p>
 
-                        <h4 class="wcm26-workshop-title">{{ w.title }}</h4>
+                        <h4 class="wcm26-workshop-title">
+                            <svg v-if="w.internal" class="wcm26-workshop-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2" /><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" /></svg>{{ w.title }}
+                        </h4>
 
                         <ul v-if="w.detail.people && w.detail.people.length" class="wcm26-workshop-people">
                             <li v-for="(person, i) in w.detail.people" :key="i" class="wcm26-workshop-person">
