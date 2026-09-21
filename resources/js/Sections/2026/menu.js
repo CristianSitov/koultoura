@@ -7,7 +7,7 @@ export const menuItems = [
     { n: '03', label: 'Themes', anchor: 'themes' },
     { n: '04', label: 'Guests', anchor: 'speakers' },
     { n: '05', label: 'Programme', anchor: 'programme' },
-    { n: '06', label: 'Heritage School Workshops', anchor: 'workshops' },
+    { n: '06', label: 'Workshops', anchor: 'workshops' },
     { n: '07', label: 'Location', anchor: 'location' },
     { n: '08', label: 'Partners', anchor: 'partners' },
 ];
