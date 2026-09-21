@@ -45,6 +45,7 @@ class Front2026Controller extends Controller
         'themes' => ['themes', 'teme'],
         'speakers' => ['speakers', 'invitati'],
         'programme' => ['programme', 'program'],
+        'workshops' => ['workshops'],
         'location' => ['location', 'locatie'],
         'partners' => ['partners', 'parteneri'],
     ];

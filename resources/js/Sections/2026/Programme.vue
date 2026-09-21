@@ -256,8 +256,8 @@ const workshops = computed(() => {
 
         <!-- The workshops and tours again, laid out in full below the grid: the
              picture, who leads it, when, the description and a way in. -->
-        <div v-if="workshops.length" class="wcm26-workshops">
-            <h3 class="wcm26-workshops-head">{{ $t('Workshops «Cultural Heritage School»') }}</h3>
+        <div v-if="workshops.length" id="workshops" class="wcm26-workshops">
+            <h3 class="wcm26-workshops-head">{{ $t('Workshops Cultural Heritage School') }}</h3>
 
             <ol class="wcm26-workshops-list">
                 <li v-for="w in workshops" :key="w.id" class="wcm26-workshop">

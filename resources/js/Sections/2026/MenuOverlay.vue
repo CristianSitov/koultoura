@@ -25,7 +25,7 @@ const locale = computed(() => (props.landing.endsWith('/ro') ? 'ro' : 'en'));
 
 const items = computed(() => [
     ...menuItems
-        .filter((item) => item.anchor !== 'programme' || props.programmeVisible)
+        .filter((item) => !['programme', 'workshops'].includes(item.anchor) || props.programmeVisible)
         .map((item) => ({ ...item, url: props.landing + '/' + sectionSlug(item.anchor, locale.value) })),
     // Last, and off the numbered sequence: these are pages of their own, so
     // they hang off `base` and are marked as the odd ones out.

@@ -10,6 +10,7 @@ export const SECTIONS = [
     { id: 'themes', en: 'themes', ro: 'teme' },
     { id: 'speakers', en: 'speakers', ro: 'invitati' },
     { id: 'programme', en: 'programme', ro: 'program' },
+    { id: 'workshops', en: 'workshops', ro: 'workshops' },
     { id: 'location', en: 'location', ro: 'locatie' },
     { id: 'partners', en: 'partners', ro: 'parteneri' },
 ];
