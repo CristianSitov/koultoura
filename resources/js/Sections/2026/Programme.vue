@@ -282,8 +282,9 @@ const workshops = computed(() => {
                         </ul>
 
                         <div class="wcm26-workshop-foot">
-                            <button type="button" class="wcm26-workshop-link" @click="openSession = w">{{ $t('Details & subscribe') }} →</button>
-                            <span v-if="w.detail.full" class="wcm26-workshop-full">{{ $t('Fully booked') }}</span>
+                            <button type="button" class="wcm26-workshop-link" @click="openSession = w">{{ w.internal ? $t('Details') : $t('Details & subscribe') }} →</button>
+                            <span v-if="w.internal" class="wcm26-workshop-full">{{ $t('By invitation only') }}</span>
+                            <span v-else-if="w.detail.full" class="wcm26-workshop-full">{{ $t('Fully booked') }}</span>
                         </div>
                     </div>
                 </li>
