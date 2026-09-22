@@ -3288,12 +3288,17 @@ a.wcm26-partner-logo:focus-visible {
     margin-top: clamp(48px, 6vw, 96px);
 }
 
-.wcm26-workshops-head {
-    margin: 0 0 clamp(20px, 2.5vw, 32px);
+/* The closing note, same as the Guests grid: still filling in. */
+.wcm26-workshops-more {
+    margin: clamp(24px, 3vw, 40px) 0 0;
+    padding: 24px clamp(20px, 3vw, 40px);
+    border: 2px solid var(--color-divider);
     font-family: var(--font-heading);
-    font-size: clamp(20px, 2vw, 28px);
-    font-weight: 700;
-    letter-spacing: 0.01em;
+    font-weight: 800;
+    font-size: 19px;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--color-accent);
 }
 
 .wcm26-workshops-list {

@@ -257,7 +257,12 @@ const workshops = computed(() => {
         <!-- The workshops and tours again, laid out in full below the grid: the
              picture, who leads it, when, the description and a way in. -->
         <div v-if="workshops.length" id="workshops" class="wcm26-workshops">
-            <h3 class="wcm26-workshops-head">{{ $t('Workshops Cultural Heritage School') }}</h3>
+            <!-- Headed like a section of its own — same size as Guests or the
+                 Programme — with the same "still growing" note on the right. -->
+            <div class="wcm26-head-split">
+                <SectionHead n="06" :title="$t('Workshops Cultural Heritage School')" />
+                <p class="wcm26-label wcm26-label-13">{{ $t('Updates in progress') }}</p>
+            </div>
 
             <ol class="wcm26-workshops-list">
                 <li v-for="w in workshops" :key="w.id" class="wcm26-workshop">
@@ -291,6 +296,9 @@ const workshops = computed(() => {
                     </div>
                 </li>
             </ol>
+
+            <!-- Same closing note as Guests: the line is still filling in. -->
+            <p class="wcm26-workshops-more">{{ $t('More workshops to be announced') }}</p>
         </div>
 
         <SessionModal v-if="openSession" :session="openSession" :base="base" @close="openSession = null" />
