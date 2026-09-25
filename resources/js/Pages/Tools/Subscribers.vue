@@ -1,7 +1,19 @@
 <script setup>
-import {Link} from '@inertiajs/inertia-vue3';
+import { computed } from 'vue';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
 import AppLayout from '../../Layouts/Layout2024.vue';
 import MainMenu from "../../Sections/2024/MainMenu.vue";
+
+// Every link stays inside the edition being shown. A past edition with no
+// public confirmation page (2022) links no names and offers no resend.
+const page = usePage();
+const year = computed(() => page.props.value.year);
+const hasConfirmation = computed(() => page.props.value.hasConfirmation);
+
+const sub = (params = {}) => route(`dashboard.${year.value}.subscribers`, params);
+const pdf = (params = {}) => route(`dashboard.${year.value}.pdf`, params);
+const reconfirm = (params) => route(`dashboard.${year.value}.reconfirm`, params);
+const confirmation = (params) => route(`${year.value}.confirmation`, params);
 </script>
 
 <template>
@@ -17,24 +29,24 @@ import MainMenu from "../../Sections/2024/MainMenu.vue";
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="w-full flex flex-row py-3">
                     <div class="grow justify-content-start">
-                        <Link :href="route('dashboard_subscribers', {day: 0, volunteers: 1})"
+                        <Link :href="sub({day: 0, volunteers: 1})"
                               :class="{ 'bg-white text-red-600 border-white': $page.props.volunteers === 1, 'bg-white border-red-600 text-gray-600': $page.props.volunteers === 0 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">Vol</Link>
-                        <Link :href="route('dashboard_subscribers')"
+                        <Link :href="sub()"
                               :class="{ 'bg-white text-red-600 border-white': $page.props.day === 0 && $page.props.volunteers === 0, 'bg-white border-red-600 text-gray-600': ($page.props.day === 0 && $page.props.volunteers === 1) || ($page.props.day !== 0 && $page.props.volunteers === 0)}"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2">ALL</Link>
-                        <Link :href="route('dashboard_subscribers', {day: 1})"
+                        <Link :href="sub({day: 1})"
                               :class="{ 'bg-white text-red-600 border-white': $page.props.day === 1, 'bg-white border-red-600 text-gray-600': $page.props.day !== 1 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>1</Link>
-                        <Link :href="route('dashboard_subscribers', {day: 2})"
+                        <Link :href="sub({day: 2})"
                               :class="{ 'bg-white text-red-600 border-white': $page.props.day === 2, 'bg-white border-red-600 text-gray-600': $page.props.day !== 2 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>2</Link>
-                        <Link :href="route('dashboard_subscribers', {day: 3})"
+                        <Link :href="sub({day: 3})"
                               :class="{ 'bg-white text-red-600 border-white': $page.props.day === 3, 'bg-white border-red-600 text-gray-600': $page.props.day !== 3 }"
                               class="text-sm font-bold border-red-600 border-2 rounded p-2 ml-2 sm:mx-2"><span class="hidden md:inline-flex">Day&nbsp;</span>3</Link>
                     </div>
                     <div class="none">
-                        <a :href="route('dashboard_subscribers_pdf', {day: $page.props.day || 0, volunteers: $page.props.volunteers})"
+                        <a :href="pdf({day: $page.props.day || 0, volunteers: $page.props.volunteers})"
                            target="_blank"
                            class="text-sm text-red-600 font-bold bg-white rounded p-2 mr-2 sm:mr-0">Download</a>
                     </div>
@@ -50,7 +62,7 @@ import MainMenu from "../../Sections/2024/MainMenu.vue";
                                 <th class="py-3 px-6">Subscribe Date</th>
                                 <th class="py-3 px-6">Full name</th>
                                 <th class="py-3 px-6 md:w-30">Days</th>
-                                <th class="py-3 px-6 md:w-30">Resend ✉︎</th>
+                                <th v-if="hasConfirmation" class="py-3 px-6 md:w-30">Resend ✉︎</th>
                             </tr>
                             </thead>
                             <tbody class="flex-1 sm:flex-none">
@@ -61,9 +73,11 @@ import MainMenu from "../../Sections/2024/MainMenu.vue";
                                     <span class="block text-sm">{{ subscriber.created_date }}</span>
                                 </td>
                                 <td class="align-top py-4 px-6">
-                                    <a class="block text-lg text-gray-700 hover:text-red-800 hover:underline"
+                                    <a v-if="hasConfirmation"
+                                       class="block text-lg text-gray-700 hover:text-red-800 hover:underline"
                                        target="_blank"
-                                       :href="route('2024.confirmation', {id: subscriber.slug })">{{ subscriber.last_name }} {{ subscriber.first_name }}</a>
+                                       :href="confirmation({id: subscriber.slug })">{{ subscriber.last_name }} {{ subscriber.first_name }}</a>
+                                    <span v-else class="block text-lg text-gray-700">{{ subscriber.last_name }} {{ subscriber.first_name }}</span>
                                     <span class="block text-sm">Email: {{ subscriber.email }}</span>
                                     <span class="block text-sm">Phone: {{ subscriber.profile.phone }}</span>
                                     <span class="block text-md">Org: {{ subscriber.profile.organization }} ({{ subscriber.profile.country }})</span>
@@ -81,8 +95,8 @@ import MainMenu from "../../Sections/2024/MainMenu.vue";
                                         </div>
                                     </div>
                                 </td>
-                                <td class="align-top py-4 px-6">
-                                    <a :href="route('dashboard_subscribers_reconfirm', {user_id: subscriber.id})" class="hover:text-red-800 hover:underline">Resend</a>
+                                <td v-if="hasConfirmation" class="align-top py-4 px-6">
+                                    <a :href="reconfirm({user_id: subscriber.id})" class="hover:text-red-800 hover:underline">Resend</a>
                                 </td>
                             </tr>
                             </tbody>

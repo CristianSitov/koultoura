@@ -238,31 +238,39 @@ Route::prefix('2022')
     });
 
 /*
- * The 2024 dashboard, now under its own year: /dashboard belongs to the
- * edition being run, and that is no longer 2024.
+ * The subscribers dashboard of a past edition, one group per year: /dashboard
+ * belongs to the edition being run, so the finished ones live under their year.
  *
- * `year:2024` because the subscribers it lists are that edition's, and nothing
- * in the address says so — without it these read the current database, which
- * has no users at all.
+ * `year:$year` because the subscribers it lists are that edition's, and nothing
+ * in the address the controller reads says so — without it these read the
+ * current database, which has no subscribers at all. The `year` default hands
+ * the same value to the controller, which passes it to the views so their
+ * links stay within the year they are showing.
  */
-Route::controller(DashboardController::class)
-    ->prefix('dashboard/2024')
-    ->middleware([
-        'year:2024',
-        'auth:sanctum',
-        config('jetstream.auth_session'),
-        'verified',
-    ])
-    ->group(function () {
-        Route::get('/', 'dashboard')
-            ->name('dashboard_2024');
-        Route::get('/subscribers/{user_id}/reconfirm', 'reconfirmUser')
-            ->name('dashboard_subscribers_reconfirm');
-        Route::get('/subscribers/{day?}/{volunteers?}', 'subscribersList')
-            ->name('dashboard_subscribers');
-        Route::get('/subscribers.pdf', 'subscribersListPdf')
-            ->name('dashboard_subscribers_pdf');
-    });
+$editionDashboard = function (string $year) {
+    Route::controller(DashboardController::class)
+        ->prefix("dashboard/$year")
+        ->middleware([
+            "year:$year",
+            'auth:sanctum',
+            config('jetstream.auth_session'),
+            'verified',
+        ])
+        ->name("dashboard.$year.")
+        ->group(function () use ($year) {
+            Route::get('/', 'dashboard')
+                ->defaults('year', $year)->name('index');
+            Route::get('/subscribers/{user_id}/reconfirm', 'reconfirmUser')
+                ->defaults('year', $year)->name('reconfirm');
+            Route::get('/subscribers/{day?}/{volunteers?}', 'subscribersList')
+                ->defaults('year', $year)->name('subscribers');
+            Route::get('/subscribers.pdf', 'subscribersListPdf')
+                ->defaults('year', $year)->name('pdf');
+        });
+};
+
+$editionDashboard('2024');
+$editionDashboard('2022');
 
 // Addresses that were handed out before the move. Bookmarks and old emails
 // still work; nobody has to know the dashboard was rearranged.

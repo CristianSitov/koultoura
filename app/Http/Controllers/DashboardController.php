@@ -9,17 +9,18 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController
 {
-    public function dashboard(Request $request): Response
+    public function dashboard(Request $request, string $year = '2024'): Response
     {
-        return Inertia::render('2024/Dashboard');
+        return Inertia::render('2024/Dashboard', ['year' => $year]);
     }
 
-    public function subscribersListPdf(Request $request): \Illuminate\Http\Response
+    public function subscribersListPdf(Request $request, string $year = '2024'): \Illuminate\Http\Response
     {
         $day = $request->get('day', false);
         $volunteersOnly = $request->get('volunteers', false);
@@ -43,16 +44,20 @@ class DashboardController
             ->download($fileName);
     }
 
-    public function subscribersList(Request $request, int $day = 0, int $volunteers = 0): Response
+    public function subscribersList(Request $request, string $year = '2024', int $day = 0, int $volunteers = 0): Response
     {
         return Inertia::render('Tools/Subscribers', [
+            'year' => $year,
+            // Only editions with a public confirmation page can link a name to
+            // it, or resend that email — 2022 has neither, so the view hides both.
+            'hasConfirmation' => Route::has("$year.confirmation"),
             'day' => $day,
             'volunteers' => $volunteers,
             'subscribers' => $this->getSubscribersList($day, $volunteers),
         ]);
     }
 
-    public function reconfirmUser(Request $request, int $userId): \Illuminate\Http\RedirectResponse
+    public function reconfirmUser(Request $request, string $year, int $userId): \Illuminate\Http\RedirectResponse
     {
         $user = User::query()->find($userId);
 
@@ -60,7 +65,7 @@ class DashboardController
             ->bcc(config('mail.from.address'))
             ->send(new EventRegistrationConfirmation($user->load('profile')));
 
-        return Redirect::route('dashboard_subscribers');
+        return Redirect::route("dashboard.$year.subscribers");
     }
 
     private function getSubscribersList(int $day, int $volunteersOnly): array|Collection
