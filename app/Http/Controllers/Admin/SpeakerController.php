@@ -154,7 +154,7 @@ class SpeakerController extends Controller
             'ro.role' => ['nullable', 'string', 'max:255'],
             'ro.institution' => ['nullable', 'string', 'max:255'],
             'ro.description' => ['nullable', 'string'],
-            'photo' => ['nullable', 'image', 'max:8192'],
+            'photo' => ['nullable', 'image', 'max:32768'],
         ]);
 
         $person->full_name = $data['full_name'];

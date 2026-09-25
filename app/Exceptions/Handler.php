@@ -71,7 +71,7 @@ class Handler extends ExceptionHandler
          * first (see imageGuard.js); this is the net for when it cannot.
          */
         $this->renderable(function (PostTooLargeException $e, $request) {
-            $message = 'That upload is too large. Please choose an image under 8 MB.';
+            $message = 'That upload is too large. Please choose an image under 32 MB.';
 
             return back()->withErrors(array_fill_keys(
                 ['image', 'photo', 'new_person.image', 'new_moderator.image'],

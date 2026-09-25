@@ -133,7 +133,7 @@ class ProgrammeController extends Controller
             'moderator_id' => ['nullable', Rule::exists('wcm_2026.people', 'id')],
             'new_moderator.first' => ['nullable', 'required_with:new_moderator.last', 'string', 'max:255'],
             'new_moderator.last' => ['nullable', 'required_with:new_moderator.first', 'string', 'max:255'],
-            'new_moderator.image' => ['nullable', 'image', 'max:8192'],
+            'new_moderator.image' => ['nullable', 'image', 'max:32768'],
         ]);
 
         $moderatorId = $data['moderator_id'] ?? null;
@@ -342,7 +342,7 @@ class ProgrammeController extends Controller
                 'nullable', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/',
                 Rule::unique('wcm_2026.sessions', 'slug')->ignore($session->id),
             ],
-            'image' => ['nullable', 'image', 'max:8192'],
+            'image' => ['nullable', 'image', 'max:32768'],
             'speakers' => ['array'],
             'speakers.*' => [Rule::exists('wcm_2026.people', 'id')],
             // One person added here rather than on the speakers grid: both names
@@ -350,7 +350,7 @@ class ProgrammeController extends Controller
             'new_person.first' => ['nullable', 'required_with:new_person.last', 'string', 'max:255'],
             'new_person.last' => ['nullable', 'required_with:new_person.first', 'string', 'max:255'],
             // The added trainer has no profile page, so they carry their photo here.
-            'new_person.image' => ['nullable', 'image', 'max:8192'],
+            'new_person.image' => ['nullable', 'image', 'max:32768'],
             'en.title' => ['required', 'string', 'max:255'],
             'en.subtitle' => ['nullable', 'string', 'max:255'],
             'en.audience' => ['nullable', 'string', 'max:255'],
