@@ -73,11 +73,6 @@ onBeforeUnmount(() => stopShift?.());
                 </p>
             </article>
 
-            <article class="wcm26-guest">
-                <div class="wcm26-guest-more">
-                    <p>{{ $t('More guests to be announced') }}</p>
-                </div>
-            </article>
         </div>
     </section>
 </template>
