@@ -1107,33 +1107,6 @@
     color: color-mix(in srgb, var(--color-text) 65%, transparent);
 }
 
-/*
- * The closing cell is a full-width bar, not a ghost card: the guest count keeps
- * changing, and a bar reads as a deliberate end to the section at any count,
- * where a card-shaped box looks like a guest whose photo failed to load.
- */
-.wcm26-guest:last-child {
-    grid-column: 1 / -1;
-}
-
-.wcm26-guest-more {
-    border: 2px solid var(--color-divider);
-    display: flex;
-    align-items: center;
-    min-height: 120px;
-    padding: 24px clamp(20px, 3vw, 40px);
-}
-
-.wcm26-guest-more p {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: 19px;
-    line-height: 1.2;
-    letter-spacing: -0.025em;
-    color: var(--color-accent);
-}
-
 /* ── guest profile overlay ───────────────────────────────────────────────── */
 
 .wcm26-profile {
