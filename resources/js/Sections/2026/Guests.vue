@@ -43,12 +43,7 @@ onBeforeUnmount(() => stopShift?.());
 
 <template>
     <section id="speakers" class="wcm26-section">
-        <!-- The same split as the Programme heading: the list is still growing
-             and saying so is better than a visitor assuming it is complete. -->
-        <div class="wcm26-head-split">
-            <SectionHead n="04" :title="$t('Guests')" />
-            <p class="wcm26-label wcm26-label-13">{{ $t('Updates in progress') }}</p>
-        </div>
+        <SectionHead n="04" :title="$t('Guests')" />
 
         <div ref="grid" class="wcm26-guests">
             <article v-for="guest in guests" :key="guest.id" class="wcm26-guest">
