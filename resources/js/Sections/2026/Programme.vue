@@ -59,15 +59,25 @@ function titleKind(title) {
     return null;
 }
 
+// A session run jointly with HoT Talks — a co-branded slot, marked on its kind.
+function isHotTalks(session) {
+    return /hot talks/i.test(session.kind || '');
+}
+
 /*
  * The tint under a session's body — title, who, note. One axis is whether it is
  * still to be announced, the other whether it belongs to the Heritage School;
  * their four combinations read white / grey / pink / greyed-pink. A draft wins
- * over all of them, in amber, because it is a note to the office first.
+ * over all of them, in amber, because it is a note to the office first; a HoT
+ * Talks co-production reads blue, because it is a thing apart.
  */
 function bodyTint(session) {
     if (session.draft) {
         return 'tint-draft';
+    }
+
+    if (isHotTalks(session)) {
+        return 'tint-hot';
     }
 
     const tba = titleKind(session.title) === 'tba';
@@ -145,10 +155,7 @@ const workshops = computed(() => {
 
 <template>
     <section id="programme" class="wcm26-section">
-        <div class="wcm26-head-split">
-            <SectionHead n="05" :title="$t('Programme')" />
-            <p class="wcm26-label wcm26-label-13">{{ $t('Soon') }}</p>
-        </div>
+        <SectionHead n="05" :title="$t('Programme')" />
 
         <div class="wcm26-spans">
             <p v-for="bar in themeBars" :key="bar.numeral" class="wcm26-span">
@@ -175,11 +182,12 @@ const workshops = computed(() => {
                     </p>
                     <p class="wcm26-day-n">{{ day.num }}<span class="wcm26-day-month">{{ day.month }}</span></p>
                     <p class="wcm26-day-label">{{ $t('Day :n', { n: day.day }) }}</p>
+                    <p v-if="day.moderator" class="wcm26-day-moderator">{{ $t('Moderator') }}: <strong>{{ day.moderator.name }}</strong></p>
                 </div>
 
-                <p v-if="day.theme || day.moderator" class="wcm26-day-theme">
-                    <span v-if="day.theme" class="wcm26-square"></span>
-                    <span><template v-if="day.theme">{{ day.theme.numeral }} · {{ day.theme.title }}</template><span v-if="day.moderator" class="wcm26-day-moderated"><template v-if="day.theme">, </template>{{ $t('moderated by :name', { name: day.moderator.name }) }}</span></span>
+                <p v-if="day.theme" class="wcm26-day-theme">
+                    <span class="wcm26-square"></span>
+                    <span>{{ day.theme.numeral }} · {{ day.theme.title }}</span>
                 </p>
 
                 <p v-if="!day.sessions.length" class="wcm26-day-soon">{{ $t('Coming soon') }}</p>
@@ -257,12 +265,8 @@ const workshops = computed(() => {
         <!-- The workshops and tours again, laid out in full below the grid: the
              picture, who leads it, when, the description and a way in. -->
         <div v-if="workshops.length" id="workshops" class="wcm26-workshops">
-            <!-- Headed like a section of its own — same size as Guests or the
-                 Programme — with the same "still growing" note on the right. -->
-            <div class="wcm26-head-split">
-                <SectionHead n="06" :title="$t('Workshops Cultural Heritage School')" />
-                <p class="wcm26-label wcm26-label-13">{{ $t('Updates in progress') }}</p>
-            </div>
+            <!-- Headed like a section of its own — same size as Guests or the Programme. -->
+            <SectionHead n="06" :title="$t('Workshops Cultural Heritage School')" />
 
             <ol class="wcm26-workshops-list">
                 <li v-for="w in workshops" :key="w.id" class="wcm26-workshop">
@@ -288,6 +292,10 @@ const workshops = computed(() => {
                             </li>
                         </ul>
 
+                        <!-- Who it is for — the age band, the one restriction a
+                             visitor needs before they open the details. -->
+                        <p v-if="w.detail.audience" class="wcm26-workshop-audience">{{ w.detail.audience }}</p>
+
                         <div class="wcm26-workshop-foot">
                             <button type="button" class="wcm26-workshop-link" @click="openSession = w">{{ w.internal ? $t('Details') : $t('Details & subscribe') }} →</button>
                             <span v-if="w.internal" class="wcm26-workshop-full">{{ $t('By invitation only') }}</span>
@@ -296,9 +304,6 @@ const workshops = computed(() => {
                     </div>
                 </li>
             </ol>
-
-            <!-- Same closing note as Guests: the line is still filling in. -->
-            <p class="wcm26-workshops-more">{{ $t('More workshops to be announced') }}</p>
         </div>
 
         <SessionModal v-if="openSession" :session="openSession" :base="base" @close="openSession = null" />
