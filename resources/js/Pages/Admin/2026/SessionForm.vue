@@ -71,6 +71,24 @@ function pickTrainerImage(event) {
     trainerPreview.value = file ? URL.createObjectURL(file) : null;
 }
 
+/*
+ * Removing a session is deliberate: the first button only arms the real one,
+ * and that one stays off until the word is typed — a slip of the hand cannot
+ * do it. The server refuses anyway while anyone still holds a place.
+ */
+const armed = ref(false);
+const confirmWord = ref('');
+const del = useForm({});
+const canRemove = computed(() => confirmWord.value.trim().toUpperCase() === 'DELETE');
+
+function remove() {
+    if (! canRemove.value) {
+        return;
+    }
+
+    del.delete(`/dashboard/programme/sessions/${props.session.id}`);
+}
+
 function submit() {
     // POST either way (multipart carries the picture); the update route is POST.
     form.post(editing ? `/dashboard/programme/sessions/${props.session.id}` : '/dashboard/programme/sessions', {
@@ -284,6 +302,43 @@ function submit() {
                     :disabled="form.processing"
                     class="w-full rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
                 >{{ editing ? 'Save' : 'Add session' }}</button>
+
+                <!-- Danger zone: only on an existing session, and never one click.
+                     Every control is type="button" so nothing here submits the form. -->
+                <div v-if="editing" class="rounded border border-red-200 bg-red-50 p-5 space-y-3">
+                    <p class="text-sm font-semibold text-red-800">Remove this session</p>
+                    <p class="text-xs text-red-700">
+                        Takes “{{ session.en.title || session.ro.title || 'this session' }}” off the programme for good. Nothing else is touched.
+                    </p>
+                    <p v-if="del.errors.session" class="text-sm font-medium text-red-700">{{ del.errors.session }}</p>
+
+                    <button v-if="!armed" type="button" class="text-sm font-semibold text-red-700 underline" @click="armed = true">
+                        I want to remove it…
+                    </button>
+
+                    <template v-else>
+                        <label class="block text-xs text-red-800">Type <span class="font-mono font-bold">DELETE</span> to confirm</label>
+                        <input
+                            v-model="confirmWord"
+                            type="text"
+                            autocomplete="off"
+                            placeholder="DELETE"
+                            class="w-full rounded border-red-300 text-sm"
+                            @keydown.enter.prevent
+                        />
+                        <div class="flex gap-2">
+                            <button
+                                type="button"
+                                :disabled="!canRemove || del.processing"
+                                class="rounded bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-40"
+                                @click="remove"
+                            >Remove session</button>
+                            <button type="button" class="rounded px-4 py-2 text-sm text-gray-600 hover:text-gray-900" @click="armed = false; confirmWord = ''">
+                                Cancel
+                            </button>
+                        </div>
+                    </template>
+                </div>
             </div>
         </form>
     </Admin2026>

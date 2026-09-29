@@ -238,7 +238,8 @@ class ProgrammeController extends Controller
 
         $session->delete();
 
-        return back()->with('flash', 'Session removed.');
+        // Not back(): that would be the edit page of a session that no longer exists.
+        return redirect()->route('admin.2026.programme')->with('flash', 'Session removed.');
     }
 
     /** The one-click toggle from the list, rather than opening the form. */
