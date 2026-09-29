@@ -182,7 +182,9 @@ const workshops = computed(() => {
                     </p>
                     <p class="wcm26-day-n">{{ day.num }}<span class="wcm26-day-month">{{ day.month }}</span></p>
                     <p class="wcm26-day-label">{{ $t('Day :n', { n: day.day }) }}</p>
-                    <p v-if="day.moderator" class="wcm26-day-moderator">{{ $t('Moderator') }}: <strong>{{ day.moderator.name }}</strong></p>
+                    <!-- Always one line, even with no moderator, so the rule and
+                         the theme sit at the same height across the four columns. -->
+                    <p class="wcm26-day-moderator"><template v-if="day.moderator">{{ $t('Moderator') }}: <strong>{{ day.moderator.name }}</strong></template><template v-else>&nbsp;</template></p>
                 </div>
 
                 <p v-if="day.theme" class="wcm26-day-theme">
