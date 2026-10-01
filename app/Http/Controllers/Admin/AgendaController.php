@@ -192,17 +192,8 @@ class AgendaController extends Controller
             'starts_at' => 'start time',
         ]);
 
-        /*
-         * Events go around the programme, not over it. The programme is one
-         * box on the page, and a second box on top of it has nowhere to be
-         * drawn — what happens during it is written on the box, as its note.
-         */
-        if ($hours = Agenda::clash($data['date'], $data['starts_at'], $data['ends_at'] ?? null)) {
-            throw ValidationException::withMessages([
-                'starts_at' => "That falls during the programme ({$hours['start']}–{$hours['end']}). Write it in the programme box’s note for that day, or move it outside those hours.",
-            ]);
-        }
-
+        // An event may fall during the programme too — a lunch, a press call:
+        // it is listed by the clock alongside the programme's box.
         return $data;
     }
 }

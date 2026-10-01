@@ -99,27 +99,6 @@ class Agenda
         ];
     }
 
-    /**
-     * The programme's hours on a date, if an event at these times would fall
-     * inside them. Events go around the programme, not over it: what happens
-     * during it belongs in the day's note. With no end, an event is the moment
-     * it starts.
-     */
-    public static function clash(string $date, string $start, ?string $end): ?array
-    {
-        $day = ProgrammeDay::with('sessions')->whereDate('date', $date)->first();
-        $hours = $day ? self::hours($day) : null;
-
-        return $hours && self::overlaps($hours, $start, $end) ? $hours : null;
-    }
-
-    public static function overlaps(array $hours, string $start, ?string $end): bool
-    {
-        return filled($end)
-            ? $start < $hours['end'] && $hours['start'] < $end
-            : $hours['start'] <= $start && $start < $hours['end'];
-    }
-
     public static function days(string $locale): array
     {
         $programme = ProgrammeDay::with(['translations', 'theme.translations', 'moderator', 'sessions'])

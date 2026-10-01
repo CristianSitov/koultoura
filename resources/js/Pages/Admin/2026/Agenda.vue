@@ -278,8 +278,8 @@ function copyLink(locale) {
                 <p v-if="eventForm.errors.starts_at" class="text-sm text-red-600">{{ eventForm.errors.starts_at }}</p>
                 <p v-if="eventForm.errors.ends_at" class="text-sm text-red-600">{{ eventForm.errors.ends_at }}</p>
                 <p v-if="formDay?.programme" class="text-xs text-gray-500">
-                    The programme takes {{ formDay.programme.start }}–{{ formDay.programme.end }} on this day. Events go before or
-                    after it; what happens during it belongs in the programme box’s note.
+                    The programme takes {{ formDay.programme.start }}–{{ formDay.programme.end }} on this day. An event can fall
+                    during it — it is listed by its time next to the programme box.
                 </p>
 
                 <div class="grid gap-4 sm:grid-cols-2">

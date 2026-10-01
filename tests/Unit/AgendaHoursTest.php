@@ -8,9 +8,8 @@ use App\Support\Agenda;
 use Tests\TestCase;
 
 /*
- * The programme box on the internal agenda: its hours, and what counts as an
- * event falling inside them. No database — the day and its sessions are made
- * in memory.
+ * The programme box on the internal agenda: its hours. No database — the day
+ * and its sessions are made in memory.
  */
 class AgendaHoursTest extends TestCase
 {
@@ -61,21 +60,5 @@ class AgendaHoursTest extends TestCase
     {
         $this->assertNull(Agenda::hours($this->day([['starts_at' => '09:00:00', 'published' => false]])));
         $this->assertNull(Agenda::hours($this->day([['starts_at' => '09:00:00']], ['published' => false])));
-    }
-
-    public function test_events_go_around_the_programme_not_over_it(): void
-    {
-        $hours = ['start' => '09:15', 'end' => '19:00'];
-
-        // Touching the edges is fine: breakfast until 09:15, dinner from 19:00.
-        $this->assertFalse(Agenda::overlaps($hours, '08:00', '09:15'));
-        $this->assertFalse(Agenda::overlaps($hours, '19:00', null));
-        $this->assertFalse(Agenda::overlaps($hours, '08:30', null));
-
-        $this->assertTrue(Agenda::overlaps($hours, '13:00', null));
-        $this->assertTrue(Agenda::overlaps($hours, '09:15', null));
-        $this->assertTrue(Agenda::overlaps($hours, '08:00', '09:30'));
-        $this->assertTrue(Agenda::overlaps($hours, '18:30', '21:00'));
-        $this->assertTrue(Agenda::overlaps($hours, '08:00', '20:00'));
     }
 }

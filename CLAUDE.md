@@ -155,14 +155,14 @@ earlier version had all three and they were removed on purpose.
   agenda_starts_at / agenda_ends_at / agenda_note / agenda_note_ro`. The box
   links to that day of the public programme in a new tab
   (`/2026/programme#day-09`; `Landing.vue` scrolls to the `#day-NN` anchor).
-- **Events go around the programme, not over it:** `agenda_events` (own `date`,
-  start/end, title/location/description with optional `_ro`). Saving one that
-  falls inside the box's hours is **refused** (`Agenda::clash()`), pointing the
-  office at the note instead. An event has its own date because the agenda also
+- **Events:** `agenda_events` (own `date`, start/end, title/location/description
+  with optional `_ro`). They may fall during the programme's hours (a lunch, a
+  press call) — **no overlap check**, by the user's choice; they are listed by
+  the clock beside the box. An event has its own date because the agenda also
   covers **the day before and the day after** the symposium —
   `Agenda::dates()` is the one place that range is set. Empty days are not drawn.
 - **One builder:** `App\Support\Agenda::days($locale)` feeds both the page and
-  the backoffice preview. `Agenda::hours()` / `overlaps()` are covered by
+  the backoffice preview. `Agenda::hours()` is covered by
   `tests/Unit/AgendaHoursTest.php` (no database).
 - **Links & maps:** web addresses typed in a note, location or description
   render as links (`resources/js/agendaText.js`, built as Vue parts — never
