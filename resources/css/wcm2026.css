@@ -3455,6 +3455,17 @@ a.wcm26-partner-logo:focus-visible {
     color: color-mix(in srgb, var(--color-text) 75%, transparent);
 }
 
+.wcm26-agenda-lead p {
+    margin: 0;
+}
+
+/* "Dear … guest," — a letter's opening, a line of its own. */
+.wcm26-agenda-lead p:first-child {
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
 .wcm26-agenda-empty {
     margin: 0;
     font-size: 15px;

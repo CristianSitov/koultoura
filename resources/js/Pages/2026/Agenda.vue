@@ -50,7 +50,10 @@ LinkedText.props = ['text'];
 
             <SectionHead n="→" :title="$t('Agenda')" />
 
-            <p class="wcm26-agenda-lead">{{ $t('agenda.lead') }}</p>
+            <div class="wcm26-agenda-lead">
+                <p>{{ $t('agenda.greeting') }}</p>
+                <p>{{ $t('agenda.lead') }}</p>
+            </div>
 
             <p v-if="!days.length" class="wcm26-agenda-empty">{{ $t('agenda.empty') }}</p>
 
