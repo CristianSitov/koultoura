@@ -24,6 +24,9 @@ class Setting extends Model
     /** Whether the programme section appears on the public page at all. */
     public const PROGRAMME_VISIBLE = 'programme_visible';
 
+    /** The code in the internal agenda's address — see App\Support\Agenda. */
+    public const AGENDA_TOKEN = 'agenda_token';
+
     public static function bool(string $key, bool $default = false): bool
     {
         $value = static::find($key)?->value;
@@ -33,6 +36,16 @@ class Setting extends Model
 
     public static function put(string $key, bool $value): void
     {
-        static::updateOrCreate(['key' => $key], ['value' => $value ? '1' : '0']);
+        static::store($key, $value ? '1' : '0');
+    }
+
+    public static function text(string $key): ?string
+    {
+        return static::find($key)?->value;
+    }
+
+    public static function store(string $key, string $value): void
+    {
+        static::updateOrCreate(['key' => $key], ['value' => $value]);
     }
 }

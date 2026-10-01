@@ -56,6 +56,14 @@ class Front2026Controller extends Controller
         return implode('|', array_merge(...array_values(self::SECTIONS)));
     }
 
+    /** A section's slug in a language: English first, Romanian last. */
+    public static function sectionSlug(string $anchor, string $locale): string
+    {
+        $slugs = self::SECTIONS[$anchor];
+
+        return $locale === 'ro' ? end($slugs) : $slugs[0];
+    }
+
     /** The English anchor a section slug points at, in either language. */
     public static function sectionAnchor(?string $slug): ?string
     {

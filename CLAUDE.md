@@ -136,49 +136,38 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 **Hosting:** shared VPS `root@heritageoftimisoara.ro:2221`; this site lives at
 `/var/www/whyculturematters.eu`; prod DBs are `whyculturematters_2026/_2024/_2022`.
 
-## Internal agenda (speakers, guests, team)
+## Internal agenda (speakers, guests)
 
-The public **Programme** plus the things arranged only for insiders — meetings,
-meals, round tables, outings. Never shown on the public site.
+One page behind **one secret link**, which the office sends from its own mail.
+There is no send list, no per-person link and no speaker email in the app — an
+earlier version had all three and they were removed on purpose.
 
-- **Data:** `agenda_events` (a `date`, start/end, title/location/description,
-  each with an optional `_ro` that falls back to English) and
-  `agenda_recipients` (name, email, `locale`, a 48-char `token`, send tracking).
-  Recipients are their own list because `people` carries **no email**. An event
-  has its own date, not a programme day: the agenda also covers **the day
-  before and the day after** the symposium (arrivals, departures), which are
-  not programme days — `Agenda::dates()` is the one place that range is set.
-- **Overlaps are flagged, never blocked** (`resources/js/agendaConflicts.js`,
-  checked by `node resources/js/agendaConflicts.check.mjs`): an event is marked
-  when it sits on a session or another event. A session with no end time runs
-  until the next later start (most have none); breaks do not count; an event
-  with no end is checked at its start only. Worked out on every render, so a
-  session moved in Programme flags the event it lands on.
-- **One builder:** `App\Support\Agenda::days($locale)` merges each day's
-  *published* sessions with its events, by the clock. Both the recipient's page
-  and the backoffice preview call it, so the office sees exactly what is sent.
-- **Recipient page:** `/2026/agenda/{token}` (`Front2026AgendaController`) — no
-  login, the token is the key; a wrong token is a 404. It renders in the
-  recipient's language: `Resolve2026Locale` reads it from the token, the same
-  way the contribution step reads a registration's. Sent `X-Robots-Tag: noindex`.
+- **The page:** `/2026/agenda/{token}` and `/2026/{locale}/agenda/{token}`
+  (`Front2026AgendaController`, `Pages/2026/Agenda.vue`). No login; the token is
+  compared to `Setting::AGENDA_TOKEN` (a row in `settings`, made on first use),
+  a wrong one is a 404. Sent `X-Robots-Tag: noindex`. It has the normal EN/RO
+  switch.
+- **A day is a few boxes by the clock.** The public programme is **one box per
+  day** — never its sessions — running from the first published session's start
+  to the last one's end (a session with no end counts as an hour, so a last
+  talk at 18:00 gives 19:00). The office can override either hour and writes a
+  **note** on the box (when to arrive, where speakers eat): `programme_days.
+  agenda_starts_at / agenda_ends_at / agenda_note / agenda_note_ro`. The box
+  links to that day of the public programme in a new tab
+  (`/2026/programme#day-09`; `Landing.vue` scrolls to the `#day-NN` anchor).
+- **Events go around the programme, not over it:** `agenda_events` (own `date`,
+  start/end, title/location/description with optional `_ro`). Saving one that
+  falls inside the box's hours is **refused** (`Agenda::clash()`), pointing the
+  office at the note instead. An event has its own date because the agenda also
+  covers **the day before and the day after** the symposium —
+  `Agenda::dates()` is the one place that range is set. Empty days are not drawn.
+- **One builder:** `App\Support\Agenda::days($locale)` feeds both the page and
+  the backoffice preview. `Agenda::hours()` / `overlaps()` are covered by
+  `tests/Unit/AgendaHoursTest.php` (no database).
 - **Backoffice:** `/dashboard/agenda` (`Admin\AgendaController`,
-  `Pages/Admin/2026/Agenda.vue`) — events CRUD, recipients, "Send programme"
-  (one, or everyone not yet sent), and a framed preview in either language.
-- **Who it goes to:** a speaker's address lives on the speaker (`people.email`
-  + `email_locale`, `$hidden` on `Person` — never on the site). Every speaker
-  with an address is on the send list automatically:
-  `AgendaRecipient::syncSpeakers()` runs whenever the Agenda screen loads and
-  links a row to its speaker (`person_id`), adopting a hand-typed row with the
-  same address rather than duplicating it. Guests and team are rows with no
-  `person_id`. A row's token never changes, so a new address keeps the old link.
-- **Changed addresses are noticed:** `sent_email` records where the last send
-  went; when it differs from `email` the row is "pending" again and flagged.
-- **Sending is one email per request**, driven by the screen (axios, a pause
-  between): Resend takes ~2 a second and a request lives 30s, so a server-side
-  loop over thirty speakers would not finish. A failure is listed, not fatal.
-- **Email:** `AgendaInvite` is only a link — the page always shows the latest
-  agenda, so nothing goes stale in an inbox. Someone who already has it at
-  their current address gets it worded as an update.
+  `Pages/Admin/2026/Agenda.vue`) — the link (copy, open, **Reset link**, which
+  kills the old address at once), each day's programme box (note + hours),
+  events CRUD, and a framed preview in either language.
 
 The root template takes `<html lang>` (which the client reads to pick its
 translations) from the page's own `locale` prop before the session — that is

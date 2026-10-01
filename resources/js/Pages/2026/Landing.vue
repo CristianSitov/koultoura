@@ -120,6 +120,9 @@ onMounted(() => {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('keydown', onKeydown);
     window.addEventListener('popstate', onPopState);
+    // A day of the programme, asked for by the internal agenda (#day-09).
+    // Read before the address is tidied, which drops it.
+    const day = /^#day-\d+$/.test(window.location.hash) ? window.location.hash.slice(1) : null;
     window.history.replaceState({ guest: openGuest.value }, '', window.location.pathname);
 
     // Entered at a section address (/2026/themes): land already scrolled there.
@@ -132,7 +135,7 @@ onMounted(() => {
     // the images then push it down. The `load` pass, after they have settled,
     // lands on the real position.
     if (props.section && ! openGuest.value) {
-        scrollToSectionOnLoad(props.section);
+        scrollToSectionOnLoad(day && document.getElementById(day) ? day : props.section);
     }
 });
 

@@ -2,20 +2,27 @@
 
 namespace App\Support;
 
+use App\Http\Controllers\Front2026Controller;
 use App\Models\AgendaEvent;
-use App\Models\Person;
 use App\Models\ProgrammeDay;
 use App\Models\Session;
+use App\Models\Setting;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /*
- * The internal agenda as the page draws it: each day's published sessions and
- * its internal events in one list, in the order they happen.
+ * The agenda for speakers and guests: one page, behind one secret link.
  *
- * One builder for the page a recipient opens and the preview in the backoffice,
- * so the office sees exactly what is sent.
+ * A day on it is a short column of boxes in the order they happen. The public
+ * programme is one of them — a single box from its first session's start to
+ * its last one's end, carrying the office's note and leading to the programme
+ * itself — and the rest are what the office adds around it: transfers, meals,
+ * meetings. The sessions are not listed here; that is what the programme is for.
+ *
+ * One builder for the page a guest opens and the preview in the backoffice, so
+ * the office sees exactly what is sent.
  */
 class Agenda
 {
@@ -41,18 +48,81 @@ class Agenda
             ->values();
     }
 
+    /** The code in the page's address. Made the first time it is asked for. */
+    public static function token(): string
+    {
+        return Setting::text(Setting::AGENDA_TOKEN) ?? self::resetToken();
+    }
+
+    /** A new code: the address already sent out stops working at once. */
+    public static function resetToken(): string
+    {
+        $token = Str::random(48);
+
+        Setting::store(Setting::AGENDA_TOKEN, $token);
+
+        return $token;
+    }
+
+    /**
+     * The hours of a day's programme box, or null when the day has nothing
+     * published to stand for.
+     *
+     * Left alone they follow the programme: from the first session's start to
+     * the last one's end. Most sessions carry no end, so one without is given
+     * an hour — which is what "the day ends at seven" means when the last talk
+     * starts at six. The office can set either hour itself; `auto` is what it
+     * would be otherwise, for the form to show.
+     */
+    public static function hours(ProgrammeDay $day): ?array
+    {
+        $sessions = $day->sessions->where('published', true);
+
+        if (! $day->published || $sessions->isEmpty()) {
+            return null;
+        }
+
+        $auto = [
+            'start' => substr($sessions->min('starts_at'), 0, 5),
+            'end' => $sessions
+                ->map(fn (Session $session) => $session->ends_at
+                    ? substr($session->ends_at, 0, 5)
+                    : self::anHourAfter(substr($session->starts_at, 0, 5)))
+                ->max(),
+        ];
+
+        return [
+            'start' => $day->agenda_starts_at ? substr($day->agenda_starts_at, 0, 5) : $auto['start'],
+            'end' => $day->agenda_ends_at ? substr($day->agenda_ends_at, 0, 5) : $auto['end'],
+            'auto' => $auto,
+            'sessions' => $sessions->count(),
+        ];
+    }
+
+    /**
+     * The programme's hours on a date, if an event at these times would fall
+     * inside them. Events go around the programme, not over it: what happens
+     * during it belongs in the day's note. With no end, an event is the moment
+     * it starts.
+     */
+    public static function clash(string $date, string $start, ?string $end): ?array
+    {
+        $day = ProgrammeDay::with('sessions')->whereDate('date', $date)->first();
+        $hours = $day ? self::hours($day) : null;
+
+        return $hours && self::overlaps($hours, $start, $end) ? $hours : null;
+    }
+
+    public static function overlaps(array $hours, string $start, ?string $end): bool
+    {
+        return filled($end)
+            ? $start < $hours['end'] && $hours['start'] < $end
+            : $hours['start'] <= $start && $start < $hours['end'];
+    }
+
     public static function days(string $locale): array
     {
-        $programme = ProgrammeDay::with([
-            'translations',
-            'theme.translations',
-            'moderator',
-            // Published only: a draft session is the office's business, and a
-            // link in an inbox is not a signed-in reader.
-            'sessions' => fn ($q) => $q->published(),
-            'sessions.translations',
-            'sessions.speakers.translations',
-        ])
+        $programme = ProgrammeDay::with(['translations', 'theme.translations', 'moderator', 'sessions'])
             ->orderBy('position')
             ->orderBy('date')
             ->get();
@@ -81,12 +151,12 @@ class Agenda
     private static function day(string $date, ?ProgrammeDay $day, Collection $events, Collection $numbers, string $locale): array
     {
         $when = Carbon::parse($date)->locale($locale);
+        $hours = $day ? self::hours($day) : null;
 
-        $items = collect($day?->sessions ?? [])
-            ->map(fn (Session $session) => self::session($session, $locale))
-            ->concat($events->map(fn (AgendaEvent $event) => self::event($event, $locale)))
-            // By the clock; at the same minute the official session leads.
-            ->sortBy(fn (array $item) => $item['time'].($item['type'] === 'event' ? '1' : '0'))
+        $items = $events
+            ->map(fn (AgendaEvent $event) => self::event($event, $locale))
+            ->when($hours, fn (Collection $items) => $items->push(self::programme($day, $hours, $numbers[$day->id], $when, $locale)))
+            ->sortBy('time')
             ->values()
             ->all();
 
@@ -96,33 +166,30 @@ class Agenda
             'num' => $when->format('d'),
             'month' => rtrim($when->translatedFormat('M'), '.'),
             'name' => ($day ? self::text($day, $locale)?->name : null) ?: $when->translatedFormat('l'),
-            'theme' => $day?->theme ? [
-                'numeral' => $day->theme->numeral,
-                'title' => self::text($day->theme, $locale)?->title ?? '',
-            ] : null,
-            'moderator' => $day?->moderator?->full_name,
             'items' => $items,
         ];
     }
 
-    private static function session(Session $session, string $locale): array
+    /** The whole of a day's public programme, as the one box it is here. */
+    private static function programme(ProgrammeDay $day, array $hours, int $n, Carbon $when, string $locale): array
     {
-        $text = self::text($session, $locale);
-
         return [
-            'type' => 'session',
-            'id' => 's'.$session->id,
-            'time' => substr($session->starts_at, 0, 5),
-            'end' => $session->ends_at ? substr($session->ends_at, 0, 5) : null,
-            'kind' => $session->kind,
-            'title' => $text?->title ?? '',
-            'audience' => $text?->audience ?? '',
-            'school' => $session->school,
-            'who' => $session->speakers->map(function (Person $person) use ($locale) {
-                $org = self::text($person, $locale)?->institution;
-
-                return ['name' => $person->full_name, 'org' => filled($org) ? $org : null];
-            })->all(),
+            'type' => 'programme',
+            'id' => 'p'.$day->id,
+            'time' => $hours['start'],
+            'end' => $hours['end'],
+            'n' => $n,
+            'theme' => $day->theme ? [
+                'numeral' => $day->theme->numeral,
+                'title' => self::text($day->theme, $locale)?->title ?? '',
+            ] : null,
+            'moderator' => $day->moderator?->full_name,
+            'note' => $locale === 'ro' && filled($day->agenda_note_ro) ? $day->agenda_note_ro : $day->agenda_note,
+            // The public programme, at that day — in the language being read.
+            'url' => Front2026Controller::base()
+                .($locale === 'ro' ? '/ro' : '')
+                .'/'.Front2026Controller::sectionSlug('programme', $locale)
+                .'#day-'.$when->format('d'),
         ];
     }
 
@@ -137,6 +204,14 @@ class Agenda
             'location' => $event->text('location', $locale),
             'description' => $event->text('description', $locale),
         ];
+    }
+
+    private static function anHourAfter(string $time): string
+    {
+        $later = Carbon::createFromFormat('H:i', $time)->addHour()->format('H:i');
+
+        // Past midnight would read as before the start.
+        return $later < $time ? '23:59' : $later;
     }
 
     /** The translation in the language asked for, falling back to English. */

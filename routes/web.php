@@ -183,12 +183,14 @@ Route::prefix(Front2026Controller::path())
                     ->name('place.calendar');
             });
 
-        // The internal agenda, opened from the email sent to a speaker, a guest
-        // or one of the team. The token is the key, and the language is the
-        // recipient's — see Resolve2026Locale — so there is no locale variant.
+        // The internal agenda for speakers and guests: one page behind one
+        // secret link, which the office sends out itself. The token is the key.
         Route::get('/agenda/{token}', [Front2026AgendaController::class, 'show'])
             ->where('token', '[A-Za-z0-9]+')
             ->name('agenda');
+        Route::get('/{locale}/agenda/{token}', [Front2026AgendaController::class, 'show'])
+            ->where(['locale' => 'en|ro', 'token' => '[A-Za-z0-9]+'])
+            ->name('locale.agenda');
 
         // The contribution step. The language comes from the registration, so
         // these need no locale variant.
@@ -366,7 +368,8 @@ Route::prefix('dashboard')
             Route::post('/places/{place}/invite', 'invitePlace')->name('places.invite');
         });
 
-        // The internal agenda: its events, who it is sent to, and a preview.
+        // The internal agenda: its events, each day's programme box, the
+        // secret link, and a preview.
         Route::controller(AgendaController::class)->group(function () {
             Route::get('/agenda', 'index')->name('agenda');
             Route::get('/agenda/preview/{locale}', 'preview')
@@ -377,14 +380,7 @@ Route::prefix('dashboard')
             Route::put('/agenda/events/{event}', 'updateEvent')->name('agenda.events.update');
             Route::delete('/agenda/events/{event}', 'destroyEvent')->name('agenda.events.destroy');
 
-            // A speaker's address and language, set from the send list.
-            Route::put('/agenda/speakers/{person}', 'updateSpeaker')->name('agenda.speakers.update');
-
-            Route::post('/agenda/recipients', 'storeRecipient')->name('agenda.recipients.store');
-            Route::put('/agenda/recipients/{recipient}', 'updateRecipient')->name('agenda.recipients.update');
-            Route::delete('/agenda/recipients/{recipient}', 'destroyRecipient')->name('agenda.recipients.destroy');
-            // One email per call — sending to many is the screen calling this
-            // in turn, so no request outlives its thirty seconds.
-            Route::post('/agenda/recipients/{recipient}/send', 'send')->name('agenda.recipients.send');
+            Route::put('/agenda/days/{day}', 'updateDay')->name('agenda.days.update');
+            Route::post('/agenda/link/reset', 'resetLink')->name('agenda.link.reset');
         });
     });

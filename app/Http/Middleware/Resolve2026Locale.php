@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\Front2026Controller;
-use App\Models\AgendaRecipient;
 use App\Models\Registration;
 use Closure;
 use GeoIp2\Database\Reader;
@@ -59,19 +58,6 @@ class Resolve2026Locale
 
             if (in_array($registered, config('translatable.locales'), true)) {
                 $locale = $registered;
-            }
-        }
-
-        /*
-         * The internal agenda is the same case: a link in an inbox, opened on
-         * whatever device, belongs to the language its recipient was given —
-         * not to whatever the browser happened to be reading last.
-         */
-        if ($locale === null && $request->routeIs('2026.agenda')) {
-            $given = AgendaRecipient::where('token', $request->route('token'))->value('locale');
-
-            if (in_array($given, config('translatable.locales'), true)) {
-                $locale = $given;
             }
         }
 

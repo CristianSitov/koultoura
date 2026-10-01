@@ -25,7 +25,11 @@ class ProgrammeDay extends Model implements TranslatableContract
      */
     public const SCHOOL_DAYS = [7, 8, 10];
 
-    protected $fillable = ['date', 'theme_id', 'moderator_id', 'position', 'published'];
+    protected $fillable = [
+        'date', 'theme_id', 'moderator_id', 'position', 'published',
+        // Its box on the internal agenda — see App\Support\Agenda.
+        'agenda_starts_at', 'agenda_ends_at', 'agenda_note', 'agenda_note_ro',
+    ];
 
     protected $casts = [
         'date' => 'date',

@@ -174,7 +174,7 @@ const workshops = computed(() => {
         </div>
 
         <div class="wcm26-days">
-            <div v-for="day in days" :key="day.id" class="wcm26-day">
+            <div v-for="day in days" :id="'day-' + day.num" :key="day.id" class="wcm26-day">
                 <div>
                     <p class="wcm26-label">
                         {{ day.name }}

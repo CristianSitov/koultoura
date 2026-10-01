@@ -3428,10 +3428,10 @@ a.wcm26-partner-logo:focus-visible {
 }
 
 /* ── the internal agenda ───────────────────────────────────────────────────
- * The programme as speakers, guests and the team get it: each day a column
- * head and, beside it, one list by the clock. An official session is a quiet
- * card; an internal event is a filled one, with a badge and a place, because
- * those are the rows this page exists for.
+ * What is arranged for speakers and guests, behind its secret link: each day a
+ * column head and, beside it, a few boxes by the clock. The public programme
+ * is one of them — the large red one, which opens the day's sessions — and the
+ * quiet ones around it are the events the office adds.
  * ------------------------------------------------------------------------ */
 /* The shared page column is 720px, set for forms and prose. A timetable needs
    more room than that, so this one page takes a wider column. */
@@ -3447,49 +3447,12 @@ a.wcm26-partner-logo:focus-visible {
     font-weight: 600;
 }
 
-.wcm26-agenda-intro {
+.wcm26-agenda-lead {
     max-width: 720px;
     margin: 0 0 clamp(36px, 5vw, 64px);
-}
-
-.wcm26-agenda-hello {
-    margin: 0 0 10px;
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: clamp(22px, 2.2vw, 30px);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-}
-
-.wcm26-agenda-lead {
-    margin: 0;
     font-size: 17px;
     line-height: 1.55;
     color: color-mix(in srgb, var(--color-text) 75%, transparent);
-}
-
-.wcm26-agenda-legend {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 10px;
-    margin: 22px 0 0;
-}
-
-.wcm26-agenda-key {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    flex: none;
-}
-
-.wcm26-agenda-key-session {
-    background: color-mix(in srgb, var(--color-text) 14%, transparent);
-}
-
-.wcm26-agenda-key-event {
-    margin-left: 14px;
-    background: var(--color-accent);
 }
 
 .wcm26-agenda-empty {
@@ -3507,28 +3470,11 @@ a.wcm26-partner-logo:focus-visible {
     border-top: 2px solid var(--color-divider);
 }
 
-/* The day stays in view while its list scrolls past. */
+/* The day stays in view while its boxes scroll past. */
 .wcm26-agenda-dayhead {
     position: sticky;
     top: 100px;
     align-self: start;
-}
-
-.wcm26-agenda-theme {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin: 16px 0 0;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 15px;
-    line-height: 1.3;
-    color: var(--color-accent);
-}
-
-.wcm26-agenda-theme .wcm26-square {
-    flex: none;
-    margin-top: 4px;
 }
 
 .wcm26-agenda-items {
@@ -3558,41 +3504,50 @@ a.wcm26-partner-logo:focus-visible {
     color: color-mix(in srgb, var(--color-text) 60%, transparent);
 }
 
+.wcm26-agenda-item.is-programme .wcm26-agenda-time {
+    padding-top: 26px;
+    color: var(--color-accent);
+}
+
 .wcm26-agenda-card {
     padding: 14px 18px;
     background: color-mix(in srgb, var(--color-text) 4%, transparent);
     border-left: 3px solid color-mix(in srgb, var(--color-text) 16%, transparent);
 }
 
-.wcm26-agenda-item.is-event .wcm26-agenda-card {
-    background: var(--color-accent-100);
-    border-left-color: var(--color-accent);
+/* The programme: one large block for the whole of the day's sessions. It is a
+   link, so it reads as one — the whole box, not a line of text inside it. */
+a.wcm26-agenda-programme {
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+    padding: 24px 26px;
+    background: var(--color-accent);
+    border-left: 0;
+    color: #f3f2f2;
+    text-decoration: none;
+    transition: background 0.15s ease;
 }
 
-.wcm26-agenda-item.is-event .wcm26-agenda-time {
-    color: var(--color-accent);
+/* The page's own type colours would otherwise win inside the link. */
+.wcm26-agenda-programme :is(p, h3, strong) {
+    color: inherit;
 }
 
-.wcm26-agenda-kind,
-.wcm26-agenda-badge {
-    margin: 0 0 7px;
+.wcm26-agenda-programme:hover,
+.wcm26-agenda-programme:focus-visible {
+    background: color-mix(in srgb, var(--color-accent) 86%, #000);
+}
+
+.wcm26-agenda-kind {
+    margin: 0 0 8px;
     font-family: var(--font-heading);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.06em;
     line-height: 1.2;
     text-transform: uppercase;
-}
-
-.wcm26-agenda-kind {
-    color: color-mix(in srgb, var(--color-text) 55%, transparent);
-}
-
-.wcm26-agenda-badge {
-    display: inline-block;
-    padding: 3px 8px;
-    background: var(--color-accent);
-    color: #f3f2f2;
+    opacity: 0.8;
 }
 
 .wcm26-agenda-title {
@@ -3604,15 +3559,29 @@ a.wcm26-partner-logo:focus-visible {
     letter-spacing: -0.01em;
 }
 
-.wcm26-agenda-who {
-    margin: 6px 0 0;
-    font-size: 14px;
-    line-height: 1.4;
-    color: color-mix(in srgb, var(--color-text) 72%, transparent);
+.wcm26-agenda-programme .wcm26-agenda-title {
+    font-weight: 800;
+    font-size: clamp(26px, 3vw, 38px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-feature-settings: 'tnum' 1;
 }
 
-.wcm26-agenda-org {
-    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+.wcm26-agenda-theme,
+.wcm26-agenda-moderator {
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.wcm26-agenda-theme {
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+
+.wcm26-agenda-moderator {
+    margin-top: 4px;
+    opacity: 0.9;
 }
 
 .wcm26-agenda-where {
@@ -3642,6 +3611,31 @@ a.wcm26-partner-logo:focus-visible {
     color: color-mix(in srgb, var(--color-text) 80%, transparent);
 }
 
+/* The office's note is what the programme box is for, so it is set apart and
+   easy to read on the red. */
+.wcm26-agenda-programme .wcm26-agenda-desc {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid color-mix(in srgb, #f3f2f2 35%, transparent);
+    font-size: 15px;
+    color: inherit;
+}
+
+.wcm26-agenda-more {
+    margin: auto 0 0;
+    padding-top: 22px;
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* A day of the public programme, landed on from the agenda's box. */
+.wcm26-day {
+    scroll-margin-top: 110px;
+}
+
 @media (max-width: 860px) {
     .wcm26-agenda-day {
         grid-template-columns: 1fr;
@@ -3658,7 +3652,8 @@ a.wcm26-partner-logo:focus-visible {
         gap: 4px;
     }
 
-    .wcm26-agenda-time {
+    .wcm26-agenda-time,
+    .wcm26-agenda-item.is-programme .wcm26-agenda-time {
         padding-top: 0;
     }
 }
