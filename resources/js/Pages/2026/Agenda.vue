@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head, usePage } from '@inertiajs/inertia-vue3';
 import { h } from 'vue';
 import { trans } from 'laravel-vue-i18n';
 import '../../../css/wcm2026.css';
@@ -36,6 +36,22 @@ const LinkedText = ({ text }) => linkify(text).map((part) => (part.href
         part.map ? `${trans('See on map')} ↗` : part.text)
     : part.text));
 LinkedText.props = ['text'];
+
+/*
+ * Who to call during the event. Numbers are kept without the country code and
+ * written the way each language's readers dial them — 0721 … in Romanian,
+ * +40 721 … in English — while the link always dials the full number.
+ */
+const helpers = [
+    { name: 'Alexandra', phone: '721 532 454' },
+    { name: 'Maria', phone: '729 009 264' },
+    { name: 'Alina', phone: '722 635 749' },
+];
+const travel = { name: 'Ramona Lambing', phone: '743 737 212' };
+
+const romanian = (usePage().props.value.locale || 'en') === 'ro';
+const shown = (phone) => (romanian ? `0${phone}` : `+40 ${phone}`);
+const dial = (phone) => `tel:+40${phone.replace(/\s/g, '')}`;
 </script>
 
 <template>
@@ -101,6 +117,28 @@ LinkedText.props = ['text'];
                         </div>
                     </li>
                 </ol>
+            </div>
+
+            <!-- Who to call: after the days, where a guest looks last. -->
+            <div class="wcm26-agenda-day wcm26-agenda-contact">
+                <header class="wcm26-agenda-dayhead">
+                    <p class="wcm26-label">{{ $t('agenda.contact.title') }}</p>
+                </header>
+
+                <div>
+                    <p class="wcm26-agenda-contact-text">{{ $t('agenda.contact.intro') }}</p>
+                    <ul class="wcm26-agenda-phones">
+                        <li v-for="person in helpers" :key="person.name">
+                            <span>{{ person.name }}</span>
+                            <a :href="dial(person.phone)">{{ shown(person.phone) }}</a>
+                        </li>
+                    </ul>
+
+                    <p class="wcm26-agenda-contact-text wcm26-agenda-urgent">
+                        {{ $t('agenda.contact.urgent') }}
+                        <a :href="dial(travel.phone)">{{ shown(travel.phone) }}</a>.
+                    </p>
+                </div>
             </div>
         </section>
     </PageShell>

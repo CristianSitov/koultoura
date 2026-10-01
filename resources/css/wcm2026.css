@@ -3671,6 +3671,50 @@ a.wcm26-partner-logo:focus-visible {
     text-transform: uppercase;
 }
 
+/* Who to call — after the days. Numbers are links: a tap on a phone dials. */
+.wcm26-agenda-contact-text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.wcm26-agenda-phones {
+    list-style: none;
+    margin: 14px 0 24px;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.wcm26-agenda-phones li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    align-items: baseline;
+    padding: 12px 18px;
+    background: color-mix(in srgb, var(--color-text) 4%, transparent);
+    border-left: 3px solid color-mix(in srgb, var(--color-text) 16%, transparent);
+}
+
+.wcm26-agenda-phones span {
+    min-width: 96px;
+    font-weight: 600;
+}
+
+.wcm26-agenda-contact a {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-feature-settings: 'tnum' 1;
+    white-space: nowrap;
+}
+
+/* The travel line is the one for when something goes wrong. */
+.wcm26-agenda-urgent {
+    padding: 14px 18px;
+    background: var(--color-accent-100);
+    border-left: 3px solid var(--color-accent);
+}
+
 /* The whole box is the day's link: this covers it. */
 .wcm26-agenda-more::after {
     content: '';
