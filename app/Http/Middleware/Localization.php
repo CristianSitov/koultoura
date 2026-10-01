@@ -5,17 +5,20 @@ namespace App\Http\Middleware;
 use Closure;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use MaxMind\Db\Reader\InvalidDatabaseException;
+use Symfony\Component\HttpFoundation\Response;
 
 class Localization
 {
-    public function handle(Request $request, Closure $next): Response|RedirectResponse|JsonResponse
+    /*
+     * The Symfony base type, not a list of Laravel ones: a streamed download
+     * (the registrations CSV) or a file response is neither a Response, a
+     * redirect nor JSON, and a narrower type here turned those into a 500.
+     */
+    public function handle(Request $request, Closure $next): Response
     {
         if (Session::has('locale')) {
             App::setLocale(Session::get('locale'));
