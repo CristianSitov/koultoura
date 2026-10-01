@@ -114,6 +114,9 @@ class SpeakerController extends Controller
                 'slug' => $person->exists ? $person->slug : '',
                 'avatar' => $person->avatar ?? '',
                 'institution_url' => $person->institution_url ?? '',
+                // For the office to write to them; never shown on the site.
+                'email' => $person->email ?? '',
+                'email_locale' => $person->email_locale ?: 'en',
                 'position' => $person->position ?? 0,
                 'en' => $this->translation($person, 'en'),
                 'ro' => $this->translation($person, 'ro'),
@@ -148,6 +151,8 @@ class SpeakerController extends Controller
             ],
             'position' => ['nullable', 'integer', 'min:0', 'max:999'],
             'institution_url' => ['nullable', 'url', 'max:255'],
+            'email' => ['nullable', 'email:rfc', 'max:255', Rule::unique('wcm_2026.people', 'email')->ignore($person->id)],
+            'email_locale' => ['nullable', Rule::in(['en', 'ro'])],
             'en.role' => ['nullable', 'string', 'max:255'],
             'en.institution' => ['nullable', 'string', 'max:255'],
             'en.description' => ['nullable', 'string'],
@@ -155,6 +160,8 @@ class SpeakerController extends Controller
             'ro.institution' => ['nullable', 'string', 'max:255'],
             'ro.description' => ['nullable', 'string'],
             'photo' => ['nullable', 'image', 'max:32768'],
+        ], [
+            'email.unique' => 'Another speaker already has that address.',
         ]);
 
         $person->full_name = $data['full_name'];
@@ -162,6 +169,9 @@ class SpeakerController extends Controller
         $person->slug = $data['slug'] ?: ($person->exists ? $person->slug : Str::slug($data['full_name']));
         $person->position = $data['position'] ?? 0;
         $person->institution_url = $data['institution_url'] ?: null;
+        // With an address they are on the agenda's send list; without, off it.
+        $person->email = filled($data['email'] ?? null) ? $data['email'] : null;
+        $person->email_locale = $data['email_locale'] ?? 'en';
         $person->save();
 
         foreach (['en', 'ro'] as $locale) {

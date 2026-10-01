@@ -377,9 +377,14 @@ Route::prefix('dashboard')
             Route::put('/agenda/events/{event}', 'updateEvent')->name('agenda.events.update');
             Route::delete('/agenda/events/{event}', 'destroyEvent')->name('agenda.events.destroy');
 
+            // A speaker's address and language, set from the send list.
+            Route::put('/agenda/speakers/{person}', 'updateSpeaker')->name('agenda.speakers.update');
+
             Route::post('/agenda/recipients', 'storeRecipient')->name('agenda.recipients.store');
+            Route::put('/agenda/recipients/{recipient}', 'updateRecipient')->name('agenda.recipients.update');
             Route::delete('/agenda/recipients/{recipient}', 'destroyRecipient')->name('agenda.recipients.destroy');
+            // One email per call — sending to many is the screen calling this
+            // in turn, so no request outlives its thirty seconds.
             Route::post('/agenda/recipients/{recipient}/send', 'send')->name('agenda.recipients.send');
-            Route::post('/agenda/send', 'sendAll')->name('agenda.send');
         });
     });

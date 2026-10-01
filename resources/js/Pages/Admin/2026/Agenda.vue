@@ -1,6 +1,7 @@
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3';
-import { computed, ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import { computed, reactive, ref, watch } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 import { conflictsFor } from '../../../agendaConflicts';
 
@@ -11,11 +12,15 @@ import { conflictsFor } from '../../../agendaConflicts';
  * The official sessions are not edited here — they come from Programme, and
  * the agenda page weaves the two together by the clock. The days run one past
  * the symposium at each end, for arrivals and departures.
+ *
+ * The send list is the speakers who have an address, plus whoever is added by
+ * hand. A speaker's address is kept on the speaker; this screen is just the
+ * quickest place to type thirty of them in.
  */
 const props = defineProps({
     days: { type: Array, default: () => [] },
-    recipients: { type: Array, default: () => [] },
     speakers: { type: Array, default: () => [] },
+    extras: { type: Array, default: () => [] },
     publicBase: { type: String, default: '' },
 });
 
@@ -92,11 +97,93 @@ function removeEvent(event) {
     }
 }
 
-function addRecipient() {
-    recipientForm.post('/dashboard/agenda/recipients', {
+// ── who it is sent to ─────────────────────────────────────────────────────
+
+// Everyone who can be written to: the speakers with an address, then the rest.
+const everyone = computed(() => [
+    ...props.speakers.filter((speaker) => speaker.recipient).map((speaker) => speaker.recipient),
+    ...props.extras,
+]);
+// Not had it at the address they have now — never sent, or the address changed.
+const pending = computed(() => everyone.value.filter((recipient) => recipient.pending));
+/*
+ * Speakers on the list first, then the ones still without an address: thirty
+ * names in one alphabet scatter the handful that matter through a scrolling
+ * box. Each half keeps the order the server gave it, which is by name.
+ */
+const listed = computed(() => props.speakers.filter((speaker) => speaker.recipient));
+const unlisted = computed(() => props.speakers.filter((speaker) => ! speaker.recipient));
+const ordered = computed(() => [...listed.value, ...unlisted.value]);
+
+const people = (n) => (n === 1 ? '1 person' : `${n} people`);
+const status = (r) => (r.changed
+    ? 'Address changed — not sent to this one yet'
+    : r.sent_count ? `Sent ${r.sent_count}× · last ${r.last_sent}` : 'Not sent yet');
+const statusClass = (r) => (r.changed ? 'font-medium text-amber-700' : r.sent_count ? 'text-green-700' : 'text-gray-400');
+
+/*
+ * A speaker's address, typed straight into the list. Each row keeps its own
+ * draft, taken from what the server last said — so after a save, or when
+ * someone else's row is saved, the fields show what is actually stored.
+ */
+const editingSpeaker = ref(null);
+const drafts = reactive({});
+const draftErrors = reactive({});
+
+const takeDrafts = () => props.speakers.forEach((speaker) => {
+    if (editingSpeaker.value !== speaker.id) {
+        drafts[speaker.id] = { email: speaker.email, locale: speaker.locale };
+    }
+});
+takeDrafts();
+watch(() => props.speakers, takeDrafts);
+
+function saveSpeaker(speaker) {
+    delete draftErrors[speaker.id];
+
+    Inertia.put(`/dashboard/agenda/speakers/${speaker.id}`, drafts[speaker.id], {
         preserveScroll: true,
-        onSuccess: () => recipientForm.reset(),
+        onSuccess: () => (editingSpeaker.value = null),
+        onError: (errors) => (draftErrors[speaker.id] = errors.email || errors.locale || 'That could not be saved.'),
     });
+}
+
+function cancelSpeaker(speaker) {
+    editingSpeaker.value = null;
+    delete draftErrors[speaker.id];
+    drafts[speaker.id] = { email: speaker.email, locale: speaker.locale };
+}
+
+function clearSpeaker(speaker) {
+    if (confirm(`Take ${speaker.name}’s address off? They leave the send list, and the link they were sent stops working.`)) {
+        drafts[speaker.id].email = '';
+        saveSpeaker(speaker);
+    }
+}
+
+// Guests and team: added by hand, and edited in the same form.
+const editingExtra = ref(null);
+
+function editExtra(recipient) {
+    editingExtra.value = recipient.id;
+    recipientForm.clearErrors();
+    recipientForm.name = recipient.name;
+    recipientForm.email = recipient.email;
+    recipientForm.locale = recipient.locale;
+}
+
+function cancelExtra() {
+    editingExtra.value = null;
+    recipientForm.reset();
+    recipientForm.clearErrors();
+}
+
+function saveExtra() {
+    const done = { preserveScroll: true, onSuccess: cancelExtra };
+
+    editingExtra.value
+        ? recipientForm.put(`/dashboard/agenda/recipients/${editingExtra.value}`, done)
+        : recipientForm.post('/dashboard/agenda/recipients', done);
 }
 
 function removeRecipient(recipient) {
@@ -105,24 +192,63 @@ function removeRecipient(recipient) {
     }
 }
 
+/*
+ * Sending. One email per request, one after another, with a breath between:
+ * the mail provider takes only a couple a second, and a single request for
+ * thirty people would not live long enough to finish. It also means one bad
+ * address fails alone — the rest still go, and the failures are listed.
+ */
+const sending = ref(null); // { done, total } while a run is under way
+const outcome = ref(null); // { sent, failed: [{ name, email, error }] } once it ends
+
+async function sendTo(list, question) {
+    if (sending.value || ! list.length || ! confirm(question)) {
+        return;
+    }
+
+    const failed = [];
+    outcome.value = null;
+    sending.value = { done: 0, total: list.length };
+
+    for (const recipient of list) {
+        let error = null;
+
+        try {
+            const { data } = await window.axios.post(`/dashboard/agenda/recipients/${recipient.id}/send`);
+
+            if (! data.ok) {
+                error = data.error || 'The mail provider refused it.';
+            }
+        } catch (e) {
+            error = e.response?.data?.message || e.message;
+        }
+
+        if (error) {
+            failed.push({ name: recipient.name, email: recipient.email, error });
+        }
+
+        sending.value.done += 1;
+
+        if (sending.value.done < list.length) {
+            await new Promise((resolve) => setTimeout(resolve, 600));
+        }
+    }
+
+    outcome.value = { sent: list.length - failed.length, failed };
+    sending.value = null;
+    Inertia.reload({ preserveScroll: true });
+}
+
 // An email leaves the building, so every send asks first.
-function send(recipient) {
-    const verb = recipient.sent_count ? 'Send the programme again' : 'Send the programme';
+const sendOne = (recipient) => sendTo([recipient], recipient.pending
+    ? `Send the programme to ${recipient.email}?`
+    : `Send ${recipient.email} the programme again? It goes as an update — “the programme has changed”.`);
 
-    if (confirm(`${verb} to ${recipient.email}?`)) {
-        action.post(`/dashboard/agenda/recipients/${recipient.id}/send`, { preserveScroll: true });
-    }
-}
+const sendPending = () => sendTo(pending.value,
+    `Send the programme to the ${people(pending.value.length)} who have not had it at their current address?`);
 
-const pending = computed(() => props.recipients.filter((r) => ! r.sent_count).length);
-
-function sendAll() {
-    const who = pending.value === 1 ? '1 person' : `${pending.value} people`;
-
-    if (confirm(`Send the programme to the ${who} who have not had it yet?`)) {
-        action.post('/dashboard/agenda/send', { preserveScroll: true });
-    }
-}
+const sendEveryone = () => sendTo(everyone.value,
+    `Send to all ${people(everyone.value.length)} now? Anyone who already has it gets it as an update — “the programme has changed”.`);
 
 const copied = ref(null);
 
@@ -190,43 +316,139 @@ function copyLink(recipient) {
                 </div>
             </div>
 
-            <!-- Recipients -->
+            <!-- Who it is sent to -->
             <div class="space-y-4 lg:col-span-2">
+                <!-- Sending -->
                 <div class="rounded border border-gray-200 bg-white p-5">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-sm font-semibold">Recipients <span class="font-normal text-gray-400">{{ recipients.length }}</span></h2>
-                        <button
-                            type="button"
-                            :disabled="!pending || action.processing"
-                            class="rounded bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
-                            @click="sendAll"
-                        >Send programme<template v-if="pending"> to {{ pending }} new</template></button>
-                    </div>
+                    <h2 class="text-sm font-semibold">Send the programme <span class="font-normal text-gray-400">{{ people(everyone.length) }} on the list</span></h2>
                     <p class="mt-1 text-xs text-gray-500">
-                        Each person gets their own link, in their language. The link always shows the latest agenda, so
-                        send again only to nudge — not after every change.
+                        Each person gets their own link, in their language, and it always shows the latest agenda.
+                        After a change, “Send to everyone” tells them the programme has been updated.
                     </p>
 
-                    <!-- Two by two: the column is narrow, and four controls in a
-                         row left the language picker too thin to read. -->
-                    <form class="mt-4 grid grid-cols-2 gap-2" @submit.prevent="addRecipient">
-                        <input v-model="recipientForm.name" type="text" placeholder="Name" list="agenda-speakers" class="min-w-0 rounded border-gray-300 text-sm" />
-                        <input v-model="recipientForm.email" type="email" placeholder="Email" class="min-w-0 rounded border-gray-300 text-sm" />
-                        <select v-model="recipientForm.locale" aria-label="Language" class="rounded border-gray-300 text-sm">
-                            <option value="en">English</option>
-                            <option value="ro">Romanian</option>
-                        </select>
-                        <button type="submit" :disabled="recipientForm.processing" class="rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50 disabled:opacity-50">Add recipient</button>
-                        <datalist id="agenda-speakers">
-                            <option v-for="speaker in speakers" :key="speaker" :value="speaker" />
-                        </datalist>
-                    </form>
-                    <p v-for="(message, field) in recipientForm.errors" :key="field" class="mt-1 text-sm text-red-600">{{ message }}</p>
+                    <div class="mt-4 grid grid-cols-2 gap-2">
+                        <button
+                            type="button"
+                            :disabled="!pending.length || !!sending"
+                            class="rounded bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+                            @click="sendPending"
+                        >{{ pending.length ? `Send to ${pending.length} not yet sent` : 'Everyone has it' }}</button>
+                        <button
+                            type="button"
+                            :disabled="!everyone.length || !!sending"
+                            class="rounded border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                            @click="sendEveryone"
+                        >Send to everyone</button>
+                    </div>
+
+                    <div v-if="sending" class="mt-4">
+                        <p class="text-sm font-medium text-gray-700">Sending {{ Math.min(sending.done + 1, sending.total) }} of {{ sending.total }}… keep this page open.</p>
+                        <div class="mt-2 h-1.5 overflow-hidden rounded bg-gray-100">
+                            <div class="h-full bg-red-600 transition-all" :style="{ width: `${(sending.done / sending.total) * 100}%` }"></div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="outcome"
+                        class="mt-4 rounded border px-4 py-3 text-sm"
+                        :class="outcome.failed.length ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-800'"
+                    >
+                        <p class="font-semibold">
+                            Sent to {{ people(outcome.sent) }}<template v-if="outcome.failed.length"> — {{ outcome.failed.length }} could not be sent</template>.
+                        </p>
+                        <ul v-if="outcome.failed.length" class="mt-1 list-disc space-y-0.5 pl-5 text-xs">
+                            <li v-for="failure in outcome.failed" :key="failure.email">{{ failure.name }} &lt;{{ failure.email }}&gt; — {{ failure.error }}</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div v-if="recipients.length" class="rounded border border-gray-200 bg-white">
-                    <ul class="divide-y divide-gray-100">
-                        <li v-for="recipient in recipients" :key="recipient.id" class="px-5 py-3">
+                <!-- Speakers -->
+                <div class="rounded border border-gray-200 bg-white">
+                    <div class="border-b border-gray-100 px-5 py-3">
+                        <h2 class="text-sm font-semibold">Speakers <span class="font-normal text-gray-400">{{ listed.length }} of {{ speakers.length }} have an address</span></h2>
+                        <p class="mt-0.5 text-xs text-gray-500">A speaker with an address is on the list. The address is theirs — it is also on their page in Speakers, and never on the site.</p>
+                    </div>
+
+                    <ul class="max-h-[34rem] divide-y divide-gray-100 overflow-y-auto">
+                        <li v-for="speaker in ordered" :key="speaker.id" class="px-5 py-3">
+                            <p
+                                v-if="unlisted.length && speaker.id === unlisted[0].id"
+                                class="-mx-5 -mt-3 mb-3 bg-gray-50 px-5 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-500"
+                            >No address yet · {{ unlisted.length }}</p>
+                            <!-- On the list -->
+                            <template v-if="speaker.recipient && editingSpeaker !== speaker.id">
+                                <div class="flex items-start justify-between gap-3">
+                                    <span class="min-w-0">
+                                        <span class="block text-sm font-medium">
+                                            {{ speaker.name }}
+                                            <span class="ml-1 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-gray-500">{{ speaker.recipient.locale }}</span>
+                                        </span>
+                                        <span class="block truncate text-xs text-gray-500">{{ speaker.recipient.email }}</span>
+                                    </span>
+                                    <button
+                                        type="button"
+                                        :disabled="!!sending"
+                                        class="flex-none rounded border px-3 py-1 text-sm font-semibold disabled:opacity-50"
+                                        :class="speaker.recipient.pending ? 'border-red-600 text-red-600 hover:bg-red-50' : 'border-gray-300 text-gray-700 hover:bg-gray-50'"
+                                        @click="sendOne(speaker.recipient)"
+                                    >{{ speaker.recipient.pending ? 'Send programme' : 'Send again' }}</button>
+                                </div>
+                                <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+                                    <span :class="statusClass(speaker.recipient)">{{ status(speaker.recipient) }}</span>
+                                    <a :href="speaker.recipient.url" target="_blank" class="text-gray-500 underline hover:text-gray-900">Open their page ↗</a>
+                                    <button type="button" class="text-gray-500 underline hover:text-gray-900" @click="copyLink(speaker.recipient)">
+                                        {{ copied === speaker.recipient.id ? 'Copied' : 'Copy link' }}
+                                    </button>
+                                    <button type="button" class="text-gray-500 underline hover:text-gray-900" @click="editingSpeaker = speaker.id">Change address</button>
+                                </div>
+                            </template>
+
+                            <!-- No address yet, or changing it -->
+                            <template v-else>
+                                <p class="text-sm font-medium" :class="speaker.email ? '' : 'text-gray-500'">{{ speaker.name }}</p>
+                                <form class="mt-1.5 flex gap-2" @submit.prevent="saveSpeaker(speaker)">
+                                    <input v-model="drafts[speaker.id].email" type="email" placeholder="add their email" :aria-label="`Email for ${speaker.name}`" class="min-w-0 flex-1 rounded border-gray-300 py-1.5 text-sm" />
+                                    <select v-model="drafts[speaker.id].locale" :aria-label="`Language for ${speaker.name}`" class="w-[4.75rem] flex-none rounded border-gray-300 py-1.5 text-sm">
+                                        <option value="en">EN</option>
+                                        <option value="ro">RO</option>
+                                    </select>
+                                    <button type="submit" class="flex-none rounded border border-gray-300 px-3 py-1.5 text-sm font-semibold hover:bg-gray-50">Save</button>
+                                </form>
+                                <p v-if="draftErrors[speaker.id]" class="mt-1 text-sm text-red-600">{{ draftErrors[speaker.id] }}</p>
+                                <p v-if="editingSpeaker === speaker.id" class="mt-1.5 flex gap-4 text-xs">
+                                    <button type="button" class="text-gray-500 underline hover:text-gray-900" @click="cancelSpeaker(speaker)">Cancel</button>
+                                    <button type="button" class="text-red-600 underline hover:text-red-800" @click="clearSpeaker(speaker)">Remove their address</button>
+                                </p>
+                            </template>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Guests and team -->
+                <div class="rounded border border-gray-200 bg-white">
+                    <div class="border-b border-gray-100 px-5 py-3">
+                        <h2 class="text-sm font-semibold">Guests &amp; team <span class="font-normal text-gray-400">{{ extras.length }}</span></h2>
+                        <p class="mt-0.5 text-xs text-gray-500">Anyone else who should get the programme and is not a speaker.</p>
+
+                        <!-- Two by two: the column is narrow, and four controls in a
+                             row left the language picker too thin to read. -->
+                        <form class="mt-3 grid grid-cols-2 gap-2" @submit.prevent="saveExtra">
+                            <input v-model="recipientForm.name" type="text" placeholder="Name" class="min-w-0 rounded border-gray-300 text-sm" />
+                            <input v-model="recipientForm.email" type="email" placeholder="Email" class="min-w-0 rounded border-gray-300 text-sm" />
+                            <select v-model="recipientForm.locale" aria-label="Language" class="rounded border-gray-300 text-sm">
+                                <option value="en">English</option>
+                                <option value="ro">Romanian</option>
+                            </select>
+                            <button type="submit" :disabled="recipientForm.processing" class="rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50 disabled:opacity-50">
+                                {{ editingExtra ? 'Save changes' : 'Add recipient' }}
+                            </button>
+                        </form>
+                        <p v-for="(message, field) in recipientForm.errors" :key="field" class="mt-1 text-sm text-red-600">{{ message }}</p>
+                        <button v-if="editingExtra" type="button" class="mt-1.5 text-xs text-gray-500 underline hover:text-gray-900" @click="cancelExtra">Cancel the edit</button>
+                    </div>
+
+                    <ul v-if="extras.length" class="divide-y divide-gray-100">
+                        <li v-for="recipient in extras" :key="recipient.id" class="px-5 py-3" :class="editingExtra === recipient.id ? 'bg-gray-50' : ''">
                             <div class="flex items-start justify-between gap-3">
                                 <span class="min-w-0">
                                     <span class="block text-sm font-medium">
@@ -237,20 +459,19 @@ function copyLink(recipient) {
                                 </span>
                                 <button
                                     type="button"
-                                    :disabled="action.processing"
+                                    :disabled="!!sending"
                                     class="flex-none rounded border px-3 py-1 text-sm font-semibold disabled:opacity-50"
-                                    :class="recipient.sent_count ? 'border-gray-300 text-gray-700 hover:bg-gray-50' : 'border-red-600 text-red-600 hover:bg-red-50'"
-                                    @click="send(recipient)"
-                                >{{ recipient.sent_count ? 'Send again' : 'Send programme' }}</button>
+                                    :class="recipient.pending ? 'border-red-600 text-red-600 hover:bg-red-50' : 'border-gray-300 text-gray-700 hover:bg-gray-50'"
+                                    @click="sendOne(recipient)"
+                                >{{ recipient.pending ? 'Send programme' : 'Send again' }}</button>
                             </div>
                             <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-                                <span :class="recipient.sent_count ? 'text-green-700' : 'text-gray-400'">
-                                    {{ recipient.sent_count ? `Sent ${recipient.sent_count}× · last ${recipient.last_sent}` : 'Not sent yet' }}
-                                </span>
+                                <span :class="statusClass(recipient)">{{ status(recipient) }}</span>
                                 <a :href="recipient.url" target="_blank" class="text-gray-500 underline hover:text-gray-900">Open their page ↗</a>
                                 <button type="button" class="text-gray-500 underline hover:text-gray-900" @click="copyLink(recipient)">
                                     {{ copied === recipient.id ? 'Copied' : 'Copy link' }}
                                 </button>
+                                <button type="button" class="text-gray-500 underline hover:text-gray-900" @click="editExtra(recipient)">Edit</button>
                                 <button type="button" class="text-red-600 underline hover:text-red-800" @click="removeRecipient(recipient)">Remove</button>
                             </div>
                         </li>

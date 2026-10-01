@@ -164,8 +164,21 @@ meals, round tables, outings. Never shown on the public site.
 - **Backoffice:** `/dashboard/agenda` (`Admin\AgendaController`,
   `Pages/Admin/2026/Agenda.vue`) — events CRUD, recipients, "Send programme"
   (one, or everyone not yet sent), and a framed preview in either language.
+- **Who it goes to:** a speaker's address lives on the speaker (`people.email`
+  + `email_locale`, `$hidden` on `Person` — never on the site). Every speaker
+  with an address is on the send list automatically:
+  `AgendaRecipient::syncSpeakers()` runs whenever the Agenda screen loads and
+  links a row to its speaker (`person_id`), adopting a hand-typed row with the
+  same address rather than duplicating it. Guests and team are rows with no
+  `person_id`. A row's token never changes, so a new address keeps the old link.
+- **Changed addresses are noticed:** `sent_email` records where the last send
+  went; when it differs from `email` the row is "pending" again and flagged.
+- **Sending is one email per request**, driven by the screen (axios, a pause
+  between): Resend takes ~2 a second and a request lives 30s, so a server-side
+  loop over thirty speakers would not finish. A failure is listed, not fatal.
 - **Email:** `AgendaInvite` is only a link — the page always shows the latest
-  agenda, so nothing goes stale in an inbox.
+  agenda, so nothing goes stale in an inbox. Someone who already has it at
+  their current address gets it worded as an update.
 
 The root template takes `<html lang>` (which the client reads to pick its
 translations) from the page's own `locale` prop before the session — that is

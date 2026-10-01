@@ -1,7 +1,7 @@
 @component('mail::message')
 # {{ __('Hello :name,', ['name' => $name]) }}
 
-{{ __('agenda.email.intro') }}
+{{ __($update ? 'agenda.email.update' : 'agenda.email.intro') }}
 
 @component('mail::button', ['url' => $url])
 {{ __('Open my programme') }}

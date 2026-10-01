@@ -30,6 +30,17 @@ class Person extends Model implements TranslatableContract
         'synced_at',
     ];
 
+    /*
+     * The address is for the office to write to a speaker, never for the site.
+     * The public pages build their own arrays field by field and do not pick
+     * it up — hidden here so that a model handed whole to a page, by mistake,
+     * still cannot carry it out.
+     */
+    protected $hidden = [
+        'email',
+        'email_locale',
+    ];
+
     protected $casts = [
         'published' => 'boolean',
         'synced_at' => 'datetime',

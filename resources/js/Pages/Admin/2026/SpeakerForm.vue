@@ -17,6 +17,8 @@ const form = useForm({
     slug: props.speaker.slug,
     position: props.speaker.position,
     institution_url: props.speaker.institution_url,
+    email: props.speaker.email,
+    email_locale: props.speaker.email_locale,
     en: { ...props.speaker.en },
     ro: { ...props.speaker.ro },
     photo: null,
@@ -81,6 +83,24 @@ function submit() {
                             The institution named below their name on the public page becomes a link to this.
                         </p>
                         <p v-if="form.errors.institution_url" class="mt-1 text-sm text-red-600">{{ form.errors.institution_url }}</p>
+                    </div>
+
+                    <div class="grid gap-4 sm:grid-cols-3">
+                        <div class="sm:col-span-2">
+                            <label class="block text-sm font-medium mb-1">Email <span class="font-normal text-gray-400">private</span></label>
+                            <input v-model="form.email" type="email" placeholder="name@example.org" class="w-full rounded border-gray-300 text-sm" />
+                            <p class="mt-1 text-xs text-gray-500">
+                                Never shown on the site. With an address, they are on the Agenda’s send list.
+                            </p>
+                            <p v-if="form.errors.email" class="mt-1 text-sm text-red-600">{{ form.errors.email }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Write to them in</label>
+                            <select v-model="form.email_locale" class="w-full rounded border-gray-300 text-sm">
+                                <option value="en">English</option>
+                                <option value="ro">Romanian</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
