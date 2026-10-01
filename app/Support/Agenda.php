@@ -203,6 +203,12 @@ class Agenda
             'title' => $event->text('title', $locale),
             'location' => $event->text('location', $locale),
             'description' => $event->text('description', $locale),
+            // A map is a place, not a language: one pasted only into the English
+            // text still counts when the Romanian has words of its own.
+            'english' => $locale === 'en' ? null : [
+                'location' => $event->location,
+                'description' => $event->description,
+            ],
         ];
     }
 

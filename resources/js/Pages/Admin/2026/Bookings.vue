@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
+import DraftNotice from '../../../Components/DraftNotice.vue';
+import { useDraft } from '../../../formDraft';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 
 const props = defineProps({
@@ -43,11 +45,13 @@ function invitePlace(place) {
 // ── Attendees CRUD ──────────────────────────────────────────────────────────
 const editingBooking = ref(null);
 const bookingForm = useForm({ first_name: '', last_name: '', email: '', phone: '' });
+const bookingDraft = useDraft(bookingForm, 'booking');
 
 function openAddBooking(session) {
     editingBooking.value = { sessionId: session.id, sessionTitle: session.title, id: null };
     bookingForm.clearErrors();
     bookingForm.first_name = bookingForm.last_name = bookingForm.email = bookingForm.phone = '';
+    bookingDraft.start(`new-${session.id}`);
 }
 
 function openEditBooking(session, booking) {
@@ -57,15 +61,21 @@ function openEditBooking(session, booking) {
     bookingForm.last_name = booking.last_name || booking.name.split(' ').slice(-1).join(' ');
     bookingForm.email = booking.email;
     bookingForm.phone = booking.phone || '';
+    bookingDraft.start(booking.id);
 }
 
 function saveBooking() {
     if (editingBooking.value.id) {
-        bookingForm.put(`/dashboard/bookings/${editingBooking.value.id}`, { preserveScroll: true, onSuccess: () => (editingBooking.value = null) });
+        bookingForm.put(`/dashboard/bookings/${editingBooking.value.id}`, { preserveScroll: true, onSuccess: saved });
     } else {
         bookingForm.transform((d) => ({ ...d, session_id: editingBooking.value.sessionId }))
-            .post('/dashboard/bookings', { preserveScroll: true, onSuccess: () => (editingBooking.value = null) });
+            .post('/dashboard/bookings', { preserveScroll: true, onSuccess: saved });
     }
+}
+
+function saved() {
+    bookingDraft.finish();
+    editingBooking.value = null;
 }
 
 function toggleBooking(booking) {
@@ -200,6 +210,7 @@ function removeBooking(booking) {
             <form class="bg-white rounded p-5 w-full max-w-md space-y-4" @submit.prevent="saveBooking">
                 <h2 class="font-bold text-lg">{{ editingBooking.id ? 'Edit attendee' : 'Add attendee' }}</h2>
                 <p class="text-sm text-gray-500">{{ editingBooking.sessionTitle }}</p>
+                <DraftNotice :draft="bookingDraft" />
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>

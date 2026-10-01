@@ -164,6 +164,14 @@ earlier version had all three and they were removed on purpose.
 - **One builder:** `App\Support\Agenda::days($locale)` feeds both the page and
   the backoffice preview. `Agenda::hours()` / `overlaps()` are covered by
   `tests/Unit/AgendaHoursTest.php` (no database).
+- **Links & maps:** web addresses typed in a note, location or description
+  render as links (`resources/js/agendaText.js`, built as Vue parts — never
+  `v-html`; check: `node resources/js/agendaText.check.mjs`). A map link
+  (Google/Apple Maps, OpenStreetMap, Waze) becomes the event's place: the
+  location line opens it, and the link is taken out of the description. A
+  Romanian text without a map uses the English one's. The programme box is a
+  block with one stretched link (`.wcm26-agenda-more::after`), so links in its
+  note sit above it and open themselves.
 - **Backoffice:** `/dashboard/agenda` (`Admin\AgendaController`,
   `Pages/Admin/2026/Agenda.vue`) — the link (copy, open, **Reset link**, which
   kills the old address at once), each day's programme box (note + hours),
@@ -174,6 +182,11 @@ translations) from the page's own `locale` prop before the session — that is
 what lets the preview show Romanian to an office reading in English.
 
 ## Guardrails & conventions
+
+- **Edit windows keep unsaved work** in the browser (`resources/js/formDraft.js`
+  + `Components/DraftNotice.vue`): `useDraft(form, name)`, `start(id)` after the
+  form is filled, `finish()` in `onSuccess`. Used by every backoffice modal
+  (Agenda, Programme, Workshops attendees) — use it in new ones too.
 
 - **Runtime uploads are gitignored** — `/public/assets/2026/sessions/*` and
   `/public/assets/2026/guests/*` (keep the `.gitkeep`s). These live only on prod.

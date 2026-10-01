@@ -1,5 +1,7 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/inertia-vue3';
+import DraftNotice from '../../../Components/DraftNotice.vue';
+import { useDraft } from '../../../formDraft';
 import { ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 import { tooLarge, tooLargeMessage } from '../../../imageGuard';
@@ -22,6 +24,9 @@ const dayForm = useForm({
 });
 const themeForm = useForm({ numeral: '', position: 0, title: '', title_ro: '', description: '', description_ro: '' });
 const toggle = useForm({});
+// Typed but not saved survives closing the window — see formDraft.js.
+const dayDraft = useDraft(dayForm, 'programme-day');
+const themeDraft = useDraft(themeForm, 'programme-theme');
 
 function openDay(day) {
     editingDay.value = day?.id ?? 'new';
@@ -36,6 +41,7 @@ function openDay(day) {
     });
     dayForm.reset();
     dayForm.new_moderator = { first: '', last: '', image: null };
+    dayDraft.start(day?.id ?? 'new');
 }
 
 function pickModeratorImage(event) {
@@ -50,7 +56,7 @@ function pickModeratorImage(event) {
 }
 
 function saveDay() {
-    const done = { forceFormData: true, onSuccess: () => (editingDay.value = null) };
+    const done = { forceFormData: true, onSuccess: () => { dayDraft.finish(); editingDay.value = null; } };
 
     editingDay.value === 'new'
         ? dayForm.post('/dashboard/programme/days', done)
@@ -74,10 +80,11 @@ function openTheme(theme) {
         description_ro: theme?.description_ro ?? '',
     });
     themeForm.reset();
+    themeDraft.start(theme?.id ?? 'new');
 }
 
 function saveTheme() {
-    const done = { onSuccess: () => (editingTheme.value = null) };
+    const done = { onSuccess: () => { themeDraft.finish(); editingTheme.value = null; } };
 
     editingTheme.value === 'new'
         ? themeForm.post('/dashboard/programme/themes', done)
@@ -214,6 +221,7 @@ function saveTheme() {
         <div v-if="editingDay" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" @click.self="editingDay = null">
             <form class="bg-white rounded w-full max-w-lg p-6 space-y-4" @submit.prevent="saveDay">
                 <h2 class="font-bold text-lg">{{ editingDay === 'new' ? 'Add day' : 'Edit day' }}</h2>
+                <DraftNotice :draft="dayDraft" />
 
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div>
@@ -287,6 +295,7 @@ function saveTheme() {
         <div v-if="editingTheme" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" @click.self="editingTheme = null">
             <form class="bg-white rounded w-full max-w-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto" @submit.prevent="saveTheme">
                 <h2 class="font-bold text-lg">{{ editingTheme === 'new' ? 'Add theme' : 'Edit theme' }}</h2>
+                <DraftNotice :draft="themeDraft" />
 
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div>

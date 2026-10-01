@@ -2,6 +2,9 @@
 import { useForm } from '@inertiajs/inertia-vue3';
 import { computed, ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
+import DraftNotice from '../../../Components/DraftNotice.vue';
+import { useDraft } from '../../../formDraft';
+import { place } from '../../../agendaText';
 
 /*
  * The agenda builder. The agenda is one page behind one secret link, which the
@@ -28,6 +31,9 @@ const eventForm = useForm({ ...blank });
 const boxDay = ref(null); // the day whose programme box is being edited
 const boxForm = useForm({ starts_at: '', ends_at: '', note: '', note_ro: '' });
 const action = useForm({});
+// Typed but not saved survives closing the window — see formDraft.js.
+const eventDraft = useDraft(eventForm, 'agenda-event');
+const boxDraft = useDraft(boxForm, 'agenda-box');
 
 // A day's boxes in the order the page shows them: the programme among the events.
 const boxes = (day) => [
@@ -55,12 +61,15 @@ function openEvent(event, date) {
         : { ...blank, date: date ?? props.days[0]?.date ?? null });
     eventForm.reset();
     eventForm.clearErrors();
+    // A new event's draft belongs to the day it was started on.
+    eventDraft.start(event?.id ?? `new-${eventForm.date}`);
 }
 
 function saveEvent() {
     const done = {
         preserveScroll: true,
         onSuccess: () => {
+            eventDraft.finish();
             editing.value = null;
             refreshPreview();
         },
@@ -87,12 +96,14 @@ function openBox(day) {
     });
     boxForm.reset();
     boxForm.clearErrors();
+    boxDraft.start(day.programme.id);
 }
 
 function saveBox() {
     boxForm.put(`/dashboard/agenda/days/${boxDay.value.programme.id}`, {
         preserveScroll: true,
         onSuccess: () => {
+            boxDraft.finish();
             boxDay.value = null;
             refreshPreview();
         },
@@ -202,7 +213,10 @@ function copyLink(locale) {
                             </span>
                             <span class="min-w-0 flex-1">
                                 <span class="block text-sm font-medium">{{ box.event.title }}</span>
-                                <span v-if="box.event.location" class="block text-xs text-gray-500">{{ box.event.location }}</span>
+                                <span v-if="place(box.event.location, box.event.description).name || place(box.event.location, box.event.description).map" class="block text-xs text-gray-500">
+                                    {{ place(box.event.location, box.event.description).name }}
+                                    <span v-if="place(box.event.location, box.event.description).map" class="font-medium text-green-700">📍 on the map</span>
+                                </span>
                             </span>
                             <span class="flex flex-none gap-3 text-sm">
                                 <button type="button" class="text-gray-600 underline hover:text-gray-900" @click="openEvent(box.event)">Edit</button>
@@ -240,6 +254,7 @@ function copyLink(locale) {
         <div v-if="editing" class="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto bg-black/40 p-4" @click.self="editing = null">
             <form class="w-full max-w-2xl space-y-4 rounded bg-white p-6" @submit.prevent="saveEvent">
                 <h2 class="text-lg font-bold">{{ editing === 'new' ? 'Add event' : 'Edit event' }}</h2>
+                <DraftNotice :draft="eventDraft" />
 
                 <div class="grid gap-4 sm:grid-cols-4">
                     <div class="sm:col-span-2">
@@ -291,6 +306,13 @@ function copyLink(locale) {
                     </div>
                 </div>
 
+                <p class="text-xs text-gray-500">
+                    Web addresses in the location or description become links. Paste a map link — Google Maps, Apple Maps,
+                    OpenStreetMap, Waze — and it becomes the event’s place: the location opens the map, so a restaurant or a
+                    museum is one tap away.
+                    <span v-if="place(eventForm.location, eventForm.description).map" class="font-medium text-green-700">📍 Map found.</span>
+                </p>
+
                 <div class="flex justify-end gap-3">
                     <button type="button" class="rounded px-4 py-2 text-sm text-gray-600 hover:text-gray-900" @click="editing = null">Cancel</button>
                     <button type="submit" :disabled="eventForm.processing" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50">
@@ -304,6 +326,7 @@ function copyLink(locale) {
         <div v-if="boxDay" class="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto bg-black/40 p-4" @click.self="boxDay = null">
             <form class="w-full max-w-2xl space-y-4 rounded bg-white p-6" @submit.prevent="saveBox">
                 <h2 class="text-lg font-bold">Programme box · {{ boxDay.label }}</h2>
+                <DraftNotice :draft="boxDraft" />
 
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div>
@@ -334,7 +357,7 @@ function copyLink(locale) {
                         <p v-if="boxForm.errors.note_ro" class="mt-1 text-sm text-red-600">{{ boxForm.errors.note_ro }}</p>
                     </div>
                 </div>
-                <p class="text-xs text-gray-500">Shown on the box exactly as typed, line breaks included. The box opens that day’s public programme in a new tab.</p>
+                <p class="text-xs text-gray-500">Shown on the box exactly as typed, line breaks included; web addresses become links, and a map link reads “See on map”. The rest of the box opens that day’s public programme in a new tab.</p>
 
                 <div class="flex justify-end gap-3">
                     <button type="button" class="rounded px-4 py-2 text-sm text-gray-600 hover:text-gray-900" @click="boxDay = null">Cancel</button>

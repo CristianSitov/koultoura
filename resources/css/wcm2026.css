@@ -3517,7 +3517,8 @@ a.wcm26-partner-logo:focus-visible {
 
 /* The programme: one large block for the whole of the day's sessions. It is a
    link, so it reads as one — the whole box, not a line of text inside it. */
-a.wcm26-agenda-programme {
+.wcm26-agenda-programme {
+    position: relative;
     display: flex;
     flex-direction: column;
     min-height: 220px;
@@ -3529,13 +3530,13 @@ a.wcm26-agenda-programme {
     transition: background 0.15s ease;
 }
 
-/* The page's own type colours would otherwise win inside the link. */
-.wcm26-agenda-programme :is(p, h3, strong) {
+/* The page's own type colours would otherwise win on the red. */
+.wcm26-agenda-programme :is(p, h3, strong, a) {
     color: inherit;
 }
 
 .wcm26-agenda-programme:hover,
-.wcm26-agenda-programme:focus-visible {
+.wcm26-agenda-programme:focus-within {
     background: color-mix(in srgb, var(--color-accent) 86%, #000);
 }
 
@@ -3622,13 +3623,37 @@ a.wcm26-agenda-programme {
 }
 
 .wcm26-agenda-more {
+    display: block;
     margin: auto 0 0;
+    text-decoration: none;
     padding-top: 22px;
     font-family: var(--font-heading);
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+}
+
+/* The whole box is the day's link: this covers it. */
+.wcm26-agenda-more::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+
+/* A link typed in a note or a description. In the programme box it sits above
+   the box's own link, so it opens itself rather than the programme. */
+.wcm26-agenda-link {
+    position: relative;
+    z-index: 1;
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    overflow-wrap: anywhere;
+}
+
+.wcm26-agenda-where .wcm26-agenda-link {
+    color: inherit;
 }
 
 /* A day of the public programme, landed on from the agenda's box. */
