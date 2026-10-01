@@ -269,6 +269,7 @@ class ProgrammeController extends Controller
                 'internal' => (bool) $session->internal,
                 'capacity' => $session->capacity,
                 'slug' => $session->slug ?? '',
+                'link' => $session->link ?? '',
                 'image' => $session->image,
                 'speakers' => $session->exists ? $session->speakers->pluck('id')->all() : [],
                 // For the inline "add someone not on the speakers list".
@@ -344,6 +345,8 @@ class ProgrammeController extends Controller
                 Rule::unique('wcm_2026.sessions', 'slug')->ignore($session->id),
             ],
             'image' => ['nullable', 'image', 'max:32768'],
+            // Web addresses only: it is put on the public page as a link.
+            'link' => ['nullable', 'url:http,https', 'max:2048'],
             'speakers' => ['array'],
             'speakers.*' => [Rule::exists('wcm_2026.people', 'id')],
             // One person added here rather than on the speakers grid: both names
@@ -360,6 +363,8 @@ class ProgrammeController extends Controller
             'ro.subtitle' => ['nullable', 'string', 'max:255'],
             'ro.audience' => ['nullable', 'string', 'max:255'],
             'ro.description' => ['nullable', 'string'],
+        ], [
+            'link.url' => 'Enter a full web address, starting with https://',
         ]);
 
         // Booking is not a separate switch any more: a workshop or a tour has a
@@ -380,6 +385,9 @@ class ProgrammeController extends Controller
             'position' => $data['position'] ?? 0,
             'bookable' => $exception,
             'capacity' => $exception ? $data['capacity'] : null,
+            // A workshop's or a tour's title opens its own panel, so only a
+            // plain session's title can lead elsewhere.
+            'link' => $exception ? null : ($data['link'] ?? null),
             // A slug that has been handed out in a link is kept even after a
             // change of type, so the address does not rot.
             'slug' => filled($data['slug'] ?? null)

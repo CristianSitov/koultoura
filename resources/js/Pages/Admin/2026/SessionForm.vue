@@ -31,6 +31,7 @@ const form = useForm({
     position: props.session.position,
     capacity: props.session.capacity,
     slug: props.session.slug,
+    link: props.session.link ?? '',
     image: null,
     speakers: [...props.session.speakers],
     new_person: { first: '', last: '', image: null },
@@ -40,6 +41,14 @@ const form = useForm({
 
 // A workshop or a tour is the exception: clickable, with a picture and a form.
 const isException = computed(() => form.type === 'workshop' || form.type === 'tour');
+
+// The title as a link: ticking shows the address; unticking forgets it.
+const linked = ref(!! props.session.link);
+const toggleLink = () => {
+    if (! linked.value) {
+        form.link = '';
+    }
+};
 const trainerWord = computed(() => (form.type === 'tour' ? 'Guide' : 'Trainer'));
 
 const preview = ref(props.session.image);
@@ -170,6 +179,20 @@ function submit() {
                         <input v-model="form.published" type="checkbox" class="rounded border-gray-300 text-red-600" />
                         Published on the public page
                     </label>
+
+                    <!-- A workshop's or a tour's title already opens its panel. -->
+                    <div v-if="!isException" class="sm:col-span-2 space-y-2">
+                        <label class="flex items-center gap-2 text-sm">
+                            <input v-model="linked" type="checkbox" class="rounded border-gray-300 text-red-600" @change="toggleLink" />
+                            Link the title
+                            <span class="text-xs text-gray-500">— underlined on the programme, opens in a new tab</span>
+                        </label>
+                        <div v-if="linked">
+                            <input v-model="form.link" type="url" placeholder="https://" aria-label="Link address" class="w-full rounded border-gray-300 text-sm" />
+                            <p v-if="form.errors.link" class="mt-1 text-sm text-red-600">{{ form.errors.link }}</p>
+                        </div>
+                    </div>
+                    <p v-else class="sm:col-span-2 text-xs text-gray-500">The title of a {{ form.type }} opens its own details panel, so it takes no link.</p>
                 </div>
 
                 <div v-for="locale in ['en', 'ro']" :key="locale" class="bg-white rounded border border-gray-200 p-5 space-y-4">

@@ -56,7 +56,9 @@ Local `.env` maps: `DB_DATABASE_2026=wcm_2026`, `_2024=wcm_2024`, `_2022=wcm_202
 - **Programme model:** `ProgrammeDay` → `sessions` → `speakers` (Person, via
   `person_session`) + `theme` + `moderator`. `Session` has `kind`, `type`,
   `starts_at`, `image`, `school`, `youth`, `published`, `bookable`, `capacity`,
-  `slug`. A **workshop or guided tour is an "exception"**:
+  `slug`, `link`. `link` (one address, both languages) makes a **plain**
+  session's title a link — underlined, small arrow, new tab, incl. breaks; it is
+  forced to null for workshops/tours, whose card is a button opening the modal. A **workshop or guided tour is an "exception"**:
   `Session::EXCEPTIONS = ['workshop','tour']`, `isException()` — these are
   clickable, carry a `detail` payload (image, subtitle, description, trainer
   photos, booking url) and open `SessionModal`. Plain slots don't.

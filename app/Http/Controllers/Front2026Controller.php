@@ -264,6 +264,8 @@ class Front2026Controller extends Controller
                     'kind' => $session->kind,
                     'type' => $session->type,
                     'title' => $this->text($session)->title ?? '',
+                    // Where the title leads, if anywhere — opened in a new tab.
+                    'link' => $session->isException() ? null : $session->link,
                     // Who is speaking — a name and, dimmed on the page, the
                     // organisation where it is known.
                     'who' => $session->speakers->map(function (Person $person) {

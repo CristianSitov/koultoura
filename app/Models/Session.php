@@ -25,6 +25,8 @@ class Session extends Model implements TranslatableContract
     protected $fillable = [
         'programme_day_id', 'starts_at', 'ends_at', 'kind', 'type', 'image',
         'school', 'youth', 'published', 'position', 'slug', 'bookable', 'capacity', 'internal',
+        // Where the title leads, when the editor gives it somewhere to go.
+        'link',
     ];
 
     /** The two exceptions to a plain slot — clickable, bookable, with a panel. */

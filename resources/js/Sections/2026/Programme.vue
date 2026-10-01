@@ -214,7 +214,7 @@ const workshops = computed(() => {
                                 class="wcm26-break-icon"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                            ><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg>{{ session.title }}</span>
+                            ><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></svg><a v-if="session.link" :href="session.link" target="_blank" rel="noopener" class="wcm26-session-link">{{ session.title }}<svg class="wcm26-session-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></a><template v-else>{{ session.title }}</template></span>
                         </p>
 
                         <template v-else>
@@ -242,7 +242,8 @@ const workshops = computed(() => {
 
                                 <div class="wcm26-session-body" :class="bodyTint(session)">
                                     <p class="wcm26-session-title" :class="{ 'wcm26-session-tba': titleKind(session.title) === 'tba' }">
-                                        <svg v-if="session.internal" class="wcm26-session-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2" /><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" /></svg><template v-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
+                                        <svg v-if="session.internal" class="wcm26-session-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2" /><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" /></svg><!-- A title the editor linked: underlined, with a small arrow, and it
+                                        opens in a new tab. --><a v-if="session.link" :href="session.link" target="_blank" rel="noopener" class="wcm26-session-link">{{ titleKind(session.title) === 'tba' ? $t('TBA') : session.title }}<svg class="wcm26-session-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></a><template v-else-if="titleKind(session.title) === 'tba'">{{ $t('TBA') }}</template><template v-else>{{ session.title }}</template>
                                         <span v-if="session.detail" class="wcm26-session-more">{{ session.internal ? $t('Details') : $t('Details & subscribe') }} →</span>
                                     </p>
                                     <p v-if="session.who && session.who.length" class="wcm26-session-who">
