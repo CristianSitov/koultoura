@@ -251,9 +251,16 @@ function copyLink(locale) {
         </div>
 
         <!-- Add / edit an event -->
-        <div v-if="editing" class="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto bg-black/40 p-4" @click.self="editing = null">
-            <form class="w-full max-w-2xl space-y-4 rounded bg-white p-6" @submit.prevent="saveEvent">
-                <h2 class="text-lg font-bold">{{ editing === 'new' ? 'Add event' : 'Edit event' }}</h2>
+        <div v-if="editing" class="fixed inset-0 z-20 overflow-y-auto bg-white">
+            <!-- Full screen, with nothing outside it to click: selecting text in a
+                 field and letting go past its edge used to close the window. -->
+            <div class="sticky top-0 z-10 border-b border-gray-200 bg-white">
+                <div class="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
+                    <h2 class="text-lg font-bold">{{ editing === 'new' ? 'Add event' : 'Edit event' }}</h2>
+                    <button type="button" class="rounded px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900" @click="editing = null">Close ✕</button>
+                </div>
+            </div>
+            <form class="mx-auto max-w-3xl space-y-4 p-6" @submit.prevent="saveEvent">
                 <DraftNotice :draft="eventDraft" />
 
                 <div class="grid gap-4 sm:grid-cols-4">
@@ -323,9 +330,16 @@ function copyLink(locale) {
         </div>
 
         <!-- A day's programme box: its note, and its hours -->
-        <div v-if="boxDay" class="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto bg-black/40 p-4" @click.self="boxDay = null">
-            <form class="w-full max-w-2xl space-y-4 rounded bg-white p-6" @submit.prevent="saveBox">
-                <h2 class="text-lg font-bold">Programme box · {{ boxDay.label }}</h2>
+        <div v-if="boxDay" class="fixed inset-0 z-20 overflow-y-auto bg-white">
+            <!-- Full screen, with nothing outside it to click: selecting text in a
+                 field and letting go past its edge used to close the window. -->
+            <div class="sticky top-0 z-10 border-b border-gray-200 bg-white">
+                <div class="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
+                    <h2 class="text-lg font-bold">Programme box · {{ boxDay.label }}</h2>
+                    <button type="button" class="rounded px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900" @click="boxDay = null">Close ✕</button>
+                </div>
+            </div>
+            <form class="mx-auto max-w-3xl space-y-4 p-6" @submit.prevent="saveBox">
                 <DraftNotice :draft="boxDraft" />
 
                 <div class="grid gap-4 sm:grid-cols-2">

@@ -2,6 +2,7 @@
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import DraftNotice from '../../../Components/DraftNotice.vue';
 import { useDraft } from '../../../formDraft';
+import { backdrop } from '../../../backdrop';
 import { ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 import { tooLarge, tooLargeMessage } from '../../../imageGuard';
@@ -27,6 +28,9 @@ const toggle = useForm({});
 // Typed but not saved survives closing the window — see formDraft.js.
 const dayDraft = useDraft(dayForm, 'programme-day');
 const themeDraft = useDraft(themeForm, 'programme-theme');
+// Clicking beside a window closes it — only a click that started there.
+const dayBackdrop = backdrop(() => (editingDay.value = null));
+const themeBackdrop = backdrop(() => (editingTheme.value = null));
 
 function openDay(day) {
     editingDay.value = day?.id ?? 'new';
@@ -218,7 +222,7 @@ function saveTheme() {
         </section>
 
         <!-- Day editor -->
-        <div v-if="editingDay" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" @click.self="editingDay = null">
+        <div v-if="editingDay" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" v-on="dayBackdrop">
             <form class="bg-white rounded w-full max-w-lg p-6 space-y-4" @submit.prevent="saveDay">
                 <h2 class="font-bold text-lg">{{ editingDay === 'new' ? 'Add day' : 'Edit day' }}</h2>
                 <DraftNotice :draft="dayDraft" />
@@ -292,7 +296,7 @@ function saveTheme() {
         </div>
 
         <!-- Theme editor -->
-        <div v-if="editingTheme" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" @click.self="editingTheme = null">
+        <div v-if="editingTheme" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" v-on="themeBackdrop">
             <form class="bg-white rounded w-full max-w-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto" @submit.prevent="saveTheme">
                 <h2 class="font-bold text-lg">{{ editingTheme === 'new' ? 'Add theme' : 'Edit theme' }}</h2>
                 <DraftNotice :draft="themeDraft" />

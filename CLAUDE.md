@@ -189,6 +189,10 @@ what lets the preview show Romanian to an office reading in English.
   + `Components/DraftNotice.vue`): `useDraft(form, name)`, `start(id)` after the
   form is filled, `finish()` in `onSuccess`. Used by every backoffice modal
   (Agenda, Programme, Workshops attendees) — use it in new ones too.
+- **Pop-ups close on a backdrop click only if the press started there**
+  (`resources/js/backdrop.js`, built once in setup, `v-on="xBackdrop"`) —
+  never `@click.self`, which closes the window when a text selection is let go
+  past its edge. The Agenda's two edit windows are full screen instead.
 
 - **Runtime uploads are gitignored** — `/public/assets/2026/sessions/*` and
   `/public/assets/2026/guests/*` (keep the `.gitkeep`s). These live only on prod.

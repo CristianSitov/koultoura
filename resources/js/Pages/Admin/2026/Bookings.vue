@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import DraftNotice from '../../../Components/DraftNotice.vue';
 import { useDraft } from '../../../formDraft';
+import { backdrop } from '../../../backdrop';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 
 const props = defineProps({
@@ -46,6 +47,8 @@ function invitePlace(place) {
 const editingBooking = ref(null);
 const bookingForm = useForm({ first_name: '', last_name: '', email: '', phone: '' });
 const bookingDraft = useDraft(bookingForm, 'booking');
+// Clicking beside the window closes it — only a click that started there.
+const bookingBackdrop = backdrop(() => (editingBooking.value = null));
 
 function openAddBooking(session) {
     editingBooking.value = { sessionId: session.id, sessionTitle: session.title, id: null };
@@ -206,7 +209,7 @@ function removeBooking(booking) {
         </section>
 
         <!-- Add / edit an attendee -->
-        <div v-if="editingBooking" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" @click.self="editingBooking = null">
+        <div v-if="editingBooking" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" v-on="bookingBackdrop">
             <form class="bg-white rounded p-5 w-full max-w-md space-y-4" @submit.prevent="saveBooking">
                 <h2 class="font-bold text-lg">{{ editingBooking.id ? 'Edit attendee' : 'Add attendee' }}</h2>
                 <p class="text-sm text-gray-500">{{ editingBooking.sessionTitle }}</p>
