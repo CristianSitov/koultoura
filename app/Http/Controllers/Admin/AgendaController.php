@@ -34,9 +34,10 @@ class AgendaController extends Controller
 
         return Inertia::render('Admin/2026/Agenda', [
             // The same page in either language; the page has a switch of its
-            // own, so whichever is sent, the reader can change it.
+            // own, so whichever is sent, the reader can change it. English is
+            // named too: without it the page follows the reader's last visit.
             'link' => [
-                'en' => $link.'/agenda/'.$token,
+                'en' => $link.'/en/agenda/'.$token,
                 'ro' => $link.'/ro/agenda/'.$token,
             ],
             'days' => Agenda::dates()->map(fn (string $date) => [
