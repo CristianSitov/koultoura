@@ -2,13 +2,15 @@
 import { useForm } from '@inertiajs/inertia-vue3';
 import { computed, ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
+import { conflictsFor } from '../../../agendaConflicts';
 
 /*
  * The internal agenda: the events that are not in the public programme, the
  * people the agenda is sent to, and a preview of the page they open.
  *
  * The official sessions are not edited here — they come from Programme, and
- * the agenda page weaves the two together by the clock.
+ * the agenda page weaves the two together by the clock. The days run one past
+ * the symposium at each end, for arrivals and departures.
  */
 const props = defineProps({
     days: { type: Array, default: () => [] },
@@ -18,7 +20,7 @@ const props = defineProps({
 });
 
 const blank = {
-    programme_day_id: null, starts_at: '', ends_at: '',
+    date: null, starts_at: '', ends_at: '',
     title: '', title_ro: '', location: '', location_ro: '', description: '', description_ro: '',
 };
 
@@ -26,6 +28,30 @@ const editing = ref(null); // null, 'new', or the event's id
 const eventForm = useForm({ ...blank });
 const recipientForm = useForm({ name: '', email: '', locale: 'en' });
 const action = useForm({});
+
+/*
+ * Overlaps are worked out from what the page already holds, on every render —
+ * so an event is flagged whether the clash came from adding it, or from a
+ * session being moved onto it in Programme afterwards. They never stop a save.
+ */
+const clashes = computed(() => Object.fromEntries(
+    props.days.flatMap((day) => day.events.map((event) => [
+        event.id,
+        conflictsFor(day, event.starts_at, event.ends_at, event.id),
+    ])),
+));
+const clashing = computed(() => Object.values(clashes.value).filter((list) => list.length).length);
+
+// The same check, live, against whatever is in the form right now.
+const formClashes = computed(() => conflictsFor(
+    props.days.find((day) => day.date === eventForm.date),
+    eventForm.starts_at,
+    eventForm.ends_at,
+    editing.value === 'new' ? null : editing.value,
+));
+
+const short = (title) => (title.length > 44 ? `${title.slice(0, 42)}…` : title);
+const describe = (list) => list.map((clash) => `${clash.time} ${short(clash.title)}`).join(' · ');
 
 /*
  * The previewer is the real page in a frame, so what the office sees is what
@@ -37,11 +63,11 @@ const previewKey = ref(0);
 const previewUrl = computed(() => `/dashboard/agenda/preview/${previewLocale.value}`);
 const refreshPreview = () => (previewKey.value += 1);
 
-function openEvent(event, dayId) {
+function openEvent(event, date) {
     editing.value = event?.id ?? 'new';
     eventForm.defaults(event
         ? { ...blank, ...event }
-        : { ...blank, programme_day_id: dayId ?? props.days[0]?.id ?? null });
+        : { ...blank, date: date ?? props.days[0]?.date ?? null });
     eventForm.reset();
     eventForm.clearErrors();
 }
@@ -114,22 +140,34 @@ function copyLink(recipient) {
             events you add here — meetings, meals, round tables, outings. None of this appears on the public site.
         </p>
 
+        <p v-if="clashing" class="mb-6 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <span class="font-semibold">{{ clashing }} {{ clashing === 1 ? 'event overlaps' : 'events overlap' }} something else on the day.</span>
+            Each is marked below. Nothing is blocked — check that the overlap is meant.
+        </p>
+
         <div class="grid gap-6 lg:grid-cols-5">
             <!-- Events, by day -->
             <div class="space-y-4 lg:col-span-3">
                 <div v-if="!days.length" class="rounded border border-gray-200 bg-white p-5 text-sm text-gray-500">
-                    Add the days in Programme first — an event belongs to a day.
+                    Add the days in Programme first — the agenda takes its dates from them.
                 </div>
 
-                <div v-for="day in days" :key="day.id" class="rounded border border-gray-200 bg-white">
+                <div v-for="day in days" :key="day.date" class="rounded border border-gray-200 bg-white">
                     <div class="flex items-center justify-between border-b border-gray-100 px-5 py-3">
-                        <h2 class="text-sm font-semibold">{{ day.label }}</h2>
-                        <button type="button" class="text-sm font-semibold text-red-600 hover:text-red-800" @click="openEvent(null, day.id)">
+                        <h2 class="text-sm font-semibold">
+                            {{ day.label }}
+                            <span v-if="day.extra" class="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+                                outside the programme
+                            </span>
+                        </h2>
+                        <button type="button" class="text-sm font-semibold text-red-600 hover:text-red-800" @click="openEvent(null, day.date)">
                             + Add event
                         </button>
                     </div>
 
-                    <p v-if="!day.events.length" class="px-5 py-4 text-sm text-gray-400">No internal events on this day.</p>
+                    <p v-if="!day.events.length" class="px-5 py-4 text-sm text-gray-400">
+                        {{ day.extra ? 'Nothing yet — for arrivals and departures: a transfer, a dinner, a meeting point.' : 'No internal events on this day.' }}
+                    </p>
 
                     <ul v-else class="divide-y divide-gray-100">
                         <li v-for="event in day.events" :key="event.id" class="flex items-start gap-4 px-5 py-3">
@@ -139,6 +177,9 @@ function copyLink(recipient) {
                             <span class="min-w-0 flex-1">
                                 <span class="block text-sm font-medium">{{ event.title }}</span>
                                 <span v-if="event.location" class="block text-xs text-gray-500">{{ event.location }}</span>
+                                <span v-if="clashes[event.id].length" class="mt-1 block text-xs font-medium text-amber-700">
+                                    ⚠ Overlaps {{ describe(clashes[event.id]) }}
+                                </span>
                             </span>
                             <span class="flex flex-none gap-3 text-sm">
                                 <button type="button" class="text-gray-600 underline hover:text-gray-900" @click="openEvent(event)">Edit</button>
@@ -248,10 +289,12 @@ function copyLink(recipient) {
                 <div class="grid gap-4 sm:grid-cols-4">
                     <div class="sm:col-span-2">
                         <label class="mb-1 block text-sm font-medium">Day</label>
-                        <select v-model="eventForm.programme_day_id" class="w-full rounded border-gray-300 text-sm">
-                            <option v-for="day in days" :key="day.id" :value="day.id">{{ day.label }}</option>
+                        <select v-model="eventForm.date" class="w-full rounded border-gray-300 text-sm">
+                            <option v-for="day in days" :key="day.date" :value="day.date">
+                                {{ day.label }}{{ day.extra ? ' — outside the programme' : '' }}
+                            </option>
                         </select>
-                        <p v-if="eventForm.errors.programme_day_id" class="mt-1 text-sm text-red-600">{{ eventForm.errors.programme_day_id }}</p>
+                        <p v-if="eventForm.errors.date" class="mt-1 text-sm text-red-600">{{ eventForm.errors.date }}</p>
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium">Starts</label>
@@ -264,6 +307,21 @@ function copyLink(recipient) {
                         <p v-if="eventForm.errors.ends_at" class="mt-1 text-sm text-red-600">{{ eventForm.errors.ends_at }}</p>
                     </div>
                 </div>
+
+                <!-- A heads-up, never a refusal: the Save button below still works. -->
+                <div v-if="formClashes.length" class="rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                    <p class="font-semibold">⚠ At this time it overlaps:</p>
+                    <ul class="mt-1 list-disc space-y-0.5 pl-5">
+                        <li v-for="clash in formClashes" :key="`${clash.kind}-${clash.time}-${clash.title}`">
+                            {{ clash.time }} — {{ clash.title }}
+                            <span class="text-amber-700">({{ clash.kind === 'agenda' ? 'another agenda event' : 'programme' }})</span>
+                        </li>
+                    </ul>
+                    <p class="mt-1.5 text-xs text-amber-800">You can still save it — this is only so an overlap is never a surprise.</p>
+                </div>
+                <p v-else-if="eventForm.starts_at && !eventForm.ends_at" class="text-xs text-gray-500">
+                    With no end time, only the start is checked against the programme. Add an end for a full check.
+                </p>
 
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div v-for="lang in [{ key: '', label: 'English' }, { key: '_ro', label: 'Romanian' }]" :key="lang.key" class="space-y-3">

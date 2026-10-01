@@ -45,9 +45,11 @@ defineProps({
 
             <p v-if="!days.length" class="wcm26-agenda-empty">{{ $t('agenda.empty') }}</p>
 
-            <div v-for="day in days" :key="day.id" class="wcm26-agenda-day">
+            <div v-for="day in days" :key="day.date" class="wcm26-agenda-day">
                 <header class="wcm26-agenda-dayhead">
-                    <p class="wcm26-label">{{ day.name }} · {{ $t('Day :n', { n: day.n }) }}</p>
+                    <!-- "Day 2" is a place in the symposium; the day before it
+                         and the day after have a weekday and nothing more. -->
+                    <p class="wcm26-label">{{ day.name }}<template v-if="day.n"> · {{ $t('Day :n', { n: day.n }) }}</template></p>
                     <p class="wcm26-day-n">{{ day.num }}<span class="wcm26-day-month">{{ day.month }}</span></p>
                     <p v-if="day.theme" class="wcm26-agenda-theme">
                         <span class="wcm26-square"></span>

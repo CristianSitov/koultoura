@@ -141,10 +141,19 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 The public **Programme** plus the things arranged only for insiders — meetings,
 meals, round tables, outings. Never shown on the public site.
 
-- **Data:** `agenda_events` (a programme day, start/end, title/location/
-  description, each with an optional `_ro` that falls back to English) and
+- **Data:** `agenda_events` (a `date`, start/end, title/location/description,
+  each with an optional `_ro` that falls back to English) and
   `agenda_recipients` (name, email, `locale`, a 48-char `token`, send tracking).
-  Recipients are their own list because `people` carries **no email**.
+  Recipients are their own list because `people` carries **no email**. An event
+  has its own date, not a programme day: the agenda also covers **the day
+  before and the day after** the symposium (arrivals, departures), which are
+  not programme days — `Agenda::dates()` is the one place that range is set.
+- **Overlaps are flagged, never blocked** (`resources/js/agendaConflicts.js`,
+  checked by `node resources/js/agendaConflicts.check.mjs`): an event is marked
+  when it sits on a session or another event. A session with no end time runs
+  until the next later start (most have none); breaks do not count; an event
+  with no end is checked at its start only. Worked out on every render, so a
+  session moved in Programme flags the event it lands on.
 - **One builder:** `App\Support\Agenda::days($locale)` merges each day's
   *published* sessions with its events, by the clock. Both the recipient's page
   and the backoffice preview call it, so the office sees exactly what is sent.

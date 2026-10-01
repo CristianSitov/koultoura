@@ -9,9 +9,11 @@ use App\Models\AgendaEvent;
 use App\Models\AgendaRecipient;
 use App\Models\Person;
 use App\Models\ProgrammeDay;
+use App\Models\Session;
 use App\Support\Agenda;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
@@ -24,30 +26,43 @@ use Inertia\Response;
  */
 class AgendaController extends Controller
 {
+    /*
+     * A break is free time, so an event set across one is not a clash — a
+     * speakers' lunch belongs in the lunch break. Told by the title, the same
+     * way the public programme tells them (see Sections/2026/Programme.vue).
+     */
+    private const BREAKS = ['Coffee Break', 'Lunch Break'];
+
     public function index(): Response
     {
+        $programme = ProgrammeDay::with('sessions.translations')->get()
+            ->keyBy(fn (ProgrammeDay $day) => $day->date->toDateString());
+        $events = AgendaEvent::orderBy('starts_at')->get()
+            ->groupBy(fn (AgendaEvent $event) => $event->date->toDateString());
+
         return Inertia::render('Admin/2026/Agenda', [
-            'days' => ProgrammeDay::with(['translations', 'agendaEvents'])
-                ->orderBy('position')
-                ->orderBy('date')
-                ->get()
-                ->map(fn (ProgrammeDay $day) => [
-                    'id' => $day->id,
-                    'label' => $day->date->format('D j M'),
-                    'events' => $day->agendaEvents->map(fn (AgendaEvent $e) => [
-                        'id' => $e->id,
-                        'programme_day_id' => $e->programme_day_id,
-                        // HH:MM, which is what a time input reads and writes.
-                        'starts_at' => substr($e->starts_at, 0, 5),
-                        'ends_at' => $e->ends_at ? substr($e->ends_at, 0, 5) : '',
-                        'title' => $e->title,
-                        'title_ro' => $e->title_ro ?? '',
-                        'location' => $e->location ?? '',
-                        'location_ro' => $e->location_ro ?? '',
-                        'description' => $e->description ?? '',
-                        'description_ro' => $e->description_ro ?? '',
-                    ]),
-                ]),
+            'days' => Agenda::dates()->map(fn (string $date) => [
+                'date' => $date,
+                'label' => Carbon::parse($date)->format('D j M'),
+                // Not one of the symposium's own days: the day guests arrive,
+                // or the day they leave.
+                'extra' => ! $programme->has($date),
+                'events' => ($events->get($date) ?? collect())->map(fn (AgendaEvent $e) => [
+                    'id' => $e->id,
+                    'date' => $date,
+                    // HH:MM, which is what a time input reads and writes.
+                    'starts_at' => substr($e->starts_at, 0, 5),
+                    'ends_at' => $e->ends_at ? substr($e->ends_at, 0, 5) : '',
+                    'title' => $e->title,
+                    'title_ro' => $e->title_ro ?? '',
+                    'location' => $e->location ?? '',
+                    'location_ro' => $e->location_ro ?? '',
+                    'description' => $e->description ?? '',
+                    'description_ro' => $e->description_ro ?? '',
+                ])->values(),
+                // What the programme has on that day, for the overlap check.
+                'busy' => $programme->has($date) ? $this->busy($programme->get($date)) : [],
+            ])->values(),
             'recipients' => AgendaRecipient::orderBy('name')->get()
                 ->map(fn (AgendaRecipient $r) => [
                     'id' => $r->id,
@@ -146,6 +161,49 @@ class AgendaController extends Controller
             : 'Programme sent to '.$pending->count().' '.($pending->count() === 1 ? 'person' : 'people').'.');
     }
 
+    /*
+     * A day's sessions as stretches of time. Most carry only a start, so one
+     * without an end is taken to run until the next thing starts — which is how
+     * the printed programme reads. "Next" means a later start: sessions that
+     * share a slot run side by side, and neither ends the other.
+     *
+     * Drafts are in: a session not yet published is still one the office means
+     * to hold, and it is the office this warns.
+     */
+    private function busy(ProgrammeDay $day): array
+    {
+        $starts = $day->sessions
+            ->map(fn (Session $session) => substr($session->starts_at, 0, 5))
+            ->unique()
+            ->sort()
+            ->values();
+
+        return $day->sessions->map(function (Session $session) use ($starts) {
+            $start = substr($session->starts_at, 0, 5);
+            $title = $session->translate('en')?->title ?? '';
+
+            return [
+                'title' => $title,
+                'start' => $start,
+                'end' => $session->ends_at
+                    ? substr($session->ends_at, 0, 5)
+                    : ($starts->first(fn (string $time) => $time > $start) ?? self::anHourAfter($start)),
+                'break' => in_array($title, self::BREAKS, true),
+                'draft' => ! $session->published,
+            ];
+        })->values()->all();
+    }
+
+    // ponytail: the day's last session, if it has no end, is given an hour.
+    // Give it a real end time in Programme and that is used instead.
+    private static function anHourAfter(string $time): string
+    {
+        $later = Carbon::createFromFormat('H:i', $time)->addHour()->format('H:i');
+
+        // Past midnight would read as before the start.
+        return $later < $time ? '23:59' : $later;
+    }
+
     private function deliver(AgendaRecipient $recipient): void
     {
         Mail::to($recipient->email)->send(new AgendaInvite($recipient, $this->link($recipient)));
@@ -164,7 +222,8 @@ class AgendaController extends Controller
     private function eventData(Request $request): array
     {
         return $request->validate([
-            'programme_day_id' => ['required', Rule::exists(ProgrammeDay::class, 'id')],
+            // One of the agenda's days — the symposium's, or the day either side.
+            'date' => ['required', Rule::in(Agenda::dates()->all())],
             'starts_at' => ['required', 'date_format:H:i'],
             'ends_at' => ['nullable', 'date_format:H:i', 'after:starts_at'],
             'title' => ['required', 'string', 'max:200'],
@@ -179,8 +238,9 @@ class AgendaController extends Controller
             'ends_at.after' => 'The end must be later than the start.',
             'starts_at.date_format' => 'Enter the start as a time, like 14:30.',
             'ends_at.date_format' => 'Enter the end as a time, like 14:30.',
+            'date.in' => 'Pick one of the agenda’s days.',
         ], [
-            'programme_day_id' => 'day',
+            'date' => 'day',
             'starts_at' => 'start time',
         ]);
     }
