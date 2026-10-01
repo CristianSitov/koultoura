@@ -128,15 +128,18 @@ const dial = (phone) => `tel:+40${phone.replace(/\s/g, '')}`;
                 <div>
                     <p class="wcm26-agenda-contact-text">{{ $t('agenda.contact.intro') }}</p>
                     <ul class="wcm26-agenda-phones">
+                        <!-- The whole box dials — easier to hit with a thumb than the number. -->
                         <li v-for="person in helpers" :key="person.name">
-                            <span>{{ person.name }}</span>
-                            <a :href="dial(person.phone)">{{ shown(person.phone) }}</a>
+                            <a :href="dial(person.phone)" class="wcm26-agenda-phone">
+                                <span>{{ person.name }}</span>
+                                <span class="wcm26-agenda-number">{{ shown(person.phone) }}</span>
+                            </a>
                         </li>
                     </ul>
 
                     <p class="wcm26-agenda-contact-text wcm26-agenda-urgent">
                         {{ $t('agenda.contact.urgent') }}
-                        <a :href="dial(travel.phone)">{{ shown(travel.phone) }}</a>.
+                        <a :href="dial(travel.phone)" class="wcm26-agenda-number wcm26-agenda-dial-box">{{ shown(travel.phone) }}</a>.
                     </p>
                 </div>
             </div>

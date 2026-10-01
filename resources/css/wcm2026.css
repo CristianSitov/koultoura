@@ -3686,22 +3686,31 @@ a.wcm26-partner-logo:focus-visible {
     gap: 8px;
 }
 
-.wcm26-agenda-phones li {
+.wcm26 .wcm26-agenda-phone {
     display: flex;
     flex-wrap: wrap;
     gap: 4px 12px;
     align-items: baseline;
-    padding: 12px 18px;
+    padding: 14px 18px;
     background: color-mix(in srgb, var(--color-text) 4%, transparent);
     border-left: 3px solid color-mix(in srgb, var(--color-text) 16%, transparent);
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.15s ease;
 }
 
-.wcm26-agenda-phones span {
+.wcm26 .wcm26-agenda-phone:hover,
+.wcm26 .wcm26-agenda-phone:focus-visible {
+    background: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.wcm26-agenda-phone > span:first-child {
     min-width: 96px;
     font-weight: 600;
 }
 
-.wcm26-agenda-contact a {
+.wcm26 .wcm26-agenda-number {
+    color: var(--color-accent-700);
     font-family: var(--font-heading);
     font-weight: 700;
     font-feature-settings: 'tnum' 1;
@@ -3710,9 +3719,17 @@ a.wcm26-partner-logo:focus-visible {
 
 /* The travel line is the one for when something goes wrong. */
 .wcm26-agenda-urgent {
+    position: relative;
     padding: 14px 18px;
     background: var(--color-accent-100);
     border-left: 3px solid var(--color-accent);
+}
+
+/* The travel box dials too: its number's link covers the whole box. */
+.wcm26-agenda-dial-box::after {
+    content: '';
+    position: absolute;
+    inset: 0;
 }
 
 /* The whole box is the day's link: this covers it. */
