@@ -136,6 +136,32 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 **Hosting:** shared VPS `root@heritageoftimisoara.ro:2221`; this site lives at
 `/var/www/whyculturematters.eu`; prod DBs are `whyculturematters_2026/_2024/_2022`.
 
+## Internal agenda (speakers, guests, team)
+
+The public **Programme** plus the things arranged only for insiders — meetings,
+meals, round tables, outings. Never shown on the public site.
+
+- **Data:** `agenda_events` (a programme day, start/end, title/location/
+  description, each with an optional `_ro` that falls back to English) and
+  `agenda_recipients` (name, email, `locale`, a 48-char `token`, send tracking).
+  Recipients are their own list because `people` carries **no email**.
+- **One builder:** `App\Support\Agenda::days($locale)` merges each day's
+  *published* sessions with its events, by the clock. Both the recipient's page
+  and the backoffice preview call it, so the office sees exactly what is sent.
+- **Recipient page:** `/2026/agenda/{token}` (`Front2026AgendaController`) — no
+  login, the token is the key; a wrong token is a 404. It renders in the
+  recipient's language: `Resolve2026Locale` reads it from the token, the same
+  way the contribution step reads a registration's. Sent `X-Robots-Tag: noindex`.
+- **Backoffice:** `/dashboard/agenda` (`Admin\AgendaController`,
+  `Pages/Admin/2026/Agenda.vue`) — events CRUD, recipients, "Send programme"
+  (one, or everyone not yet sent), and a framed preview in either language.
+- **Email:** `AgendaInvite` is only a link — the page always shows the latest
+  agenda, so nothing goes stale in an inbox.
+
+The root template takes `<html lang>` (which the client reads to pick its
+translations) from the page's own `locale` prop before the session — that is
+what lets the preview show Romanian to an office reading in English.
+
 ## Guardrails & conventions
 
 - **Runtime uploads are gitignored** — `/public/assets/2026/sessions/*` and

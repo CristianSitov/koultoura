@@ -51,9 +51,10 @@ const otherLocaleUrl = computed(() => {
 
 /*
  * The contribution step has no address of its own per language — it reads the
- * language of the registration it belongs to — so there is nothing to switch to.
+ * language of the registration it belongs to — so there is nothing to switch
+ * to. The internal agenda is the same: its language is its recipient's.
  */
-const canSwitchLocale = computed(() => ! (page.url.value || '').includes('/contribute/'));
+const canSwitchLocale = computed(() => ! /\/(contribute|agenda)\//.test(page.url.value || ''));
 
 // The page behind the menu does not scroll, as on the landing page.
 watch(menuOpen, (open) => {

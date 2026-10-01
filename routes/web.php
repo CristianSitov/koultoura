@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AgendaController;
 use App\Http\Controllers\Admin\Overview2026Controller;
 use App\Http\Controllers\Admin\ProgrammeController;
 use App\Http\Controllers\Admin\RegistrationsController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Admin\SpeakerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front2022Controller;
 use App\Http\Controllers\Front2024Controller;
+use App\Http\Controllers\Front2026AgendaController;
 use App\Http\Controllers\Front2026Controller;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\Front2026RegistrationController;
@@ -180,6 +182,13 @@ Route::prefix(Front2026Controller::path())
                     ->where('token', '[A-Za-z0-9]+')
                     ->name('place.calendar');
             });
+
+        // The internal agenda, opened from the email sent to a speaker, a guest
+        // or one of the team. The token is the key, and the language is the
+        // recipient's — see Resolve2026Locale — so there is no locale variant.
+        Route::get('/agenda/{token}', [Front2026AgendaController::class, 'show'])
+            ->where('token', '[A-Za-z0-9]+')
+            ->name('agenda');
 
         // The contribution step. The language comes from the registration, so
         // these need no locale variant.
@@ -355,5 +364,22 @@ Route::prefix('dashboard')
             // Internal-workshop places.
             Route::put('/places/{place}', 'updatePlace')->name('places.update');
             Route::post('/places/{place}/invite', 'invitePlace')->name('places.invite');
+        });
+
+        // The internal agenda: its events, who it is sent to, and a preview.
+        Route::controller(AgendaController::class)->group(function () {
+            Route::get('/agenda', 'index')->name('agenda');
+            Route::get('/agenda/preview/{locale}', 'preview')
+                ->where('locale', 'en|ro')
+                ->name('agenda.preview');
+
+            Route::post('/agenda/events', 'storeEvent')->name('agenda.events.store');
+            Route::put('/agenda/events/{event}', 'updateEvent')->name('agenda.events.update');
+            Route::delete('/agenda/events/{event}', 'destroyEvent')->name('agenda.events.destroy');
+
+            Route::post('/agenda/recipients', 'storeRecipient')->name('agenda.recipients.store');
+            Route::delete('/agenda/recipients/{recipient}', 'destroyRecipient')->name('agenda.recipients.destroy');
+            Route::post('/agenda/recipients/{recipient}/send', 'send')->name('agenda.recipients.send');
+            Route::post('/agenda/send', 'sendAll')->name('agenda.send');
         });
     });

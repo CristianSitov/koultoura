@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', session()->get('locale')) }}" class="scroll-smooth">
+{{-- The language of the page being drawn, which the client also reads to pick
+     its translations. A page may name its own (the agenda preview shows either
+     language whatever the office is reading in); the rest carry the shared one,
+     which is the session's — so for them this is what it always was. --}}
+<html lang="{{ str_replace('_', '-', $page['props']['locale'] ?? session()->get('locale') ?? app()->getLocale()) }}" class="scroll-smooth">
     <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/fav/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/fav/favicon-32x32.png">

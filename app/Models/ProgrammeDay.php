@@ -54,4 +54,10 @@ class ProgrammeDay extends Model implements TranslatableContract
     {
         return $this->hasMany(Session::class)->orderBy('starts_at')->orderBy('position');
     }
+
+    /** The internal agenda's events on this day — never on the public page. */
+    public function agendaEvents(): HasMany
+    {
+        return $this->hasMany(AgendaEvent::class)->orderBy('starts_at');
+    }
 }
