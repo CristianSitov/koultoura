@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AgendaController;
+use App\Http\Controllers\Admin\DayBriefController;
 use App\Http\Controllers\Admin\Overview2026Controller;
 use App\Http\Controllers\Admin\ProgrammeController;
 use App\Http\Controllers\Admin\RegistrationsController;
@@ -338,6 +339,19 @@ Route::prefix('dashboard')
             Route::delete('/speakers/{speaker}', 'destroy')->name('speakers.destroy');
         });
 
+        // The email the evening before a day: preview, who it goes to, and the
+        // sending — one person per request, driven by the screen.
+        Route::controller(DayBriefController::class)->group(function () {
+            Route::get('/programme/days/{day}/email/{locale}', 'preview')
+                ->where('locale', 'en|ro')
+                ->name('days.email');
+            Route::get('/programme/days/{day}/brief', 'status')->name('days.brief');
+            Route::post('/programme/days/{day}/brief/test/{locale}', 'test')
+                ->where('locale', 'en|ro')
+                ->name('days.brief.test');
+            Route::post('/programme/days/{day}/brief/{registration}', 'send')->name('days.brief.send');
+        });
+
         Route::controller(ProgrammeController::class)->group(function () {
             Route::get('/programme', 'index')->name('programme');
             Route::put('/programme/visibility', 'toggleVisibility')->name('programme.visibility');
@@ -347,10 +361,6 @@ Route::prefix('dashboard')
             // only parses a multipart body on POST.
             Route::post('/programme/days/{day}', 'updateDay')->name('days.update');
             Route::delete('/programme/days/{day}', 'destroyDay')->name('days.destroy');
-            // The eve-of-day email, previewed. Nothing sends from here.
-            Route::get('/programme/days/{day}/email/{locale}', 'dayEmail')
-                ->where('locale', 'en|ro')
-                ->name('days.email');
 
             Route::post('/programme/themes', 'saveTheme')->name('themes.store');
             Route::put('/programme/themes/{theme}', 'saveTheme')->name('themes.update');

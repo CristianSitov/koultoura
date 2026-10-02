@@ -4,7 +4,7 @@ import DraftNotice from '../../../Components/DraftNotice.vue';
 import RichText from './RichText.vue';
 import { useDraft } from '../../../formDraft';
 import { backdrop } from '../../../backdrop';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 import { tooLarge, tooLargeMessage } from '../../../imageGuard';
 
@@ -16,6 +16,77 @@ const props = defineProps({
     visible: { type: Boolean, default: false },
     publicBase: { type: String, default: '' },
 });
+
+/*
+ * The email the evening before a day. The panel asks the server who it goes
+ * to, then sends one person per request with a pause between: the mail
+ * provider takes a couple a second, and a request lives thirty seconds, so the
+ * server could not send eighty in one go. Every send is recorded there — a run
+ * that stops halfway resumes with whoever is left.
+ */
+const briefDay = ref(null);
+const brief = reactive({ status: null, sending: null, outcome: null, test: null });
+const briefBackdrop = backdrop(() => {
+    if (! brief.sending) {
+        briefDay.value = null;
+    }
+});
+const longDate = (iso) => new Date(`${iso}T12:00:00`).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+const headcount = (n) => (n === 1 ? '1 person' : `${n} people`);
+
+async function openBrief(day) {
+    briefDay.value = day;
+    Object.assign(brief, { status: null, sending: null, outcome: null, test: null });
+    brief.status = (await window.axios.get(`/dashboard/programme/days/${day.id}/brief`)).data;
+}
+
+async function sendTest(locale) {
+    brief.test = 'Sending…';
+    try {
+        const { data } = await window.axios.post(`/dashboard/programme/days/${briefDay.value.id}/brief/test/${locale}`);
+        brief.test = data.ok ? `Test sent to ${data.email} (${locale.toUpperCase()}).` : `Not sent: ${data.error}`;
+    } catch (e) {
+        brief.test = `Not sent: ${e.response?.data?.message || e.message}`;
+    }
+}
+
+async function sendBrief() {
+    const list = brief.status.pending;
+
+    if (brief.sending || ! list.length
+        || ! confirm(`Send the email for ${longDate(briefDay.value.date)} to ${headcount(list.length)} now?`)) {
+        return;
+    }
+
+    const failed = [];
+    brief.outcome = null;
+    brief.sending = { done: 0, total: list.length };
+
+    for (const person of list) {
+        let error = null;
+
+        try {
+            const { data } = await window.axios.post(`/dashboard/programme/days/${briefDay.value.id}/brief/${person.id}`);
+            error = data.ok ? null : (data.error || 'The mail provider refused it.');
+        } catch (e) {
+            error = e.response?.data?.message || e.message;
+        }
+
+        if (error) {
+            failed.push({ ...person, error });
+        }
+
+        brief.sending.done += 1;
+
+        if (brief.sending.done < list.length) {
+            await new Promise((resolve) => setTimeout(resolve, 600));
+        }
+    }
+
+    brief.outcome = { sent: list.length - failed.length, failed };
+    brief.sending = null;
+    brief.status = (await window.axios.get(`/dashboard/programme/days/${briefDay.value.id}/brief`)).data;
+}
 
 const editingDay = ref(null);
 const editingTheme = ref(null);
@@ -179,6 +250,7 @@ function saveTheme() {
                     </div>
 
                     <div class="flex items-center gap-3 text-sm">
+                        <button type="button" class="text-gray-500 hover:text-gray-900" @click="openBrief(day)">Email the day before</button>
                         <button type="button" class="text-gray-500 hover:text-gray-900" @click="openDay(day)">Edit day</button>
                         <button type="button" class="text-gray-500 hover:text-red-600" @click="removeDay(day)">Remove</button>
                         <Link
@@ -322,6 +394,82 @@ function saveTheme() {
                     <button type="submit" :disabled="dayForm.processing" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white">Save</button>
                 </div>
             </form>
+        </div>
+
+        <!-- The email the evening before a day -->
+        <div v-if="briefDay" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" v-on="briefBackdrop">
+            <div class="bg-white rounded w-full max-w-xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+                <h2 class="font-bold text-lg">Email the day before · {{ longDate(briefDay.date) }}</h2>
+                <p class="text-sm text-gray-500">
+                    A few lines about the day — “About this day” in Edit day — and a button to the day’s own page,
+                    in each person’s language.
+                    <a :href="`/dashboard/programme/days/${briefDay.id}/email/en`" target="_blank" class="underline">Preview EN ↗</a> ·
+                    <a :href="`/dashboard/programme/days/${briefDay.id}/email/ro`" target="_blank" class="underline">RO ↗</a> ·
+                    <a :href="`${publicBase}/programme/${briefDay.slug}`" target="_blank" class="underline">Day page ↗</a>
+                </p>
+
+                <p v-if="!brief.status" class="text-sm text-gray-400">Counting who it goes to…</p>
+
+                <!-- The workshop Saturday: nobody registers for it, so it has no list here. -->
+                <p v-else-if="!brief.status.covered" class="rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                    Nobody registers for this day — it is the workshops’ and tours’ day, and their people are in the bookings.
+                    A reminder for each workshop and tour is planned; until then there is nothing to send from here.
+                </p>
+
+                <template v-else>
+                    <div class="rounded border border-gray-200 px-4 py-3 text-sm">
+                        <p>
+                            <span class="font-semibold">{{ headcount(brief.status.total) }}</span> registered for this day,
+                            confirmed or not — each address once.
+                            <span class="text-gray-500">
+                                <template v-for="(n, lang, i) in brief.status.languages" :key="lang"><template v-if="i"> · </template>{{ n }} {{ lang.toUpperCase() }}</template>
+                            </span>
+                        </p>
+                        <p class="mt-1" :class="brief.status.sent ? 'text-green-700' : 'text-gray-500'">
+                            {{ brief.status.sent ? `Already sent to ${headcount(brief.status.sent)}.` : 'Not sent yet.' }}
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2 text-sm">
+                        <span class="text-gray-600">Send a test to yourself:</span>
+                        <button type="button" class="rounded border border-gray-300 px-3 py-1.5 font-semibold hover:bg-gray-50" @click="sendTest('en')">EN</button>
+                        <button type="button" class="rounded border border-gray-300 px-3 py-1.5 font-semibold hover:bg-gray-50" @click="sendTest('ro')">RO</button>
+                        <span v-if="brief.test" class="text-gray-500">{{ brief.test }}</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        :disabled="!brief.status.pending.length || !!brief.sending"
+                        class="w-full rounded bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+                        @click="sendBrief"
+                    >{{ brief.status.pending.length ? `Send to ${headcount(brief.status.pending.length)}${brief.status.sent ? ' not sent yet' : ''}` : 'Everyone has it' }}</button>
+
+                    <div v-if="brief.sending">
+                        <p class="text-sm font-medium text-gray-700">Sending {{ Math.min(brief.sending.done + 1, brief.sending.total) }} of {{ brief.sending.total }}… keep this window open.</p>
+                        <div class="mt-2 h-1.5 overflow-hidden rounded bg-gray-100">
+                            <div class="h-full bg-red-600 transition-all" :style="{ width: `${(brief.sending.done / brief.sending.total) * 100}%` }"></div>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="brief.outcome"
+                        class="rounded border px-4 py-3 text-sm"
+                        :class="brief.outcome.failed.length ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-800'"
+                    >
+                        <p class="font-semibold">
+                            Sent to {{ headcount(brief.outcome.sent) }}<template v-if="brief.outcome.failed.length"> — {{ brief.outcome.failed.length }} could not be sent</template>.
+                        </p>
+                        <ul v-if="brief.outcome.failed.length" class="mt-1 list-disc space-y-0.5 pl-5 text-xs">
+                            <li v-for="f in brief.outcome.failed" :key="f.id">{{ f.name }} &lt;{{ f.email }}&gt; — {{ f.error }}</li>
+                        </ul>
+                        <p v-if="brief.outcome.failed.length" class="mt-1 text-xs">Press send again to retry just those.</p>
+                    </div>
+                </template>
+
+                <div class="flex justify-end">
+                    <button type="button" class="text-sm text-gray-500 disabled:opacity-40" :disabled="!!brief.sending" @click="briefDay = null">Close</button>
+                </div>
+            </div>
         </div>
 
         <!-- Theme editor -->

@@ -138,6 +138,27 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 **Hosting:** shared VPS `root@heritageoftimisoara.ro:2221`; this site lives at
 `/var/www/whyculturematters.eu`; prod DBs are `whyculturematters_2026/_2024/_2022`.
 
+## Day pages & the eve-of-day email (participants)
+
+- **Day page:** `/2026/programme/7-oct`, `/2026/ro/program/7-oct`
+  (`Front2026Controller::day`, `Pages/2026/Day.vue`). The slug comes from the
+  **date** (`Front2026Controller::daySlug()`), never the day's name. Content:
+  day/date, theme, moderator, the day's brief, its sessions, a link back to the
+  day in the full programme. Same visibility rules as the landing programme.
+- **Brief:** `programme_day_translations.description` — "About this day" in
+  Programme → Edit day (RichText, cleaned by `HtmlBio`; RO empty → EN).
+- **Email:** `App\Mail\DayBrief` (`emails/day-brief`), sent from Programme →
+  "Email the day before" (`Admin\DayBriefController`). Recipients: **every**
+  registration whose `days` holds the day's number — confirmed or not, by the
+  user's choice — once per lowercased email, in the registration's `locale`.
+  Day number = place in programme order; `Registration::DAYS` (1–3) are the
+  registrable days, so the workshop Saturday (day 4) has no list — workshop/
+  tour booking reminders are a planned follow-up (`SessionBooking`).
+- **Sending is one email per request, driven by the screen** (600 ms pause),
+  never a server loop (Resend ~2/s, PHP 30 s). Each send is recorded in
+  `day_brief_sends` (unique day+email), so a run resumes and never doubles.
+  "Send a test to yourself" goes to the signed-in admin and is not recorded.
+
 ## Internal agenda (speakers, guests)
 
 One page behind **one secret link**, which the office sends from its own mail.

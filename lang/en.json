@@ -388,6 +388,7 @@
     "See this day in the full programme": "See this day in the full programme",
     "day.email.subject": "Tomorrow at Why Culture Matters 2026 · :date",
     "day.email.hello": "Dear participant,",
+    "day.email.hello_name": "Dear :name,",
     "day.email.intro": "Tomorrow is day :n of the symposium. Here is what to expect:",
     "See you tomorrow,": "See you tomorrow,",
     "Cultural Heritage School": "Cultural Heritage School",

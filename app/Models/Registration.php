@@ -18,6 +18,13 @@ class Registration extends Model
 
     protected $connection = 'wcm_2026';
 
+    /*
+     * The days a registration can pick, by their place in the programme:
+     * 1–3 are 7–9 October. The 10th is the Heritage School's workshop day,
+     * which has its own forms and is not registered for here.
+     */
+    public const DAYS = [1, 2, 3];
+
     protected $fillable = [
         'name', 'email', 'organisation', 'country', 'phone',
         'days', 'workshop_interest', 'locale', 'consented_at',

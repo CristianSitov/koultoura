@@ -179,15 +179,6 @@ class ProgrammeController extends Controller
         $day->save();
     }
 
-    /**
-     * The eve-of-day email as a participant would get it — a preview only;
-     * nothing here sends.
-     */
-    public function dayEmail(ProgrammeDay $day, string $locale): string
-    {
-        return (new \App\Mail\DayBrief($day, $locale))->render();
-    }
-
     /* -------------------------------------------------------------- themes */
 
     public function saveTheme(Request $request, ?Theme $theme = null): RedirectResponse

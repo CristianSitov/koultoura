@@ -35,7 +35,7 @@ class Front2026RegistrationController extends Controller
      * their own forms and their own capacity, so registering for the symposium
      * does not cover them.
      */
-    private const DAYS = [1, 2, 3];
+    private const DAYS = Registration::DAYS;
 
     /** The submitted page for this registration, in its own language. */
     private function submittedUrl(Registration $registration): string

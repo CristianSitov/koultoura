@@ -15,16 +15,21 @@ use Illuminate\Support\Facades\App;
  * The evening before a day of the symposium: a few lines about tomorrow — the
  * day's brief, written in the backoffice — and a link to the day's own page.
  *
- * Only previewed so far: who it goes to, and how it is sent, are still to be
- * settled.
+ * Sent from the backoffice, one person per request — see DayBriefController.
  */
 class DayBrief extends Mailable
 {
     use Queueable;
     use SerializesModels;
 
-    public function __construct(public ProgrammeDay $day, public string $language)
+    public function __construct(public ProgrammeDay $day, public string $language, public ?string $name = null)
     {
+    }
+
+    /** The day's place in the symposium: Day 1 is the first in programme order. */
+    public static function dayNumber(ProgrammeDay $day): int
+    {
+        return ProgrammeDay::orderBy('position')->orderBy('date')->pluck('id')->search($day->id) + 1;
     }
 
     public function envelope(): Envelope
@@ -49,7 +54,8 @@ class DayBrief extends Mailable
             .'/'.Front2026Controller::daySlug($this->day->date));
 
         return new Content(markdown: 'emails.day-brief', with: [
-            'n' => ProgrammeDay::orderBy('position')->orderBy('date')->pluck('id')->search($this->day->id) + 1,
+            'n' => self::dayNumber($this->day),
+            'name' => $this->name,
             'date' => $this->date(),
             'theme' => $this->day->theme ? $this->day->theme->numeral.' · '.(($this->day->theme->translate($this->language) ?? $this->day->theme->translate('en'))?->title) : null,
             'brief' => $brief,
