@@ -1,6 +1,7 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import DraftNotice from '../../../Components/DraftNotice.vue';
+import RichText from './RichText.vue';
 import { useDraft } from '../../../formDraft';
 import { backdrop } from '../../../backdrop';
 import { ref } from 'vue';
@@ -21,6 +22,7 @@ const editingTheme = ref(null);
 
 const dayForm = useForm({
     date: '', theme_id: null, moderator_id: null, position: 0, published: false, name: '', name_ro: '',
+    description: '', description_ro: '',
     new_moderator: { first: '', last: '', image: null },
 });
 const themeForm = useForm({ numeral: '', position: 0, title: '', title_ro: '', description: '', description_ro: '' });
@@ -42,6 +44,8 @@ function openDay(day) {
         published: day?.published ?? false,
         name: day?.name ?? '',
         name_ro: day?.name_ro ?? '',
+        description: day?.description ?? '',
+        description_ro: day?.description_ro ?? '',
     });
     dayForm.reset();
     dayForm.new_moderator = { first: '', last: '', image: null };
@@ -223,7 +227,7 @@ function saveTheme() {
 
         <!-- Day editor -->
         <div v-if="editingDay" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" v-on="dayBackdrop">
-            <form class="bg-white rounded w-full max-w-lg p-6 space-y-4" @submit.prevent="saveDay">
+            <form class="bg-white rounded w-full max-w-3xl p-6 space-y-4 max-h-[90vh] overflow-y-auto" @submit.prevent="saveDay">
                 <h2 class="font-bold text-lg">{{ editingDay === 'new' ? 'Add day' : 'Edit day' }}</h2>
                 <DraftNotice :draft="dayDraft" />
 
@@ -285,6 +289,31 @@ function saveTheme() {
                         </div>
                         <p v-if="dayForm.errors['new_moderator.image']" class="mt-1 text-sm text-red-600">{{ dayForm.errors['new_moderator.image'] }}</p>
                         <p class="mt-1 text-xs text-gray-500">Adding a name here overrides the choice above. They stay off the public speakers grid.</p>
+                    </div>
+                </div>
+
+                <!-- The day's brief: what to expect, opening the day's own page
+                     and the email sent the evening before. -->
+                <div class="border-t border-gray-100 pt-4">
+                    <p class="text-sm font-medium">About this day</p>
+                    <p class="mt-0.5 text-xs text-gray-500">
+                        A few paragraphs on what to expect. Shown at the top of the day’s own page and in the email the evening before.
+                        <template v-if="editingDay !== 'new'">
+                            <a :href="`${publicBase}/programme/${days.find((d) => d.id === editingDay)?.slug}`" target="_blank" class="underline">Day page ↗</a>
+                            · Email <a :href="`/dashboard/programme/days/${editingDay}/email/en`" target="_blank" class="underline">EN ↗</a>
+                            ·
+                            <a :href="`/dashboard/programme/days/${editingDay}/email/ro`" target="_blank" class="underline">RO ↗</a>
+                        </template>
+                    </p>
+                    <div class="mt-3 grid gap-4 lg:grid-cols-2">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">English</label>
+                            <RichText v-model="dayForm.description" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Romanian <span class="font-normal normal-case tracking-normal text-gray-400">empty falls back to English</span></label>
+                            <RichText v-model="dayForm.description_ro" />
+                        </div>
                     </div>
                 </div>
 

@@ -64,6 +64,16 @@ class Front2026Controller extends Controller
         return $locale === 'ro' ? end($slugs) : $slugs[0];
     }
 
+    /**
+     * A programme day's own address: /2026/programme/7-oct. From the date,
+     * never the day's name — names are edited, dates are what the day is.
+     * The same in both languages ("oct" is Romanian too).
+     */
+    public static function daySlug(\DateTimeInterface $date): string
+    {
+        return strtolower($date->format('j-M'));
+    }
+
     /** The English anchor a section slug points at, in either language. */
     public static function sectionAnchor(?string $slug): ?string
     {
@@ -240,6 +250,7 @@ class Front2026Controller extends Controller
             ->get()
             ->map(fn (ProgrammeDay $day, int $i) => [
                 'id' => $day->id,
+                'slug' => self::daySlug($day->date),
                 'num' => $day->date->format('d'),
                 // Short, because the column is narrow and they are all October.
                 // Romanian abbreviates with a full stop ("oct."), which reads
@@ -368,6 +379,39 @@ class Front2026Controller extends Controller
     }
 
     /** The row for the current locale, or the English one it falls back to. */
+    /**
+     * One day of the programme on a page of its own — the page the eve-of-day
+     * email links to: the day's brief, written in the backoffice, then what is
+     * on. Built from the same programme the landing page shows, so it follows
+     * the same rules: published only, unless signed in; nothing while the
+     * programme is hidden.
+     */
+    public function day(Request $request): Response
+    {
+        $day = collect($this->programme())->firstWhere('slug', $request->route('day'));
+
+        abort_unless($day, 404);
+
+        $model = ProgrammeDay::with('translations')->findOrFail($day['id']);
+        $locale = app()->getLocale();
+
+        return Inertia::render('2026/Day', [
+            'base' => self::base(),
+            'isPublic' => config('wcm.public'),
+            'day' => $day + [
+                // "7 October" / "7 octombrie".
+                'date' => $model->date->locale($locale)->translatedFormat('j F'),
+                // A Romanian brief left empty reads the English one.
+                'brief' => HtmlBio::clean($this->text($model)->description ?? null)
+                    ?? HtmlBio::clean($model->translate('en')?->description) ?? '',
+                'programmeUrl' => self::base()
+                    .($locale === 'ro' ? '/ro' : '')
+                    .'/'.self::sectionSlug('programme', $locale)
+                    .'#day-'.$day['num'],
+            ],
+        ]);
+    }
+
     private function text($model)
     {
         return $model->translate(app()->getLocale()) ?? $model->translate('en');

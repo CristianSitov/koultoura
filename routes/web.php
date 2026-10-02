@@ -92,6 +92,17 @@ Route::prefix(Front2026Controller::path())
                  * rest — those words are not in the list.
                  */
                 $sections = Front2026Controller::sectionsPattern();
+
+                // One programme day on a page of its own: /2026/programme/7-oct,
+                // /2026/ro/program/7-oct. The day is a date, never a word, so
+                // it cannot collide with a section.
+                Route::get('/{section}/{day}', 'day')
+                    ->where(['section' => 'programme|program', 'day' => '[0-9]{1,2}-[a-z]{3}'])
+                    ->name('day');
+                Route::get('/{locale}/{section}/{day}', 'day')
+                    ->where(['locale' => 'en|ro', 'section' => 'programme|program', 'day' => '[0-9]{1,2}-[a-z]{3}'])
+                    ->name('locale.day');
+
                 Route::get('/{section}', 'landing')
                     ->where('section', $sections)
                     ->name('section');
@@ -336,6 +347,10 @@ Route::prefix('dashboard')
             // only parses a multipart body on POST.
             Route::post('/programme/days/{day}', 'updateDay')->name('days.update');
             Route::delete('/programme/days/{day}', 'destroyDay')->name('days.destroy');
+            // The eve-of-day email, previewed. Nothing sends from here.
+            Route::get('/programme/days/{day}/email/{locale}', 'dayEmail')
+                ->where('locale', 'en|ro')
+                ->name('days.email');
 
             Route::post('/programme/themes', 'saveTheme')->name('themes.store');
             Route::put('/programme/themes/{theme}', 'saveTheme')->name('themes.update');

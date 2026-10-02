@@ -40,6 +40,10 @@ class ProgrammeController extends Controller
                     'date' => $day->date->toDateString(),
                     'name' => $day->translate('en')?->name ?? '',
                     'name_ro' => $day->translate('ro')?->name ?? '',
+                    // The brief on the day's own page and in the eve-of-day email.
+                    'description' => $day->translate('en')?->description ?? '',
+                    'description_ro' => $day->translate('ro')?->description ?? '',
+                    'slug' => Front2026Controller::daySlug($day->date),
                     'position' => $day->position,
                     'published' => $day->published,
                     'theme_id' => $day->theme_id,
@@ -134,6 +138,8 @@ class ProgrammeController extends Controller
             'new_moderator.first' => ['nullable', 'required_with:new_moderator.last', 'string', 'max:255'],
             'new_moderator.last' => ['nullable', 'required_with:new_moderator.first', 'string', 'max:255'],
             'new_moderator.image' => ['nullable', 'image', 'max:32768'],
+            'description' => ['nullable', 'string'],  // cleaned below via HtmlBio.
+            'description_ro' => ['nullable', 'string'],
         ]);
 
         $moderatorId = $data['moderator_id'] ?? null;
@@ -167,7 +173,19 @@ class ProgrammeController extends Controller
 
         $day->translateOrNew('en')->name = $data['name'] ?? '';
         $day->translateOrNew('ro')->name = $data['name_ro'] ?? '';
+        // Formatted text: only the safe subset is kept.
+        $day->translateOrNew('en')->description = HtmlBio::clean($data['description'] ?? null);
+        $day->translateOrNew('ro')->description = HtmlBio::clean($data['description_ro'] ?? null);
         $day->save();
+    }
+
+    /**
+     * The eve-of-day email as a participant would get it — a preview only;
+     * nothing here sends.
+     */
+    public function dayEmail(ProgrammeDay $day, string $locale): string
+    {
+        return (new \App\Mail\DayBrief($day, $locale))->render();
     }
 
     /* -------------------------------------------------------------- themes */
