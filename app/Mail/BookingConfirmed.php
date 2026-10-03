@@ -10,12 +10,15 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Mail;
 
 /**
- * A workshop or tour place, in writing: which one, when, and the link back to
- * the booking. Booking itself sends nothing — the page says the place is held
- * — so this goes out by hand from Workshops, e.g. after the office corrects an
- * address that was mistyped.
+ * A workshop or tour place, in writing — which one, when — and a request: the
+ * link opens the booking page, where the place is confirmed or released.
+ *
+ * Sent by hand from Workshops (one person, or everyone not yet confirmed — a
+ * second send is the reminder), and on booking when the workshop's
+ * "send automatically" switch is on. Always through `sendTo`, which records it.
  */
 class BookingConfirmed extends Mailable
 {
@@ -24,6 +27,17 @@ class BookingConfirmed extends Mailable
 
     public function __construct(public SessionBooking $booking)
     {
+    }
+
+    /** Sends it, and notes when — the Workshops screen shows who was asked. */
+    public static function sendTo(SessionBooking $booking): void
+    {
+        Mail::to($booking->email)->send(new self($booking->loadMissing('session.translations', 'session.day')));
+
+        $booking->forceFill([
+            'confirmation_sent_at' => now(),
+            'confirmation_sent_count' => $booking->confirmation_sent_count + 1,
+        ])->save();
     }
 
     public function envelope(): Envelope

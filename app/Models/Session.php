@@ -27,6 +27,8 @@ class Session extends Model implements TranslatableContract
         'school', 'youth', 'published', 'position', 'slug', 'bookable', 'capacity', 'internal',
         // Where the title leads, when the editor gives it somewhere to go.
         'link',
+        // Email each new booking a request to confirm — see BookingConfirmed.
+        'auto_confirm',
     ];
 
     /** The two exceptions to a plain slot — clickable, bookable, with a panel. */
@@ -38,6 +40,7 @@ class Session extends Model implements TranslatableContract
         'published' => 'boolean',
         'bookable' => 'boolean',
         'internal' => 'boolean',
+        'auto_confirm' => 'boolean',
         'capacity' => 'integer',
     ];
 

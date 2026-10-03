@@ -3,11 +3,11 @@
 
 {!! __('booking.email.held', ['title' => $title, 'date' => $date, 'time' => $time]) !!}
 
-@component('mail::button', ['url' => $url])
-{{ __('See your booking') }}
-@endcomponent
+{{ __('Please confirm you are coming, or release the place so someone else can take it.') }}
 
-{{ __('Changed your mind? Write to us and we will free the place for someone else.') }}
+@component('mail::button', ['url' => $url])
+{{ __('Confirm or release my place') }}
+@endcomponent
 
 {{ __('See you in October,') }}
 {{ __('Asociația Prin Banat') }}

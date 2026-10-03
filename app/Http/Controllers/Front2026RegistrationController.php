@@ -91,10 +91,10 @@ class Front2026RegistrationController extends Controller
 
         $input = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            // rfc only, not dns: the confirmation link is what proves the
-            // address, and an MX lookup both adds a network round trip to every
-            // submission and rejects valid domains that receive mail without one.
-            'email' => ['required', 'string', 'email:rfc', 'max:255'],
+            // The domain must exist: a typo like ".rp" for ".ro" otherwise
+            // passes, and the confirmation link goes nowhere. (A domain with no
+            // MX record but an address of its own still passes.)
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255'],
             'email_confirmation' => ['required', 'same:email'],
             'organisation' => ['nullable', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:255'],
@@ -102,6 +102,8 @@ class Front2026RegistrationController extends Controller
             'days' => ['required', 'array', 'min:1'],
             'days.*' => [Rule::in(self::DAYS)],
             'consent' => ['accepted'],
+        ], [
+            'email.email' => __('Please check your email address — that domain does not seem to exist.'),
         ]);
 
         $registration = Registration::firstOrNew(['email' => $input['email']]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BookingConfirmed;
 use App\Models\Registration;
 use App\Models\Session;
 use App\Models\SessionBooking;
@@ -10,6 +11,8 @@ use App\Support\Slack;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -53,7 +56,9 @@ class Front2026SessionController extends Controller
         $rules = [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email:rfc', 'max:255'],
+            // The domain must exist — a mistyped one (".rp") leaves a place
+            // nobody can be reached about.
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255'],
             'consent' => ['accepted'],
         ];
 
@@ -80,7 +85,9 @@ class Front2026SessionController extends Controller
             $rules['phone'] = array_merge(['required'], $phone);
         }
 
-        $input = $request->validate($rules);
+        $input = $request->validate($rules, [
+            'email.email' => __('Please check your email address — that domain does not seem to exist.'),
+        ]);
 
         // Kept as one line too, for everything downstream that prints a name.
         $input['name'] = trim($input['first_name'].' '.$input['last_name']);
@@ -140,6 +147,17 @@ class Front2026SessionController extends Controller
                     'Workshop' => $session->translate('en')?->title ?? $session->slug,
                 ]);
             }
+
+            // Asked to confirm straight away, when this workshop's switch is on.
+            // A mail that fails does not undo the booking: the place is held,
+            // and the office can send it again from Workshops.
+            if ($session->auto_confirm) {
+                try {
+                    BookingConfirmed::sendTo($outcome['booking']);
+                } catch (Throwable $e) {
+                    Log::error('2026 booking confirmation failed', ['booking' => $outcome['booking']->id, 'error' => $e->getMessage()]);
+                }
+            }
         }
 
         return redirect($this->url($session, $outcome['booking']->token));
@@ -154,8 +172,60 @@ class Front2026SessionController extends Controller
         return Inertia::render('2026/SessionBooking', [
             'base' => Front2026Controller::base(),
             'session' => $this->payload($session),
-            'booked' => ['name' => $booking->name, 'cancelled' => $booking->isCancelled()],
+            'booked' => [
+                'name' => $booking->first_name ?: $booking->name,
+                'cancelled' => $booking->isCancelled(),
+                'confirmed' => $booking->isConfirmed(),
+                // Only someone who has been asked to confirm is asked here too;
+                // with the workshop's switch off, the page stays as it was.
+                'asked' => $booking->confirmation_sent_at !== null,
+                // Where the two buttons post, in the page's own language.
+                'url' => $this->url($session, $booking->token),
+            ],
         ]);
+    }
+
+    /** "I am coming" — from the link in the confirmation email. */
+    public function confirm(Request $request): RedirectResponse
+    {
+        $session = $this->session($request);
+        $booking = $this->booking($session, $request);
+
+        if (! $booking->isCancelled() && ! $booking->isConfirmed()) {
+            $booking->forceFill(['confirmed_at' => now()])->save();
+        }
+
+        return redirect($this->url($session, $booking->token));
+    }
+
+    /**
+     * "I cannot come" — the place goes back to the pool at once. Not undone
+     * from here: the place may already be someone else's; the office can
+     * restore it from Workshops.
+     */
+    public function release(Request $request): RedirectResponse
+    {
+        $session = $this->session($request);
+        $booking = $this->booking($session, $request);
+
+        if (! $booking->isCancelled()) {
+            $booking->forceFill(['cancelled_at' => now()])->save();
+
+            Slack::warn('Workshop place released by the attendee', [
+                'Workshop' => $session->translate('en')?->title ?? $session->slug,
+                'Name' => $booking->name,
+                'Places left' => $session->fresh()->places_left === null ? 'uncapped' : (string) $session->fresh()->places_left,
+            ]);
+        }
+
+        return redirect($this->url($session, $booking->token));
+    }
+
+    private function booking(Session $session, Request $request): SessionBooking
+    {
+        return SessionBooking::where('session_id', $session->id)
+            ->where('token', $request->route('token'))
+            ->firstOrFail();
     }
 
     private function url(Session $session, string $token): string

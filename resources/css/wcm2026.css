@@ -3427,6 +3427,28 @@ a.wcm26-partner-logo:focus-visible {
     }
 }
 
+/* The answer to the confirmation email, on the booking page: confirming is the
+   button; giving the place back is a quieter link beside it. */
+.wcm26-booking-answer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    margin: 20px 0 8px;
+}
+
+.wcm26 .wcm26-booking-release {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 600;
+    color: var(--color-accent-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
 /* ── a programme title the editor linked ─────────────────────────────────
  * Underlined, with a small arrow at its end, and it opens in a new tab. The
  * arrow stays with the title's last word rather than wrapping on its own.

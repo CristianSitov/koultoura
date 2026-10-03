@@ -1,6 +1,8 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/inertia-vue3';
-import { computed } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import { trans } from 'laravel-vue-i18n';
+import { computed, ref } from 'vue';
 import '../../../css/wcm2026.css';
 import PageShell from '../../Sections/2026/PageShell.vue';
 import SectionHead from '../../Sections/2026/SectionHead.vue';
@@ -29,6 +31,16 @@ const form = useForm({
 // The ages a youth workshop offers, and whether the one picked needs a parent.
 const ages = Array.from({ length: 95 }, (_, i) => i + 5);
 const minor = computed(() => props.session.youth && form.age !== '' && Number(form.age) < 18);
+
+// The answer to the confirmation email: coming, or giving the place back.
+const answering = ref(false);
+function answer(what) {
+    if (what === 'release' && ! window.confirm(trans('Release your place? It goes to someone else, and cannot be taken back from here.'))) {
+        return;
+    }
+    answering.value = true;
+    Inertia.post(`${props.booked.url}/${what}`, {}, { preserveScroll: true, onFinish: () => (answering.value = false) });
+}
 </script>
 
 <template>
@@ -63,8 +75,20 @@ const minor = computed(() => props.session.youth && form.age !== '' && Number(fo
                 <div v-if="session.description" class="wcm26-rte wcm26-booking-desc" v-html="session.description"></div>
 
                 <template v-if="booked">
-                        <p>{{ $t('booking.held', { name: booked.name }) }}</p>
-                        <p class="wcm26-hint">{{ $t('Changed your mind? Write to us and we will free the place for someone else.') }}</p>
+                        <p v-if="booked.cancelled">{{ $t('booking.released') }}</p>
+                        <p v-else-if="booked.confirmed">{{ $t('booking.confirmed', { name: booked.name }) }}</p>
+                        <template v-else-if="booked.asked">
+                            <p>{{ $t('booking.held_ask', { name: booked.name }) }}</p>
+                            <p>{{ $t('Please confirm you are coming, or release the place so someone else can take it.') }}</p>
+                            <div class="wcm26-booking-answer">
+                                <button type="button" class="btn btn-primary" :disabled="answering" @click="answer('confirm')">{{ $t('Confirm my place') }}</button>
+                                <button type="button" class="wcm26-booking-release" :disabled="answering" @click="answer('release')">{{ $t('Release my place') }}</button>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <p>{{ $t('booking.held', { name: booked.name }) }}</p>
+                        </template>
+                        <p v-if="!booked.cancelled && (booked.confirmed || !booked.asked)" class="wcm26-hint">{{ $t('Changed your mind? Write to us and we will free the place for someone else.') }}</p>
                     </template>
 
                     <template v-else-if="session.full">

@@ -14,12 +14,13 @@ class SessionBooking extends Model
     protected $fillable = [
         'session_id', 'registration_id', 'token', 'name', 'first_name', 'last_name',
         'email', 'phone', 'age', 'guardian_name', 'guardian_phone', 'guardian_consent',
-        'locale', 'confirmed_at', 'cancelled_at',
+        'locale', 'confirmed_at', 'cancelled_at', 'confirmation_sent_at', 'confirmation_sent_count',
     ];
 
     protected $casts = [
         'confirmed_at' => 'datetime',
         'cancelled_at' => 'datetime',
+        'confirmation_sent_at' => 'datetime',
     ];
 
     protected static function booted(): void
@@ -42,5 +43,11 @@ class SessionBooking extends Model
     public function isCancelled(): bool
     {
         return $this->cancelled_at !== null;
+    }
+
+    /** Said, from the email's link, that they are coming. */
+    public function isConfirmed(): bool
+    {
+        return $this->confirmed_at !== null;
     }
 }

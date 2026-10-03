@@ -138,6 +138,25 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 **Hosting:** shared VPS `root@heritageoftimisoara.ro:2221`; this site lives at
 `/var/www/whyculturematters.eu`; prod DBs are `whyculturematters_2026/_2024/_2022`.
 
+## Workshop & tour booking confirmations
+
+- **Booking sends nothing by default.** Each workshop has its own switch,
+  `sessions.auto_confirm` (Workshops → "Send booking confirmations
+  automatically", off by default). On: every new public booking is emailed
+  `App\Mail\BookingConfirmed` — always via `BookingConfirmed::sendTo()`, which
+  records `session_bookings.confirmation_sent_at/_count`.
+- **The email asks**: its link opens the booking page
+  (`/2026/{ro/}sessions/{slug}/booked/{token}`), which shows **Confirm my place**
+  (`confirmed_at`) / **Release my place** (`cancelled_at`, Slack notice) —
+  only once the person has been asked; with the switch off the page is as before.
+- **Workshops screen:** per attendee *Confirmed* / *Asked {date}* / *Not asked*
+  and "Send confirmation" for anyone unconfirmed; with the switch on, "Send
+  confirmations to users who have not confirmed (N)" — everyone unconfirmed,
+  already-asked included (that is the reminder), one request per person.
+  Nobody is released automatically.
+- **Public forms check the email's domain exists** (`email:rfc,dns`) — a typo
+  like `datcomp.rp` is refused with "Please check your email address".
+
 ## Day pages & the eve-of-day email (participants)
 
 - **Day page:** `/2026/programme/7-oct`, `/2026/ro/program/7-oct`

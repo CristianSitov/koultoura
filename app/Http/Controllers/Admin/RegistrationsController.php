@@ -13,6 +13,7 @@ use App\Mail\PlaceInvite;
 use App\Models\Session;
 use App\Models\SessionBooking;
 use App\Models\SessionPlace;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -232,6 +233,7 @@ class RegistrationsController extends Controller
                     'image' => $s->image,
                     'published' => $s->published,
                     'internal' => (bool) $s->internal,
+                    'auto_confirm' => (bool) $s->auto_confirm,
                     // An internal workshop hands out places rather than taking sign-ups.
                     'places' => $s->places->map(fn (SessionPlace $p) => [
                         'id' => $p->id,
@@ -259,6 +261,10 @@ class RegistrationsController extends Controller
                         'guardian_consent' => $b->guardian_consent,
                         'locale' => $b->locale,
                         'cancelled' => $b->isCancelled(),
+                        'confirmed' => $b->isConfirmed(),
+                        // When they were last asked, and how many times.
+                        'asked' => $b->confirmation_sent_at?->format('d M H:i'),
+                        'asked_count' => $b->confirmation_sent_count,
                         'created' => $b->created_at->toDateTimeString(),
                     ]),
                 ]),
@@ -349,21 +355,37 @@ class RegistrationsController extends Controller
      * The place, in writing, to the address on the booking — for when the
      * office has just corrected a mistyped one, or someone asks for it.
      */
-    public function sendBookingConfirmation(SessionBooking $booking): RedirectResponse
+    public function sendBookingConfirmation(Request $request, SessionBooking $booking): RedirectResponse|JsonResponse
     {
+        // One button on a row is a page visit; the "everyone not confirmed"
+        // run calls this once per person and wants a plain answer back.
+        $answer = fn (bool $ok, string $message) => $request->header('X-Inertia')
+            ? ($ok ? back()->with('flash', $message) : back()->withErrors(['booking' => $message]))
+            : response()->json(['ok' => $ok, 'error' => $ok ? null : $message]);
+
         if ($booking->isCancelled()) {
-            return back()->withErrors(['booking' => 'That place has been released — restore it before confirming it.']);
+            return $answer(false, 'That place has been released — restore it before asking again.');
         }
 
         try {
-            Mail::to($booking->email)->send(new BookingConfirmed($booking->load('session.translations', 'session.day')));
+            BookingConfirmed::sendTo($booking);
         } catch (Throwable $e) {
             Log::error('2026 booking confirmation failed', ['booking' => $booking->id, 'error' => $e->getMessage()]);
 
-            return back()->withErrors(['booking' => 'The email did not go out: '.$e->getMessage()]);
+            return $answer(false, 'The email did not go out: '.$e->getMessage());
         }
 
-        return back()->with('flash', 'Confirmation sent to '.$booking->email.'.');
+        return $answer(true, 'Confirmation request sent to '.$booking->email.'.');
+    }
+
+    /** This workshop's switch: email new bookings a request to confirm, or not. */
+    public function toggleAutoConfirm(Session $session): RedirectResponse
+    {
+        $session->update(['auto_confirm' => ! $session->auto_confirm]);
+
+        return back()->with('flash', $session->auto_confirm
+            ? 'New bookings for this one are now asked to confirm, by email.'
+            : 'New bookings for this one are no longer emailed.');
     }
 
     /** A hard delete, for a row entered by mistake — Release is the soft one. */

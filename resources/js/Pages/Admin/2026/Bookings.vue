@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
+import { Inertia } from '@inertiajs/inertia';
 import DraftNotice from '../../../Components/DraftNotice.vue';
 import { useDraft } from '../../../formDraft';
 import { backdrop } from '../../../backdrop';
@@ -13,9 +14,50 @@ const props = defineProps({
 
 const action = useForm({});
 
-// The place, in writing — e.g. after correcting a mistyped address in Edit.
+const toggleAuto = (session) => action.put(`/dashboard/sessions/${session.id}/auto-confirm`, { preserveScroll: true });
+
+// Everyone holding a place who has not confirmed — a second run is the reminder.
+const unconfirmed = (session) => session.bookings.filter((b) => ! b.cancelled && ! b.confirmed);
+
+/*
+ * The run for a whole workshop: one email per request, a pause between — the
+ * mail provider takes a couple a second and a request lives thirty seconds.
+ */
+const runs = reactive({}); // session id → { done, total } while sending, { sent, failed } once done
+
+async function sendToUnconfirmed(session) {
+    const list = unconfirmed(session);
+
+    if (runs[session.id]?.total || ! list.length
+        || ! confirm(`Ask ${list.length} ${list.length === 1 ? 'person' : 'people'} to confirm their place at “${session.title}”? Anyone already asked gets it again, as a reminder.`)) {
+        return;
+    }
+
+    const failed = [];
+    runs[session.id] = { done: 0, total: list.length };
+
+    for (const booking of list) {
+        try {
+            const { data } = await window.axios.post(`/dashboard/bookings/${booking.id}/send`);
+            if (! data.ok) failed.push({ ...booking, error: data.error });
+        } catch (e) {
+            failed.push({ ...booking, error: e.response?.data?.message || e.message });
+        }
+
+        runs[session.id].done += 1;
+
+        if (runs[session.id].done < list.length) {
+            await new Promise((resolve) => setTimeout(resolve, 600));
+        }
+    }
+
+    runs[session.id] = { sent: list.length - failed.length, failed };
+    Inertia.reload({ preserveScroll: true });
+}
+
+// The request to confirm, to one person — e.g. after correcting a mistyped address in Edit.
 function sendConfirmation(booking) {
-    if (confirm(`Send ${booking.name} a confirmation of their place, to ${booking.email}?`)) {
+    if (confirm(`Ask ${booking.name} to confirm their place, at ${booking.email}?`)) {
         action.post(`/dashboard/bookings/${booking.id}/send`, {
             preserveScroll: true,
             onError: (errors) => alert(errors.booking || 'The email did not go out.'),
@@ -149,6 +191,46 @@ function removeBooking(booking) {
                 <button type="button" class="text-sm text-gray-500 hover:text-gray-900" @click="openAddBooking(session)">+ Add attendee</button>
             </div>
 
+            <!-- Confirmations, per workshop: off until the office turns it on. -->
+            <div class="border-t border-gray-100 px-5 py-3 text-sm">
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" :checked="session.auto_confirm" class="rounded border-gray-300 text-red-600" @change="toggleAuto(session)" />
+                    <span>Send booking confirmations automatically</span>
+                    <span class="text-xs text-gray-500">— each new booking is emailed a link to confirm or release the place</span>
+                </label>
+
+                <div v-if="session.auto_confirm" class="mt-3 flex flex-wrap items-center gap-3">
+                    <button
+                        type="button"
+                        :disabled="!unconfirmed(session).length || !!runs[session.id]?.total"
+                        class="rounded bg-red-600 px-3 py-1.5 font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+                        @click="sendToUnconfirmed(session)"
+                    >Send confirmations to users who have not confirmed ({{ unconfirmed(session).length }})</button>
+                    <span class="text-xs text-gray-500">
+                        {{ session.bookings.filter((b) => b.confirmed && !b.cancelled).length }} confirmed ·
+                        {{ unconfirmed(session).filter((b) => b.asked).length }} asked, waiting ·
+                        {{ unconfirmed(session).filter((b) => !b.asked).length }} not asked
+                    </span>
+                </div>
+
+                <div v-if="runs[session.id]?.total" class="mt-3">
+                    <p class="text-gray-700">Sending {{ Math.min(runs[session.id].done + 1, runs[session.id].total) }} of {{ runs[session.id].total }}… keep this page open.</p>
+                    <div class="mt-1.5 h-1.5 overflow-hidden rounded bg-gray-100">
+                        <div class="h-full bg-red-600 transition-all" :style="{ width: `${(runs[session.id].done / runs[session.id].total) * 100}%` }"></div>
+                    </div>
+                </div>
+                <div
+                    v-else-if="runs[session.id]"
+                    class="mt-3 rounded border px-3 py-2"
+                    :class="runs[session.id].failed.length ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-800'"
+                >
+                    Sent to {{ runs[session.id].sent }}<template v-if="runs[session.id].failed.length"> — {{ runs[session.id].failed.length }} could not be sent:</template>.
+                    <ul v-if="runs[session.id].failed.length" class="mt-1 list-disc pl-5 text-xs">
+                        <li v-for="f in runs[session.id].failed" :key="f.id">{{ f.name }} &lt;{{ f.email }}&gt; — {{ f.error }}</li>
+                    </ul>
+                </div>
+            </div>
+
             <table v-if="open[session.id] && session.bookings.length" class="min-w-full border-t border-gray-100 text-sm">
                 <tbody class="divide-y divide-gray-100">
                     <tr v-for="booking in session.bookings" :key="booking.id" :class="booking.cancelled ? 'text-gray-400' : ''">
@@ -164,12 +246,17 @@ function removeBooking(booking) {
                         </td>
                         <td class="px-2 py-3 text-gray-500 whitespace-nowrap">{{ booking.created.slice(0, 16) }}</td>
                         <td class="px-5 py-3 text-right whitespace-nowrap">
-                            <button
-                                v-if="!booking.cancelled"
-                                type="button"
-                                class="mr-3 text-gray-500 hover:text-gray-900"
-                                @click="sendConfirmation(booking)"
-                            >Send confirmation</button>
+                            <!-- Where they stand: confirmed, asked and waiting, or not asked. -->
+                            <span v-if="booking.cancelled"></span>
+                            <span v-else-if="booking.confirmed" class="mr-3 rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">Confirmed</span>
+                            <template v-else>
+                                <span
+                                    class="mr-2 rounded px-2 py-0.5 text-xs font-medium"
+                                    :class="booking.asked ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600'"
+                                    :title="booking.asked ? `Asked ${booking.asked_count}× — last ${booking.asked}` : ''"
+                                >{{ booking.asked ? `Asked ${booking.asked}` : 'Not asked' }}</span>
+                                <button type="button" class="mr-3 text-gray-500 hover:text-gray-900" @click="sendConfirmation(booking)">Send confirmation</button>
+                            </template>
                             <button type="button" class="text-gray-500 hover:text-gray-900" @click="openEditBooking(session, booking)">Edit</button>
                             <button type="button" class="ml-3 text-gray-500 hover:text-red-600" @click="toggleBooking(booking)">
                                 {{ booking.cancelled ? 'Restore' : 'Release' }}

@@ -181,6 +181,18 @@ Route::prefix(Front2026Controller::path())
                 Route::get('/{locale}/sessions/{slug}/booked/{token}', 'booked')
                     ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+', 'token' => '[A-Za-z0-9]+'])
                     ->name('locale.session.booked');
+
+                // From the confirmation email: the place is confirmed, or given back.
+                foreach (['confirm', 'release'] as $answer) {
+                    Route::post('/sessions/{slug}/booked/{token}/'.$answer, $answer)
+                        ->where(['slug' => '[a-z0-9-]+', 'token' => '[A-Za-z0-9]+'])
+                        ->middleware('throttle:20,60')
+                        ->name('session.'.$answer);
+                    Route::post('/{locale}/sessions/{slug}/booked/{token}/'.$answer, $answer)
+                        ->where(['locale' => 'en|ro', 'slug' => '[a-z0-9-]+', 'token' => '[A-Za-z0-9]+'])
+                        ->middleware('throttle:20,60')
+                        ->name('locale.session.'.$answer);
+                }
             });
 
         // Internal-workshop places: the holder confirms from their invitation
@@ -388,6 +400,7 @@ Route::prefix('dashboard')
             Route::delete('/bookings/{booking}', 'deleteBooking')->name('bookings.delete');
             Route::post('/bookings/{booking}/cancel', 'cancelBooking')->name('bookings.cancel');
             Route::post('/bookings/{booking}/send', 'sendBookingConfirmation')->name('bookings.send');
+            Route::put('/sessions/{session}/auto-confirm', 'toggleAutoConfirm')->name('sessions.auto-confirm');
 
             // Internal-workshop places.
             Route::put('/places/{place}', 'updatePlace')->name('places.update');
