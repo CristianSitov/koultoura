@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Front2026Controller;
+use App\Mail\BookingConfirmed;
 use App\Mail\RegistrationConfirmation;
 use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
@@ -342,6 +343,27 @@ class RegistrationsController extends Controller
         $booking->update($this->bookingData($request, $booking, $booking->session_id));
 
         return back()->with('flash', $booking->name.'’s booking updated.');
+    }
+
+    /**
+     * The place, in writing, to the address on the booking — for when the
+     * office has just corrected a mistyped one, or someone asks for it.
+     */
+    public function sendBookingConfirmation(SessionBooking $booking): RedirectResponse
+    {
+        if ($booking->isCancelled()) {
+            return back()->withErrors(['booking' => 'That place has been released — restore it before confirming it.']);
+        }
+
+        try {
+            Mail::to($booking->email)->send(new BookingConfirmed($booking->load('session.translations', 'session.day')));
+        } catch (Throwable $e) {
+            Log::error('2026 booking confirmation failed', ['booking' => $booking->id, 'error' => $e->getMessage()]);
+
+            return back()->withErrors(['booking' => 'The email did not go out: '.$e->getMessage()]);
+        }
+
+        return back()->with('flash', 'Confirmation sent to '.$booking->email.'.');
     }
 
     /** A hard delete, for a row entered by mistake — Release is the soft one. */

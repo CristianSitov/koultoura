@@ -12,6 +12,16 @@ const props = defineProps({
 });
 
 const action = useForm({});
+
+// The place, in writing — e.g. after correcting a mistyped address in Edit.
+function sendConfirmation(booking) {
+    if (confirm(`Send ${booking.name} a confirmation of their place, to ${booking.email}?`)) {
+        action.post(`/dashboard/bookings/${booking.id}/send`, {
+            preserveScroll: true,
+            onError: (errors) => alert(errors.booking || 'The email did not go out.'),
+        });
+    }
+}
 const open = ref({}); // session id -> attendee list expanded
 
 function toggleList(id) {
@@ -154,6 +164,12 @@ function removeBooking(booking) {
                         </td>
                         <td class="px-2 py-3 text-gray-500 whitespace-nowrap">{{ booking.created.slice(0, 16) }}</td>
                         <td class="px-5 py-3 text-right whitespace-nowrap">
+                            <button
+                                v-if="!booking.cancelled"
+                                type="button"
+                                class="mr-3 text-gray-500 hover:text-gray-900"
+                                @click="sendConfirmation(booking)"
+                            >Send confirmation</button>
                             <button type="button" class="text-gray-500 hover:text-gray-900" @click="openEditBooking(session, booking)">Edit</button>
                             <button type="button" class="ml-3 text-gray-500 hover:text-red-600" @click="toggleBooking(booking)">
                                 {{ booking.cancelled ? 'Restore' : 'Release' }}

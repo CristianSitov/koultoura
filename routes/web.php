@@ -387,6 +387,7 @@ Route::prefix('dashboard')
             Route::put('/bookings/{booking}', 'updateBooking')->name('bookings.update');
             Route::delete('/bookings/{booking}', 'deleteBooking')->name('bookings.delete');
             Route::post('/bookings/{booking}/cancel', 'cancelBooking')->name('bookings.cancel');
+            Route::post('/bookings/{booking}/send', 'sendBookingConfirmation')->name('bookings.send');
 
             // Internal-workshop places.
             Route::put('/places/{place}', 'updatePlace')->name('places.update');
