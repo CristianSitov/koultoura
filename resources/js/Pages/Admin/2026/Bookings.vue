@@ -269,9 +269,20 @@ function removeBooking(booking) {
             <p v-else-if="open[session.id]" class="border-t border-gray-100 px-5 py-6 text-center text-sm text-gray-500">Nobody has booked yet.</p>
             </template>
 
-            <!-- Internal: places with codes, an email to invite, and Send. -->
+            <!-- Internal: places with codes, an email to invite, and Send —
+                 folded away like the attendees above. -->
             <template v-else>
-                <table class="min-w-full text-sm">
+                <div class="px-5 py-3">
+                    <button type="button" class="text-sm font-medium text-gray-700 hover:text-red-600" @click="toggleList(session.id)">
+                        <span class="inline-block w-3">{{ open[session.id] ? '▾' : '▸' }}</span>
+                        {{ session.places.length }} {{ session.places.length === 1 ? 'place' : 'places' }}
+                        <span class="font-normal text-gray-500">
+                            · {{ session.places.filter((p) => p.status === 'invited' && !p.confirmed).length }} invited
+                            · {{ session.places.filter((p) => p.confirmed).length }} confirmed
+                        </span>
+                    </button>
+                </div>
+                <table v-if="open[session.id]" class="min-w-full border-t border-gray-100 text-sm">
                     <tbody class="divide-y divide-gray-100">
                         <tr v-for="place in session.places" :key="place.id">
                             <td class="px-5 py-3 w-28">
@@ -305,7 +316,7 @@ function removeBooking(booking) {
                         </tr>
                     </tbody>
                 </table>
-                <p v-if="!session.places.length" class="border-t border-gray-100 px-5 py-6 text-center text-sm text-gray-500">
+                <p v-if="open[session.id] && !session.places.length" class="border-t border-gray-100 px-5 py-6 text-center text-sm text-gray-500">
                     Set a capacity on this workshop to generate places.
                 </p>
             </template>
