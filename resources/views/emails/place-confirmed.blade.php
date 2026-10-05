@@ -1,7 +1,17 @@
 @component('mail::message')
 # Your place is confirmed
 
-Thank you — your place at **{{ $title }}** is held. Your code is **{{ $code }}**.
+Thank you — your place at **{{ $title }}** is held.
+
+**{{ $when }}**
+
+Your place code: **{{ $code }}**
+
+@if($description)
+## About the workshop
+
+{!! $description !!}
+@endif
 
 Add it to your calendar:
 
@@ -12,6 +22,6 @@ Add to Google Calendar
 Or download it for Apple Calendar, Outlook and the rest:
 [{{ $icsUrl }}]({{ $icsUrl }})
 
-See you in October,
+See you soon,
 Asociația Prin Banat
 @endcomponent

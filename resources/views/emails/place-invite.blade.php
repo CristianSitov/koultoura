@@ -16,6 +16,6 @@ If the button does not work, paste this into your browser:
 
 If this was not meant for you, ignore this email and nothing further will happen.
 
-See you in October,
+See you soon,
 Asociația Prin Banat
 @endcomponent

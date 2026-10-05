@@ -10,10 +10,12 @@ use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\Registration;
 use App\Models\Person;
+use App\Mail\PlaceConfirmed;
 use App\Mail\PlaceInvite;
 use App\Models\Session;
 use App\Models\SessionBooking;
 use App\Models\SessionPlace;
+use App\Support\PlaceCalendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -410,6 +412,18 @@ class RegistrationsController extends Controller
     {
         if (blank($place->email)) {
             return back()->withErrors(['place' => 'Add an email before sending the invitation.']);
+        }
+
+        // Already confirmed: they get the confirmation again — date, code,
+        // description, calendar — not an invitation to confirm once more.
+        if ($place->isConfirmed()) {
+            Mail::to($place->email)->send(new PlaceConfirmed(
+                $place->load('session.day', 'session.translations'),
+                PlaceCalendar::icsUrl($place),
+                PlaceCalendar::googleUrl($place->session),
+            ));
+
+            return back()->with('flash', 'Confirmation sent again to '.$place->email.'.');
         }
 
         $url = url(Front2026Controller::base().'/places/confirm/'.$place->token);

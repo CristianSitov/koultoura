@@ -311,7 +311,7 @@ function removeBooking(booking) {
                                     class="text-gray-500 hover:text-gray-900 disabled:opacity-40 disabled:cursor-not-allowed"
                                     :disabled="!emails[place.id]"
                                     @click="invitePlace(place)"
-                                >{{ place.status === 'open' ? 'Send invite' : 'Resend' }}</button>
+                                >{{ place.confirmed ? 'Resend confirmation' : place.status === 'open' ? 'Send invite' : 'Resend invite' }}</button>
                             </td>
                         </tr>
                     </tbody>
