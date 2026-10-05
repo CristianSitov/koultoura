@@ -1,8 +1,8 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 
 /*
- * The entrance list: everyone registered, confirmed or not, by first name —
+ * The entrance list: everyone registered, confirmed or not, by last name —
  * the sheet the people at the door tick off. Names can be corrected here
  * (each row saves when a field is left, or at once on a swap), and the list
  * prints a set number of people per page, its type sized to fill the page.
@@ -36,15 +36,40 @@ const perPage = ref(25);
 
 onMounted(async () => {
     const { data } = await window.axios.get('/dashboard/registrations/entrance');
-    // Sorted once, as it opens: re-sorting while a name is being typed would
-    // move the row out from under the cursor.
-    people.value = data.sort((a, b) => byFirstName(a, b));
+    people.value = data.sort(byLastName);
 });
 
-const byFirstName = (a, b) => a.first_name.localeCompare(b.first_name, 'ro', { sensitivity: 'base' })
-    || a.last_name.localeCompare(b.last_name, 'ro', { sensitivity: 'base' });
+// By last name, then first — on screen and on paper, the same order.
+const byLastName = (a, b) => a.last_name.localeCompare(b.last_name, 'ro', { sensitivity: 'base' })
+    || a.first_name.localeCompare(b.first_name, 'ro', { sensitivity: 'base' });
 
-async function save(person) {
+/*
+ * A corrected or swapped name moves the row to its place in the order — once
+ * it is saved, never while it is typed. Moving a row takes the focus with it,
+ * so a cursor that was in it is put back; a swapped row is scrolled to, since
+ * it may land far from where it was.
+ */
+const moved = ref(null); // the row just put in its new place, briefly marked
+
+async function resort(person, follow) {
+    const focused = document.activeElement;
+
+    people.value.sort(byLastName);
+    await nextTick();
+
+    if (focused && document.contains(focused) && document.activeElement !== focused) {
+        focused.focus({ preventScroll: true });
+    }
+
+    moved.value = person.id;
+    setTimeout(() => moved.value === person.id && (moved.value = null), 1600);
+
+    if (follow) {
+        document.getElementById(`entrance-row-${person.id}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+}
+
+async function save(person, follow = false) {
     if (! person.first_name.trim()) {
         state[person.id] = 'A first name is needed.';
         return;
@@ -58,6 +83,7 @@ async function save(person) {
             last_name: person.last_name,
         });
         state[person.id] = 'saved';
+        resort(person, follow);
     } catch (e) {
         state[person.id] = e.response?.data?.message || 'Not saved.';
     }
@@ -65,7 +91,7 @@ async function save(person) {
 
 function swap(person) {
     [person.first_name, person.last_name] = [person.last_name, person.first_name];
-    save(person);
+    save(person, true);
 }
 
 // ── printing ─────────────────────────────────────────────────────────────────
@@ -104,7 +130,7 @@ function print() {
             <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-4">
                 <h2 class="text-lg font-bold">
                     Entrance list
-                    <span v-if="people" class="ml-1 text-sm font-normal text-gray-500">{{ dayName }} · {{ shown.length }} people, by first name</span>
+                    <span v-if="people" class="ml-1 text-sm font-normal text-gray-500">{{ dayName }} · {{ shown.length }} people, by last name</span>
                 </h2>
                 <div class="flex items-center gap-3 text-sm">
                     <label class="flex items-center gap-2 text-gray-600">
@@ -134,7 +160,7 @@ function print() {
                 </div>
 
                 <p class="mb-4 text-xs text-gray-500">
-                    Correct a name in place — it saves when you leave the field. ⇄ swaps last and first name, for anyone who
+                    Correct a name in place — it saves when you leave the field, and the row moves to its place by last name. ⇄ swaps last and first name, for anyone who
                     wrote them the other way round. Printing puts {{ rows }} people on a page ({{ pages.length }} {{ pages.length === 1 ? 'page' : 'pages' }}), the text sized to fill it.
                 </p>
 
@@ -151,7 +177,13 @@ function print() {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        <tr v-for="(person, i) in shown" :key="person.id">
+                        <tr
+                            v-for="(person, i) in shown"
+                            :id="`entrance-row-${person.id}`"
+                            :key="person.id"
+                            class="transition-colors duration-700"
+                            :class="moved === person.id ? 'bg-amber-100' : ''"
+                        >
                             <td class="py-1.5 pr-2 text-gray-400 tabular-nums">{{ i + 1 }}</td>
                             <td class="py-1.5 pr-1">
                                 <input v-model="person.last_name" type="text" :aria-label="`Last name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
