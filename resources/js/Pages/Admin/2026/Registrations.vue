@@ -23,6 +23,10 @@ const dayLabels = { 1: '07', 2: '08', 3: '09', 4: '10' };
  * like the first. The one that needs someone to act says so.
  */
 function state(row) {
+    if (row.unsubscribed) {
+        return { label: 'unsubscribed', note: row.unsubscribed_ago, class: 'bg-gray-200 text-gray-700' };
+    }
+
     if (row.confirmed) {
         return { label: 'confirmed', note: row.confirmed_ago, class: 'bg-green-100 text-green-800' };
     }
@@ -60,6 +64,20 @@ function resendDetails(registration) {
     if (confirm(`Send ${registration.name} the registration details again?`)) {
         action.post(`/dashboard/registrations/${registration.id}/resend-details`, { preserveScroll: true });
     }
+}
+
+/*
+ * Off the list — a second registration of the same person, or someone who
+ * asked. Nothing is sent to them; they can be brought back from "Unsubscribed".
+ */
+function unsubscribe(registration) {
+    if (confirm(`Unsubscribe ${registration.name} (${registration.email})?\n\nThey leave the counts, the entrance list, the CSV and every email. Nothing is sent to them, and you can restore them from “Unsubscribed”.`)) {
+        action.delete(`/dashboard/registrations/${registration.id}`, { preserveScroll: true });
+    }
+}
+
+function restore(registration) {
+    action.post(`/dashboard/registrations/${registration.id}/restore`, { preserveScroll: true });
 }
 
 function confirmByHand(registration) {
@@ -110,14 +128,14 @@ function confirmByHand(registration) {
             <span class="mx-2 text-gray-300">|</span>
 
             <Link
-                v-for="status in ['all', 'confirmed', 'waiting', 'unsent']"
+                v-for="status in ['all', 'confirmed', 'waiting', 'unsent', 'unsubscribed']"
                 :key="status"
                 :href="filterUrl(filters.day, status)"
                 :class="[
                     'rounded px-3 py-1.5 border capitalize',
                     filters.status === status ? 'border-red-500 text-red-700 bg-red-50' : 'border-gray-300 text-gray-600',
                 ]"
-            >{{ status }}</Link>
+            >{{ status }}<template v-if="status === 'unsubscribed' && counts.unsubscribed"> ({{ counts.unsubscribed }})</template></Link>
 
             <span class="ml-auto text-gray-500">{{ registrations.length }} shown · {{ counts.workshopInterest }} interested in a workshop</span>
         </div>
@@ -140,6 +158,8 @@ function confirmByHand(registration) {
                             <p class="font-medium">
                                 {{ row.name }}
                                 <span v-if="row.workshop_interest" class="ml-2 rounded bg-red-50 px-1.5 py-0.5 text-xs text-red-700">workshop</span>
+                                <!-- Same name as another registration: probably registered twice. -->
+                                <span v-if="row.duplicate && !row.unsubscribed" class="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-800" title="Another registration has the same name">possible duplicate</span>
                             </p>
                             <p class="text-xs text-gray-500">{{ row.email }} · {{ row.locale.toUpperCase() }}</p>
                         </td>
@@ -156,7 +176,8 @@ function confirmByHand(registration) {
                         </td>
                         <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ row.created.slice(0, 16) }}</td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
-                            <template v-if="!row.confirmed">
+                            <button v-if="row.unsubscribed" type="button" class="text-gray-500 hover:text-green-700" @click="restore(row)">Restore</button>
+                            <template v-else-if="!row.confirmed">
                                 <button type="button" class="text-gray-500 hover:text-gray-900" @click="resend(row)">
                                     Resend<span v-if="row.sent_count > 1" class="text-gray-400"> ({{ row.sent_count }})</span>
                                 </button>
@@ -171,6 +192,7 @@ function confirmByHand(registration) {
                             >
                                 Resend details<span v-if="row.sent_count > 1" class="text-gray-400"> ({{ row.sent_count }})</span>
                             </button>
+                            <button v-if="!row.unsubscribed" type="button" class="ml-3 text-gray-400 hover:text-red-600" @click="unsubscribe(row)">Unsubscribe</button>
                         </td>
                     </tr>
                     <tr v-if="!registrations.length">

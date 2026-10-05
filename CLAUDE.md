@@ -138,6 +138,18 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 **Hosting:** shared VPS `root@heritageoftimisoara.ro:2221`; this site lives at
 `/var/www/whyculturematters.eu`; prod DBs are `whyculturematters_2026/_2024/_2022`.
 
+## Unsubscribing a registration
+
+- Registrations → **Unsubscribe** soft-deletes (`SoftDeletes`, `deleted_at`): the
+  row leaves every count, the entrance list, the CSV and all emails (they all
+  query `Registration` normally); nothing is sent. **Restore** under the
+  "unsubscribed" filter. Payments stay linked; `ReconcileContributions` reads
+  `withTrashed()`.
+- An unsubscribed address that registers again is **registered afresh** (the
+  form looks it up `withTrashed()`, the email column is unique).
+- Rows whose name matches another registration (case, accents, word order
+  aside) are tagged **possible duplicate**.
+
 ## Entrance list (Registrations → "Entrance list")
 
 - Full-screen list of **every** registration (confirmed or not) — with day tabs

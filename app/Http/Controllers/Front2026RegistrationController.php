@@ -106,7 +106,9 @@ class Front2026RegistrationController extends Controller
             'email.email' => __('Please check your email address — that domain does not seem to exist.'),
         ]);
 
-        $registration = Registration::firstOrNew(['email' => $input['email']]);
+        // An unsubscribed address that registers again is registered afresh.
+        $registration = Registration::withTrashed()->firstOrNew(['email' => $input['email']]);
+        $returning = $registration->trashed();
 
         /*
          * An address that has already registered keeps the days it chose. The
@@ -115,8 +117,12 @@ class Front2026RegistrationController extends Controller
          * again, rather than silently overwriting a reservation the office may
          * already have counted.
          */
-        if ($registration->exists) {
+        if ($registration->exists && ! $returning) {
             return redirect($this->submittedUrl($registration));
+        }
+
+        if ($returning) {
+            $registration->forceFill(['deleted_at' => null, 'confirmed_at' => null, 'sent_count' => 0, 'last_sent_at' => null]);
         }
 
         $registration->fill([

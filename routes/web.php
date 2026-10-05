@@ -396,6 +396,8 @@ Route::prefix('dashboard')
             Route::post('/registrations/{registration}/resend', 'resendConfirmation')->name('registrations.resend');
             Route::post('/registrations/{registration}/resend-details', 'resendConfirmed')->name('registrations.resend-details');
             Route::post('/registrations/{registration}/confirm', 'confirm')->name('registrations.confirm');
+            Route::delete('/registrations/{registration}', 'unsubscribe')->name('registrations.unsubscribe');
+            Route::post('/registrations/{id}/restore', 'restore')->whereNumber('id')->name('registrations.restore');
 
             Route::get('/bookings', 'bookings')->name('bookings');
             Route::post('/bookings', 'addBooking')->name('bookings.store');

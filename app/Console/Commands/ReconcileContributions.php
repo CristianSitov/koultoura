@@ -46,7 +46,7 @@ class ReconcileContributions extends Command
 
         $stripe = new StripeClient($secret);
         $since = now()->subDays((int) $this->option('days'))->getTimestamp();
-        $ours = $this->option('all') ? null : Registration::pluck('token')->flip();
+        $ours = $this->option('all') ? null : Registration::withTrashed()->pluck('token')->flip();
         $seen = 0;
         $skipped = 0;
         $missing = [];

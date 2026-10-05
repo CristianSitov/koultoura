@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 /**
@@ -15,6 +16,9 @@ use Illuminate\Support\Str;
 class Registration extends Model
 {
     use HasFactory;
+    // "Unsubscribed" in the backoffice: gone from every count, list and email,
+    // kept so it can be restored and its payments stay linked.
+    use SoftDeletes;
 
     protected $connection = 'wcm_2026';
 

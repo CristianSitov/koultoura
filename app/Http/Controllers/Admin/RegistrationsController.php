@@ -50,6 +50,8 @@ class RegistrationsController extends Controller
         $status = $request->string('status')->toString();
 
         $registrations = Registration::query()
+            // Unsubscribed ones are listed only when asked for, to be restored.
+            ->when($status === 'unsubscribed', fn ($q) => $q->onlyTrashed())
             ->when($day, fn ($q) => $q->whereJsonContains('days', $day))
             ->when($status === 'confirmed', fn ($q) => $q->whereNotNull('confirmed_at'))
             ->when($status === 'waiting', fn ($q) => $q->whereNull('confirmed_at')->where('sent_count', '>', 0))
@@ -57,6 +59,11 @@ class RegistrationsController extends Controller
             ->when($status === 'unsent', fn ($q) => $q->whereNull('confirmed_at')->where('sent_count', 0))
             ->orderByDesc('id')
             ->get();
+
+        $twice = Registration::pluck('name')
+            ->map(fn ($name) => self::nameKey($name))
+            ->countBy()
+            ->filter(fn ($n) => $n > 1);
 
         return Inertia::render('Admin/2026/Registrations', [
             'registrations' => $registrations->map(fn (Registration $r) => [
@@ -77,6 +84,10 @@ class RegistrationsController extends Controller
                 // knows the server's timezone where the browser does not.
                 'sent_ago' => $r->last_sent_at?->diffForHumans(),
                 'confirmed_ago' => $r->confirmed_at?->diffForHumans(),
+                'unsubscribed' => $r->trashed(),
+                'unsubscribed_ago' => $r->deleted_at?->diffForHumans(),
+                // Same name as another registration — likely registered twice.
+                'duplicate' => $twice->has(self::nameKey($r->name)),
             ]),
             'filters' => ['day' => $day, 'status' => $status ?: 'all'],
             'counts' => $this->counts(),
@@ -172,6 +183,7 @@ class RegistrationsController extends Controller
             'total' => Registration::count(),
             'confirmed' => Registration::whereNotNull('confirmed_at')->count(),
             'unsent' => Registration::whereNull('confirmed_at')->where('sent_count', 0)->count(),
+            'unsubscribed' => Registration::onlyTrashed()->count(),
             'workshopInterest' => Registration::where('workshop_interest', true)->count(),
             'perDay' => $perDay,
             'contributions' => [
@@ -246,6 +258,35 @@ class RegistrationsController extends Controller
         ])->save();
 
         return back()->with('flash', 'Details resent to '.$registration->email);
+    }
+
+    /**
+     * Takes a registration off — a second registration of the same person, or
+     * someone who asked. It leaves the counts, the entrance list, the CSV and
+     * every email; nothing is sent to them. Restorable.
+     */
+    public function unsubscribe(Registration $registration): RedirectResponse
+    {
+        $registration->delete();
+
+        return back()->with('flash', $registration->name.' ('.$registration->email.') unsubscribed — find them under “Unsubscribed” to bring them back.');
+    }
+
+    public function restore(int $id): RedirectResponse
+    {
+        $registration = Registration::onlyTrashed()->findOrFail($id);
+        $registration->restore();
+
+        return back()->with('flash', $registration->name.' is registered again.');
+    }
+
+    /** A name compared loosely: case, accents and word order aside. */
+    private static function nameKey(?string $name): string
+    {
+        $words = preg_split('/[\s\-]+/u', Str::lower(Str::ascii(trim((string) $name))), -1, PREG_SPLIT_NO_EMPTY);
+        sort($words);
+
+        return implode(' ', $words);
     }
 
     /** Marks an address confirmed by hand, for the ones that never will be. */
