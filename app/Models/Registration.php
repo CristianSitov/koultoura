@@ -57,7 +57,13 @@ class Registration extends Model
             return [$this->first_name, (string) $this->last_name];
         }
 
-        $words = preg_split('/\s+/u', trim((string) $this->name), -1, PREG_SPLIT_NO_EMPTY);
+        return self::splitName($this->name);
+    }
+
+    /** One written name as [first, last]: the last word is the surname. */
+    public static function splitName(?string $name): array
+    {
+        $words = preg_split('/\s+/u', trim((string) $name), -1, PREG_SPLIT_NO_EMPTY);
         $last = count($words) > 1 ? array_pop($words) : '';
 
         return [implode(' ', $words), $last];

@@ -157,6 +157,9 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
   The editor shows last name before first name too; days are on screen only.
   "Blank pages" (0–20) adds empty pages with the same columns for late
   arrivals, after the list or — "Only blank" — on their own.
+- **Speakers are on every day's list** (published `Person`s, institution as
+  organization, marked "Speaker"), read-only — their name is the site's, edited in
+  Speakers. One whose name matches a registration is left out (already listed).
 
 ## Workshop & tour booking confirmations
 

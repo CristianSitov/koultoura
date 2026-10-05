@@ -30,6 +30,7 @@ const day = ref(0);
 const dayName = computed(() => dayTabs.find((t) => t.value === day.value).long);
 const shown = computed(() => (people.value || [])
     .filter((p) => ! day.value || (p.days || []).map(Number).includes(day.value)));
+const speakerCount = computed(() => shown.value.filter((p) => p.speaker).length);
 const countFor = (value) => (people.value || []).filter((p) => ! value || (p.days || []).map(Number).includes(value)).length;
 const state = reactive({}); // id → 'saving' | 'saved' | error message
 const perPage = ref(25);
@@ -174,7 +175,7 @@ function print() {
             <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-4">
                 <h2 class="text-lg font-bold">
                     Entrance list
-                    <span v-if="people" class="ml-1 text-sm font-normal text-gray-500">{{ dayName }} · {{ shown.length }} people, by last name</span>
+                    <span v-if="people" class="ml-1 text-sm font-normal text-gray-500">{{ dayName }} · {{ shown.length }} people, by last name<template v-if="speakerCount"> (with {{ speakerCount }} speakers)</template></span>
                 </h2>
                 <div class="flex items-center gap-3 text-sm">
                     <label class="flex items-center gap-2 text-gray-600">
@@ -238,17 +239,27 @@ function print() {
                             :class="moved === person.id ? 'bg-amber-100' : ''"
                         >
                             <td class="py-1.5 pr-2 text-gray-400 tabular-nums">{{ i + 1 }}</td>
-                            <td class="py-1.5 pr-1">
-                                <input v-model="person.last_name" type="text" :aria-label="`Last name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
+                            <!-- A speaker's name is the one on the site: changed in Speakers, not here. -->
+                            <template v-if="person.speaker">
+                                <td class="py-1.5 pr-1 pl-3 font-medium">{{ person.last_name }}</td>
+                                <td></td>
+                                <td class="py-1.5 pr-2 pl-3">{{ person.first_name }}</td>
+                            </template>
+                            <template v-else>
+                                <td class="py-1.5 pr-1">
+                                    <input v-model="person.last_name" type="text" :aria-label="`Last name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
+                                </td>
+                                <td class="py-1.5 text-center">
+                                    <button type="button" title="Swap last and first name" class="rounded px-2 py-1 font-mono text-gray-500 hover:bg-gray-100 hover:text-gray-900" @click="swap(person)">⇄</button>
+                                </td>
+                                <td class="py-1.5 pr-2">
+                                    <input v-model="person.first_name" type="text" :aria-label="`First name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
+                                </td>
+                            </template>
+                            <td class="py-1.5 pr-2 text-gray-500">
+                                <span v-if="person.speaker" class="mr-1 rounded bg-red-50 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-red-700">Speaker</span>{{ person.organisation }}
                             </td>
-                            <td class="py-1.5 text-center">
-                                <button type="button" title="Swap last and first name" class="rounded px-2 py-1 font-mono text-gray-500 hover:bg-gray-100 hover:text-gray-900" @click="swap(person)">⇄</button>
-                            </td>
-                            <td class="py-1.5 pr-2">
-                                <input v-model="person.first_name" type="text" :aria-label="`First name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
-                            </td>
-                            <td class="py-1.5 pr-2 text-gray-500">{{ person.organisation }}</td>
-                            <td class="py-1.5 pr-2 whitespace-nowrap text-gray-500">{{ daysOf(person) }}</td>
+                            <td class="py-1.5 pr-2 whitespace-nowrap text-gray-500">{{ person.speaker ? 'all' : daysOf(person) }}</td>
                             <td class="py-1.5 text-xs whitespace-nowrap">
                                 <button
                                     v-if="swapped[person.id]"
@@ -305,7 +316,7 @@ function print() {
                         <tr v-for="person in page.people" :key="person.id">
                             <td class="entrance-last"><div><strong>{{ person.last_name }}</strong></div></td>
                             <td class="entrance-first"><div>{{ person.first_name }}</div></td>
-                            <td class="entrance-org"><div>{{ person.organisation }}</div></td>
+                            <td class="entrance-org"><div><em v-if="person.speaker" class="entrance-role">Speaker</em> {{ person.organisation }}</div></td>
                             <!-- Left empty: signed at the door. -->
                             <td class="entrance-sign"></td>
                         </tr>
@@ -409,6 +420,13 @@ function print() {
     .entrance-print td.entrance-org {
         color: #444;
         font-size: clamp(7pt, calc(var(--row) * 0.3), 14pt);
+    }
+
+    .entrance-role {
+        font-style: normal;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
 
     /* The widest: a signature needs the room. */

@@ -9,6 +9,7 @@ use App\Mail\RegistrationConfirmation;
 use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\Registration;
+use App\Models\Person;
 use App\Mail\PlaceInvite;
 use App\Models\Session;
 use App\Models\SessionBooking;
@@ -18,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -89,7 +91,7 @@ class RegistrationsController extends Controller
      */
     public function entrance(): JsonResponse
     {
-        return response()->json(Registration::orderBy('id')->get()->map(function (Registration $r) {
+        $registered = Registration::orderBy('id')->get()->map(function (Registration $r) {
             [$first, $last] = $r->nameParts();
 
             return [
@@ -99,7 +101,33 @@ class RegistrationsController extends Controller
                 'organisation' => $r->organisation,
                 'days' => $r->days,
             ];
-        }));
+        });
+
+        /*
+         * The speakers too, on every day's list, so the door has them. Not
+         * editable here — their name is the one on the site, changed in
+         * Speakers. One who also registered is already on the list by name.
+         */
+        $key = fn (string $first, string $last) => Str::lower(Str::ascii(trim($first.' '.$last)));
+        $known = $registered->map(fn (array $r) => $key($r['first_name'], $r['last_name']))->flip();
+
+        $speakers = Person::where('published', true)->with('translations')->get()
+            ->map(function (Person $p) {
+                [$first, $last] = Registration::splitName($p->full_name);
+                $text = $p->translate('en') ?? $p->translate('ro');
+
+                return [
+                    'id' => 'speaker-'.$p->id,
+                    'first_name' => $first,
+                    'last_name' => $last,
+                    'organisation' => $text?->institution,
+                    'days' => Registration::DAYS,
+                    'speaker' => true,
+                ];
+            })
+            ->reject(fn (array $s) => $known->has($key($s['first_name'], $s['last_name'])));
+
+        return response()->json($registered->concat($speakers)->values());
     }
 
     /**
