@@ -140,7 +140,8 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 
 ## Entrance list (Registrations → "Entrance list")
 
-- Full-screen list of **every** registration (confirmed or not), sorted by first
+- Full-screen list of **every** registration (confirmed or not) — with day tabs
+  (All · 7 · 8 · 9 Oct) on top, which filter the list and the print — sorted by first
   name once on open (`Pages/Admin/2026/EntranceList.vue`, data from
   `GET /dashboard/registrations/entrance`).
 - First/last name are `registrations.first_name/last_name`, **null until the

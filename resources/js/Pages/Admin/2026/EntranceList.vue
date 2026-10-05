@@ -17,6 +17,20 @@ const dayLabels = { 1: '7', 2: '8', 3: '9', 4: '10' };
 const daysOf = (person) => [...(person.days || [])].map(Number).sort((a, b) => a - b).map((d) => dayLabels[d]).join(' · ');
 
 const people = ref(null); // null while loading
+
+// Which day's door this list is for — each day has its own sheet. "All" is
+// everyone registered for any day.
+const dayTabs = [
+    { value: 0, label: 'All days', long: 'All days' },
+    { value: 1, label: 'Wed 7 Oct', long: 'Wednesday, 7 October' },
+    { value: 2, label: 'Thu 8 Oct', long: 'Thursday, 8 October' },
+    { value: 3, label: 'Fri 9 Oct', long: 'Friday, 9 October' },
+];
+const day = ref(0);
+const dayName = computed(() => dayTabs.find((t) => t.value === day.value).long);
+const shown = computed(() => (people.value || [])
+    .filter((p) => ! day.value || (p.days || []).map(Number).includes(day.value)));
+const countFor = (value) => (people.value || []).filter((p) => ! value || (p.days || []).map(Number).includes(value)).length;
 const state = reactive({}); // id → 'saving' | 'saved' | error message
 const perPage = ref(25);
 
@@ -58,7 +72,7 @@ function swap(person) {
 
 const rows = computed(() => Math.min(60, Math.max(5, Number(perPage.value) || 25)));
 const pages = computed(() => {
-    const list = people.value || [];
+    const list = shown.value;
     const out = [];
 
     for (let i = 0; i < list.length; i += rows.value) {
@@ -90,7 +104,7 @@ function print() {
             <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-4">
                 <h2 class="text-lg font-bold">
                     Entrance list
-                    <span v-if="people" class="ml-1 text-sm font-normal text-gray-500">{{ people.length }} people, by first name</span>
+                    <span v-if="people" class="ml-1 text-sm font-normal text-gray-500">{{ dayName }} · {{ shown.length }} people, by first name</span>
                 </h2>
                 <div class="flex items-center gap-3 text-sm">
                     <label class="flex items-center gap-2 text-gray-600">
@@ -107,6 +121,18 @@ function print() {
             <p v-if="!people" class="text-sm text-gray-400">Loading…</p>
 
             <template v-else>
+                <!-- The day first: each day's door has its own sheet. -->
+                <div class="mb-4 inline-flex overflow-hidden rounded border border-gray-300 text-sm">
+                    <button
+                        v-for="tab in dayTabs"
+                        :key="tab.value"
+                        type="button"
+                        class="border-r border-gray-300 px-4 py-2 font-semibold last:border-r-0"
+                        :class="day === tab.value ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'"
+                        @click="day = tab.value"
+                    >{{ tab.label }} <span class="font-normal opacity-70">{{ countFor(tab.value) }}</span></button>
+                </div>
+
                 <p class="mb-4 text-xs text-gray-500">
                     Correct a name in place — it saves when you leave the field. ⇄ swaps first and last name, for anyone who
                     wrote their surname first. Printing puts {{ rows }} people on a page ({{ pages.length }} {{ pages.length === 1 ? 'page' : 'pages' }}), the text sized to fill it.
@@ -125,7 +151,7 @@ function print() {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        <tr v-for="(person, i) in people" :key="person.id">
+                        <tr v-for="(person, i) in shown" :key="person.id">
                             <td class="py-1.5 pr-2 text-gray-400 tabular-nums">{{ i + 1 }}</td>
                             <td class="py-1.5 pr-1">
                                 <input v-model="person.first_name" type="text" :aria-label="`First name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
@@ -163,7 +189,7 @@ function print() {
         <div class="entrance-print" :style="{ '--rows': rows }">
             <section v-for="(page, p) in pages" :key="p" class="entrance-page">
                 <header class="entrance-head">
-                    <strong>Why Culture Matters 2026 — Entrance list</strong>
+                    <strong>Why Culture Matters 2026 — Entrance list · {{ dayName }}</strong>
                     <span>{{ printedOn }} · page {{ p + 1 }} of {{ pages.length }}</span>
                 </header>
                 <table>
