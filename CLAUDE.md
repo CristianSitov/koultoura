@@ -138,6 +138,19 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 **Hosting:** shared VPS `root@heritageoftimisoara.ro:2221`; this site lives at
 `/var/www/whyculturematters.eu`; prod DBs are `whyculturematters_2026/_2024/_2022`.
 
+## Entrance list (Registrations → "Entrance list")
+
+- Full-screen list of **every** registration (confirmed or not), sorted by first
+  name once on open (`Pages/Admin/2026/EntranceList.vue`, data from
+  `GET /dashboard/registrations/entrance`).
+- First/last name are `registrations.first_name/last_name`, **null until the
+  office edits a row**; until then `Registration::nameParts()` reads them off
+  `name` (last word = surname). Saving a row (on blur, or ⇄ swap) writes both
+  and **rebuilds `name`**, which every email and the CSV use.
+- **Print / PDF** uses the browser's dialog, no library: a print-only copy is
+  teleported to `<body>`; `body.entrance-printing` hides the rest. N per page
+  (5–60) sets `--rows`; row height and type size are derived from it.
+
 ## Workshop & tour booking confirmations
 
 - **Booking sends nothing by default.** Each workshop has its own switch,

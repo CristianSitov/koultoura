@@ -82,6 +82,49 @@ class RegistrationsController extends Controller
         ]);
     }
 
+    /**
+     * Everyone registered, confirmed or not — the people who may turn up at
+     * the door — for the entrance list. Fetched when the list opens, since the
+     * page itself may be filtered.
+     */
+    public function entrance(): JsonResponse
+    {
+        return response()->json(Registration::orderBy('id')->get()->map(function (Registration $r) {
+            [$first, $last] = $r->nameParts();
+
+            return [
+                'id' => $r->id,
+                'first_name' => $first,
+                'last_name' => $last,
+                'organisation' => $r->organisation,
+                'days' => $r->days,
+            ];
+        }));
+    }
+
+    /**
+     * A name corrected in the entrance list. The one-line `name` everything
+     * else prints (emails, the CSV) is rebuilt from the two halves.
+     */
+    public function updateName(Request $request, Registration $registration): JsonResponse
+    {
+        $data = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $first = trim($data['first_name']);
+        $last = trim((string) ($data['last_name'] ?? ''));
+
+        $registration->update([
+            'first_name' => $first,
+            'last_name' => $last,
+            'name' => trim($first.' '.$last),
+        ]);
+
+        return response()->json(['ok' => true, 'name' => $registration->name]);
+    }
+
     /** Headcounts, which is the question actually being asked of this page. */
     private function counts(): array
     {

@@ -26,7 +26,7 @@ class Registration extends Model
     public const DAYS = [1, 2, 3];
 
     protected $fillable = [
-        'name', 'email', 'organisation', 'country', 'phone',
+        'name', 'first_name', 'last_name', 'email', 'organisation', 'country', 'phone',
         'days', 'workshop_interest', 'locale', 'consented_at',
     ];
 
@@ -43,6 +43,24 @@ class Registration extends Model
         static::creating(function (self $registration) {
             $registration->token ??= Str::random(48);
         });
+    }
+
+    /**
+     * First and last name. As corrected in the entrance list once the office
+     * has touched the row; before that, read off the one name the form asked
+     * for — the last word is the surname, the rest the first name. That guess
+     * is wrong for "Popescu Ion", which is what the list's swap button is for.
+     */
+    public function nameParts(): array
+    {
+        if ($this->first_name !== null) {
+            return [$this->first_name, (string) $this->last_name];
+        }
+
+        $words = preg_split('/\s+/u', trim((string) $this->name), -1, PREG_SPLIT_NO_EMPTY);
+        $last = count($words) > 1 ? array_pop($words) : '';
+
+        return [implode(' ', $words), $last];
     }
 
     public function isConfirmed(): bool

@@ -1,6 +1,8 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
+import EntranceList from './EntranceList.vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     registrations: { type: Array, default: () => [] },
@@ -10,6 +12,7 @@ const props = defineProps({
 });
 
 const action = useForm({});
+const entrance = ref(false); // the entrance list, full screen
 
 const dayLabels = { 1: '07', 2: '08', 3: '09', 4: '10' };
 
@@ -68,7 +71,11 @@ function confirmByHand(registration) {
 
 <template>
     <Admin2026 title="Registrations" :public-base="publicBase">
+        <EntranceList v-if="entrance" @close="entrance = false" />
         <template #actions>
+            <button type="button" class="mr-2 rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" @click="entrance = true">
+                Entrance list
+            </button>
             <a href="/dashboard/registrations.csv" class="rounded border border-gray-300 px-4 py-2 text-sm hover:border-red-400">
                 Download CSV
             </a>
