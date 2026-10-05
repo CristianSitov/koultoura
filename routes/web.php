@@ -390,6 +390,9 @@ Route::prefix('dashboard')
         Route::controller(RegistrationsController::class)->group(function () {
             Route::get('/registrations', 'index')->name('registrations');
             Route::get('/registrations.csv', 'export')->name('registrations.export');
+            // The entrance list: everyone, by first name, names correctable.
+            Route::get('/registrations/entrance', 'entrance')->name('registrations.entrance');
+            Route::put('/registrations/{registration}/name', 'updateName')->name('registrations.name');
             Route::post('/registrations/{registration}/resend', 'resendConfirmation')->name('registrations.resend');
             Route::post('/registrations/{registration}/resend-details', 'resendConfirmed')->name('registrations.resend-details');
             Route::post('/registrations/{registration}/confirm', 'confirm')->name('registrations.confirm');
