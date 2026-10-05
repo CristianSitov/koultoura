@@ -155,6 +155,8 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
   cell is capped to its row so a page never spills. Printed columns are fixed
   by the user: **Last name · First name · Organization · Signature** (empty).
   The editor shows last name before first name too; days are on screen only.
+  "Blank pages" (0–20) adds empty pages with the same columns for late
+  arrivals, after the list or — "Only blank" — on their own.
 
 ## Workshop & tour booking confirmations
 

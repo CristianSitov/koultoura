@@ -120,12 +120,29 @@ function close() {
 // ── printing ─────────────────────────────────────────────────────────────────
 
 const rows = computed(() => Math.min(60, Math.max(5, Number(perPage.value) || 25)));
+/*
+ * Blank pages for late arrivals: the same columns and rows, nobody in them, to
+ * be filled in by hand at the door — added after the list, or printed alone.
+ */
+const blankPages = ref(0);
+const blankOnly = ref(false);
+const blankCount = computed(() => {
+    const n = Math.min(20, Math.max(0, Math.floor(Number(blankPages.value) || 0)));
+
+    return blankOnly.value ? Math.max(1, n) : n;
+});
+
 const pages = computed(() => {
-    const list = shown.value;
     const out = [];
 
-    for (let i = 0; i < list.length; i += rows.value) {
-        out.push(list.slice(i, i + rows.value));
+    if (! blankOnly.value) {
+        for (let i = 0; i < shown.value.length; i += rows.value) {
+            out.push({ blank: false, people: shown.value.slice(i, i + rows.value) });
+        }
+    }
+
+    for (let b = 0; b < blankCount.value; b++) {
+        out.push({ blank: true, people: Array.from({ length: rows.value }, (_, i) => ({ id: `blank-${b}-${i}`, last_name: '', first_name: '', organisation: '' })) });
     }
 
     return out;
@@ -141,7 +158,7 @@ onBeforeUnmount(() => {
 });
 
 function print() {
-    if (unsaved.value && ! window.confirm(unsavedQuestion('Print'))) {
+    if (unsaved.value && ! blankOnly.value && ! window.confirm(unsavedQuestion('Print'))) {
         return;
     }
 
@@ -163,6 +180,15 @@ function print() {
                     <label class="flex items-center gap-2 text-gray-600">
                         Per page
                         <input v-model="perPage" type="number" min="5" max="60" class="w-20 rounded border-gray-300 text-sm" />
+                    </label>
+                    <!-- Blank pages for late arrivals, after the list or on their own. -->
+                    <label class="flex items-center gap-2 text-gray-600" title="Empty pages with the same columns, for people who were not registered">
+                        Blank pages
+                        <input v-model="blankPages" type="number" min="0" max="20" class="w-16 rounded border-gray-300 text-sm" />
+                    </label>
+                    <label class="flex items-center gap-1.5 text-gray-600">
+                        <input v-model="blankOnly" type="checkbox" class="rounded border-gray-300 text-red-600" />
+                        Only blank
                     </label>
                     <button type="button" class="rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700" :disabled="!people" @click="print">Print / PDF</button>
                     <button type="button" class="rounded px-3 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900" @click="close">Close ✕</button>
@@ -188,7 +214,7 @@ function print() {
 
                 <p class="mb-4 text-xs text-gray-500">
                     Correct a name in place — it saves when you leave the field, and the row moves to its place by last name. ⇄ swaps last and first name, for anyone who
-                    wrote them the other way round — check it, then press the row’s Save. Printing puts {{ rows }} people on a page ({{ pages.length }} {{ pages.length === 1 ? 'page' : 'pages' }}), the text sized to fill it.
+                    wrote them the other way round — check it, then press the row’s Save. <template v-if="blankOnly">Printing gives {{ blankCount }} blank {{ blankCount === 1 ? 'page' : 'pages' }} for late arrivals, {{ rows }} rows each.</template><template v-else>Printing puts {{ rows }} people on a page, the text sized to fill it<template v-if="blankCount">, plus {{ blankCount }} blank {{ blankCount === 1 ? 'page' : 'pages' }} for late arrivals</template>: {{ pages.length }} {{ pages.length === 1 ? 'page' : 'pages' }} in all.</template>
                 </p>
 
                 <table class="min-w-full text-sm">
@@ -243,6 +269,15 @@ function print() {
                         Per page
                         <input v-model="perPage" type="number" min="5" max="60" class="w-20 rounded border-gray-300 text-sm" />
                     </label>
+                    <!-- Blank pages for late arrivals, after the list or on their own. -->
+                    <label class="flex items-center gap-2 text-gray-600" title="Empty pages with the same columns, for people who were not registered">
+                        Blank pages
+                        <input v-model="blankPages" type="number" min="0" max="20" class="w-16 rounded border-gray-300 text-sm" />
+                    </label>
+                    <label class="flex items-center gap-1.5 text-gray-600">
+                        <input v-model="blankOnly" type="checkbox" class="rounded border-gray-300 text-red-600" />
+                        Only blank
+                    </label>
                     <button type="button" class="rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700" @click="print">Print / PDF</button>
                 </div>
             </template>
@@ -254,7 +289,7 @@ function print() {
         <div class="entrance-print" :style="{ '--rows': rows }">
             <section v-for="(page, p) in pages" :key="p" class="entrance-page">
                 <header class="entrance-head">
-                    <strong>Why Culture Matters 2026 — Entrance list · {{ dayName }}</strong>
+                    <strong>Why Culture Matters 2026 — Entrance list · {{ dayName }}<template v-if="page.blank"> · late arrivals</template></strong>
                     <span>{{ printedOn }} · page {{ p + 1 }} of {{ pages.length }}</span>
                 </header>
                 <table>
@@ -267,7 +302,7 @@ function print() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="person in page" :key="person.id">
+                        <tr v-for="person in page.people" :key="person.id">
                             <td class="entrance-last"><div><strong>{{ person.last_name }}</strong></div></td>
                             <td class="entrance-first"><div>{{ person.first_name }}</div></td>
                             <td class="entrance-org"><div>{{ person.organisation }}</div></td>
