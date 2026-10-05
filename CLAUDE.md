@@ -150,7 +150,10 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
   and **rebuilds `name`**, which every email and the CSV use.
 - **Print / PDF** uses the browser's dialog, no library: a print-only copy is
   teleported to `<body>`; `body.entrance-printing` hides the rest. N per page
-  (5–60) sets `--rows`; row height and type size are derived from it.
+  (5–60) sets `--rows`; row height and type size are derived from it, and each
+  cell is capped to its row so a page never spills. Printed columns are fixed
+  by the user: **Last name · First name · Organization · Signature** (empty).
+  The editor shows last name before first name too; days are on screen only.
 
 ## Workshop & tour booking confirmations
 

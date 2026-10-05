@@ -134,18 +134,18 @@ function print() {
                 </div>
 
                 <p class="mb-4 text-xs text-gray-500">
-                    Correct a name in place — it saves when you leave the field. ⇄ swaps first and last name, for anyone who
-                    wrote their surname first. Printing puts {{ rows }} people on a page ({{ pages.length }} {{ pages.length === 1 ? 'page' : 'pages' }}), the text sized to fill it.
+                    Correct a name in place — it saves when you leave the field. ⇄ swaps last and first name, for anyone who
+                    wrote them the other way round. Printing puts {{ rows }} people on a page ({{ pages.length }} {{ pages.length === 1 ? 'page' : 'pages' }}), the text sized to fill it.
                 </p>
 
                 <table class="min-w-full text-sm">
                     <thead>
                         <tr class="border-b border-gray-200 text-left text-xs uppercase tracking-wide text-gray-500">
                             <th class="w-10 py-2 pr-2 font-medium">#</th>
-                            <th class="py-2 pr-2 font-medium">First name</th>
-                            <th class="w-10"></th>
                             <th class="py-2 pr-2 font-medium">Last name</th>
-                            <th class="py-2 pr-2 font-medium">Organisation</th>
+                            <th class="w-10"></th>
+                            <th class="py-2 pr-2 font-medium">First name</th>
+                            <th class="py-2 pr-2 font-medium">Organization</th>
                             <th class="py-2 pr-2 font-medium">Days</th>
                             <th class="w-16"></th>
                         </tr>
@@ -154,13 +154,13 @@ function print() {
                         <tr v-for="(person, i) in shown" :key="person.id">
                             <td class="py-1.5 pr-2 text-gray-400 tabular-nums">{{ i + 1 }}</td>
                             <td class="py-1.5 pr-1">
-                                <input v-model="person.first_name" type="text" :aria-label="`First name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
+                                <input v-model="person.last_name" type="text" :aria-label="`Last name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
                             </td>
                             <td class="py-1.5 text-center">
-                                <button type="button" title="Swap first and last name" class="rounded px-2 py-1 font-mono text-gray-500 hover:bg-gray-100 hover:text-gray-900" @click="swap(person)">⇄</button>
+                                <button type="button" title="Swap last and first name" class="rounded px-2 py-1 font-mono text-gray-500 hover:bg-gray-100 hover:text-gray-900" @click="swap(person)">⇄</button>
                             </td>
                             <td class="py-1.5 pr-2">
-                                <input v-model="person.last_name" type="text" :aria-label="`Last name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
+                                <input v-model="person.first_name" type="text" :aria-label="`First name, row ${i + 1}`" class="w-full rounded border-gray-300 py-1 text-sm" @change="save(person)" />
                             </td>
                             <td class="py-1.5 pr-2 text-gray-500">{{ person.organisation }}</td>
                             <td class="py-1.5 pr-2 whitespace-nowrap text-gray-500">{{ daysOf(person) }}</td>
@@ -195,22 +195,19 @@ function print() {
                 <table>
                     <thead>
                         <tr>
-                            <th class="entrance-n">#</th>
-                            <th>First name</th>
-                            <th>Last name</th>
-                            <th>Organisation</th>
-                            <th class="entrance-days">Days</th>
-                            <th class="entrance-tick">✓</th>
+                            <th class="entrance-last">Last name</th>
+                            <th class="entrance-first">First name</th>
+                            <th class="entrance-org">Organization</th>
+                            <th class="entrance-sign">Signature</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(person, i) in page" :key="person.id">
-                            <td class="entrance-n">{{ p * rows + i + 1 }}</td>
-                            <td><strong>{{ person.first_name }}</strong></td>
-                            <td>{{ person.last_name }}</td>
-                            <td class="entrance-org">{{ person.organisation }}</td>
-                            <td class="entrance-days">{{ daysOf(person) }}</td>
-                            <td class="entrance-tick"><span></span></td>
+                        <tr v-for="person in page" :key="person.id">
+                            <td class="entrance-last"><div><strong>{{ person.last_name }}</strong></div></td>
+                            <td class="entrance-first"><div>{{ person.first_name }}</div></td>
+                            <td class="entrance-org"><div>{{ person.organisation }}</div></td>
+                            <!-- Left empty: signed at the door. -->
+                            <td class="entrance-sign"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -241,7 +238,7 @@ function print() {
         color: #000;
         font-family: Arial, Helvetica, sans-serif;
         /* The page's height under its header, shared out between the rows. */
-        --row: calc(258mm / var(--rows));
+        --row: calc(252mm / var(--rows));
     }
 
     .entrance-page {
@@ -282,22 +279,31 @@ function print() {
         font-size: clamp(8pt, calc(var(--row) * 0.4), 18pt);
         line-height: 1.1;
         border-bottom: 0.5pt solid #999;
-        overflow: hidden;
         overflow-wrap: anywhere;
         padding: 0 2mm 0 0;
+    }
+
+    /* A cell never grows its row: what does not fit in the row's height is
+       cut, so every page holds exactly its share and nothing spills over. */
+    .entrance-print td > div {
+        max-height: calc(var(--row) - 1mm);
+        overflow: hidden;
     }
 
     .entrance-print tr {
         break-inside: avoid;
     }
 
-    .entrance-n {
-        width: 11mm;
-        color: #555;
+    .entrance-last {
+        width: 27%;
     }
 
-    .entrance-print td.entrance-n {
-        font-size: clamp(7pt, calc(var(--row) * 0.28), 12pt);
+    .entrance-first {
+        width: 23%;
+    }
+
+    .entrance-org {
+        width: 22%;
     }
 
     .entrance-print td.entrance-org {
@@ -305,26 +311,13 @@ function print() {
         font-size: clamp(7pt, calc(var(--row) * 0.3), 14pt);
     }
 
-    .entrance-days {
-        width: 22mm;
+    /* The widest: a signature needs the room. */
+    .entrance-sign {
+        width: 28%;
     }
 
-    .entrance-print td.entrance-days {
-        font-size: clamp(7pt, calc(var(--row) * 0.3), 14pt);
-    }
-
-    .entrance-tick {
-        width: 12mm;
-        text-align: center;
-    }
-
-    /* A box to tick at the door. */
-    .entrance-tick span {
-        display: inline-block;
-        width: clamp(3.5mm, calc(var(--row) * 0.5), 8mm);
-        height: clamp(3.5mm, calc(var(--row) * 0.5), 8mm);
-        border: 0.75pt solid #000;
-        vertical-align: middle;
+    .entrance-print td.entrance-sign {
+        border-left: 0.5pt solid #999;
     }
 }
 </style>
