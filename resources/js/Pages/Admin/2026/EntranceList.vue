@@ -83,15 +83,38 @@ async function save(person, follow = false) {
             last_name: person.last_name,
         });
         state[person.id] = 'saved';
+        delete swapped[person.id];
         resort(person, follow);
     } catch (e) {
         state[person.id] = e.response?.data?.message || 'Not saved.';
     }
 }
 
+/*
+ * A swap is only on screen until Save is pressed — spot the mix-up, swap,
+ * look, then save. Swapping again puts it back, and there is nothing to save.
+ */
+const swapped = reactive({}); // id → true while a swap waits for Save
+const unsaved = computed(() => Object.keys(swapped).length);
+
 function swap(person) {
     [person.first_name, person.last_name] = [person.last_name, person.first_name];
-    save(person, true);
+
+    if (swapped[person.id]) {
+        delete swapped[person.id];
+    } else {
+        swapped[person.id] = true;
+    }
+
+    delete state[person.id];
+}
+
+const unsavedQuestion = (doing) => `${unsaved.value} swapped ${unsaved.value === 1 ? 'name is' : 'names are'} not saved yet. ${doing} anyway?`;
+
+function close() {
+    if (! unsaved.value || window.confirm(unsavedQuestion('Close'))) {
+        emit('close');
+    }
 }
 
 // ── printing ─────────────────────────────────────────────────────────────────
@@ -118,6 +141,10 @@ onBeforeUnmount(() => {
 });
 
 function print() {
+    if (unsaved.value && ! window.confirm(unsavedQuestion('Print'))) {
+        return;
+    }
+
     document.body.classList.add('entrance-printing');
     // A tick for the print copy to take the current names before the dialog.
     setTimeout(() => window.print(), 50);
@@ -138,7 +165,7 @@ function print() {
                         <input v-model="perPage" type="number" min="5" max="60" class="w-20 rounded border-gray-300 text-sm" />
                     </label>
                     <button type="button" class="rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700" :disabled="!people" @click="print">Print / PDF</button>
-                    <button type="button" class="rounded px-3 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900" @click="emit('close')">Close ✕</button>
+                    <button type="button" class="rounded px-3 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900" @click="close">Close ✕</button>
                 </div>
             </div>
         </div>
@@ -161,7 +188,7 @@ function print() {
 
                 <p class="mb-4 text-xs text-gray-500">
                     Correct a name in place — it saves when you leave the field, and the row moves to its place by last name. ⇄ swaps last and first name, for anyone who
-                    wrote them the other way round. Printing puts {{ rows }} people on a page ({{ pages.length }} {{ pages.length === 1 ? 'page' : 'pages' }}), the text sized to fill it.
+                    wrote them the other way round — check it, then press the row’s Save. Printing puts {{ rows }} people on a page ({{ pages.length }} {{ pages.length === 1 ? 'page' : 'pages' }}), the text sized to fill it.
                 </p>
 
                 <table class="min-w-full text-sm">
@@ -197,7 +224,13 @@ function print() {
                             <td class="py-1.5 pr-2 text-gray-500">{{ person.organisation }}</td>
                             <td class="py-1.5 pr-2 whitespace-nowrap text-gray-500">{{ daysOf(person) }}</td>
                             <td class="py-1.5 text-xs whitespace-nowrap">
-                                <span v-if="state[person.id] === 'saving'" class="text-gray-400">saving…</span>
+                                <button
+                                    v-if="swapped[person.id]"
+                                    type="button"
+                                    class="rounded bg-red-600 px-2.5 py-1 font-semibold text-white hover:bg-red-700"
+                                    @click="save(person, true)"
+                                >Save</button>
+                                <span v-else-if="state[person.id] === 'saving'" class="text-gray-400">saving…</span>
                                 <span v-else-if="state[person.id] === 'saved'" class="text-green-700">✓ saved</span>
                                 <span v-else-if="state[person.id]" class="text-red-600">{{ state[person.id] }}</span>
                             </td>

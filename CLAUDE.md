@@ -143,7 +143,7 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 - Full-screen list of **every** registration (confirmed or not) — with day tabs
   (All · 7 · 8 · 9 Oct) on top, which filter the list and the print — sorted by
   **last name** (then first), and a row re-sorts into place once a corrected or
-  swapped name is saved (`Pages/Admin/2026/EntranceList.vue`, data from
+  swapped name is saved — a swap waits for its row’s **Save** button (`Pages/Admin/2026/EntranceList.vue`, data from
   `GET /dashboard/registrations/entrance`).
 - First/last name are `registrations.first_name/last_name`, **null until the
   office edits a row**; until then `Registration::nameParts()` reads them off
