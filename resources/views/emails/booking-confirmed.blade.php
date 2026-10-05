@@ -9,6 +9,6 @@
 {{ __('Confirm or release my place') }}
 @endcomponent
 
-{{ __('See you in October,') }}
+{{ __('See you soon,') }}
 {{ __('Asociația Prin Banat') }}
 @endcomponent

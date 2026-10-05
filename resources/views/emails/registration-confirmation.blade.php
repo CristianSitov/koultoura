@@ -12,6 +12,6 @@
 
 {{ __('If you did not register, ignore this email and nothing further will happen.') }}
 
-{{ __('See you in October,') }}
+{{ __('See you soon,') }}
 {{ __('Asociația Prin Banat') }}
 @endcomponent

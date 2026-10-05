@@ -23,7 +23,7 @@ defineProps({
             <div class="wcm26-split">
                 <div>
                     <p class="wcm26-lead" style="max-width: 20ch">
-                        {{ alreadyConfirmed ? $t('Already confirmed.') : $t('See you in October.') }}
+                        {{ alreadyConfirmed ? $t('Already confirmed.') : $t('See you soon.') }}
                     </p>
                 </div>
 

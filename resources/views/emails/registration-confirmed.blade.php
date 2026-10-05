@@ -7,6 +7,6 @@
 
 [{{ __('Add to Google Calendar') }}]({{ $googleCalendarUrl }})
 
-{{ __('See you in October,') }}
+{{ __('See you soon,') }}
 {{ __('Asociația Prin Banat') }}
 @endcomponent
