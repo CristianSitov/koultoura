@@ -34,10 +34,12 @@ class ReminderEmail extends Mailable
     public static function daysList(array $days, string $locale): string
     {
         $items = self::dates($days, $locale)
-            ->map(fn ($date) => '<li><strong>'.e($date->translatedFormat('l, j F')).'</strong></li>')
+            ->map(fn ($date) => '<li style="font-size:16px;line-height:1.5em;margin:0 0 4px;"><strong>'.e($date->translatedFormat('l, j F')).'</strong></li>')
             ->implode('');
 
-        return $items === '' ? '' : '<ul>'.$items.'</ul>';
+        // Sized like the paragraphs: the mail theme sizes <p> only, and a
+        // list left to the mail app's default came out noticeably smaller.
+        return $items === '' ? '' : '<ul style="font-size:16px;line-height:1.5em;margin:0 0 16px;padding-left:24px;">'.$items.'</ul>';
     }
 
     private static function dates(array $days, string $locale)
