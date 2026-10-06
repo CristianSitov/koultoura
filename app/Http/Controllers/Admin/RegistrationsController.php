@@ -16,6 +16,8 @@ use App\Mail\SessionReminder;
 use App\Models\Session;
 use App\Models\SessionBooking;
 use App\Models\SessionPlace;
+use App\Models\SessionReminderSend;
+use App\Support\Delivery;
 use App\Support\PlaceCalendar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -376,12 +378,32 @@ class RegistrationsController extends Controller
     public function bookings(): Response
     {
         return Inertia::render('Admin/2026/Bookings', [
-            'sessions' => Session::with(['translations', 'day.translations', 'bookings', 'places', 'speakers'])
+            'sessions' => Session::with(['translations', 'day.translations', 'bookings', 'places', 'speakers', 'reminderSends'])
                 ->where('bookable', true)
                 ->orderBy('programme_day_id')
                 ->orderBy('starts_at')
                 ->get()
-                ->map(fn (Session $s) => [
+                ->map(fn (Session $s) => $this->sessionRow($s, $this->latestReminders($s))),
+            'publicBase' => Front2026Controller::base(),
+        ]);
+    }
+
+    /**
+     * Each booking's or place's latest reminder — the one whose fate matters;
+     * the earlier ones stay in the history.
+     *
+     * @return \Illuminate\Support\Collection<string, SessionReminderSend>
+     */
+    private function latestReminders(Session $s)
+    {
+        return $s->reminderSends
+            ->keyBy(fn (SessionReminderSend $r) => $r->session_booking_id ? 'b'.$r->session_booking_id : 'p'.$r->session_place_id);
+    }
+
+    /** One workshop as the Workshops page shows it. */
+    private function sessionRow(Session $s, $latest): array
+    {
+        return [
                     'id' => $s->id,
                     'type' => $s->type,
                     'title' => $s->translate('en')?->title ?? '',
@@ -404,6 +426,7 @@ class RegistrationsController extends Controller
                         'status' => $p->status,
                         'confirmed' => $p->isConfirmed(),
                         'reminded' => $p->reminder_sent_at?->format('d M H:i'),
+                        'reminder_status' => $latest->get('p'.$p->id)?->status,
                     ]),
                     // Editable identity, both languages.
                     'en' => ['title' => $s->translate('en')?->title ?? '', 'subtitle' => $s->translate('en')?->subtitle ?? ''],
@@ -429,11 +452,14 @@ class RegistrationsController extends Controller
                         'asked' => $b->confirmation_sent_at?->format('d M H:i'),
                         'asked_count' => $b->confirmation_sent_count,
                         'reminded' => $b->reminder_sent_at?->format('d M H:i'),
+                        'reminder_status' => $latest->get('b'.$b->id)?->status,
                         'created' => $b->created_at->toDateTimeString(),
                     ]),
-                ]),
-            'publicBase' => Front2026Controller::base(),
-        ]);
+            // How this one's reminders stand, by Resend's last word, and which to look up.
+            'reminder_statuses' => $latest->countBy('status'),
+            'reminder_checkable' => $latest->filter(fn (SessionReminderSend $r) => $r->resend_id && ! in_array($r->status, Delivery::FINAL, true))
+                ->pluck('id')->values(),
+        ];
     }
 
     /** Assign (or clear) the person invited to hold an internal place. */
@@ -596,6 +622,22 @@ class RegistrationsController extends Controller
         }
 
         return $answer(true, 'Reminder sent to '.$place->email.'.');
+    }
+
+    /** What Resend last saw of one workshop reminder: delivered, bounced, complained… */
+    public function checkReminderSend(SessionReminderSend $send): JsonResponse
+    {
+        if (! $send->resend_id) {
+            return response()->json(['ok' => true, 'status' => $send->status]);
+        }
+
+        try {
+            $send->update(['status' => Delivery::lookup($send->resend_id) ?? $send->status, 'checked_at' => now()]);
+        } catch (Throwable $e) {
+            return response()->json(['ok' => false, 'error' => $e->getMessage()]);
+        }
+
+        return response()->json(['ok' => true, 'status' => $send->status]);
     }
 
     /** The reminder as someone who booked in that language would get it. Nothing sends. */

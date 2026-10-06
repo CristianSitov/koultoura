@@ -7,6 +7,7 @@ import { backdrop } from '../../../backdrop';
 import { reactive, ref } from 'vue';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 import { tooLarge, tooLargeMessage } from '../../../imageGuard';
+import { statusClass, statusLabel } from '../../../deliveryStatus';
 
 const props = defineProps({
     days: { type: Array, default: () => [] },
@@ -84,6 +85,38 @@ async function sendBrief() {
     }
 
     brief.outcome = { sent: list.length - failed.length, failed };
+    brief.sending = null;
+    brief.status = (await window.axios.get(`/dashboard/programme/days/${briefDay.value.id}/brief`)).data;
+}
+
+// Ask Resend what became of each one sent — one at a time, it takes a couple a second.
+async function checkBrief() {
+    const ids = brief.status.checkable;
+
+    if (brief.sending || ! ids.length) {
+        return;
+    }
+
+    const failed = [];
+    brief.outcome = null;
+    brief.sending = { what: 'Checking', done: 0, total: ids.length };
+
+    for (const id of ids) {
+        try {
+            const { data } = await window.axios.post(`/dashboard/programme/days/${briefDay.value.id}/brief/check/${id}`);
+            if (! data.ok) failed.push({ id, name: `Email #${id}`, error: data.error });
+        } catch (e) {
+            failed.push({ id, name: `Email #${id}`, error: e.response?.data?.message || e.message });
+        }
+
+        brief.sending.done += 1;
+
+        if (brief.sending.done < ids.length) {
+            await new Promise((resolve) => setTimeout(resolve, 600));
+        }
+    }
+
+    brief.outcome = { what: 'Checked', sent: ids.length - failed.length, failed };
     brief.sending = null;
     brief.status = (await window.axios.get(`/dashboard/programme/days/${briefDay.value.id}/brief`)).data;
 }
@@ -428,6 +461,18 @@ function saveTheme() {
                         <p class="mt-1" :class="brief.status.sent ? 'text-green-700' : 'text-gray-500'">
                             {{ brief.status.sent ? `Already sent to ${headcount(brief.status.sent)}.` : 'Not sent yet.' }}
                         </p>
+                        <!-- What Resend says became of them; each send is kept, failed ones too. -->
+                        <div v-if="Object.keys(brief.status.statuses || {}).length" class="mt-2 flex flex-wrap items-center gap-2">
+                            <span v-for="(n, status) in brief.status.statuses" :key="status" class="rounded px-2 py-0.5 text-xs" :class="statusClass(status)">
+                                {{ n }} {{ statusLabel(status) }}
+                            </span>
+                            <button
+                                type="button"
+                                :disabled="!brief.status.checkable.length || !!brief.sending"
+                                class="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                                @click="checkBrief"
+                            >{{ brief.status.checkable.length ? `Check delivery (${brief.status.checkable.length})` : 'Nothing left to look up' }}</button>
+                        </div>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2 text-sm">
@@ -445,7 +490,7 @@ function saveTheme() {
                     >{{ brief.status.pending.length ? `Send to ${headcount(brief.status.pending.length)}${brief.status.sent ? ' not sent yet' : ''}` : 'Everyone has it' }}</button>
 
                     <div v-if="brief.sending">
-                        <p class="text-sm font-medium text-gray-700">Sending {{ Math.min(brief.sending.done + 1, brief.sending.total) }} of {{ brief.sending.total }}… keep this window open.</p>
+                        <p class="text-sm font-medium text-gray-700">{{ brief.sending.what || 'Sending' }} {{ Math.min(brief.sending.done + 1, brief.sending.total) }} of {{ brief.sending.total }}… keep this window open.</p>
                         <div class="mt-2 h-1.5 overflow-hidden rounded bg-gray-100">
                             <div class="h-full bg-red-600 transition-all" :style="{ width: `${(brief.sending.done / brief.sending.total) * 100}%` }"></div>
                         </div>
@@ -457,12 +502,12 @@ function saveTheme() {
                         :class="brief.outcome.failed.length ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-800'"
                     >
                         <p class="font-semibold">
-                            Sent to {{ headcount(brief.outcome.sent) }}<template v-if="brief.outcome.failed.length"> — {{ brief.outcome.failed.length }} could not be sent</template>.
+                            {{ brief.outcome.what || 'Sent to' }} {{ headcount(brief.outcome.sent) }}<template v-if="brief.outcome.failed.length"> — {{ brief.outcome.failed.length }} {{ brief.outcome.what ? 'could not be looked up' : 'could not be sent' }}</template>.
                         </p>
                         <ul v-if="brief.outcome.failed.length" class="mt-1 list-disc space-y-0.5 pl-5 text-xs">
-                            <li v-for="f in brief.outcome.failed" :key="f.id">{{ f.name }} &lt;{{ f.email }}&gt; — {{ f.error }}</li>
+                            <li v-for="f in brief.outcome.failed" :key="f.id">{{ f.name }}<template v-if="f.email"> &lt;{{ f.email }}&gt;</template> — {{ f.error }}</li>
                         </ul>
-                        <p v-if="brief.outcome.failed.length" class="mt-1 text-xs">Press send again to retry just those.</p>
+                        <p v-if="brief.outcome.failed.length && !brief.outcome.what" class="mt-1 text-xs">Press send again to retry just those.</p>
                     </div>
                 </template>
 

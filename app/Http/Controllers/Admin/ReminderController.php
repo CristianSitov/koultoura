@@ -76,16 +76,15 @@ class ReminderController extends Controller
     {
         $reminder = Reminder::current();
 
-        if ($reminder->sends()->where('registration_id', $registration->id)->exists()) {
+        if ($reminder->sends()->where('registration_id', $registration->id)->where('status', '!=', 'failed')->exists()) {
             return response()->json(['ok' => true, 'skipped' => true]);
         }
 
-        $record = fn (array $fields) => ReminderSend::create($fields + [
-            'reminder_id' => $reminder->id,
-            'registration_id' => $registration->id,
-            'email' => $registration->email,
-            'sent_at' => now(),
-        ]);
+        // One row per person and reminder: a failed try is overwritten by the retry.
+        $record = fn (array $fields) => ReminderSend::updateOrCreate(
+            ['reminder_id' => $reminder->id, 'registration_id' => $registration->id],
+            $fields + ['email' => $registration->email, 'sent_at' => now(), 'checked_at' => null],
+        );
 
         try {
             $sent = Mail::to($registration->email)->send(
@@ -93,7 +92,7 @@ class ReminderController extends Controller
             );
         } catch (Throwable $e) {
             Log::error('2026 reminder failed', ['registration' => $registration->id, 'error' => $e->getMessage()]);
-            $record(['status' => 'failed', 'error' => $e->getMessage()]);
+            $record(['status' => 'failed', 'error' => $e->getMessage(), 'resend_id' => null]);
 
             return response()->json(['ok' => false, 'error' => $e->getMessage()]);
         }
@@ -101,7 +100,7 @@ class ReminderController extends Controller
         // Laravel's Resend transport stamps the id Resend gave the email on
         // it. Mail that is only logged (locally) has none to look up.
         $id = $sent?->getOriginalMessage()->getHeaders()->get('X-Resend-Email-ID')?->getBodyAsString();
-        $record(['status' => $id ? 'sent' : 'logged', 'resend_id' => $id]);
+        $record(['status' => $id ? 'sent' : 'logged', 'resend_id' => $id, 'error' => null]);
 
         return response()->json(['ok' => true]);
     }
@@ -126,12 +125,13 @@ class ReminderController extends Controller
     private function state(Reminder $reminder): array
     {
         $sends = $reminder->sends()->get();
-        $sent = $sends->pluck('registration_id')->flip();
+        // A failed try does not count as having it: it is offered again.
+        $sent = $sends->where('status', '!=', 'failed')->pluck('registration_id')->flip();
 
         return [
             'reminder' => $reminder->only(['id', 'subject', 'subject_ro', 'body', 'body_ro']),
             'total' => Registration::count(),
-            'sent' => $sends->count(),
+            'sent' => $sent->count(),
             // How the sent ones stand, by Resend's last word.
             'statuses' => $sends->countBy('status'),
             // Everyone registered, confirmed or not, who has not had this one.

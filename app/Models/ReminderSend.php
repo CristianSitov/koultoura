@@ -19,5 +19,5 @@ class ReminderSend extends Model
     ];
 
     /** Where Resend's story ends: nothing more to look up. */
-    public const FINAL = ['delivered', 'bounced', 'complained', 'failed', 'canceled'];
+    public const FINAL = \App\Support\Delivery::FINAL;
 }

@@ -5,6 +5,8 @@ namespace App\Mail;
 use App\Http\Controllers\Front2026Controller;
 use App\Models\SessionBooking;
 use App\Models\SessionPlace;
+use App\Models\SessionReminderSend;
+use App\Support\Delivery;
 use App\Support\HtmlBio;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -25,7 +27,9 @@ use Illuminate\Support\Facades\Mail;
  * rest of their emails), with their code instead of the booking page.
  *
  * Sent from Workshops, one person per request. Always through `sendTo`, which
- * records it; a test or preview builds one from an unsaved booking or place.
+ * records every send — failed ones too — in `session_reminder_sends`, and on
+ * success stamps the holder's `reminder_sent_at`; a test or preview builds one
+ * from an unsaved booking or place.
  */
 class SessionReminder extends Mailable
 {
@@ -41,8 +45,24 @@ class SessionReminder extends Mailable
 
     public static function sendTo(SessionBooking|SessionPlace $holder): void
     {
-        Mail::to($holder->email)->send(new self($holder->loadMissing('session.translations', 'session.day.translations')));
+        $record = fn (array $fields) => SessionReminderSend::create($fields + [
+            'session_id' => $holder->session_id,
+            'session_booking_id' => $holder instanceof SessionBooking ? $holder->id : null,
+            'session_place_id' => $holder instanceof SessionPlace ? $holder->id : null,
+            'email' => $holder->email,
+            'sent_at' => now(),
+        ]);
 
+        try {
+            $sent = Mail::to($holder->email)->send(new self($holder->loadMissing('session.translations', 'session.day.translations')));
+        } catch (\Throwable $e) {
+            $record(['status' => 'failed', 'error' => $e->getMessage()]);
+
+            throw $e;
+        }
+
+        $id = Delivery::id($sent);
+        $record(['resend_id' => $id, 'status' => Delivery::initial($id)]);
         $holder->forceFill(['reminder_sent_at' => now()])->save();
     }
 

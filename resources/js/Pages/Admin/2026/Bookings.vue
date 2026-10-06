@@ -7,6 +7,7 @@ import { useDraft } from '../../../formDraft';
 import { backdrop } from '../../../backdrop';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 import AttendanceList from './AttendanceList.vue';
+import { statusClass, statusLabel } from '../../../deliveryStatus';
 
 const props = defineProps({
     sessions: { type: Array, default: () => [] },
@@ -74,10 +75,19 @@ function sendPlaceReminder(place) {
     }
 }
 
-// One email per person; `url` gives each one's endpoint.
-async function sendEach(session, list, url) {
+// Ask Resend what became of each one's latest reminder.
+function checkReminders(session) {
+    const list = session.reminder_checkable.map((id) => ({ id, name: `Email #${id}` }));
+
+    if (! runs[session.id]?.total && list.length) {
+        sendEach(session, list, (x) => `/dashboard/reminder-sends/${x.id}/check`, 'Checking', 'Checked');
+    }
+}
+
+// One request per person; `url` gives each one's endpoint, `what`/`label` the words.
+async function sendEach(session, list, url, what = 'Sending', label = 'Sent to') {
     const failed = [];
-    runs[session.id] = { done: 0, total: list.length };
+    runs[session.id] = { what, done: 0, total: list.length };
 
     for (const booking of list) {
         try {
@@ -94,7 +104,7 @@ async function sendEach(session, list, url) {
         }
     }
 
-    runs[session.id] = { sent: list.length - failed.length, failed };
+    runs[session.id] = { label, sent: list.length - failed.length, failed };
     Inertia.reload({ preserveScroll: true });
 }
 
@@ -311,9 +321,19 @@ function removeBooking(booking) {
                         <span v-if="tests[session.id]" class="ml-1">— {{ tests[session.id] }}</span>
                     </span>
                 </div>
+                    <!-- What Resend says became of each one's latest reminder. -->
+                    <div v-if="Object.keys(session.reminder_statuses || {}).length" class="mt-2 flex flex-wrap items-center gap-2">
+                        <span v-for="(n, status) in session.reminder_statuses" :key="status" class="rounded px-2 py-0.5 text-xs" :class="statusClass(status)">{{ n }} {{ statusLabel(status) }}</span>
+                        <button
+                            type="button"
+                            :disabled="!session.reminder_checkable.length || !!runs[session.id]?.total"
+                            class="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                            @click="checkReminders(session)"
+                        >{{ session.reminder_checkable.length ? `Check delivery (${session.reminder_checkable.length})` : 'Nothing left to look up' }}</button>
+                    </div>
 
                 <div v-if="runs[session.id]?.total" class="mt-3">
-                    <p class="text-gray-700">Sending {{ Math.min(runs[session.id].done + 1, runs[session.id].total) }} of {{ runs[session.id].total }}… keep this page open.</p>
+                    <p class="text-gray-700">{{ runs[session.id].what }} {{ Math.min(runs[session.id].done + 1, runs[session.id].total) }} of {{ runs[session.id].total }}… keep this page open.</p>
                     <div class="mt-1.5 h-1.5 overflow-hidden rounded bg-gray-100">
                         <div class="h-full bg-red-600 transition-all" :style="{ width: `${(runs[session.id].done / runs[session.id].total) * 100}%` }"></div>
                     </div>
@@ -323,9 +343,9 @@ function removeBooking(booking) {
                     class="mt-3 rounded border px-3 py-2"
                     :class="runs[session.id].failed.length ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-800'"
                 >
-                    Sent to {{ runs[session.id].sent }}<template v-if="runs[session.id].failed.length"> — {{ runs[session.id].failed.length }} could not be sent:</template>.
+                    {{ runs[session.id].label }} {{ runs[session.id].sent }}<template v-if="runs[session.id].failed.length"> — {{ runs[session.id].failed.length }} did not go through:</template>.
                     <ul v-if="runs[session.id].failed.length" class="mt-1 list-disc pl-5 text-xs">
-                        <li v-for="f in runs[session.id].failed" :key="f.id">{{ f.name }} &lt;{{ f.email }}&gt; — {{ f.error }}</li>
+                        <li v-for="f in runs[session.id].failed" :key="f.id">{{ f.name }}<template v-if="f.email"> &lt;{{ f.email }}&gt;</template> — {{ f.error }}</li>
                     </ul>
                 </div>
             </div>
@@ -357,7 +377,7 @@ function removeBooking(booking) {
                                 <button type="button" class="mr-3 text-gray-500 hover:text-gray-900" @click="sendConfirmation(booking)">Send confirmation</button>
                             </template>
                             <template v-if="!booking.cancelled">
-                                <span v-if="booking.reminded" class="mr-2 text-xs text-gray-500">Reminded {{ booking.reminded }}</span>
+                                <span v-if="booking.reminder_status" class="mr-2 rounded px-1.5 py-0.5 text-xs" :class="statusClass(booking.reminder_status)" :title="booking.reminded ? `Last reminded ${booking.reminded}` : ''">Reminder {{ statusLabel(booking.reminder_status) }}</span>
                                 <button type="button" class="mr-3 text-gray-500 hover:text-gray-900" @click="sendReminder(booking)">{{ booking.reminded ? 'Remind again' : 'Send reminder' }}</button>
                             </template>
                             <button type="button" class="text-gray-500 hover:text-gray-900" @click="openEditBooking(session, booking)">Edit</button>
@@ -408,8 +428,18 @@ function removeBooking(booking) {
                             <span v-if="tests[session.id]" class="ml-1">— {{ tests[session.id] }}</span>
                         </span>
                     </div>
+                    <!-- What Resend says became of each one's latest reminder. -->
+                    <div v-if="Object.keys(session.reminder_statuses || {}).length" class="mt-2 flex flex-wrap items-center gap-2">
+                        <span v-for="(n, status) in session.reminder_statuses" :key="status" class="rounded px-2 py-0.5 text-xs" :class="statusClass(status)">{{ n }} {{ statusLabel(status) }}</span>
+                        <button
+                            type="button"
+                            :disabled="!session.reminder_checkable.length || !!runs[session.id]?.total"
+                            class="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                            @click="checkReminders(session)"
+                        >{{ session.reminder_checkable.length ? `Check delivery (${session.reminder_checkable.length})` : 'Nothing left to look up' }}</button>
+                    </div>
                     <div v-if="runs[session.id]?.total" class="mt-3">
-                        <p class="text-gray-700">Sending {{ Math.min(runs[session.id].done + 1, runs[session.id].total) }} of {{ runs[session.id].total }}… keep this page open.</p>
+                        <p class="text-gray-700">{{ runs[session.id].what }} {{ Math.min(runs[session.id].done + 1, runs[session.id].total) }} of {{ runs[session.id].total }}… keep this page open.</p>
                         <div class="mt-1.5 h-1.5 overflow-hidden rounded bg-gray-100">
                             <div class="h-full bg-red-600 transition-all" :style="{ width: `${(runs[session.id].done / runs[session.id].total) * 100}%` }"></div>
                         </div>
@@ -419,9 +449,9 @@ function removeBooking(booking) {
                         class="mt-3 rounded border px-3 py-2"
                         :class="runs[session.id].failed.length ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-800'"
                     >
-                        Sent to {{ runs[session.id].sent }}<template v-if="runs[session.id].failed.length"> — {{ runs[session.id].failed.length }} could not be sent:</template>.
+                        {{ runs[session.id].label }} {{ runs[session.id].sent }}<template v-if="runs[session.id].failed.length"> — {{ runs[session.id].failed.length }} did not go through:</template>.
                         <ul v-if="runs[session.id].failed.length" class="mt-1 list-disc pl-5 text-xs">
-                            <li v-for="f in runs[session.id].failed" :key="f.id">{{ f.name }} &lt;{{ f.email }}&gt; — {{ f.error }}</li>
+                            <li v-for="f in runs[session.id].failed" :key="f.id">{{ f.name }}<template v-if="f.email"> &lt;{{ f.email }}&gt;</template> — {{ f.error }}</li>
                         </ul>
                     </div>
                 </div>
@@ -451,7 +481,7 @@ function removeBooking(booking) {
                             </td>
                             <td class="px-5 py-3 text-right whitespace-nowrap">
                                 <template v-if="place.confirmed && place.email">
-                                    <span v-if="place.reminded" class="mr-2 text-xs text-gray-500">Reminded {{ place.reminded }}</span>
+                                    <span v-if="place.reminder_status" class="mr-2 rounded px-1.5 py-0.5 text-xs" :class="statusClass(place.reminder_status)" :title="place.reminded ? `Last reminded ${place.reminded}` : ''">Reminder {{ statusLabel(place.reminder_status) }}</span>
                                     <button type="button" class="mr-3 text-gray-500 hover:text-gray-900" @click="sendPlaceReminder(place)">{{ place.reminded ? 'Remind again' : 'Send reminder' }}</button>
                                 </template>
                                 <button

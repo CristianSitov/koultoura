@@ -63,6 +63,12 @@ class Session extends Model implements TranslatableContract
         return $this->hasMany(SessionBooking::class);
     }
 
+    /** Every reminder sent for it, failed ones included — the history. */
+    public function reminderSends(): HasMany
+    {
+        return $this->hasMany(SessionReminderSend::class)->orderBy('id');
+    }
+
     public function places(): HasMany
     {
         return $this->hasMany(SessionPlace::class)->orderBy('id');

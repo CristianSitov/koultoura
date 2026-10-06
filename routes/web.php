@@ -361,6 +361,7 @@ Route::prefix('dashboard')
             Route::post('/programme/days/{day}/brief/test/{locale}', 'test')
                 ->where('locale', 'en|ro')
                 ->name('days.brief.test');
+            Route::post('/programme/days/{day}/brief/check/{send}', 'check')->whereNumber('send')->name('days.brief.check');
             Route::post('/programme/days/{day}/brief/{registration}', 'send')->name('days.brief.send');
         });
 
@@ -425,6 +426,7 @@ Route::prefix('dashboard')
             Route::put('/places/{place}', 'updatePlace')->name('places.update');
             Route::post('/places/{place}/invite', 'invitePlace')->name('places.invite');
             Route::post('/places/{place}/remind', 'sendPlaceReminder')->name('places.remind');
+            Route::post('/reminder-sends/{send}/check', 'checkReminderSend')->name('reminder-sends.check');
         });
 
         // The internal agenda: its events, each day's programme box, the

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\DayBrief;
 use App\Models\ProgrammeDay;
 use App\Models\Registration;
+use App\Support\Delivery;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,9 @@ use Throwable;
  * for the same reason the old agenda did: the mail provider takes a couple a
  * second and a request lives thirty seconds, so a loop over eighty people on
  * the server would not finish. Each send is recorded, so a run that stops
- * halfway resumes where it left off and nobody gets it twice.
+ * halfway resumes where it left off and nobody gets it twice — with Resend's
+ * id, so "Check delivery" can ask what became of it. A send that failed is
+ * kept too, and is tried again on the next run.
  */
 class DayBriefController extends Controller
 {
@@ -36,6 +39,7 @@ class DayBriefController extends Controller
         $recipients = self::recipients($day);
         $sent = $this->sent($day);
         $pending = $recipients->reject(fn (Registration $r) => $sent->has(self::key($r->email)));
+        $rows = $this->rows($day);
 
         return response()->json([
             // A day no registration covers (the workshop Saturday) has no list
@@ -44,6 +48,11 @@ class DayBriefController extends Controller
             'total' => $recipients->count(),
             'sent' => $recipients->count() - $pending->count(),
             'languages' => $recipients->countBy('locale'),
+            // How the sends stand, by Resend's last word — failed ones included.
+            'statuses' => $rows->countBy('status'),
+            // Still worth looking up at Resend: has an id, not at a final state.
+            'checkable' => $rows->filter(fn ($row) => $row->resend_id && ! in_array($row->status, Delivery::FINAL, true))
+                ->pluck('id')->values(),
             'pending' => $pending->map(fn (Registration $r) => [
                 'id' => $r->id,
                 'name' => $r->name,
@@ -60,22 +69,45 @@ class DayBriefController extends Controller
             return response()->json(['ok' => true, 'skipped' => true]);
         }
 
+        // One row per day and address: a failed try is overwritten by the retry.
+        $record = fn (array $fields) => DB::connection('wcm_2026')->table('day_brief_sends')->updateOrInsert(
+            ['programme_day_id' => $day->id, 'email' => $email],
+            $fields + ['registration_id' => $registration->id, 'sent_at' => now(), 'checked_at' => null],
+        );
+
         try {
-            Mail::to($registration->email)->send(new DayBrief($day, $registration->locale ?: 'en', $registration->name));
+            $sent = Mail::to($registration->email)->send(new DayBrief($day, $registration->locale ?: 'en', $registration->name));
         } catch (Throwable $e) {
             report($e);
+            $record(['status' => 'failed', 'error' => $e->getMessage(), 'resend_id' => null]);
 
             return response()->json(['ok' => false, 'error' => $e->getMessage()]);
         }
 
-        DB::connection('wcm_2026')->table('day_brief_sends')->insertOrIgnore([
-            'programme_day_id' => $day->id,
-            'registration_id' => $registration->id,
-            'email' => $email,
-            'sent_at' => now(),
-        ]);
+        $id = Delivery::id($sent);
+        $record(['status' => Delivery::initial($id), 'error' => null, 'resend_id' => $id]);
 
         return response()->json(['ok' => true]);
+    }
+
+    /** What Resend last saw of one day email: delivered, bounced, complained… */
+    public function check(ProgrammeDay $day, int $send): JsonResponse
+    {
+        $query = DB::connection('wcm_2026')->table('day_brief_sends')->where('programme_day_id', $day->id)->where('id', $send);
+        $row = $query->first() ?? abort(404);
+
+        if (! $row->resend_id) {
+            return response()->json(['ok' => true, 'status' => $row->status]);
+        }
+
+        try {
+            $status = Delivery::lookup($row->resend_id) ?? $row->status;
+            $query->update(['status' => $status, 'checked_at' => now()]);
+        } catch (Throwable $e) {
+            return response()->json(['ok' => false, 'error' => $e->getMessage()]);
+        }
+
+        return response()->json(['ok' => true, 'status' => $status]);
     }
 
     /** To the person signed in, in the language asked for. Not recorded. */
@@ -126,11 +158,15 @@ class DayBriefController extends Controller
         return in_array($n, Registration::DAYS, true) ? $n : null;
     }
 
+    /** The addresses that have it — a failed try does not count. */
     private function sent(ProgrammeDay $day): Collection
     {
-        return DB::connection('wcm_2026')->table('day_brief_sends')
-            ->where('programme_day_id', $day->id)
-            ->pluck('sent_at', 'email');
+        return $this->rows($day)->where('status', '!=', 'failed')->pluck('sent_at', 'email');
+    }
+
+    private function rows(ProgrammeDay $day): Collection
+    {
+        return DB::connection('wcm_2026')->table('day_brief_sends')->where('programme_day_id', $day->id)->get();
     }
 
     private static function key(?string $email): string

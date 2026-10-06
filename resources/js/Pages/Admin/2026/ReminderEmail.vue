@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
 import RichText from './RichText.vue';
+import { statusClass, statusLabel } from '../../../deliveryStatus';
 
 /*
  * The reminder email to everyone registered: write it (English, and Romanian
@@ -118,18 +119,6 @@ function close() {
     emit('close');
 }
 
-// Resend's words, as the office reads them.
-const statusLabels = {
-    sent: 'sent, not yet delivered',
-    delivered: 'delivered',
-    delivery_delayed: 'delayed',
-    bounced: 'bounced',
-    complained: 'marked as spam',
-    opened: 'opened',
-    clicked: 'clicked',
-    failed: 'failed to send',
-    logged: 'logged (local, not sent)',
-};
 const statusList = computed(() => Object.entries(state.value?.statuses || {}));
 </script>
 
@@ -216,13 +205,8 @@ const statusList = computed(() => Object.entries(state.value?.statuses || {}));
                                 v-for="[status, n] in statusList"
                                 :key="status"
                                 class="rounded px-2 py-0.5"
-                                :class="{
-                                    'bg-green-100 text-green-800': ['delivered', 'opened', 'clicked'].includes(status),
-                                    'bg-red-100 text-red-800': ['bounced', 'complained', 'failed'].includes(status),
-                                    'bg-amber-100 text-amber-800': status === 'delivery_delayed',
-                                    'bg-gray-100 text-gray-700': ['sent', 'logged'].includes(status),
-                                }"
-                            >{{ n }} {{ statusLabels[status] || status }}</span>
+                                :class="statusClass(status)"
+                            >{{ n }} {{ statusLabel(status) }}</span>
                         </div>
                         <button
                             type="button"

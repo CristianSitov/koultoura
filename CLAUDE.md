@@ -158,6 +158,10 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
   `resend_id`, `status`). The id comes from Laravel's Resend transport header
   `X-Resend-Email-ID`; status is Resend's `emails->get($id)->last_event`.
   Locally (`MAIL_MAILER=log`) there is no id: status `logged`, nothing to check.
+  A failed send is offered again and overwritten by the retry.
+- **All three bulk emails keep this evidence** (reminder, day before, workshop
+  reminder): `App\Support\Delivery` (id from the header, `lookup()`, `FINAL`)
+  and `resources/js/deliveryStatus.js` (labels, chip colours) are shared.
 - Sending **and** checking are one request per person with a 600 ms pause,
   driven by the window — Resend's ~2 req/s limit covers lookups too. Final
   states (`ReminderSend::FINAL`) are not looked up again.
@@ -225,7 +229,10 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
   "Remind again"; Preview EN/RO and a test to the signed-in admin (unsaved
   sample booking, not recorded).
 - `App\Mail\SessionReminder` (`emails/session-reminder`), always via
-  `sendTo()`, which stamps `session_bookings.reminder_sent_at`. In the booking's
+  `sendTo()`, which writes a row to `session_reminder_sends` for **every** send
+  (failed included — "Remind again" adds history, never overwrites) and, on
+  success, stamps `reminder_sent_at` (which drives "not yet reminded"). Status
+  chips and "Check delivery" read each holder's latest row. In the booking's
   language: full date (never "tomorrow" — it may go two days ahead), time, the
   **day's brief** and the **session description** (RO empty → EN) — the meeting
   point has no field of its own, the office writes it in either — a button to
@@ -272,7 +279,11 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
   tour booking reminders are a planned follow-up (`SessionBooking`).
 - **Sending is one email per request, driven by the screen** (600 ms pause),
   never a server loop (Resend ~2/s, PHP 30 s). Each send is recorded in
-  `day_brief_sends` (unique day+email), so a run resumes and never doubles.
+  `day_brief_sends` (unique day+email: `resend_id`, `status`, `error`), so a run
+  resumes and never doubles; a **failed** try is kept, offered again, and
+  overwritten by the retry. "Check delivery" asks Resend, as for the reminder.
+- Without "About this day" the email skips "Here is what to expect:" and points
+  to the day's programme (`day.email.intro_plain`).
   "Send a test to yourself" goes to the signed-in admin and is not recorded.
 
 ## Internal agenda (speakers, guests)
