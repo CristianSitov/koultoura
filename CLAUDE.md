@@ -79,6 +79,10 @@ Local `.env` maps: `DB_DATABASE_2026=wcm_2026`, `_2024=wcm_2024`, `_2022=wcm_202
   `--color-accent-100`, `--font-heading` (Manrope), and `color-mix(...)` for
   tints. Current aesthetic: **square corners** (no border-radius on chips/boxes),
   editorial type, chips share one shape (school = pink, draft = amber).
+- **Rich text** (`Pages/Admin/2026/RichText.vue` + `App\Support\HtmlBio`, used for
+  speaker/session descriptions, day briefs, the reminder): paragraphs, bold,
+  italic, underline and **links** — the cleaner keeps an `<a>` only with an
+  http/https/mailto href and writes it back with `target="_blank" rel="noopener"`.
 - **Backoffice pages DO use Tailwind** (`resources/js/Pages/Admin/2026/*.vue`).
 - Runtime-uploaded images render through `ImageSlot` (shows a grey placeholder
   until a file exists).

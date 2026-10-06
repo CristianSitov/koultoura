@@ -73,4 +73,19 @@ class HtmlBioTest extends TestCase
     {
         $this->assertSame('<p>Timișoara · încă</p>', HtmlBio::clean('<p>Timișoara · încă</p>'));
     }
+
+    public function test_keeps_a_web_or_mail_link_opening_in_a_new_tab(): void
+    {
+        $this->assertSame(
+            '<p>See <a href="https://whyculturematters.eu/2026/programme" target="_blank" rel="noopener">the programme</a> or <a href="mailto:office@prinbanat.ro" target="_blank" rel="noopener">write</a>.</p>',
+            HtmlBio::clean('<p>See <a href="https://whyculturematters.eu/2026/programme" style="color:red" onclick="x()">the programme</a> or <a href="mailto:office@prinbanat.ro">write</a>.</p>')
+        );
+    }
+
+    public function test_a_link_to_anywhere_unsafe_keeps_only_its_words(): void
+    {
+        $this->assertSame('<p>click me</p>', HtmlBio::clean('<p><a href="javascript:alert(1)">click me</a></p>'));
+        $this->assertSame('<p>no address</p>', HtmlBio::clean('<p><a>no address</a></p>'));
+        $this->assertSame('<p>data</p>', HtmlBio::clean('<p><a href="data:text/html,x">data</a></p>'));
+    }
 }

@@ -14,10 +14,12 @@ use DOMNode;
  * modal can render it with v-html without a way in for a script.
  *
  * The rule is an allowlist, not a blocklist: only these tags survive, and no
- * attribute on any of them. With no attributes there is no href, no style, no
- * on* handler — nothing that carries an attack — so the surface is the five
- * tags themselves. Everything else is unwrapped to its text (a stray <span>
- * keeps its words) except <script>/<style>, whose contents are dropped whole.
+ * attribute on any of them — no style, no on* handler. The one exception is a
+ * link's href, kept only when it is a web or mail address (http, https,
+ * mailto), so a `javascript:` link loses its href and is unwrapped to its
+ * words. Links are written back with a new tab and `noopener`, whatever came
+ * in. Everything else is unwrapped to its text (a stray <span> keeps its
+ * words) except <script>/<style>, whose contents are dropped whole.
  *
  * Run on save and again on render: the store holds clean HTML, and rendering
  * never trusts the store to have stayed that way.
@@ -25,7 +27,7 @@ use DOMNode;
 class HtmlBio
 {
     /** The only tags that live. `br` is void; the rest wrap their children. */
-    private const ALLOWED = ['p', 'br', 'strong', 'em', 'u'];
+    private const ALLOWED = ['p', 'br', 'strong', 'em', 'u', 'a'];
 
     /** Editors and browsers reach for these; they mean the allowed ones. */
     private const MAP = ['b' => 'strong', 'i' => 'em', 'div' => 'p'];
@@ -45,7 +47,7 @@ class HtmlBio
         // editor emits those, and a browser serialises a typed "<" as "&lt;",
         // so a bare angle bracket here means prose like "ages 5 < 10", not
         // markup. Routing that to the parser would eat it as a broken tag.
-        if (! preg_match('#</?(?:p|br|strong|b|em|i|u|div)\b#i', $raw)) {
+        if (! preg_match('#</?(?:p|br|strong|b|em|i|u|div|a)\b#i', $raw)) {
             return self::fromPlainText($raw);
         }
 
@@ -97,10 +99,28 @@ class HtmlBio
                 continue;
             }
 
+            if ($tag === 'a') {
+                $href = self::href($child->getAttribute('href'));
+                // A link that goes nowhere safe is just its words.
+                $out .= $href === null
+                    ? $inner
+                    : '<a href="'.htmlspecialchars($href, ENT_QUOTES, 'UTF-8').'" target="_blank" rel="noopener">'.$inner.'</a>';
+
+                continue;
+            }
+
             $out .= $tag === 'br' ? '<br>' : '<'.$tag.'>'.$inner.'</'.$tag.'>';
         }
 
         return $out;
+    }
+
+    /** A web or mail address, or null for anything else (javascript:, data:…). */
+    private static function href(string $href): ?string
+    {
+        $href = trim($href);
+
+        return preg_match('#^(https?://|mailto:)\S+$#i', $href) ? $href : null;
     }
 
     private static function fromPlainText(string $raw): ?string

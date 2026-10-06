@@ -168,8 +168,8 @@ const statusList = computed(() => Object.entries(state.value?.statuses || {}));
                         </div>
                     </div>
                     <p class="text-xs text-gray-500">
-                        <strong>{name}</strong> is replaced by each person’s name, in the subject and the text. Web addresses typed in
-                        the text are usually turned into links by the mail app. The email ends with “See you soon, Asociația Prin Banat”.
+                        <strong>{name}</strong> is replaced by each person’s name, in the subject and the text. To link words, select
+                        them and press the link button. The email ends with “See you soon, Asociația Prin Banat”.
                     </p>
                     <div class="flex items-center gap-3">
                         <button type="button" class="rounded bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700 disabled:opacity-40" :disabled="saved" @click="save">
