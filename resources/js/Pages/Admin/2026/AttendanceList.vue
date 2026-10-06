@@ -56,8 +56,11 @@ const sheets = computed(() => props.sessions.map((s) => {
     return { session: s, internal: false, people };
 }));
 
+// One workshop printed on its own from the full window; null prints them all.
+const only = ref(null);
+
 // The printed pages: each workshop's people in pages, then its blank pages.
-const pages = computed(() => sheets.value.flatMap((sheet) => {
+const pages = computed(() => sheets.value.filter((sheet) => ! only.value || sheet.session.id === only.value).flatMap((sheet) => {
     const out = [];
     for (let i = 0; i < sheet.people.length; i += rows.value) {
         out.push({ sheet, rows: sheet.people.slice(i, i + rows.value), start: i });
@@ -78,15 +81,20 @@ const ageOf = (b) => (b.age ? `${b.age}` : '');
 
 const printedOn = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-const done = () => document.body.classList.remove('attendance-printing');
+const done = () => {
+    document.body.classList.remove('attendance-printing');
+    only.value = null;
+};
 onMounted(() => window.addEventListener('afterprint', done));
 onBeforeUnmount(() => {
     window.removeEventListener('afterprint', done);
     done();
 });
 
-function print() {
+function print(id = null) {
+    only.value = id;
     document.body.classList.add('attendance-printing');
+    // After Vue has redrawn the print copy for just that workshop.
     setTimeout(() => window.print(), 50);
 }
 </script>
@@ -110,7 +118,7 @@ function print() {
                         Blank pages
                         <input v-model="blankPages" type="number" min="0" max="10" class="w-16 rounded border-gray-300 text-sm" />
                     </label>
-                    <button type="button" class="rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700" @click="print">Print / PDF</button>
+                    <button type="button" class="rounded bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700" @click="print()">{{ sessions.length === 1 ? 'Print / PDF' : 'Print all / PDF' }}</button>
                     <button type="button" class="rounded px-3 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900" @click="emit('close')">Close ✕</button>
                 </div>
             </div>
@@ -128,7 +136,10 @@ function print() {
                         {{ sheet.session.title }}
                         <span class="ml-1 text-sm font-normal text-gray-500">{{ sheet.session.day }} · {{ sheet.session.time }} · {{ sheet.people.length }} {{ sheet.internal ? 'invited' : 'attending' }}</span>
                     </h3>
-                    <a :href="`/dashboard/sessions/${sheet.session.id}/attendance.csv`" class="ml-auto text-sm text-gray-600 underline hover:text-gray-900">Download CSV</a>
+                    <div class="ml-auto flex items-center gap-4 text-sm">
+                        <button v-if="sessions.length > 1" type="button" class="rounded border border-gray-300 px-3 py-1 font-semibold hover:border-red-400" @click="print(sheet.session.id)">Print / PDF</button>
+                        <a :href="`/dashboard/sessions/${sheet.session.id}/attendance.csv`" class="text-gray-600 underline hover:text-gray-900">Download CSV</a>
+                    </div>
                 </div>
 
                 <table class="min-w-full text-sm">

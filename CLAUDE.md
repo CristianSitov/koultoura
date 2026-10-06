@@ -230,6 +230,8 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 - Printed like the entrance list (teleported copy, `body.attendance-printing`,
   `--rows` 5–40, cells capped), each workshop on pages of its own with its
   title/day/time and "page n of N"; blank pages (0–10) per workshop for walk-ins.
+  In the all-lists window each workshop also has its own **Print / PDF** (prints
+  only that one; `only` is cleared on `afterprint`).
 
 ## Day pages & the eve-of-day email (participants)
 
