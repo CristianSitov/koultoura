@@ -138,14 +138,30 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 **Hosting:** shared VPS `root@heritageoftimisoara.ro:2221`; this site lives at
 `/var/www/whyculturematters.eu`; prod DBs are `whyculturematters_2026/_2024/_2022`.
 
-## Unsubscribing a registration
+## Reminder email (Registrations → "Reminder email")
 
-- Registrations → **Unsubscribe** soft-deletes (`SoftDeletes`, `deleted_at`): the
+- Full-screen window (`Pages/Admin/2026/ReminderEmail.vue`, `Admin\ReminderController`):
+  subject + RichText body in EN and RO (RO empty → EN), `{name}` replaced per
+  person; Save; test to the signed-in admin (EN/RO, not recorded); send to every
+  active registration (confirmed or not) not yet sent; then **Check delivery**.
+- `reminders` (one row per round — "Start a new reminder" copies the text and
+  starts with nobody sent) and `reminder_sends` (unique reminder+registration,
+  `resend_id`, `status`). The id comes from Laravel's Resend transport header
+  `X-Resend-Email-ID`; status is Resend's `emails->get($id)->last_event`.
+  Locally (`MAIL_MAILER=log`) there is no id: status `logged`, nothing to check.
+- Sending **and** checking are one request per person with a 600 ms pause,
+  driven by the window — Resend's ~2 req/s limit covers lookups too. Final
+  states (`ReminderSend::FINAL`) are not looked up again.
+- The Registrations table's **Reminder** column shows the latest round's status.
+
+## Removing a registration
+
+- Registrations → **Remove** (red, with a confirm) soft-deletes (`SoftDeletes`, `deleted_at`): the
   row leaves every count, the entrance list, the CSV and all emails (they all
   query `Registration` normally); nothing is sent. **Restore** under the
-  "unsubscribed" filter. Payments stay linked; `ReconcileContributions` reads
+  "removed" filter. Payments stay linked; `ReconcileContributions` reads
   `withTrashed()`.
-- An unsubscribed address that registers again is **registered afresh** (the
+- A removed address that registers again is **registered afresh** (the
   form looks it up `withTrashed()`, the email column is unique).
 - Rows whose name matches another registration (case, accents, word order
   aside) are tagged **possible duplicate**.

@@ -2,6 +2,8 @@
 import { Link, useForm } from '@inertiajs/inertia-vue3';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
 import EntranceList from './EntranceList.vue';
+import ReminderEmail from './ReminderEmail.vue';
+import { Inertia } from '@inertiajs/inertia';
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -13,6 +15,26 @@ const props = defineProps({
 
 const action = useForm({});
 const entrance = ref(false); // the entrance list, full screen
+const reminder = ref(false); // the reminder email, full screen
+
+// Closing the reminder refreshes the list, for its Reminder column.
+function closeReminder() {
+    reminder.value = false;
+    Inertia.reload({ preserveScroll: true });
+}
+
+// Resend's last word on each person's reminder, as a badge.
+const reminderBadge = {
+    sent: ['sent', 'bg-gray-100 text-gray-700'],
+    logged: ['logged', 'bg-gray-100 text-gray-500'],
+    delivered: ['delivered', 'bg-green-100 text-green-800'],
+    opened: ['opened', 'bg-green-100 text-green-800'],
+    clicked: ['clicked', 'bg-green-100 text-green-800'],
+    delivery_delayed: ['delayed', 'bg-amber-100 text-amber-800'],
+    bounced: ['bounced', 'bg-red-100 text-red-800'],
+    complained: ['spam', 'bg-red-100 text-red-800'],
+    failed: ['failed', 'bg-red-100 text-red-800'],
+};
 
 const dayLabels = { 1: '07', 2: '08', 3: '09', 4: '10' };
 
@@ -24,7 +46,7 @@ const dayLabels = { 1: '07', 2: '08', 3: '09', 4: '10' };
  */
 function state(row) {
     if (row.unsubscribed) {
-        return { label: 'unsubscribed', note: row.unsubscribed_ago, class: 'bg-gray-200 text-gray-700' };
+        return { label: 'removed', note: row.unsubscribed_ago, class: 'bg-gray-200 text-gray-700' };
     }
 
     if (row.confirmed) {
@@ -68,10 +90,10 @@ function resendDetails(registration) {
 
 /*
  * Off the list — a second registration of the same person, or someone who
- * asked. Nothing is sent to them; they can be brought back from "Unsubscribed".
+ * asked. Nothing is sent to them; they can be brought back from "removed".
  */
 function unsubscribe(registration) {
-    if (confirm(`Unsubscribe ${registration.name} (${registration.email})?\n\nThey leave the counts, the entrance list, the CSV and every email. Nothing is sent to them, and you can restore them from “Unsubscribed”.`)) {
+    if (confirm(`Remove ${registration.name} (${registration.email}) from the registrations?\n\nThey leave the counts, the entrance list, the CSV and every email. Nothing is sent to them, and you can restore them from the “removed” filter.`)) {
         action.delete(`/dashboard/registrations/${registration.id}`, { preserveScroll: true });
     }
 }
@@ -90,13 +112,21 @@ function confirmByHand(registration) {
 <template>
     <Admin2026 title="Registrations" :public-base="publicBase">
         <EntranceList v-if="entrance" @close="entrance = false" />
+        <ReminderEmail v-if="reminder" @close="closeReminder" />
+        <!-- One group, so the header sets it at the right as a whole: two loose
+             buttons were spread across it, one of them in the middle. -->
         <template #actions>
-            <button type="button" class="mr-2 rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" @click="entrance = true">
-                Entrance list
-            </button>
-            <a href="/dashboard/registrations.csv" class="rounded border border-gray-300 px-4 py-2 text-sm hover:border-red-400">
-                Download CSV
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="/dashboard/registrations.csv" class="rounded border border-gray-300 px-4 py-2 text-sm hover:border-red-400">
+                    Download CSV
+                </a>
+                <button type="button" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" @click="reminder = true">
+                    Reminder email
+                </button>
+                <button type="button" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" @click="entrance = true">
+                    Entrance list
+                </button>
+            </div>
         </template>
 
         <!-- Headcounts first: it is the question this page is opened to answer. -->
@@ -128,14 +158,14 @@ function confirmByHand(registration) {
             <span class="mx-2 text-gray-300">|</span>
 
             <Link
-                v-for="status in ['all', 'confirmed', 'waiting', 'unsent', 'unsubscribed']"
+                v-for="status in ['all', 'confirmed', 'waiting', 'unsent', 'removed']"
                 :key="status"
                 :href="filterUrl(filters.day, status)"
                 :class="[
                     'rounded px-3 py-1.5 border capitalize',
                     filters.status === status ? 'border-red-500 text-red-700 bg-red-50' : 'border-gray-300 text-gray-600',
                 ]"
-            >{{ status }}<template v-if="status === 'unsubscribed' && counts.unsubscribed"> ({{ counts.unsubscribed }})</template></Link>
+            >{{ status }}<template v-if="status === 'removed' && counts.unsubscribed"> ({{ counts.unsubscribed }})</template></Link>
 
             <span class="ml-auto text-gray-500">{{ registrations.length }} shown · {{ counts.workshopInterest }} interested in a workshop</span>
         </div>
@@ -148,6 +178,7 @@ function confirmByHand(registration) {
                         <th class="px-4 py-3 font-medium">Days</th>
                         <th class="px-4 py-3 font-medium">Organisation</th>
                         <th class="px-4 py-3 font-medium">Status</th>
+                        <th class="px-4 py-3 font-medium">Reminder</th>
                         <th class="px-4 py-3 font-medium">Registered</th>
                         <th class="px-4 py-3"></th>
                     </tr>
@@ -174,6 +205,10 @@ function confirmByHand(registration) {
                             <span :class="['rounded px-2 py-0.5 text-xs', state(row).class]">{{ state(row).label }}</span>
                             <p v-if="state(row).note" class="mt-1 text-xs text-gray-500">{{ state(row).note }}</p>
                         </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span v-if="row.reminder" :class="['rounded px-2 py-0.5 text-xs', (reminderBadge[row.reminder] || [row.reminder, 'bg-gray-100 text-gray-700'])[1]]">{{ (reminderBadge[row.reminder] || [row.reminder])[0] }}</span>
+                            <span v-else class="text-xs text-gray-300">—</span>
+                        </td>
                         <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ row.created.slice(0, 16) }}</td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
                             <button v-if="row.unsubscribed" type="button" class="text-gray-500 hover:text-green-700" @click="restore(row)">Restore</button>
@@ -192,11 +227,11 @@ function confirmByHand(registration) {
                             >
                                 Resend details<span v-if="row.sent_count > 1" class="text-gray-400"> ({{ row.sent_count }})</span>
                             </button>
-                            <button v-if="!row.unsubscribed" type="button" class="ml-3 text-gray-400 hover:text-red-600" @click="unsubscribe(row)">Unsubscribe</button>
+                            <button v-if="!row.unsubscribed" type="button" class="ml-3 rounded bg-red-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-red-700" @click="unsubscribe(row)">Remove</button>
                         </td>
                     </tr>
                     <tr v-if="!registrations.length">
-                        <td colspan="6" class="px-4 py-8 text-center text-gray-500">Nobody matches this filter.</td>
+                        <td colspan="7" class="px-4 py-8 text-center text-gray-500">Nobody matches this filter.</td>
                     </tr>
                 </tbody>
             </table>

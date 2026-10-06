@@ -390,6 +390,16 @@ Route::prefix('dashboard')
         Route::controller(RegistrationsController::class)->group(function () {
             Route::get('/registrations', 'index')->name('registrations');
             Route::get('/registrations.csv', 'export')->name('registrations.export');
+            // The reminder email: write, test, send one per request, check delivery.
+            Route::controller(\App\Http\Controllers\Admin\ReminderController::class)->group(function () {
+                Route::get('/reminder', 'show')->name('reminder');
+                Route::put('/reminder', 'save')->name('reminder.save');
+                Route::post('/reminder/new', 'fresh')->name('reminder.new');
+                Route::post('/reminder/test/{locale}', 'test')->where('locale', 'en|ro')->name('reminder.test');
+                Route::post('/reminder/send/{registration}', 'send')->name('reminder.send');
+                Route::post('/reminder/check/{send}', 'check')->name('reminder.check');
+            });
+
             // The entrance list: everyone, by first name, names correctable.
             Route::get('/registrations/entrance', 'entrance')->name('registrations.entrance');
             Route::put('/registrations/{registration}/name', 'updateName')->name('registrations.name');

@@ -52,8 +52,8 @@ class RegistrationsController extends Controller
         $status = $request->string('status')->toString();
 
         $registrations = Registration::query()
-            // Unsubscribed ones are listed only when asked for, to be restored.
-            ->when($status === 'unsubscribed', fn ($q) => $q->onlyTrashed())
+            // Removed ones are listed only when asked for, to be restored.
+            ->when($status === 'removed', fn ($q) => $q->onlyTrashed())
             ->when($day, fn ($q) => $q->whereJsonContains('days', $day))
             ->when($status === 'confirmed', fn ($q) => $q->whereNotNull('confirmed_at'))
             ->when($status === 'waiting', fn ($q) => $q->whereNull('confirmed_at')->where('sent_count', '>', 0))
@@ -61,6 +61,12 @@ class RegistrationsController extends Controller
             ->when($status === 'unsent', fn ($q) => $q->whereNull('confirmed_at')->where('sent_count', 0))
             ->orderByDesc('id')
             ->get();
+
+        // The current reminder's status for each person, for the Reminder column.
+        $reminder = \App\Models\Reminder::latest('id')->first();
+        $reminded = $reminder
+            ? $reminder->sends()->get(['registration_id', 'status', 'sent_at'])->keyBy('registration_id')
+            : collect();
 
         $twice = Registration::pluck('name')
             ->map(fn ($name) => self::nameKey($name))
@@ -90,6 +96,7 @@ class RegistrationsController extends Controller
                 'unsubscribed_ago' => $r->deleted_at?->diffForHumans(),
                 // Same name as another registration — likely registered twice.
                 'duplicate' => $twice->has(self::nameKey($r->name)),
+                'reminder' => $reminded->get($r->id)?->status,
             ]),
             'filters' => ['day' => $day, 'status' => $status ?: 'all'],
             'counts' => $this->counts(),
@@ -271,7 +278,7 @@ class RegistrationsController extends Controller
     {
         $registration->delete();
 
-        return back()->with('flash', $registration->name.' ('.$registration->email.') unsubscribed — find them under “Unsubscribed” to bring them back.');
+        return back()->with('flash', $registration->name.' ('.$registration->email.') removed — find them under “removed” to bring them back.');
     }
 
     public function restore(int $id): RedirectResponse
