@@ -34,7 +34,7 @@ async function sendToUnconfirmed(session) {
         return;
     }
 
-    await sendEach(session, list, 'send');
+    await sendEach(session, list, (b) => `/dashboard/bookings/${b.id}/send`);
 }
 
 // Everyone holding a place, confirmed or not, who has not had the reminder.
@@ -48,17 +48,40 @@ async function sendReminders(session) {
         return;
     }
 
-    await sendEach(session, list, 'remind');
+    await sendEach(session, list, (b) => `/dashboard/bookings/${b.id}/remind`);
 }
 
-// One email per booking — `what` is the endpoint: send (confirm) or remind.
-async function sendEach(session, list, what) {
+// An internal workshop: its confirmed places, not yet reminded.
+const unremindedPlaces = (session) => session.places.filter((p) => p.confirmed && p.email && ! p.reminded);
+
+async function sendPlaceReminders(session) {
+    const list = unremindedPlaces(session);
+
+    if (runs[session.id]?.total || ! list.length
+        || ! confirm(`Send the reminder for “${session.title}” (${session.day}, ${session.time}) to ${list.length} confirmed ${list.length === 1 ? 'place' : 'places'} now?`)) {
+        return;
+    }
+
+    await sendEach(session, list.map((p) => ({ ...p, name: p.code })), (p) => `/dashboard/places/${p.id}/remind`);
+}
+
+function sendPlaceReminder(place) {
+    if (confirm(`Send the reminder to ${place.email}?`)) {
+        action.post(`/dashboard/places/${place.id}/remind`, {
+            preserveScroll: true,
+            onError: (errors) => alert(errors.place || 'The email did not go out.'),
+        });
+    }
+}
+
+// One email per person; `url` gives each one's endpoint.
+async function sendEach(session, list, url) {
     const failed = [];
     runs[session.id] = { done: 0, total: list.length };
 
     for (const booking of list) {
         try {
-            const { data } = await window.axios.post(`/dashboard/bookings/${booking.id}/${what}`);
+            const { data } = await window.axios.post(url(booking));
             if (! data.ok) failed.push({ ...booking, error: data.error });
         } catch (e) {
             failed.push({ ...booking, error: e.response?.data?.message || e.message });
@@ -366,6 +389,43 @@ function removeBooking(booking) {
                         <a :href="`/dashboard/sessions/${session.id}/attendance.csv`" class="text-gray-500 hover:text-gray-900">CSV</a>
                     </div>
                 </div>
+
+                <!-- The reminder before the day: confirmed places only, in English, with their code. -->
+                <div class="border-t border-gray-100 px-5 py-3 text-sm">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button
+                            type="button"
+                            :disabled="!unremindedPlaces(session).length || !!runs[session.id]?.total"
+                            class="rounded border border-gray-300 px-3 py-1.5 font-semibold hover:border-red-400 disabled:cursor-not-allowed disabled:opacity-40"
+                            @click="sendPlaceReminders(session)"
+                        >{{ unremindedPlaces(session).length ? `Send reminder (${unremindedPlaces(session).length})` : 'Reminder sent to every confirmed place' }}</button>
+                        <span class="text-xs text-gray-500">
+                            {{ session.places.filter((p) => p.reminded).length }} reminded · confirmed places only, in English, with their code
+                        </span>
+                        <span class="text-xs text-gray-500">
+                            <a :href="`/dashboard/sessions/${session.id}/reminder/en`" target="_blank" class="underline hover:text-gray-900">Preview ↗</a>
+                            · <button type="button" class="underline hover:text-gray-900" @click="testReminder(session, 'en')">Test to me</button>
+                            <span v-if="tests[session.id]" class="ml-1">— {{ tests[session.id] }}</span>
+                        </span>
+                    </div>
+                    <div v-if="runs[session.id]?.total" class="mt-3">
+                        <p class="text-gray-700">Sending {{ Math.min(runs[session.id].done + 1, runs[session.id].total) }} of {{ runs[session.id].total }}… keep this page open.</p>
+                        <div class="mt-1.5 h-1.5 overflow-hidden rounded bg-gray-100">
+                            <div class="h-full bg-red-600 transition-all" :style="{ width: `${(runs[session.id].done / runs[session.id].total) * 100}%` }"></div>
+                        </div>
+                    </div>
+                    <div
+                        v-else-if="runs[session.id]"
+                        class="mt-3 rounded border px-3 py-2"
+                        :class="runs[session.id].failed.length ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-800'"
+                    >
+                        Sent to {{ runs[session.id].sent }}<template v-if="runs[session.id].failed.length"> — {{ runs[session.id].failed.length }} could not be sent:</template>.
+                        <ul v-if="runs[session.id].failed.length" class="mt-1 list-disc pl-5 text-xs">
+                            <li v-for="f in runs[session.id].failed" :key="f.id">{{ f.name }} &lt;{{ f.email }}&gt; — {{ f.error }}</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <table v-if="open[session.id]" class="min-w-full border-t border-gray-100 text-sm">
                     <tbody class="divide-y divide-gray-100">
                         <tr v-for="place in session.places" :key="place.id">
@@ -390,6 +450,10 @@ function removeBooking(booking) {
                                 >{{ place.confirmed ? 'confirmed' : place.status }}</span>
                             </td>
                             <td class="px-5 py-3 text-right whitespace-nowrap">
+                                <template v-if="place.confirmed && place.email">
+                                    <span v-if="place.reminded" class="mr-2 text-xs text-gray-500">Reminded {{ place.reminded }}</span>
+                                    <button type="button" class="mr-3 text-gray-500 hover:text-gray-900" @click="sendPlaceReminder(place)">{{ place.reminded ? 'Remind again' : 'Send reminder' }}</button>
+                                </template>
                                 <button
                                     type="button"
                                     class="text-gray-500 hover:text-gray-900 disabled:opacity-40 disabled:cursor-not-allowed"

@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Http\Controllers\Front2026Controller;
 use App\Models\SessionBooking;
+use App\Models\SessionPlace;
 use App\Support\HtmlBio;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -20,8 +21,11 @@ use Illuminate\Support\Facades\Mail;
  * booking page. The date is written out, never "tomorrow": the office may
  * send it two days ahead.
  *
+ * An internal workshop's confirmed places get it too, in English (like the
+ * rest of their emails), with their code instead of the booking page.
+ *
  * Sent from Workshops, one person per request. Always through `sendTo`, which
- * records it; a test or preview builds one from an unsaved booking.
+ * records it; a test or preview builds one from an unsaved booking or place.
  */
 class SessionReminder extends Mailable
 {
@@ -31,15 +35,15 @@ class SessionReminder extends Mailable
     // Where a change of plan goes: the emails come from a no-reply address.
     public const CONTACT = 'contact@prinbanat.ro';
 
-    public function __construct(public SessionBooking $booking)
+    public function __construct(public SessionBooking|SessionPlace $holder)
     {
     }
 
-    public static function sendTo(SessionBooking $booking): void
+    public static function sendTo(SessionBooking|SessionPlace $holder): void
     {
-        Mail::to($booking->email)->send(new self($booking->loadMissing('session.translations', 'session.day.translations')));
+        Mail::to($holder->email)->send(new self($holder->loadMissing('session.translations', 'session.day.translations')));
 
-        $booking->forceFill(['reminder_sent_at' => now()])->save();
+        $holder->forceFill(['reminder_sent_at' => now()])->save();
     }
 
     public function envelope(): Envelope
@@ -54,13 +58,15 @@ class SessionReminder extends Mailable
         $locale = $this->language();
         App::setLocale($locale);
 
-        $session = $this->booking->session;
+        $session = $this->holder->session;
+        $booking = $this->holder instanceof SessionBooking ? $this->holder : null;
         // Romanian left empty reads the English.
         $text = fn ($model) => HtmlBio::clean($model?->translate($locale)?->description)
             ?? HtmlBio::clean($model?->translate('en')?->description);
 
         return new Content(markdown: 'emails.session-reminder', with: [
-            'name' => $this->booking->first_name ?: $this->booking->name,
+            'name' => $booking ? ($booking->first_name ?: $booking->name) : null,
+            'code' => $booking ? null : $this->holder->code,
             'title' => $this->title(),
             'date' => $this->date(),
             'time' => substr($session->starts_at, 0, 5),
@@ -68,27 +74,27 @@ class SessionReminder extends Mailable
             'brief' => $text($session->day),
             'description' => $text($session),
             'contact' => self::CONTACT,
-            // The booking's own page, in the language it was made in.
-            'url' => url(Front2026Controller::base()
+            // The booking's own page, in the language it was made in. A place has none.
+            'url' => $booking ? url(Front2026Controller::base()
                 .($locale === 'ro' ? '/ro' : '')
-                .'/sessions/'.$session->slug.'/booked/'.$this->booking->token),
+                .'/sessions/'.$session->slug.'/booked/'.$booking->token) : null,
         ]);
     }
 
     private function language(): string
     {
-        return $this->booking->locale === 'ro' ? 'ro' : 'en';
+        return $this->holder instanceof SessionBooking && $this->holder->locale === 'ro' ? 'ro' : 'en';
     }
 
     private function title(): string
     {
-        $session = $this->booking->session;
+        $session = $this->holder->session;
 
         return ($session->translate($this->language()) ?? $session->translate('en'))?->title ?? '';
     }
 
     private function date(): string
     {
-        return $this->booking->session->day?->date->locale($this->language())->translatedFormat('l, j F') ?? '';
+        return $this->holder->session->day?->date->locale($this->language())->translatedFormat('l, j F') ?? '';
     }
 }

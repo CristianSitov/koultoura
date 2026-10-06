@@ -1,7 +1,7 @@
 @component('mail::message')
 # {{ $title }}
 
-{{ __('booking.email.hello', ['name' => $name]) }}
+{{ $name ? __('booking.email.hello', ['name' => $name]) : __('day.email.hello') }}
 
 {!! __('booking.reminder.intro', ['title' => $title, 'date' => $date, 'time' => $time]) !!}
 
@@ -9,9 +9,15 @@
 {!! $brief !!}
 @endif
 
+@if($code)
+{{ __('Your place code:') }} **{{ $code }}**
+
+@endif
+@if($url)
 @component('mail::button', ['url' => $url])
 {{ __('See your booking') }}
 @endcomponent
+@endif
 
 {{ __('booking.reminder.cannot', ['email' => $contact]) }}
 

@@ -403,6 +403,7 @@ class RegistrationsController extends Controller
                         'email' => $p->email,
                         'status' => $p->status,
                         'confirmed' => $p->isConfirmed(),
+                        'reminded' => $p->reminder_sent_at?->format('d M H:i'),
                     ]),
                     // Editable identity, both languages.
                     'en' => ['title' => $s->translate('en')?->title ?? '', 'subtitle' => $s->translate('en')?->subtitle ?? ''],
@@ -575,10 +576,32 @@ class RegistrationsController extends Controller
         return $answer(true, 'Reminder sent to '.$booking->email.'.');
     }
 
+    /** The reminder to one confirmed place of an internal workshop. */
+    public function sendPlaceReminder(Request $request, SessionPlace $place): RedirectResponse|JsonResponse
+    {
+        $answer = fn (bool $ok, string $message) => $request->header('X-Inertia')
+            ? ($ok ? back()->with('flash', $message) : back()->withErrors(['place' => $message]))
+            : response()->json(['ok' => $ok, 'error' => $ok ? null : $message]);
+
+        if (blank($place->email) || ! $place->isConfirmed()) {
+            return $answer(false, 'Only a confirmed place gets the reminder.');
+        }
+
+        try {
+            SessionReminder::sendTo($place);
+        } catch (Throwable $e) {
+            Log::error('2026 place reminder failed', ['place' => $place->id, 'error' => $e->getMessage()]);
+
+            return $answer(false, 'The email did not go out: '.$e->getMessage());
+        }
+
+        return $answer(true, 'Reminder sent to '.$place->email.'.');
+    }
+
     /** The reminder as someone who booked in that language would get it. Nothing sends. */
     public function reminderPreview(Session $session, string $locale): string
     {
-        return (new SessionReminder($this->sampleBooking($session, $locale)))->render();
+        return (new SessionReminder($this->sample($session, $locale)))->render();
     }
 
     /** The reminder to the person signed in. Not recorded. */
@@ -587,7 +610,7 @@ class RegistrationsController extends Controller
         $email = auth()->user()->email;
 
         try {
-            Mail::to($email)->send(new SessionReminder($this->sampleBooking($session, $locale)));
+            Mail::to($email)->send(new SessionReminder($this->sample($session, $locale)));
         } catch (Throwable $e) {
             report($e);
 
@@ -597,18 +620,19 @@ class RegistrationsController extends Controller
         return response()->json(['ok' => true, 'email' => $email]);
     }
 
-    /** An unsaved booking in the signed-in admin's name, for a preview or a test. */
-    private function sampleBooking(Session $session, string $locale): SessionBooking
+    /**
+     * An unsaved booking in the signed-in admin's name — or, for an internal
+     * workshop, a place with a made-up code — for a preview or a test.
+     */
+    private function sample(Session $session, string $locale): SessionBooking|SessionPlace
     {
         abort_unless(in_array($locale, ['en', 'ro'], true), 404);
 
-        $booking = new SessionBooking([
-            'name' => auth()->user()->name,
-            'locale' => $locale,
-            'token' => 'preview',
-        ]);
+        $holder = $session->internal
+            ? new SessionPlace(['code' => 'ABC234'])
+            : new SessionBooking(['name' => auth()->user()->name, 'locale' => $locale, 'token' => 'preview']);
 
-        return $booking->setRelation('session', $session->load('translations', 'day.translations'));
+        return $holder->setRelation('session', $session->load('translations', 'day.translations'));
     }
 
     /** This workshop's switch: email new bookings a request to confirm, or not. */

@@ -230,8 +230,13 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
   **day's brief** and the **session description** (RO empty → EN) — the meeting
   point has no field of its own, the office writes it in either — a button to
   the booking page, and "can't come? write to contact@prinbanat.ro".
+- **Internal workshops:** the same mail (`SessionReminder` takes a booking or a
+  place) to **confirmed** places only — English, "Dear participant", their code
+  instead of the booking button; stamps `session_places.reminder_sent_at`
+  (`POST /dashboard/places/{place}/remind`). Invited-but-unconfirmed places get
+  "Resend invite" instead, by the user's choice.
 - This is Saturday's day-before email: the Programme modal for a day nobody
-  registers for points to Workshops. Internal workshops (places) are not covered.
+  registers for points to Workshops.
 
 ## Attendance lists (Workshops)
 

@@ -18,6 +18,7 @@ class SessionPlace extends Model
     protected $casts = [
         'invited_at' => 'datetime',
         'confirmed_at' => 'datetime',
+        'reminder_sent_at' => 'datetime',
     ];
 
     /*

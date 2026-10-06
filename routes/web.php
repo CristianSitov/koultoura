@@ -424,6 +424,7 @@ Route::prefix('dashboard')
             // Internal-workshop places.
             Route::put('/places/{place}', 'updatePlace')->name('places.update');
             Route::post('/places/{place}/invite', 'invitePlace')->name('places.invite');
+            Route::post('/places/{place}/remind', 'sendPlaceReminder')->name('places.remind');
         });
 
         // The internal agenda: its events, each day's programme box, the
