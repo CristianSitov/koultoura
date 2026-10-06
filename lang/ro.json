@@ -408,6 +408,7 @@
     "day.email.hello": "Dragă participant/ă,",
     "day.email.hello_name": "Dragă :name,",
     "day.email.intro": "Mâine este ziua :n a simpozionului. Iată ce te așteaptă:",
+    "day.email.intro_plain": "Mâine este ziua :n a simpozionului. Programul zilei îl găsești la linkul de mai jos.",
     "See you tomorrow,": "Ne vedem mâine,",
     "Cultural Heritage School": "Școala de Patrimoniu Cultural",
     "By invitation only": "Doar pe bază de invitație",

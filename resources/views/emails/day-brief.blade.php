@@ -8,10 +8,13 @@
 {{ __('day.email.hello') }}
 @endif
 
+{{-- Without the day's text, no "here is what to expect" pointing at nothing. --}}
+@if($brief)
 {{ __('day.email.intro', ['n' => $n]) }}
 
-@if($brief)
 {!! $brief !!}
+@else
+{{ __('day.email.intro_plain', ['n' => $n]) }}
 @endif
 
 @component('mail::button', ['url' => $url])

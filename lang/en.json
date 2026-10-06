@@ -408,6 +408,7 @@
     "day.email.hello": "Dear participant,",
     "day.email.hello_name": "Dear :name,",
     "day.email.intro": "Tomorrow is day :n of the symposium. Here is what to expect:",
+    "day.email.intro_plain": "Tomorrow is day :n of the symposium. You will find the day’s programme at the link below.",
     "See you tomorrow,": "See you tomorrow,",
     "Cultural Heritage School": "Cultural Heritage School",
     "By invitation only": "By invitation only",
