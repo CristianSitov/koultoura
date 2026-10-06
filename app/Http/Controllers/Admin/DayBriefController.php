@@ -8,6 +8,7 @@ use App\Models\ProgrammeDay;
 use App\Models\Registration;
 use App\Support\Delivery;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -42,6 +43,8 @@ class DayBriefController extends Controller
         $rows = $this->rows($day);
 
         return response()->json([
+            // The words, in the shape the reminder window edits (it is the same window).
+            'reminder' => $day->emailText(),
             // A day no registration covers (the workshop Saturday) has no list
             // of its own: its people are the workshops' and tours' bookings.
             'covered' => self::number($day) !== null,
@@ -59,6 +62,26 @@ class DayBriefController extends Controller
                 'email' => $r->email,
             ])->values(),
         ]);
+    }
+
+    /** The office's words for the day: subject and text, English and Romanian. */
+    public function save(Request $request, ProgrammeDay $day): JsonResponse
+    {
+        $data = $request->validate([
+            'subject' => ['required', 'string', 'max:255'],
+            'subject_ro' => ['nullable', 'string', 'max:255'],
+            'body' => ['required', 'string'],
+            'body_ro' => ['nullable', 'string'],
+        ]);
+
+        $day->update([
+            'email_subject' => $data['subject'],
+            'email_subject_ro' => $data['subject_ro'] ?? null,
+            'email_body' => $data['body'],
+            'email_body_ro' => $data['body_ro'] ?? null,
+        ]);
+
+        return $this->status($day);
     }
 
     public function send(ProgrammeDay $day, Registration $registration): JsonResponse

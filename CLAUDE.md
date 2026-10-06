@@ -269,7 +269,17 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
   day/date, theme, moderator, the day's brief, its sessions, a link back to the
   day in the full programme. Same visibility rules as the landing programme.
 - **Brief:** `programme_day_translations.description` — "About this day" in
-  Programme → Edit day (RichText, cleaned by `HtmlBio`; RO empty → EN).
+  Programme → Edit day (RichText, cleaned by `HtmlBio`; RO empty → EN). It is
+  the **day page's** text; the email has its own (below).
+- **The email's words are edited like the reminder's**, in the same window:
+  `ReminderEmail.vue` takes `base` (`/dashboard/programme/days/{id}/brief`),
+  `title`, `audience`, `rounds=false`, and `#hint` / `#uncovered` slots; both
+  servers answer `{reminder:{subject…}, total, sent, statuses, pending,
+  checkable}`. Text lives on `programme_days.email_subject/_ro/email_body/_ro`;
+  until saved, `ProgrammeDay::emailText()` gives a starter (day number, "About
+  this day" if any). Placeholders `{name}`, `{date}` ("Wednesday, 7 October" in
+  the reader's language). The mail adds a fixed button to the day page and
+  "See you tomorrow". `day.email.intro*` keys are no longer used.
 - **Email:** `App\Mail\DayBrief` (`emails/day-brief`), sent from Programme →
   "Email the day before" (`Admin\DayBriefController`). Recipients: **every**
   registration whose `days` holds the day's number — confirmed or not, by the

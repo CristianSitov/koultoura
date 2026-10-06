@@ -358,11 +358,12 @@ Route::prefix('dashboard')
                 ->where('locale', 'en|ro')
                 ->name('days.email');
             Route::get('/programme/days/{day}/brief', 'status')->name('days.brief');
+            Route::put('/programme/days/{day}/brief', 'save')->name('days.brief.save');
             Route::post('/programme/days/{day}/brief/test/{locale}', 'test')
                 ->where('locale', 'en|ro')
                 ->name('days.brief.test');
             Route::post('/programme/days/{day}/brief/check/{send}', 'check')->whereNumber('send')->name('days.brief.check');
-            Route::post('/programme/days/{day}/brief/{registration}', 'send')->name('days.brief.send');
+            Route::post('/programme/days/{day}/brief/send/{registration}', 'send')->name('days.brief.send');
         });
 
         Route::controller(ProgrammeController::class)->group(function () {

@@ -9,7 +9,20 @@ import { statusClass, statusLabel } from '../../../deliveryStatus';
  * send yourself a test, send it to everyone, then look up at Resend how each
  * one fared. Sending and looking up both go one person per request, with a
  * pause: Resend takes a couple of requests a second.
+ *
+ * The same window writes and sends the email the evening before each day
+ * (Programme): `base` points it at that day, and the words around it change.
+ * Both servers answer in one shape: { reminder: {subject, subject_ro, body,
+ * body_ro}, total, sent, statuses, pending, checkable }.
  */
+const props = defineProps({
+    base: { type: String, default: '/dashboard/reminder' },
+    title: { type: String, default: 'Reminder email' },
+    // Who "everyone" is, after the count.
+    audience: { type: String, default: 'registered (confirmed or not, removed ones left out)' },
+    // Only the general reminder has rounds, and a column in Registrations.
+    rounds: { type: Boolean, default: true },
+});
 const emit = defineEmits(['close']);
 
 const state = ref(null); // from the server: reminder, counts, pending, checkable
@@ -31,14 +44,15 @@ const load = (data) => {
     saved.value = true;
 };
 
-onMounted(async () => load((await window.axios.get('/dashboard/reminder')).data));
+const reload = async () => load((await window.axios.get(props.base)).data);
+onMounted(reload);
 
 const touched = () => (saved.value = false);
 
 async function save() {
     errors.value = {};
     try {
-        load((await window.axios.put('/dashboard/reminder', form)).data);
+        load((await window.axios.put(props.base, form)).data);
         return true;
     } catch (e) {
         errors.value = e.response?.data?.errors || {};
@@ -50,7 +64,7 @@ async function save() {
 async function test(locale) {
     if (! saved.value && ! await save()) return;
     note.value = 'Sending a test…';
-    const { data } = await window.axios.post(`/dashboard/reminder/test/${locale}`);
+    const { data } = await window.axios.post(`${props.base}/test/${locale}`);
     note.value = data.ok ? `Test sent to ${data.email} (${locale.toUpperCase()}).` : `Test not sent: ${data.error}`;
 }
 
@@ -69,7 +83,7 @@ async function sendAll() {
 
     for (const person of list) {
         try {
-            const { data } = await window.axios.post(`/dashboard/reminder/send/${person.id}`);
+            const { data } = await window.axios.post(`${props.base}/send/${person.id}`);
             if (! data.ok) failed.push({ ...person, error: data.error });
         } catch (e) {
             failed.push({ ...person, error: e.response?.data?.message || e.message });
@@ -80,7 +94,7 @@ async function sendAll() {
 
     outcome.value = { what: 'Sent to', ok: list.length - failed.length, failed };
     run.value = null;
-    load((await window.axios.get('/dashboard/reminder')).data);
+    await reload();
 }
 
 async function checkAll() {
@@ -93,7 +107,7 @@ async function checkAll() {
 
     for (const id of ids) {
         try {
-            const { data } = await window.axios.post(`/dashboard/reminder/check/${id}`);
+            const { data } = await window.axios.post(`${props.base}/check/${id}`);
             if (! data.ok) failed.push({ id, error: data.error });
         } catch (e) {
             failed.push({ id, error: e.response?.data?.message || e.message });
@@ -104,12 +118,12 @@ async function checkAll() {
 
     outcome.value = { what: 'Checked', ok: ids.length - failed.length, failed };
     run.value = null;
-    load((await window.axios.get('/dashboard/reminder')).data);
+    await reload();
 }
 
 async function startNew() {
     if (! confirm('Start a new reminder? It begins with this text and with nobody sent. The statuses of this one stay as they are.')) return;
-    load((await window.axios.post('/dashboard/reminder/new')).data);
+    load((await window.axios.post(`${props.base}/new`)).data);
     outcome.value = null;
 }
 
@@ -126,13 +140,16 @@ const statusList = computed(() => Object.entries(state.value?.statuses || {}));
     <div class="fixed inset-0 z-30 overflow-y-auto bg-white">
         <div class="sticky top-0 z-10 border-b border-gray-200 bg-white">
             <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-                <h2 class="text-lg font-bold">Reminder email</h2>
+                <h2 class="text-lg font-bold">{{ title }}</h2>
                 <button type="button" class="rounded px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 disabled:opacity-40" :disabled="!!run" @click="close">Close ✕</button>
             </div>
         </div>
 
         <div class="mx-auto max-w-5xl space-y-6 px-6 py-6">
             <p v-if="!state" class="text-sm text-gray-400">Loading…</p>
+
+            <!-- A day nobody registers for (the workshop Saturday) has nobody to send to here. -->
+            <slot v-else-if="state.covered === false" name="uncovered" />
 
             <template v-else>
                 <!-- 1. Write -->
@@ -157,9 +174,11 @@ const statusList = computed(() => Object.entries(state.value?.statuses || {}));
                         </div>
                     </div>
                     <p class="text-xs text-gray-500">
-                        <strong>{name}</strong> is replaced by each person’s name, and <strong>{days}</strong> by the days they registered for —
-                        on a line of its own, as a list (one day a line); inside a sentence or the subject, as “Thursday 8 and Friday 9 October”. A test shows all three days. To link words, select
-                        them and press the link button. The email ends with “See you soon, Asociația Prin Banat”.
+                        <slot name="hint">
+                            <strong>{name}</strong> is replaced by each person’s name, and <strong>{days}</strong> by the days they registered for —
+                            on a line of its own, as a list (one day a line); inside a sentence or the subject, as “Thursday 8 and Friday 9 October”. A test shows all three days. To link words, select
+                            them and press the link button. The email ends with “See you soon, Asociația Prin Banat”.
+                        </slot>
                     </p>
                     <div class="flex items-center gap-3">
                         <button type="button" class="rounded bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700 disabled:opacity-40" :disabled="saved" @click="save">
@@ -184,7 +203,7 @@ const statusList = computed(() => Object.entries(state.value?.statuses || {}));
                 <section class="space-y-3 border-t border-gray-100 pt-5">
                     <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">3 · Send it to everyone</h3>
                     <p class="text-sm">
-                        <strong>{{ people(state.total) }}</strong> registered (confirmed or not, removed ones left out) ·
+                        <strong>{{ people(state.total) }}</strong> {{ audience }} ·
                         <span :class="state.sent ? 'text-green-700' : 'text-gray-500'">{{ state.sent ? `sent to ${people(state.sent)}` : 'not sent yet' }}</span>
                     </p>
                     <button
@@ -214,7 +233,7 @@ const statusList = computed(() => Object.entries(state.value?.statuses || {}));
                             class="rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
                             @click="checkAll"
                         >{{ state.checkable.length ? `Check delivery (${state.checkable.length} to look up)` : 'Nothing left to look up' }}</button>
-                        <p class="text-xs text-gray-500">Each person’s status also shows in the Reminder column of the registrations list.</p>
+                        <p v-if="rounds" class="text-xs text-gray-500">Each person’s status also shows in the Reminder column of the registrations list.</p>
                     </template>
                 </section>
 
@@ -235,7 +254,7 @@ const statusList = computed(() => Object.entries(state.value?.statuses || {}));
                     </ul>
                 </div>
 
-                <div v-if="state.sent" class="border-t border-gray-100 pt-5">
+                <div v-if="rounds && state.sent" class="border-t border-gray-100 pt-5">
                     <button type="button" class="text-sm text-gray-600 underline hover:text-gray-900" :disabled="!!run" @click="startNew">Start a new reminder</button>
                     <span class="ml-2 text-xs text-gray-500">— for a later round: same text to start from, nobody sent.</span>
                 </div>
