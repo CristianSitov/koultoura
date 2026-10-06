@@ -217,6 +217,22 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 - **Public forms check the email's domain exists** (`email:rfc,dns`) — a typo
   like `datcomp.rp` is refused with "Please check your email address".
 
+## Workshop & tour reminders (Workshops → "Send reminder")
+
+- Per public workshop/tour: **Send reminder (N)** to every active booking
+  (confirmed or not) not yet reminded — one request per person, 600 ms pause,
+  the same loop as confirmations (`sendEach`). Per attendee "Send reminder" /
+  "Remind again"; Preview EN/RO and a test to the signed-in admin (unsaved
+  sample booking, not recorded).
+- `App\Mail\SessionReminder` (`emails/session-reminder`), always via
+  `sendTo()`, which stamps `session_bookings.reminder_sent_at`. In the booking's
+  language: full date (never "tomorrow" — it may go two days ahead), time, the
+  **day's brief** and the **session description** (RO empty → EN) — the meeting
+  point has no field of its own, the office writes it in either — a button to
+  the booking page, and "can't come? write to contact@prinbanat.ro".
+- This is Saturday's day-before email: the Programme modal for a day nobody
+  registers for points to Workshops. Internal workshops (places) are not covered.
+
 ## Attendance lists (Workshops)
 
 - Workshops → **Attendance lists** (all workshops & tours) or, per workshop,

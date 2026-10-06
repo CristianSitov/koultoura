@@ -21,6 +21,7 @@ class SessionBooking extends Model
         'confirmed_at' => 'datetime',
         'cancelled_at' => 'datetime',
         'confirmation_sent_at' => 'datetime',
+        'reminder_sent_at' => 'datetime',
     ];
 
     protected static function booted(): void

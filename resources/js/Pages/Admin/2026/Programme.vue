@@ -413,7 +413,7 @@ function saveTheme() {
                 <!-- The workshop Saturday: nobody registers for it, so it has no list here. -->
                 <p v-else-if="!brief.status.covered" class="rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
                     Nobody registers for this day — it is the workshops’ and tours’ day, and their people are in the bookings.
-                    A reminder for each workshop and tour is planned; until then there is nothing to send from here.
+                    Each workshop and tour sends its own reminder from <Link href="/dashboard/bookings" class="font-semibold underline">Workshops</Link> → “Send reminder”.
                 </p>
 
                 <template v-else>

@@ -34,12 +34,31 @@ async function sendToUnconfirmed(session) {
         return;
     }
 
+    await sendEach(session, list, 'send');
+}
+
+// Everyone holding a place, confirmed or not, who has not had the reminder.
+const unreminded = (session) => session.bookings.filter((b) => ! b.cancelled && ! b.reminded);
+
+async function sendReminders(session) {
+    const list = unreminded(session);
+
+    if (runs[session.id]?.total || ! list.length
+        || ! confirm(`Send the reminder for “${session.title}” (${session.day}, ${session.time}) to ${list.length} ${list.length === 1 ? 'person' : 'people'} now?`)) {
+        return;
+    }
+
+    await sendEach(session, list, 'remind');
+}
+
+// One email per booking — `what` is the endpoint: send (confirm) or remind.
+async function sendEach(session, list, what) {
     const failed = [];
     runs[session.id] = { done: 0, total: list.length };
 
     for (const booking of list) {
         try {
-            const { data } = await window.axios.post(`/dashboard/bookings/${booking.id}/send`);
+            const { data } = await window.axios.post(`/dashboard/bookings/${booking.id}/${what}`);
             if (! data.ok) failed.push({ ...booking, error: data.error });
         } catch (e) {
             failed.push({ ...booking, error: e.response?.data?.message || e.message });
@@ -65,6 +84,28 @@ function sendConfirmation(booking) {
         });
     }
 }
+// The reminder to one person — e.g. after correcting their address.
+function sendReminder(booking) {
+    if (confirm(`Send ${booking.name} the reminder, at ${booking.email}?`)) {
+        action.post(`/dashboard/bookings/${booking.id}/remind`, {
+            preserveScroll: true,
+            onError: (errors) => alert(errors.booking || 'The email did not go out.'),
+        });
+    }
+}
+
+const tests = reactive({}); // session id → the last test's outcome
+
+async function testReminder(session, locale) {
+    tests[session.id] = 'Sending…';
+    try {
+        const { data } = await window.axios.post(`/dashboard/sessions/${session.id}/reminder/test/${locale}`);
+        tests[session.id] = data.ok ? `Test sent to ${data.email} (${locale.toUpperCase()}).` : `Not sent: ${data.error}`;
+    } catch (e) {
+        tests[session.id] = `Not sent: ${e.response?.data?.message || e.message}`;
+    }
+}
+
 const open = ref({}); // session id -> attendee list expanded
 const attendance = ref(null); // the workshops whose attendance sheets are open
 
@@ -226,6 +267,28 @@ function removeBooking(booking) {
                     </span>
                 </div>
 
+                <!-- The reminder before the day: everyone holding a place, confirmed or not. -->
+                <div class="mt-3 flex flex-wrap items-center gap-3 border-t border-gray-100 pt-3">
+                    <button
+                        type="button"
+                        :disabled="!unreminded(session).length || !!runs[session.id]?.total"
+                        class="rounded border border-gray-300 px-3 py-1.5 font-semibold hover:border-red-400 disabled:cursor-not-allowed disabled:opacity-40"
+                        @click="sendReminders(session)"
+                    >{{ unreminded(session).length ? `Send reminder (${unreminded(session).length})` : 'Reminder sent to everyone' }}</button>
+                    <span class="text-xs text-gray-500">
+                        {{ session.bookings.filter((b) => b.reminded && !b.cancelled).length }} reminded · to everyone holding a place, confirmed or not
+                    </span>
+                    <span class="text-xs text-gray-500">
+                        Preview
+                        <a :href="`/dashboard/sessions/${session.id}/reminder/en`" target="_blank" class="underline hover:text-gray-900">EN ↗</a>
+                        <a :href="`/dashboard/sessions/${session.id}/reminder/ro`" target="_blank" class="ml-1 underline hover:text-gray-900">RO ↗</a>
+                        · Test to me
+                        <button type="button" class="underline hover:text-gray-900" @click="testReminder(session, 'en')">EN</button>
+                        <button type="button" class="ml-1 underline hover:text-gray-900" @click="testReminder(session, 'ro')">RO</button>
+                        <span v-if="tests[session.id]" class="ml-1">— {{ tests[session.id] }}</span>
+                    </span>
+                </div>
+
                 <div v-if="runs[session.id]?.total" class="mt-3">
                     <p class="text-gray-700">Sending {{ Math.min(runs[session.id].done + 1, runs[session.id].total) }} of {{ runs[session.id].total }}… keep this page open.</p>
                     <div class="mt-1.5 h-1.5 overflow-hidden rounded bg-gray-100">
@@ -269,6 +332,10 @@ function removeBooking(booking) {
                                     :title="booking.asked ? `Asked ${booking.asked_count}× — last ${booking.asked}` : ''"
                                 >{{ booking.asked ? `Asked ${booking.asked}` : 'Not asked' }}</span>
                                 <button type="button" class="mr-3 text-gray-500 hover:text-gray-900" @click="sendConfirmation(booking)">Send confirmation</button>
+                            </template>
+                            <template v-if="!booking.cancelled">
+                                <span v-if="booking.reminded" class="mr-2 text-xs text-gray-500">Reminded {{ booking.reminded }}</span>
+                                <button type="button" class="mr-3 text-gray-500 hover:text-gray-900" @click="sendReminder(booking)">{{ booking.reminded ? 'Remind again' : 'Send reminder' }}</button>
                             </template>
                             <button type="button" class="text-gray-500 hover:text-gray-900" @click="openEditBooking(session, booking)">Edit</button>
                             <button type="button" class="ml-3 text-gray-500 hover:text-red-600" @click="toggleBooking(booking)">

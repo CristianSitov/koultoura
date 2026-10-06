@@ -12,6 +12,7 @@ use App\Models\Registration;
 use App\Models\Person;
 use App\Mail\PlaceConfirmed;
 use App\Mail\PlaceInvite;
+use App\Mail\SessionReminder;
 use App\Models\Session;
 use App\Models\SessionBooking;
 use App\Models\SessionPlace;
@@ -426,6 +427,7 @@ class RegistrationsController extends Controller
                         // When they were last asked, and how many times.
                         'asked' => $b->confirmation_sent_at?->format('d M H:i'),
                         'asked_count' => $b->confirmation_sent_count,
+                        'reminded' => $b->reminder_sent_at?->format('d M H:i'),
                         'created' => $b->created_at->toDateTimeString(),
                     ]),
                 ]),
@@ -549,6 +551,64 @@ class RegistrationsController extends Controller
         }
 
         return $answer(true, 'Confirmation request sent to '.$booking->email.'.');
+    }
+
+    /** The reminder before the workshop, to one person — the run calls it once per person. */
+    public function sendBookingReminder(Request $request, SessionBooking $booking): RedirectResponse|JsonResponse
+    {
+        $answer = fn (bool $ok, string $message) => $request->header('X-Inertia')
+            ? ($ok ? back()->with('flash', $message) : back()->withErrors(['booking' => $message]))
+            : response()->json(['ok' => $ok, 'error' => $ok ? null : $message]);
+
+        if ($booking->isCancelled()) {
+            return $answer(false, 'That place has been released — restore it before reminding.');
+        }
+
+        try {
+            SessionReminder::sendTo($booking);
+        } catch (Throwable $e) {
+            Log::error('2026 booking reminder failed', ['booking' => $booking->id, 'error' => $e->getMessage()]);
+
+            return $answer(false, 'The email did not go out: '.$e->getMessage());
+        }
+
+        return $answer(true, 'Reminder sent to '.$booking->email.'.');
+    }
+
+    /** The reminder as someone who booked in that language would get it. Nothing sends. */
+    public function reminderPreview(Session $session, string $locale): string
+    {
+        return (new SessionReminder($this->sampleBooking($session, $locale)))->render();
+    }
+
+    /** The reminder to the person signed in. Not recorded. */
+    public function reminderTest(Session $session, string $locale): JsonResponse
+    {
+        $email = auth()->user()->email;
+
+        try {
+            Mail::to($email)->send(new SessionReminder($this->sampleBooking($session, $locale)));
+        } catch (Throwable $e) {
+            report($e);
+
+            return response()->json(['ok' => false, 'error' => $e->getMessage()]);
+        }
+
+        return response()->json(['ok' => true, 'email' => $email]);
+    }
+
+    /** An unsaved booking in the signed-in admin's name, for a preview or a test. */
+    private function sampleBooking(Session $session, string $locale): SessionBooking
+    {
+        abort_unless(in_array($locale, ['en', 'ro'], true), 404);
+
+        $booking = new SessionBooking([
+            'name' => auth()->user()->name,
+            'locale' => $locale,
+            'token' => 'preview',
+        ]);
+
+        return $booking->setRelation('session', $session->load('translations', 'day.translations'));
     }
 
     /** This workshop's switch: email new bookings a request to confirm, or not. */
