@@ -2,6 +2,13 @@
 
 return [
     /*
+     * The event's name as it is written — in the emails' header and footer.
+     * Not APP_NAME, which the session cookie's name is made from: changing
+     * that signs everyone out.
+     */
+    'name' => env('WCM_NAME', 'Why Culture Matters'),
+
+    /*
      * The 2026 edition's two switches. Both live here so going live is a change
      * of environment rather than a change of code — see docs/2026-go-live.md.
      */

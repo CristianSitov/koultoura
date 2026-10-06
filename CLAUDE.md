@@ -83,6 +83,10 @@ Local `.env` maps: `DB_DATABASE_2026=wcm_2026`, `_2024=wcm_2024`, `_2022=wcm_202
   speaker/session descriptions, day briefs, the reminder): paragraphs, bold,
   italic, underline and **links** — the cleaner keeps an `<a>` only with an
   http/https/mailto href and writes it back with `target="_blank" rel="noopener"`.
+- **Emails**: the header and footer name is `config('wcm.name')` ("Why Culture Matters",
+  `resources/views/vendor/mail/*/message.blade.php`); the sender is
+  `MAIL_FROM_NAME` on the server ("Why Culture Matters - No Reply"). Never rename
+  `APP_NAME` for this — the session cookie is named after it.
 - **Backoffice pages DO use Tailwind** (`resources/js/Pages/Admin/2026/*.vue`).
 - Runtime-uploaded images render through `ImageSlot` (shows a grey placeholder
   until a file exists).
