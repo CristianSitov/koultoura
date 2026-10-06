@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\App;
 /**
  * The reminder as one person gets it: in their language (Romanian left empty
  * reads the English), with {name} in the text replaced by theirs and {days}
- * by the days they registered for — "Wednesday 7, Thursday 8 and Friday 9
- * October" / "miercuri 7, joi 8 și vineri 9 octombrie".
+ * by the days they registered for. On a line of its own {days} is a list —
+ * one day a line, even when there is only one; inside a sentence it reads
+ * "Wednesday 7, Thursday 8 and Friday 9 October", and so does the subject.
  */
 class ReminderEmail extends Mailable
 {
@@ -29,18 +30,33 @@ class ReminderEmail extends Mailable
     {
     }
 
-    /** Day numbers as words, in a language: weekday and date, the month once. */
-    public static function daysText(array $days, string $locale): string
+    /** The days as a list, one a line: "Wednesday, 7 October". */
+    public static function daysList(array $days, string $locale): string
+    {
+        $items = self::dates($days, $locale)
+            ->map(fn ($date) => '<li><strong>'.e($date->translatedFormat('l, j F')).'</strong></li>')
+            ->implode('');
+
+        return $items === '' ? '' : '<ul>'.$items.'</ul>';
+    }
+
+    private static function dates(array $days, string $locale)
     {
         $dates = ProgrammeDay::orderBy('position')->orderBy('date')->pluck('date')->values();
 
-        $picked = collect($days)
+        return collect($days)
             ->map(fn ($n) => $dates->get((int) $n - 1))
             ->filter()
             ->unique(fn ($date) => $date->toDateString())
             ->sortBy(fn ($date) => $date->toDateString())
             ->map(fn ($date) => $date->copy()->locale($locale))
             ->values();
+    }
+
+    /** Day numbers as words, in a language: weekday and date, the month once. */
+    public static function daysText(array $days, string $locale): string
+    {
+        $picked = self::dates($days, $locale);
 
         if ($picked->isEmpty()) {
             return '';
@@ -75,12 +91,26 @@ class ReminderEmail extends Mailable
 
         return new Content(markdown: 'emails.reminder', with: [
             // The body is HTML, so the name goes in escaped.
-            'body' => str_replace(
-                ['{name}', '{days}'],
-                [e($this->name), e(self::daysText($this->days, $this->language))],
-                HtmlBio::clean($this->pick('body')) ?? ''
-            ),
+            'body' => $this->body(),
         ]);
+    }
+
+    private function body(): string
+    {
+        $body = HtmlBio::clean($this->pick('body')) ?? '';
+
+        // {days} alone on its line (bold or not) becomes the list.
+        $body = preg_replace(
+            '#<p>\s*(?:<strong>)?\s*\{days\}\s*(?:</strong>)?\s*</p>#u',
+            self::daysList($this->days, $this->language),
+            $body
+        );
+
+        return str_replace(
+            ['{name}', '{days}'],
+            [e($this->name), e(self::daysText($this->days, $this->language))],
+            $body
+        );
     }
 
     private function pick(string $field): string
