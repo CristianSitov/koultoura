@@ -334,6 +334,44 @@ class RegistrationsController extends Controller
 
     /* ------------------------------------------------------------ bookings */
 
+    /**
+     * One workshop's or tour's attendance as a spreadsheet: who holds a place
+     * (released ones left out), by last name. An internal one lists its places.
+     */
+    public function attendanceCsv(Session $session): StreamedResponse
+    {
+        $title = $session->translate('en')?->title ?? $session->slug ?? 'session';
+        $file = 'attendance-'.Str::slug(Str::limit($title, 60, '')).'.csv';
+
+        return response()->streamDownload(function () use ($session) {
+            $out = fopen('php://output', 'w');
+            fwrite($out, "\xEF\xBB\xBF"); // so Excel reads the diacritics
+
+            if ($session->internal) {
+                fputcsv($out, ['Code', 'Email', 'Status']);
+                // Only the places someone was invited to — the rest are unused codes.
+                    foreach ($session->places()->whereNotNull('email')->where('email', '!=', '')->orderBy('code')->get() as $p) {
+                    fputcsv($out, [$p->code, $p->email, $p->isConfirmed() ? 'confirmed' : $p->status]);
+                }
+            } else {
+                fputcsv($out, ['Last name', 'First name', 'Email', 'Phone', 'Age', 'Guardian', 'Guardian phone', 'Confirmed', 'Booked']);
+                $rows = $session->bookings()->whereNull('cancelled_at')->get()
+                    ->map(function (SessionBooking $b) {
+                        [$first, $last] = filled($b->first_name) ? [$b->first_name, (string) $b->last_name] : Registration::splitName($b->name);
+
+                        return [$last, $first, $b->email, $b->phone, $b->age, $b->guardian_name, $b->guardian_phone,
+                            $b->confirmed_at?->toDateTimeString() ?? '', $b->created_at->toDateTimeString()];
+                    })
+                    ->sortBy(fn ($row) => Str::lower(Str::ascii($row[0].' '.$row[1])));
+                foreach ($rows as $row) {
+                    fputcsv($out, $row);
+                }
+            }
+
+            fclose($out);
+        }, $file, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
     public function bookings(): Response
     {
         return Inertia::render('Admin/2026/Bookings', [
@@ -355,6 +393,8 @@ class RegistrationsController extends Controller
                     'published' => $s->published,
                     'internal' => (bool) $s->internal,
                     'auto_confirm' => (bool) $s->auto_confirm,
+                    // Asks an age, and under 18 a guardian — both on the attendance list.
+                    'youth' => (bool) $s->youth,
                     // An internal workshop hands out places rather than taking sign-ups.
                     'places' => $s->places->map(fn (SessionPlace $p) => [
                         'id' => $p->id,

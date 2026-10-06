@@ -415,6 +415,7 @@ Route::prefix('dashboard')
             Route::delete('/bookings/{booking}', 'deleteBooking')->name('bookings.delete');
             Route::post('/bookings/{booking}/cancel', 'cancelBooking')->name('bookings.cancel');
             Route::post('/bookings/{booking}/send', 'sendBookingConfirmation')->name('bookings.send');
+            Route::get('/sessions/{session}/attendance.csv', 'attendanceCsv')->name('sessions.attendance');
             Route::put('/sessions/{session}/auto-confirm', 'toggleAutoConfirm')->name('sessions.auto-confirm');
 
             // Internal-workshop places.

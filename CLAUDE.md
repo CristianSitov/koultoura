@@ -217,6 +217,20 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 - **Public forms check the email's domain exists** (`email:rfc,dns`) — a typo
   like `datcomp.rp` is refused with "Please check your email address".
 
+## Attendance lists (Workshops)
+
+- Workshops → **Attendance lists** (all workshops & tours) or, per workshop,
+  **Attendance list** / **CSV** (`Pages/Admin/2026/AttendanceList.vue`, CSV from
+  `GET /dashboard/sessions/{session}/attendance.csv`). Data is the Workshops
+  page's own payload — no extra endpoint for the print.
+- Public: active bookings (released left out), by last name; printed **# · Last
+  name · First name · (Age · guardian, youth only) · Phone · Signature** — a
+  minor's phone column shows the guardian's. Internal: invited places only,
+  **Code · Email · Signature**.
+- Printed like the entrance list (teleported copy, `body.attendance-printing`,
+  `--rows` 5–40, cells capped), each workshop on pages of its own with its
+  title/day/time and "page n of N"; blank pages (0–10) per workshop for walk-ins.
+
 ## Day pages & the eve-of-day email (participants)
 
 - **Day page:** `/2026/programme/7-oct`, `/2026/ro/program/7-oct`

@@ -6,6 +6,7 @@ import DraftNotice from '../../../Components/DraftNotice.vue';
 import { useDraft } from '../../../formDraft';
 import { backdrop } from '../../../backdrop';
 import Admin2026 from '../../../Layouts/Admin2026.vue';
+import AttendanceList from './AttendanceList.vue';
 
 const props = defineProps({
     sessions: { type: Array, default: () => [] },
@@ -65,6 +66,7 @@ function sendConfirmation(booking) {
     }
 }
 const open = ref({}); // session id -> attendee list expanded
+const attendance = ref(null); // the workshops whose attendance sheets are open
 
 function toggleList(id) {
     open.value = { ...open.value, [id]: !open.value[id] };
@@ -149,6 +151,13 @@ function removeBooking(booking) {
 
 <template>
     <Admin2026 title="Workshops" :public-base="publicBase">
+        <template #actions>
+            <button v-if="sessions.length" type="button" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" @click="attendance = sessions">
+                Attendance lists
+            </button>
+        </template>
+        <AttendanceList v-if="attendance" :sessions="attendance" @close="attendance = null" />
+
         <p v-if="!sessions.length" class="bg-white rounded border border-gray-200 p-8 text-center text-gray-500">
             No workshop or tour yet. Open one in the programme and set its type to Workshop or Guided tour.
         </p>
@@ -188,7 +197,11 @@ function removeBooking(booking) {
                     <span class="inline-block w-3">{{ open[session.id] ? '▾' : '▸' }}</span>
                     {{ session.bookings.length }} {{ session.bookings.length === 1 ? 'attendee' : 'attendees' }}
                 </button>
-                <button type="button" class="text-sm text-gray-500 hover:text-gray-900" @click="openAddBooking(session)">+ Add attendee</button>
+                <div class="flex items-center gap-4 text-sm">
+                    <button type="button" class="text-gray-500 hover:text-gray-900" @click="attendance = [session]">Attendance list</button>
+                    <a :href="`/dashboard/sessions/${session.id}/attendance.csv`" class="text-gray-500 hover:text-gray-900">CSV</a>
+                    <button type="button" class="text-gray-500 hover:text-gray-900" @click="openAddBooking(session)">+ Add attendee</button>
+                </div>
             </div>
 
             <!-- Confirmations, per workshop: off until the office turns it on. -->
@@ -272,7 +285,7 @@ function removeBooking(booking) {
             <!-- Internal: places with codes, an email to invite, and Send —
                  folded away like the attendees above. -->
             <template v-else>
-                <div class="px-5 py-3">
+                <div class="px-5 py-3 flex items-center justify-between">
                     <button type="button" class="text-sm font-medium text-gray-700 hover:text-red-600" @click="toggleList(session.id)">
                         <span class="inline-block w-3">{{ open[session.id] ? '▾' : '▸' }}</span>
                         {{ session.places.length }} {{ session.places.length === 1 ? 'place' : 'places' }}
@@ -281,6 +294,10 @@ function removeBooking(booking) {
                             · {{ session.places.filter((p) => p.confirmed).length }} confirmed
                         </span>
                     </button>
+                    <div class="flex items-center gap-4 text-sm">
+                        <button type="button" class="text-gray-500 hover:text-gray-900" @click="attendance = [session]">Attendance list</button>
+                        <a :href="`/dashboard/sessions/${session.id}/attendance.csv`" class="text-gray-500 hover:text-gray-900">CSV</a>
+                    </div>
                 </div>
                 <table v-if="open[session.id]" class="min-w-full border-t border-gray-100 text-sm">
                     <tbody class="divide-y divide-gray-100">
