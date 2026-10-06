@@ -29,6 +29,7 @@ class Reminder extends Model
             .'<p>A friendly reminder: <strong>Why Culture Matters 2026</strong> begins on <strong>Wednesday, 7 October</strong>, '
             .'at <strong>FABER</strong>, Splaiul Peneș Curcanul 4–5, Timișoara, and runs until 10 October. '
             .'Registration and the welcome coffee start at <strong>09:15</strong>.</p>'
+            .'<p>You registered for <strong>{days}</strong>.</p>'
             .'<p>The full programme, day by day, is at '
             .'<a href="https://whyculturematters.eu/2026/programme">whyculturematters.eu/2026/programme</a>. '
             .'The evening before each day, we will send you a few lines about what to expect.</p>',
@@ -36,6 +37,7 @@ class Reminder extends Model
             .'<p>Îți reamintim că <strong>Why Culture Matters 2026</strong> începe <strong>miercuri, 7 octombrie</strong>, '
             .'la <strong>FABER</strong>, Splaiul Peneș Curcanul 4–5, Timișoara, și durează până pe 10 octombrie. '
             .'Înregistrarea și cafeaua de bun venit încep la <strong>09:15</strong>.</p>'
+            .'<p>Te-ai înscris pentru <strong>{days}</strong>.</p>'
             .'<p>Programul complet, zi cu zi, îl găsești la '
             .'<a href="https://whyculturematters.eu/2026/ro/program">whyculturematters.eu/2026/ro/program</a>. '
             .'În seara dinaintea fiecărei zile îți vom trimite câteva rânduri despre ce te așteaptă.</p>',

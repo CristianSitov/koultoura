@@ -145,8 +145,8 @@ purpose so mid-session pages don't 404), `chown -R www-data`.
 ## Reminder email (Registrations → "Reminder email")
 
 - Full-screen window (`Pages/Admin/2026/ReminderEmail.vue`, `Admin\ReminderController`):
-  subject + RichText body in EN and RO (RO empty → EN), `{name}` replaced per
-  person; Save; test to the signed-in admin (EN/RO, not recorded); send to every
+  subject + RichText body in EN and RO (RO empty → EN), `{name}` and `{days}`
+  (`ReminderEmail::daysText()`, the person's registered days in their language) replaced per person; Save; test to the signed-in admin (EN/RO, not recorded); send to every
   active registration (confirmed or not) not yet sent; then **Check delivery**.
 - `reminders` (one row per round — "Start a new reminder" copies the text and
   starts with nobody sent) and `reminder_sends` (unique reminder+registration,

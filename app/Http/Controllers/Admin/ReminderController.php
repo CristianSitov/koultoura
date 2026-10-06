@@ -89,7 +89,7 @@ class ReminderController extends Controller
 
         try {
             $sent = Mail::to($registration->email)->send(
-                new ReminderEmail($reminder, $registration->locale === 'ro' ? 'ro' : 'en', $registration->name)
+                new ReminderEmail($reminder, $registration->locale === 'ro' ? 'ro' : 'en', $registration->name, (array) $registration->days)
             );
         } catch (Throwable $e) {
             Log::error('2026 reminder failed', ['registration' => $registration->id, 'error' => $e->getMessage()]);

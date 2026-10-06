@@ -168,7 +168,8 @@ const statusList = computed(() => Object.entries(state.value?.statuses || {}));
                         </div>
                     </div>
                     <p class="text-xs text-gray-500">
-                        <strong>{name}</strong> is replaced by each person’s name, in the subject and the text. To link words, select
+                        <strong>{name}</strong> is replaced by each person’s name, and <strong>{days}</strong> by the days they registered for
+                        (“Wednesday 7, Thursday 8 and Friday 9 October”; a test shows all three), in the subject and the text. To link words, select
                         them and press the link button. The email ends with “See you soon, Asociația Prin Banat”.
                     </p>
                     <div class="flex items-center gap-3">
