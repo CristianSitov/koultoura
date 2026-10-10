@@ -16,6 +16,14 @@ const consentOptions = {
     onAccept: function (cookie) {
         emitter.emit("consentAccepted", { consent: cookie.level });
     },
+    // The visitor's first answer, on the page they gave it — see app.js.
+    onFirstAction: function (preferences, cookie) {
+        emitter.emit("consentFirstAnswer", { consent: cookie.level });
+    },
+    // A later change in "Manage preferences" applies at once, not on the next page.
+    onChange: function (cookie) {
+        emitter.emit("consentAccepted", { consent: cookie.level });
+    },
     gui_options: {
         consent_modal: {
             layout: 'cloud',

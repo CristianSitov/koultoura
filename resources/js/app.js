@@ -11,7 +11,8 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import { Ziggy } from './ziggy';
 import CookieConsent from 'vue-cookieconsent';
 import { consentOptions } from './consent';
-import VueGtag, { optIn, optOut } from 'vue-gtag';
+import VueGtag, { event, optIn, optOut, pageview } from 'vue-gtag';
+import { Inertia } from '@inertiajs/inertia';
 import emitter from './emitter';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Why Culture Matters?';
@@ -34,8 +35,12 @@ createInertiaApp({
                 enabled: false,
                 config: {
                     id: "G-WYGPJKWNT1",
-                    send_page_view: true,
-                    debug_mode: true
+                    // The page a visit lands on. vue-gtag reads this from
+                    // `params` only — set beside `id`, as it was until 10
+                    // October 2026, it was ignored and no landing page was
+                    // ever sent. Later pages are Inertia visits, which GA's
+                    // own "browser history" page views count.
+                    params: { send_page_view: true },
                 }
             })
             .use(CookieConsent, consentOptions)
@@ -65,8 +70,33 @@ InertiaProgress.init({ color: '#4B5563' });
  * switched analytics on. Reading the level fixes that for every year's pages at
  * once, which is also why this lives here rather than in three layouts.
  */
-emitter.on('consentAccepted', ({ consent }) => {
-    const levels = Array.isArray(consent) ? consent : [consent];
+const allowsAnalytics = (consent) => (Array.isArray(consent) ? consent : [consent]).includes('analytics');
 
-    levels.includes('analytics') ? optIn() : optOut();
+emitter.on('consentAccepted', ({ consent }) => (allowsAnalytics(consent) ? optIn() : optOut()));
+
+/*
+ * A first visit: its landing page was sent while analytics was still off, so
+ * it never counted. Once the visitor says yes, the page they are on is sent.
+ * (A returning visitor's landing page counts by itself: their answer is known
+ * before Google's script runs.)
+ */
+emitter.on('consentFirstAnswer', ({ consent }) => {
+    if (allowsAnalytics(consent)) {
+        optIn();
+        pageview({ page_path: window.location.pathname, page_location: window.location.href, page_title: document.title });
+    }
+});
+
+/*
+ * What happened, for Analytics: a registration (sign_up) or a workshop place
+ * (book_workshop). The server flashes it once, with the page that follows the
+ * form, so a reload does not count it twice. Like every hit, it goes nowhere
+ * unless analytics was consented to.
+ */
+Inertia.on('navigate', ({ detail }) => {
+    const happened = detail.page.props.ga_event;
+
+    if (happened?.name) {
+        event(happened.name, happened.params || {});
+    }
 });

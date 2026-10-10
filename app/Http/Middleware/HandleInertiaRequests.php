@@ -69,6 +69,8 @@ class HandleInertiaRequests extends Middleware
             // One-off notices from the backoffice ("Session saved."). A closure
             // so it is read at render time, after the action has flashed it.
             'flash' => fn () => Session::get('flash'),
+            // One Analytics event for the page after a form — see app.js.
+            'ga_event' => fn () => Session::get('ga_event'),
 
             /*
              * The 2026 menu drops its Programme entry while the section is off

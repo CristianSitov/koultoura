@@ -341,6 +341,22 @@ The root template takes `<html lang>` (which the client reads to pick its
 translations) from the page's own `locale` prop before the session — that is
 what lets the preview show Romanian to an office reading in English.
 
+## Google Analytics (GA4 `G-WYGPJKWNT1`)
+
+- `vue-gtag` in `resources/js/app.js`, **off until the cookie banner's
+  analytics category is accepted** (`consent.js` → `emitter` → `optIn()`).
+  Numbers are therefore a consenting subset.
+- **Page views:** the landing page via `config.params.send_page_view` (it must
+  sit under `params` — beside `id` it was silently ignored until 2026-10-10);
+  Inertia visits via GA's Enhanced measurement "page changes based on browser
+  history events" (must stay on in GA Admin). A first visit's landing page is
+  sent when the visitor accepts (`onFirstAction` → `consentFirstAnswer`).
+- **Events:** the server flashes `ga_event` (shared by `HandleInertiaRequests`)
+  with the page after a form; `app.js` fires it on Inertia `navigate`, once —
+  `sign_up` (new registration: method, days, language) and `book_workshop`
+  (new place: session slug, session_type). `ContributionController::show`
+  reflashes when it redirects, so the event survives. No PII in events.
+
 ## Guardrails & conventions
 
 - **Edit windows keep unsaved work** in the browser (`resources/js/formDraft.js`

@@ -160,7 +160,15 @@ class Front2026SessionController extends Controller
             }
         }
 
-        return redirect($this->url($session, $outcome['booking']->token));
+        $redirect = redirect($this->url($session, $outcome['booking']->token));
+
+        // A new place, not the same address booking again.
+        return $outcome['status'] === 'booked'
+            ? $redirect->with('ga_event', ['name' => 'book_workshop', 'params' => [
+                'session' => $session->slug,
+                'session_type' => $session->type,
+            ]])
+            : $redirect;
     }
 
     /** The page after booking, which survives a reload. */

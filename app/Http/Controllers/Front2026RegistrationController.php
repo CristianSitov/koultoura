@@ -161,7 +161,12 @@ class Front2026RegistrationController extends Controller
          */
         $this->sendConfirmation($registration);
 
-        return redirect(Front2026Controller::base().'/contribute/'.$registration->token);
+        return redirect(Front2026Controller::base().'/contribute/'.$registration->token)
+            ->with('ga_event', ['name' => 'sign_up', 'params' => [
+                'method' => 'symposium',
+                'days' => count($registration->days),
+                'language' => $registration->locale,
+            ]]);
     }
 
     public function submitted(Request $request): Response

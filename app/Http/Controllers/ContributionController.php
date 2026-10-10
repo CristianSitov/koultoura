@@ -36,6 +36,9 @@ class ContributionController extends Controller
         $registration = Registration::where('token', $request->route('token'))->firstOrFail();
 
         if (! $this->configured()) {
+            // Passed on: the registration's Analytics event is meant for the page that shows.
+            $request->session()->reflash();
+
             return redirect($this->submittedUrl($registration));
         }
 
