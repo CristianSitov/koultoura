@@ -10,6 +10,7 @@ use App\Mail\RegistrationConfirmed;
 use App\Models\Contribution;
 use App\Models\Registration;
 use App\Models\Person;
+use App\Models\ProgrammeDay;
 use App\Mail\PlaceConfirmed;
 use App\Mail\PlaceInvite;
 use App\Mail\SessionReminder;
@@ -380,7 +381,9 @@ class RegistrationsController extends Controller
         return Inertia::render('Admin/2026/Bookings', [
             'sessions' => Session::with(['translations', 'day.translations', 'bookings', 'places', 'speakers', 'reminderSends'])
                 ->where('bookable', true)
-                ->orderBy('programme_day_id')
+                // By day, as the programme orders them, then by hour.
+                ->orderBy(ProgrammeDay::select('position')->whereColumn('programme_days.id', 'sessions.programme_day_id'))
+                ->orderBy(ProgrammeDay::select('date')->whereColumn('programme_days.id', 'sessions.programme_day_id'))
                 ->orderBy('starts_at')
                 ->get()
                 ->map(fn (Session $s) => $this->sessionRow($s, $this->latestReminders($s))),

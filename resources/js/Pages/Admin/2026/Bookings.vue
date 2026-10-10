@@ -236,7 +236,11 @@ function removeBooking(booking) {
             No workshop or tour yet. Open one in the programme and set its type to Workshop or Guided tour.
         </p>
 
-        <section v-for="session in sessions" :key="session.id" class="bg-white rounded border border-gray-200 mb-6">
+        <!-- Listed by day, then by hour: the server sends them in that order. -->
+        <template v-for="(session, i) in sessions" :key="session.id">
+        <h2 v-if="session.day !== sessions[i - 1]?.day" class="mb-3 text-lg font-bold" :class="i ? 'mt-10' : ''">{{ session.day || 'No day set' }}</h2>
+        <h3 v-if="session.day !== sessions[i - 1]?.day || session.time !== sessions[i - 1]?.time" class="mb-2 text-sm font-semibold text-gray-500">{{ session.time }}</h3>
+        <section class="bg-white rounded border border-gray-200 mb-6">
             <header class="flex flex-wrap items-start gap-4 border-b border-gray-100 p-5">
                 <img v-if="session.image" :src="session.image" alt="" class="h-20 w-28 rounded object-cover bg-gray-100" />
                 <div v-else class="h-20 w-28 rounded bg-gray-100"></div>
@@ -499,6 +503,7 @@ function removeBooking(booking) {
                 </p>
             </template>
         </section>
+        </template>
 
         <!-- Add / edit an attendee -->
         <div v-if="editingBooking" class="fixed inset-0 bg-black/40 flex items-center justify-center p-4" v-on="bookingBackdrop">
